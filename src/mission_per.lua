@@ -170,13 +170,13 @@ else
     env.info("Main Mission: We couldn't find an existing Database to load from file")
     if os ~= nil then
         mnowTable = os.date('*t')
-        mnowYear = nowTable.year
-        mnowMonth = nowTable.month
-        mnowDay = nowTable.day
-        mnowHour = nowTable.hour
-        mnowminute = nowTable.min
-        mnowsec = nowTable.secs
-        nowTime = os.time()
+        mnowYear = mnowTable.year
+        mnowMonth = mnowTable.month
+        mnowDay = mnowTable.day
+        mnowHour = mnowTable.hour
+        mnowminute = mnowTable.min
+        mnowsec = mnowTable.secs
+        mnowTime = os.time()
     else
        mnowYear = 0
        mnowMonth = 0
@@ -184,20 +184,20 @@ else
        mnowHour = 0
        mnowminute = 0
        mnowsec = 0
-       nowtime = 0
+       mnowtime = 0
     end
-    mainmission.missionstartday = nowTable.day
-    mainmission.missionstarthour = nowTable.hour
-    mainmission.missionstartminute = nowTable.min
-    mainmission.missionstartmonth = nowTable.month
-    mainmission.missionstartsecs = nowTable.secs
-    mainmission.missionstartyear = nowTable.year
-    mainmission.lastupdatehour = nowTable.hour
-    mainmission.lastupdateminute = nowTable.min
-    mainmission.lastupdatesec = nowTable.sec
-    mainmission.nextupdate = nowTime + reinforcements
-    mainmission.nextupdatehour = nowTable.hour + reinforhrs
-    mainmission.nextupdatemin = nowTable.min + reinformins
+    mainmission.missionstartday = mnowTable.day
+    mainmission.missionstarthour = mnowTable.hour
+    mainmission.missionstartminute = mnowTable.min
+    mainmission.missionstartmonth = mnowTable.month
+    mainmission.missionstartsecs = mnowTable.secs
+    mainmission.missionstartyear = mnowTable.year
+    mainmission.lastupdatehour = mnowTable.hour
+    mainmission.lastupdateminute = mnowTable.min
+    mainmission.lastupdatesec = mnowTable.sec
+    mainmission.nextupdate = mnowTime + reinforcements
+    mainmission.nextupdatehour = mnowTable.hour + reinforhrs
+    mainmission.nextupdatemin = mnowTable.min + reinformins
     BASE:E({mainmission.nextupdate})
     local temp = GROUP:FindByName("Type 054A Frigate"):Activate()
     temp = GROUP:FindByName("Cuban Tanker 1"):Activate()
@@ -223,10 +223,10 @@ function reinforce()
         mnowHour = nowTable.hour
         mnowminute = nowTable.min
         mnowsec = nowTable.secs
-        nowTime = os.time()
+        mnowTime = os.time()
     end
-    BASE:E({"Running Reinforcement Scripting nowtime,nextupdate",nowTime,mainmission.nextupdate})
-    if nowTime > mainmission.nextupdate then
+    BASE:E({"Running Reinforcement Scripting nowtime,nextupdate",mnowTime,mainmission.nextupdate})
+    if mnowTime > mainmission.nextupdate then
       BASE:E({"Reinforcements arriving"})
       if mainmission.Shiraz < 12 then
         if mainmission.Shiraz < 0 then
@@ -411,7 +411,7 @@ function reinforce()
     end
     ba2disp:SetSquadron("Al Draf",AIRBASE.PersianGulf.Al_Dhafra_AB,BLandTemp,newval)
   end
-  mainmission.nextupdate = nowTime + reinforcements
+  mainmission.nextupdate = mnowTime + reinforcements
   
   mainmission.lastupdatehour = mnowHour
   mainmission.lastupdateminute = mnowminute

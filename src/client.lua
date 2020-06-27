@@ -1,5 +1,5 @@
-version = "0.78 Beta"
-lastupdate = "22 June 2020"
+version = "0.81 Beta"
+lastupdate = "27 June 2020"
 PlayerMap = {}
 PlayerRMap = {}
 PlayerBMap = {}
@@ -7,7 +7,9 @@ SetPlayer = SET_CLIENT:New():FilterStart()
 SetPlayerRed = SET_CLIENT:New():FilterCoalitions("red"):FilterStart()
 SetPlayerBlue = SET_CLIENT:New():FilterCoalitions("blue"):FilterStart()
 Scoring = SCORING:New("Scoring")
-
+resethours = 6
+hourstoreset = 6
+trigger.action.setUserFlag("SSB",100)
 
 if os ~= nil then
         nowTable = os.date('*t')
@@ -134,52 +136,117 @@ C_tanker = MENU_COALITION:New(coalition.side.BLUE,"Tanker Control",C_menu)
 C_Arco11 = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Change ARCO11 Speed for A10",C_tanker,Arco11A10,nil)
 
 
+
 trigger.action.setUserFlag(100,0)
+
+stn = UNIT:FindByName("Stennis")
+lh2 = UNIT:FindByName("LHA-2")
+tdy = UNIT:FindByName("TeddyR")
+tar = UNIT:FindByName("Tarawa")
+
+function stndead()
+  if stn:IsAlive() ~= true then
+    trigger.action.setUserFlag("STN_141",100)
+    trigger.action.setUserFlag("STN_142",100)
+    trigger.action.setUserFlag("STN_143",100)
+    trigger.action.setUserFlag("STN_144",100)
+    trigger.action.setUserFlag("STN_440",100)
+    trigger.action.setUserFlag("STN_441",100)
+    trigger.action.setUserFlag("STN_442",100)
+    trigger.action.setUserFlag("STN_443",100)
+    trigger.action.setUserFlag("STN_444",100)
+    
+  end
+end
+function lh2dead()
+  if lh2:IsAlive() ~= true then
+    trigger.action.setUserFlag("STN-LHA2-Huey333",100)
+    trigger.action.setUserFlag("STN-LHA2-Huey334",100)
+    trigger.action.setUserFlag("STN-LHA2-Huey335",100)
+    trigger.action.setUserFlag("STN-LHA2-Huey336",100)
+    trigger.action.setUserFlag("STN-TAR-490",100)
+    trigger.action.setUserFlag("STN-TAR-491",100)
+    trigger.action.setUserFlag("STN-TAR-492",100)
+    trigger.action.setUserFlag("STN-TAR-493",100)
+    trigger.action.setUserFlag("STN-TAR-494",100)
+  end
+end
+
+function tdydead()
+  if tdy:IsAlive() ~= true then
+    trigger.action.setUserFlag("TDY_101",100)
+    trigger.action.setUserFlag("TDY_102",100)
+    trigger.action.setUserFlag("TDY_103",100)
+    trigger.action.setUserFlag("TDY_104",100)
+    trigger.action.setUserFlag("TDY_105",100)
+    trigger.action.setUserFlag("TDY_106",100)
+    trigger.action.setUserFlag("TDY_107",100)
+    trigger.action.setUserFlag("TDY_108",100)
+    trigger.action.setUserFlag("TDY_401",100)
+    trigger.action.setUserFlag("TDY_402",100)
+    trigger.action.setUserFlag("TDY_403",100)
+    trigger.action.setUserFlag("TDY_404",100)
+    trigger.action.setUserFlag("TDY_405",100)
+    trigger.action.setUserFlag("TDY_406",100)
+    trigger.action.setUserFlag("TDY_407",100)
+    trigger.action.setUserFlag("TDY_408",100)
+    trigger.action.setUserFlag("TDY_409",100)
+    trigger.action.setUserFlag("TDY_410",100)
+    trigger.action.setUserFlag("TDY_411",100)
+    trigger.action.setUserFlag("TDY_412",100)
+  end
+end
+
+function tardead()
+  if tar:IsAlive() ~= true then
+    trigger.action.setUserFlag("TDY-TAR-480",100)
+    trigger.action.setUserFlag("TDY-TAR-481",100)
+    trigger.action.setUserFlag("TDY-TAR-482",100)
+    trigger.action.setUserFlag("TDY-TAR-484",100)
+    trigger.action.setUserFlag("TDY-TAR-Huey-303",100)
+    trigger.action.setUserFlag("TDY-TAR-Huey314",100)
+    trigger.action.setUserFlag("TDY-TAR-Huey319",100)
+    trigger.action.setUserFlag("TDY-TAR-Huey444",100)
+    trigger.action.setUserFlag("TED-TAR-KA50-21",100)
+    trigger.action.setUserFlag("TED-TAR-KA50-22",100)
+    trigger.action.setUserFlag("TED-TAR-KA50-23",100)
+    trigger.action.setUserFlag("TED-TAR-KA50-24",100)
+    trigger.action.setUserFlag("TED-TAR-Mi8-55",100)
+    trigger.action.setUserFlag("TED-TAR-Mi8-56",100)
+    trigger.action.setUserFlag("TED-TAR-SA342L-44",100)
+    trigger.action.setUserFlag("TED-TAR-SA342L-45",100)
+    trigger.action.setUserFlag("TED-TAR-SA342Min-222",100)
+    trigger.action.setUserFlag("TED-TAR-SA342Min-223",100)
+    trigger.action.setUserFlag("TED-TAR-SA342Mini-111",100)
+    trigger.action.setUserFlag("TED-TAR-SA342Mini-112",100)
+    trigger.action.setUserFlag("TED-TAR-SA342m-66",100)
+    trigger.action.setUserFlag("TED-TAR-SA342m-67",100)
+  end
+end
+
+stn:HandleEvent(EVENTS.Dead,stndead)
+lh2:HandleEvent(EVENTS.Dead,lh2dead)
+tdy:HandleEvent(EVENTS.Dead,tdydead)
+tar:HandleEvent(EVENTS.Dead,tardead)
 SCHEDULER:New(nil,permanentPlayerCheck,{},1,1)
+function nextreset()
+	resettime()
+end
 
+function resettime()
+	SCHEDULER:New(nil,function() 
+	MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS",30):ToAll()
+	hourstoreset = hourstoreset - 1
+	if hourstoreset < resethours then
+		nextreset()
+	end
+	end,{},60*60)
+end
 SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 12 HOURS",30):ToAll()
+MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS",30):ToAll()
+hourstoreset = hourstoreset - 1
+nextreset()	
 end,{},1)
-
-SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 11 HOURS",10):ToAll()
-end,{},((60*60) * 1))
-
-SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 10 HOURS",10):ToAll()
-end,{},((60*60) * 2))
-
-SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 9 HOURS",10):ToAll()
-end,{},((60*60) * 3))
-
-SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 8 HOURS",10):ToAll()
-end,{},((60*60) * 4))
-
-SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 7 HOURS",10):ToAll()
-end,{},((60*60) * 5))
-
-SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 6 HOURS",10):ToAll()
-end,{},((60*60) * 6))
-
-SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 5 HOURS",10):ToAll()
-end,{},((60*60) * 7))
-
-SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 4 HOURS",10):ToAll()
-end,{},((60*60) * 8))
-
-SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 3 HOURS",10):ToAll()
-end,{},((60*60) * 9))
-
-SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 2 HOURS",10):ToAll()
-end,{},((60*60) * 10))
 
 SCHEDULER:New(nil,function() 
 MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 HOUR",11):ToAll()
@@ -196,10 +263,10 @@ SCHEDULER:New(nil,function()
       end,{},((15*60)))
   end,{},((30*60)))
 
-end,{},((60*60) * 11))
+end,{},((60*60) * (resethours - 1)))
 
 
 SCHEDULER:New(nil,function() 
 MESSAGE:New("MISSION CYCLE HAPPENING",30):ToAll()
 trigger.action.setUserFlag(100,1)
-end,{},((60*60)*12))
+end,{},((60*60)*resethours))

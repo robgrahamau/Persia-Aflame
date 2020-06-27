@@ -6,6 +6,12 @@ IRANAWACSTOTAL = 4
 
 IranIADS = SkynetIADS:create('Iran')
 
+BlueIADS = SkynetIADS:create('Blue')
+BlueIADS:addSAMSitesByPrefix('USSAM')
+BlueIADS:addEarlyWarningRadarsByPrefix('USEW')
+local bcommandCenter = StaticObject.getByName("UAE Command")
+BlueIADS:addCommandCenter(bcommandCenter)
+BlueIADS:activate()
 
 BASE:E{"IADS SCRIPT STATICS"}
 -- Our Power Sources.
