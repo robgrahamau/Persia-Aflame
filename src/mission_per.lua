@@ -1,23 +1,27 @@
 reinforhrs = 6
 reinformins = 0
 reinforcements = ((60 * 60) * reinforhrs) + (60 * reinformins) 
+dsqnsize = 16
+dsqnlsize = 24
+dsqnssize = 12
+dsqnvssize = 8
 
 local SaveSchedulePersistence=600 
 mainmission = { 
-  ["Shiraz"] = 12,
-  ["Shiraz1"] = 12,
-  ["Shiraz2"] = 12,
-  ["Shiraz_Int"] = 8,
-  ["Kerman"] = 14,
-  ["Kerman1"] = 14,
-  ["Kerman2"] = 14,
-  ["Kerman_INT"] = 8,
-  ["Bandar_Abbas"] = 8,
-  ["Bandar_Abbas2"] = 12,
-  ["Bandar_Abbas_INT"] = 8,
-  ["Lar"] = 4,
-  ["Kish"] = 8,
-  ["Kish_INT"] = 6,
+  ["Shiraz"] = 16,
+  ["Shiraz1"] = 16,
+  ["Shiraz2"] = 16,
+  ["Shiraz_Int"] = 12,
+  ["Kerman"] = 16,
+  ["Kerman1"] = 16,
+  ["Kerman2"] = 16,
+  ["Kerman_INT"] = 12,
+  ["Bandar_Abbas"] = 12,
+  ["Bandar_Abbas2"] = 16,
+  ["Bandar_Abbas_INT"] = 12,
+  ["Lar"] = 8,
+  ["Kish"] = 12,
+  ["Kish_INT"] = 12,
   ["Kuznetsov_INT"] = 18,
   ["Stennis"] = 12,
   ["TeddyR"] = 12,
@@ -228,156 +232,156 @@ function reinforce()
     BASE:E({"Running Reinforcement Scripting nowtime,nextupdate",mnowTime,mainmission.nextupdate})
     if mnowTime > mainmission.nextupdate then
       BASE:E({"Reinforcements arriving"})
-      if mainmission.Shiraz < 12 then
+      if mainmission.Shiraz < dsqnsize then
         if mainmission.Shiraz < 0 then
           mainmission.Shiraz = 0
         end
         local newval = mainmission.Shiraz + math.random(2,8)
-        if newval > 12 then
-          newval = 12
+        if newval > dsqnsize then
+          newval = dsqnsize
         end
         ra2disp:SetSquadron("Shiraz",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},newval)
       end
-      if mainmission.Shiraz1 < 12 then
+      if mainmission.Shiraz1 < dsqnsize then
         if mainmission.Shiraz1 < 0 then
           mainmission.Shiraz1 = 0
         end
         local newval = mainmission.Shiraz1 + math.random(2,8)
         
-        if newval > 12 then
-          newval = 12
+        if newval > dsqnsize then
+          newval = dsqnsize
         end
         ra2disp:SetSquadron("Shiraz1",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},newval)
       end
-      if mainmission.Shiraz2 < 12 then 
+      if mainmission.Shiraz2 < dsqnsize then 
         if mainmission.Shiraz2 < 0 then
           mainmission.Shiraz2 = 0
         end
         local newval = mainmission.Shiraz2 + math.random(2,8)
         
-        if newval > 12 then
-          newval = 12
+        if newval > dsqnsize then
+          newval = dsqnsize
         end
         ra2disp:SetSquadron("Shiraz2",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F5_1","MIG29_1","F5_2","MIG29_2"},newval)
       end
-      if mainmission.Shiraz_Int < 8 then
+      if mainmission.Shiraz_Int < dsqnssize then
         if mainmission.Shiraz_Int < 0 then
           mainmission.Shiraz_Int = 0
         end 
         local newval = mainmission.Shiraz_Int + math.random(2,8)
-        if newval > 12 then
-          newval = 12
+        if newval > dsqnssize then
+          newval = dsqnssize
         end
         ra2disp:SetSquadron("Shiraz INT",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F5_1","MIG29_1","F4_2"},newval)
       end
-      if mainmission.Kerman < 14 then
+      if mainmission.Kerman < dsqnsize then
         if mainmission.Kerman < 0 then
           mainmission.Kerman = 0
         end 
         local newval = mainmission.Kerman + math.random(2,8)
-        if newval > 14 then
-          newval = 14
+        if newval > dsqnsize then
+          newval = dsqnsize
         end
         ra2disp:SetSquadron("Kerman",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","JF17_1","JF17_2","M2000_1"},newval)
       end
-      if mainmission.Kerman1 < 14 then 
+      if mainmission.Kerman1 < dsqnsize then 
         if mainmission.Kerman1 < 0 then
           mainmission.Kerman1 = 0
         end
         local newval = mainmission.Kerman1 + math.random(2,8)
-        if newval > 14 then
-          newval = 14
+        if newval > dsqnsize then
+          newval = dsqnsize
         end
         ra2disp:SetSquadron("Kerman1",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","JF17_1","JF17_2","M2000_1"},newval)
       end
-      if mainmission.Kerman2 < 14 then
+      if mainmission.Kerman2 < dsqnsize then
         if mainmission.Kerman2 < 0 then
           mainmission.Kerman2 = 0
         end
         local newval = mainmission.Kerman2 + math.random(2,8)
-        if newval > 14 then
-          newval = 14
+        if newval > dsqnsize then
+          newval = dsqnsize
         end
         ra2disp:SetSquadron("Kerman2",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","M2000_1"},newval)
       end
-      if mainmission.Kerman_INT < 8 then
+      if mainmission.Kerman_INT < dsqnssize then
         if mainmission.Kerman_INT < 0 then
           mainmission.Kerman_INT = 0
         end 
         local newval = mainmission.Kerman_INT + math.random(0,8)
-        if newval > 8 then
-          newval = 8
+        if newval > dsqnssize then
+          newval = dsqnssize
         end
         ra2disp:SetSquadron("Kerman INT",AIRBASE.PersianGulf.Kerman_Airport,{"MIG21_1","MIG21_2"},newval)
       end
-      if mainmission.Bandar_Abbas < 12 then
+      if mainmission.Bandar_Abbas < dsqnsize then
         if mainmission.Bandar_Abbas < 0 then
           mainmission.Bandar_Abbas = 0
         end 
         local newval = mainmission.Bandar_Abbas + math.random(0,6)
-        if newval > 12 then
-          newval = 12
+        if newval > dsqnsize then
+          newval = dsqnsize
         end
         ra2disp:SetSquadron("Bandar Abbas",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG21_1","MIG29_2"},newval)
       end
-      if mainmission.Bandar_Abbas2 < 12 then
+      if mainmission.Bandar_Abbas2 < dsqnsize then
         if mainmission.Bandar_Abbas2 < 0 then
           mainmission.Bandar_Abbas2 = 0
         end  
         local newval = mainmission.Bandar_Abbas2 + math.random(0,6)
-        if newval > 12 then
-          newval = 12
+        if newval > dsqnsize then
+          newval = dsqnsize
         end
         ra2disp:SetSquadron("Bandar Abbas 2",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG29_1","MIG29_2","JF17_1","JF17_2","F4_1","F4_2"},newval)
       end
-      if mainmission.Bandar_Abbas_INT < 8 then
+      if mainmission.Bandar_Abbas_INT < dsqnssize then
         if mainmission.Bandar_Abbas_INT < 0 then
           mainmission.Bandar_Abbas_INT = 0
         end 
         local newval = mainmission.Bandar_Abbas_INT + math.random(0,4)
-        if newval > 8 then
-          newval = 8 
+        if newval > dsqnssize then
+          newval = dsqnssize 
         end
         ra2disp:SetSquadron("Bandar Abbas INT",AIRBASE.PersianGulf.Havadarya,{"MIG21_1","MIG21_2"},newval)
       end
-      if mainmission.Lar < 4 then
+      if mainmission.Lar < dsqnvssize then
       if mainmission.Lar < 0 then
           mainmission.Lar = 0
         end 
         local newval = mainmission.Lar + 2
-        if newval > 4 then
-          newval = 4
+        if newval > dsqnvssize then
+          newval = dsqnvssize
         end
         ra2disp:SetSquadron("Lar",AIRBASE.PersianGulf.Lar_Airbase,{"F4_2"},newval)
      end
-     if mainmission.Kish < 8 then
+     if mainmission.Kish < dsqnssize then
       if mainmission.Kish < 0 then
           mainmission.Kish = 0
         end 
       local newval = mainmission.Kish + math.random(0,4)
-      if newval > 8 then
-        newval = 8 
+      if newval > dsqnssize then
+        newval = dsqnssize 
       end
       ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},mainmission.Kish)
     end
-    if mainmission.Kish_INT < 6 then
+    if mainmission.Kish_INT < dsqnvssize then
       if mainmission.Kish_INT < 0 then
           mainmission.Kish_INT = 0
         end 
       local newval = mainmission.Kish_INT + math.random(0,4) 
-      if newval > 6 then
-        newval = 6
+      if newval > dsqnvssize then
+        newval = dsqnvssize
       end
       ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},newval)
     end
-    if mainmission.Kuznetsov_INT < 18 then
+    if mainmission.Kuznetsov_INT < dsqnlsize then
       if mainmission.Kuznetsov_INT < 0 then
           mainmission.Kuznetsov_INT = 0
         end 
       
       local newval = mainmission.Kuznetsov_INT + math.random(0,6)
-      if newval > 18 then 
-        newval = 18 
+      if newval > dsqnlsize then 
+        newval = dsqnlsize 
       end
       ra2disp:SetSquadron("Kuznetsov INT","Kuznetsov",{"SU33_1","SU33_2"},newval)
     end

@@ -7,8 +7,8 @@
 do
     -- lets start commenting some of this shit.
     local PORT = 3009 -- our port
-    local DATA_TIMEOUT_SEC = 25 -- data timeout not that it seems to do much
-  -- initalise and basically make our socket shit really this mint.require isn't needed 
+    local DATA_TIMEOUT_SEC = 60 -- How often we send data.
+  
     package.path = package.path..";.\\LuaSocket\\?.lua"
     package.cpath = package.cpath..";.\\LuaSocket\\?.dll"
     
