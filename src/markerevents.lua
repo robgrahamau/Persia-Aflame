@@ -19,7 +19,7 @@ SupportHandler = EVENTHANDLER:New()
 
 
 local function tankerCooldownHelp(tankername)
-  BCC:MessageToCoalition(string.format("Tanker routing is now available again for %s. Use the following marker commands:\n-tanker route %s \n-tanker route %s ,h <0-360>,d <5-100>,a <10-30,000>,s <250-400> \nFor more control",tankername,tankername,tankername), MESSAGE.Type.Information)
+  MESSAGE:New(string.format("Tanker routing is now available again for %s. Use the following marker commands:\n-tanker route %s \n-tanker route %s ,h <0-360>,d <5-100>,a <10-30,000>,s <250-400> \nFor more control",tankername,tankername,tankername), MESSAGE.Type.Information):ToBlue()
 end
 
 local function handleBlueTankerRequest(text,coord)
@@ -64,12 +64,12 @@ local function handleBlueTankerRequest(text,coord)
             local tankername = "ARCO"
             local cooldown = currentTime - ARC_Timer
               if cooldown < TANKER_COOLDOWN then 
-                BCC:MessageTypeToCoalition(string.format("ARCO Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60), MESSAGE.Type.Information)
+                MESSAGE:New(string.format("ARCO Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60), MESSAGE.Type.Information):ToBlue()
               return
             end
             tanker = Arco11
             if tanker:IsAlive() ~= true then
-              BCC:MessageTypeToCoalition("ARCO is currently not avalible for tasking, it's M.I.A",MESSAGE.Type.Information)
+              MESSAGE:New("ARCO is currently not avalible for tasking, it's M.I.A",MESSAGE.Type.Information):ToBlue()
               return
             end
             ARC_Timer = currentTime
@@ -78,11 +78,11 @@ local function handleBlueTankerRequest(text,coord)
             tanker = Texaco11
             local cooldown = currentTime - TEX_Timer
               if cooldown < TANKER_COOLDOWN then 
-                BCC:MessageTypeToCoalition(string.format("TEXACO11 Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60), MESSAGE.Type.Information)
+                MESSAGE:New(string.format("TEXACO11 Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60), MESSAGE.Type.Information):ToBlue()
               return
             end
             if tanker:IsAlive() ~= true then
-              BCC:MessageTypeToCoalition("TEXACO11 is currently not avalible for tasking it's M.I.A",MESSAGE.Type.Information)
+              MESSAGE:New("TEXACO11 is currently not avalible for tasking it's M.I.A",MESSAGE.Type.Information):ToBlue()
               return
             end
             TEX_Timer = currentTime
@@ -91,16 +91,16 @@ local function handleBlueTankerRequest(text,coord)
             tanker = Texaco21
             local cooldown = currentTime - TEX2_Timer
               if cooldown < TANKER_COOLDOWN then 
-                BCC:MessageTypeToCoalition(string.format("TEXACO21 Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60), MESSAGE.Type.Information)
+                MESSAGE:New(string.format("TEXACO21 Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60), MESSAGE.Type.Information):ToBlue()
               return
             end
             if tanker:IsAlive() ~= true then
-              BCC:MessageTypeToCoalition("TEXACO21 is currently not avalible for tasking it's M.I.A",MESSAGE.Type.Information)
+              MESSAGE:New("TEXACO21 is currently not avalible for tasking it's M.I.A",MESSAGE.Type.Information):ToBlue()
               return
             end
             TEX2_Timer = currentTime
           else
-          BCC:MessageTypeToCoalition("No known Tanker was included in the Tanker Route Command, please select ARCO21 or TEXACO21",MESSAGE.Type.Information)
+          MESSAGE:New("No known Tanker was included in the Tanker Route Command, please select ARCO21 or TEXACO21",MESSAGE.Type.Information):ToBlue()
           return
         end
         if altitude == nil then
@@ -155,7 +155,7 @@ local function handleBlueTankerRequest(text,coord)
         tanker:SetTask(routeTask, 2)
         local tankerTask = tanker:EnRouteTaskTanker()
         tanker:PushTask(tankerTask, 4)
-        MESSAGE:New( string.format("%s Tanker is re-routed to the player requested destination.\nIt will orbit on a heading of %d for %d nm, Alt: %d Gnd Speed %d.\n%d minutes cooldown starting now", tanker:GetName(),heading,distance,altft,spknt, TANKER_COOLDOWN / 60),20, MESSAGE.Type.Information )      
+        MESSAGE:New( string.format("%s Tanker is re-routed to the player requested destination.\nIt will orbit on a heading of %d for %d nm, Alt: %d Gnd Speed %d.\n%d minutes cooldown starting now", tanker:GetName(),heading,distance,altft,spknt, TANKER_COOLDOWN / 60),20, MESSAGE.Type.Information ):ToBlue()      
         SCHEDULER:New(nil, tankerCooldownHelp, {tankername}, TANKER_COOLDOWN)
     end
 end

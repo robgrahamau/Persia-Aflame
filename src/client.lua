@@ -1,5 +1,5 @@
-version = "0.82 Beta"
-lastupdate = "8 July 2020"
+version = "0.84 Beta"
+lastupdate = "22 July 2020"
 PlayerMap = {}
 PlayerRMap = {}
 PlayerBMap = {}
@@ -65,7 +65,7 @@ local function permanentPlayerCheck()
         if PlayerRMap[PlayerID] ~= true then
           PlayerRMap[PlayerID] = true
           MESSAGE:New("Welcome to Persia Aflame By Rob Graham Version: "..version.." \n Last updated:".. lastupdate .." \n POWERED BY MOOSE, MIST, SLMOD, Lots of Pain Killers and Hamsters! \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Please Be aware This Mission is currently in a ALPHA STATE and may break/Bug out etc. \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n You are on Iran Side, Please be aware this mission is geared towards BLUE side taking down red, Red Slots are to add some spice to that. \n Your goal is to defend Irani Airspace from Coalition Violations.\n  Please Join the DISCORD SEE ALT-B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .."",30):ToClient(PlayerClient)
-          
+          MESSAGE:New("BEAWARE 253.00 (OVERLORDBOT) ON SRS IS FOR AWACS CALLS ONLY. \n IT IS NOT TO BE USED FOR GENERAL COMMS \n IF YOU ARE FOUND USING IT FOR SUCH YOU WILL BE BANNED FROM SRS",60):ToClient(PlayerClient)
         end
       else
         if PlayerRMap[PlayerID] ~= false then
@@ -83,6 +83,7 @@ local function permanentPlayerCheck()
            if PlayerBMap[PlayerID] ~= true then
             PlayerBMap[PlayerID] = true
              MESSAGE:New("Welcome to Persia Aflame by Rob Graham Version: "..version.." \n Last updated:".. lastupdate .." \n POWERED BY MOOSE, MUST, SLMOD, Lots of Pain Killers, Player Donations \n Kosh and Lets not forget.. Server Space Hamsters \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n You are on the Coalition Side, Please read the BRIEFING LALT+B for full Communications and other information. \n your primary goal is the destruction of Iran's IADS, Airfields and it's ability to wage war.\n Current Prediction of Invasion Succeeding: "..  mainmission.invasionchance .. "% \n Blue Airbases offer full resupply, civilian airports only offer fuel/limited resupply. \n Check the F10 Map for Intel Reports \n Please Join the DISCORD SEE ALT-B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is:" .. currenttime .. " Server Mission Cycle:" .. restarttime .."",30):ToClient(PlayerClient)                             
+			 MESSAGE:New("BEAWARE 253.00 (OVERLORDBOT) ON SRS IS FOR AWACS CALLS ONLY. \n IT IS NOT TO BE USED FOR GENERAL COMMS \n IF YOU ARE FOUND USING IT FOR SUCH YOU WILL BE BANNED FROM SRS",60):ToClient(PlayerClient)
            end    
          else
           if PlayerBMap[PlayerID] ~= false then
@@ -243,28 +244,26 @@ function resettime()
 	end,{},60*60)
 end
 SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS",30):ToAll()
-hourstoreset = hourstoreset - 1
-nextreset()	
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS",30):ToAll()
+  hourstoreset = hourstoreset - 1
+  nextreset()	
 end,{},1)
 
 SCHEDULER:New(nil,function() 
-MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 HOUR",11):ToAll()
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 HOUR",11):ToAll()
+end,{},((60*60) * (resethours - 1)))
 SCHEDULER:New(nil,function() 
   MESSAGE:New("MISSION CYLE WILL HAPPEN IN 30 Minutes",10):ToAll()
-    SCHEDULER:New(nil,function() 
+end,{},(((60*60) *(resethours)) - (60*30)))
+SCHEDULER:New(nil,function() 
       MESSAGE:New("MISSION CYLE WILL HAPPEN IN 15 Minutes",10):ToAll()
-      SCHEDULER:New(nil,function() 
-        MESSAGE:New("MISSION CYLE WILL HAPPEN IN 5 Minutes",10):ToAll()
-          SCHEDULER:New(nil,function() 
-            MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 Minute",10):ToAll()
-            end,{},((1*60)))
-        end,{},((5*60)))      
-      end,{},((15*60)))
-  end,{},((30*60)))
-
-end,{},((60*60) * (resethours - 1)))
-
+end,{},(((60*60) *(resethours)) - (60*15)))
+SCHEDULER:New(nil,function() 
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN 5 Minutes",10):ToAll()
+end,{},(((60*60) *(resethours)) - (60*5)))
+SCHEDULER:New(nil,function() 
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 Minute",10):ToAll()
+end,{},(((60*60) *(resethours)) - (60*1)))
 
 SCHEDULER:New(nil,function() 
 MESSAGE:New("MISSION CYCLE HAPPENING",30):ToAll()
