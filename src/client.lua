@@ -1,5 +1,5 @@
-version = "0.84 Beta"
-lastupdate = "22 July 2020"
+version = "0.85 Beta"
+lastupdate = "29 July 2020"
 PlayerMap = {}
 PlayerRMap = {}
 PlayerBMap = {}
