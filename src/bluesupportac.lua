@@ -3,7 +3,11 @@ TEX_Timer = 0
 TEX2_Timer = 0
 ARC_Timer = 0
 ARC2_Timer = 0
-
+ function AI_A2A_DISPATCHER:GetSquadronAmount(SquadronName)
+    DefenderSquadron = self:GetSquadron( SquadronName )
+        self:E( { Squadron = SquadronName, SquadronResourceCount = DefenderSquadron.ResourceCount, SquadronDetails = DefenderSquadron } )
+    return DefenderSquadron.ResourceCount 
+  end
 do
 Texaco11 = GROUP:FindByName("Texaco 11")
 Texaco11Spawn = SPAWN:New("Texaco 11"):InitLimit(1,18):OnSpawnGroup(function(spawngroup) 

@@ -1,9 +1,9 @@
 reinforhrs = 6
 reinformins = 0
 reinforcements = ((60 * 60) * reinforhrs) + (60 * reinformins) 
-dsqnsize = 16
-dsqnlsize = 24
-dsqnssize = 12
+dsqnsize = 24
+dsqnlsize = 32
+dsqnssize = 18
 dsqnvssize = 8
 
 local SaveSchedulePersistence=600 
@@ -127,6 +127,7 @@ end
 
 
 function loadvalues()
+  --[[
   ra2disp:SetSquadron("Shiraz",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},mainmission.Shiraz)
   ra2disp:SetSquadron("Shiraz1",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},mainmission.Shiraz1)
   ra2disp:SetSquadron("Shiraz2",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F5_1","MIG29_1","F5_2","MIG29_2"},mainmission.Shiraz2)
@@ -142,6 +143,7 @@ function loadvalues()
   ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},mainmission.Kish)
   ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},mainmission.Kish_INT)
   ra2disp:SetSquadron("Kuznetsov INT","Kuznetsov",{"SU33_1","SU33_2"},mainmission.Kuznetsov_INT)
+  ]]
   ba2disp:SetSquadron("Stennis","Stennis",BCarrierTEMP,mainmission.Stennis)
   ba2disp:SetSquadron("TeddyR","TeddyR",BCarrierTEMP,mainmission.TeddyR)
   ba2disp:SetSquadron("Al Draf",AIRBASE.PersianGulf.Al_Dhafra_AB,BLandTemp,mainmission.Al_Dhafra)
@@ -152,7 +154,7 @@ function loadvalues()
     mainmission.ships = true
   end
   if mainmission.shipgroup1 == true then
-    local temp = GROUP:FindByName("Type 054A Frigate"):Activate()
+    -- local temp = GROUP:FindByName("Type 054A Frigate"):Activate()
   end
   if mainmission.shipgroup2 == true then
     local temp = GROUP:FindByName("Cuban Tanker 1"):Activate()
@@ -203,8 +205,7 @@ else
     mainmission.nextupdatehour = mnowTable.hour + reinforhrs
     mainmission.nextupdatemin = mnowTable.min + reinformins
     BASE:E({mainmission.nextupdate})
-    local temp = GROUP:FindByName("Type 054A Frigate"):Activate()
-    temp = GROUP:FindByName("Cuban Tanker 1"):Activate()
+    local temp = GROUP:FindByName("Cuban Tanker 1"):Activate()
     temp = GROUP:FindByName("Kuznetsov Group"):Activate()
     init = true
 end
@@ -240,7 +241,7 @@ function reinforce()
         if newval > dsqnsize then
           newval = dsqnsize
         end
-        ra2disp:SetSquadron("Shiraz",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},newval)
+        -- ra2disp:SetSquadron("Shiraz",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},newval)
       end
       if mainmission.Shiraz1 < dsqnsize then
         if mainmission.Shiraz1 < 0 then
@@ -251,7 +252,7 @@ function reinforce()
         if newval > dsqnsize then
           newval = dsqnsize
         end
-        ra2disp:SetSquadron("Shiraz1",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},newval)
+--        ra2disp:SetSquadron("Shiraz1",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},newval)
       end
       if mainmission.Shiraz2 < dsqnsize then 
         if mainmission.Shiraz2 < 0 then
@@ -262,7 +263,7 @@ function reinforce()
         if newval > dsqnsize then
           newval = dsqnsize
         end
-        ra2disp:SetSquadron("Shiraz2",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F5_1","MIG29_1","F5_2","MIG29_2"},newval)
+        -- ra2disp:SetSquadron("Shiraz2",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F5_1","MIG29_1","F5_2","MIG29_2"},newval)
       end
       if mainmission.Shiraz_Int < dsqnssize then
         if mainmission.Shiraz_Int < 0 then
@@ -272,7 +273,7 @@ function reinforce()
         if newval > dsqnssize then
           newval = dsqnssize
         end
-        ra2disp:SetSquadron("Shiraz INT",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F5_1","MIG29_1","F4_2"},newval)
+        -- ra2disp:SetSquadron("Shiraz INT",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F5_1","MIG29_1","F4_2"},newval)
       end
       if mainmission.Kerman < dsqnsize then
         if mainmission.Kerman < 0 then
@@ -282,7 +283,7 @@ function reinforce()
         if newval > dsqnsize then
           newval = dsqnsize
         end
-        ra2disp:SetSquadron("Kerman",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","JF17_1","JF17_2","M2000_1"},newval)
+        -- ra2disp:SetSquadron("Kerman",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","JF17_1","JF17_2","M2000_1"},newval)
       end
       if mainmission.Kerman1 < dsqnsize then 
         if mainmission.Kerman1 < 0 then
@@ -292,7 +293,7 @@ function reinforce()
         if newval > dsqnsize then
           newval = dsqnsize
         end
-        ra2disp:SetSquadron("Kerman1",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","JF17_1","JF17_2","M2000_1"},newval)
+        -- ra2disp:SetSquadron("Kerman1",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","JF17_1","JF17_2","M2000_1"},newval)
       end
       if mainmission.Kerman2 < dsqnsize then
         if mainmission.Kerman2 < 0 then
@@ -302,7 +303,7 @@ function reinforce()
         if newval > dsqnsize then
           newval = dsqnsize
         end
-        ra2disp:SetSquadron("Kerman2",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","M2000_1"},newval)
+        -- ra2disp:SetSquadron("Kerman2",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","M2000_1"},newval)
       end
       if mainmission.Kerman_INT < dsqnssize then
         if mainmission.Kerman_INT < 0 then
@@ -312,7 +313,7 @@ function reinforce()
         if newval > dsqnssize then
           newval = dsqnssize
         end
-        ra2disp:SetSquadron("Kerman INT",AIRBASE.PersianGulf.Kerman_Airport,{"MIG21_1","MIG21_2"},newval)
+        -- ra2disp:SetSquadron("Kerman INT",AIRBASE.PersianGulf.Kerman_Airport,{"MIG21_1","MIG21_2"},newval)
       end
       if mainmission.Bandar_Abbas < dsqnsize then
         if mainmission.Bandar_Abbas < 0 then
@@ -322,7 +323,7 @@ function reinforce()
         if newval > dsqnsize then
           newval = dsqnsize
         end
-        ra2disp:SetSquadron("Bandar Abbas",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG21_1","MIG29_2"},newval)
+        -- ra2disp:SetSquadron("Bandar Abbas",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG21_1","MIG29_2"},newval)
       end
       if mainmission.Bandar_Abbas2 < dsqnsize then
         if mainmission.Bandar_Abbas2 < 0 then
@@ -332,7 +333,7 @@ function reinforce()
         if newval > dsqnsize then
           newval = dsqnsize
         end
-        ra2disp:SetSquadron("Bandar Abbas 2",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG29_1","MIG29_2","JF17_1","JF17_2","F4_1","F4_2"},newval)
+        -- ra2disp:SetSquadron("Bandar Abbas 2",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG29_1","MIG29_2","JF17_1","JF17_2","F4_1","F4_2"},newval)
       end
       if mainmission.Bandar_Abbas_INT < dsqnssize then
         if mainmission.Bandar_Abbas_INT < 0 then
@@ -342,7 +343,7 @@ function reinforce()
         if newval > dsqnssize then
           newval = dsqnssize 
         end
-        ra2disp:SetSquadron("Bandar Abbas INT",AIRBASE.PersianGulf.Havadarya,{"MIG21_1","MIG21_2"},newval)
+        -- ra2disp:SetSquadron("Bandar Abbas INT",AIRBASE.PersianGulf.Havadarya,{"MIG21_1","MIG21_2"},newval)
       end
       if mainmission.Lar < dsqnvssize then
       if mainmission.Lar < 0 then
@@ -352,7 +353,7 @@ function reinforce()
         if newval > dsqnvssize then
           newval = dsqnvssize
         end
-        ra2disp:SetSquadron("Lar",AIRBASE.PersianGulf.Lar_Airbase,{"F4_2"},newval)
+        -- ra2disp:SetSquadron("Lar",AIRBASE.PersianGulf.Lar_Airbase,{"F4_2"},newval)
      end
      if mainmission.Kish < dsqnssize then
       if mainmission.Kish < 0 then
@@ -362,7 +363,7 @@ function reinforce()
       if newval > dsqnssize then
         newval = dsqnssize 
       end
-      ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},mainmission.Kish)
+      -- ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},mainmission.Kish)
     end
     if mainmission.Kish_INT < dsqnvssize then
       if mainmission.Kish_INT < 0 then
@@ -372,7 +373,7 @@ function reinforce()
       if newval > dsqnvssize then
         newval = dsqnvssize
       end
-      ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},newval)
+      -- ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},newval)
     end
     if mainmission.Kuznetsov_INT < dsqnlsize then
       if mainmission.Kuznetsov_INT < 0 then
@@ -383,7 +384,7 @@ function reinforce()
       if newval > dsqnlsize then 
         newval = dsqnlsize 
       end
-      ra2disp:SetSquadron("Kuznetsov INT","Kuznetsov",{"SU33_1","SU33_2"},newval)
+      -- ra2disp:SetSquadron("Kuznetsov INT","Kuznetsov",{"SU33_1","SU33_2"},newval)
     end
    if mainmission.Stennis < 12 then
    if mainmission.Stennis < 0 then
@@ -426,7 +427,7 @@ function reinforce()
 end
 
 function updatevalues()
-  mainmission.Shiraz = ra2disp:GetSquadronAmount("Shiraz")
+  --[[ mainmission.Shiraz = ra2disp:GetSquadronAmount("Shiraz")
   mainmission.Shiraz1 = ra2disp:GetSquadronAmount("Shiraz1")
   mainmission.Shiraz2 = ra2disp:GetSquadronAmount("Shiraz2")
   mainmission.Shiraz_Int = ra2disp:GetSquadronAmount("Shiraz INT")
@@ -440,10 +441,11 @@ function updatevalues()
   mainmission.Lar = ra2disp:GetSquadronAmount("Lar")
   mainmission.Kish = ra2disp:GetSquadronAmount("Kish")
   mainmission.Kish_INT = ra2disp:GetSquadronAmount("Kish INT")
+  ]]
   mainmission.Stennis = ba2disp:GetSquadronAmount("Stennis")
   mainmission.TeddyR = ba2disp:GetSquadronAmount("TeddyR")
   mainmission.Al_Dhafra = ba2disp:GetSquadronAmount("Al Draf")
-  mainmission.shipgroup1 = GROUP:FindByName("Type 054A Frigate"):IsAlive()
+  mainmission.shipgroup1 = false
   mainmission.shipgroup2 = GROUP:FindByName("Cuban Tanker 1"):IsAlive()
   mainmission.shipgroup3 = GROUP:FindByName("Kuznetsov Group"):IsAlive()
   

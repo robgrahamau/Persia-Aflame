@@ -250,27 +250,51 @@ else
   env.info("Empty target list, writing new file")
   table.save(scenery, scenerysavefile)
 end
-
-
-
+zp1 = ZONE_POLYGON:New("ap1",GROUP:FindByName("ap1"))
+zp2 = ZONE_POLYGON:New("ap2",GROUP:FindByName("ap2"))
+zp3 = ZONE_POLYGON:New("ap3",GROUP:FindByName("ap3"))
+zp4 = ZONE_POLYGON:New("ap4",GROUP:FindByName("ap4"))
+zp5 = ZONE_POLYGON:New("ap5",GROUP:FindByName("ap5"))
+zp6 = ZONE_POLYGON:New("ap6",GROUP:FindByName("ap6"))
+zp7 = ZONE_POLYGON:New("ap7",GROUP:FindByName("ap7"))
+zp8 = ZONE_POLYGON:New("ap8",GROUP:FindByName("ap8"))
+zp9 = ZONE_POLYGON:New("ap9",GROUP:FindByName("ap9"))
+zp10 = ZONE_POLYGON:New("ap10",GROUP:FindByName("ap10"))
+zp11 = ZONE_POLYGON:New("ap11",GROUP:FindByName("ap11"))
+exclusionzones = {zp1,zp2,zp3,zp4,zp5,zp6,zp7,zp8,zp9,zp10,zp11} 
+useexclusions = true
+uselandtype = false
 
 EH = EVENTHANDLER:New()
 EH:HandleEvent( EVENTS.Dead ) --this is a popular handler. Ensure you do not duplicate.
 
 function EH:OnEventDead( EventData )
          if EventData.IniUnit and EventData.IniObjectCategory==Object.Category.SCENERY then
-          local coord=EventData.IniUnit:GetVec3()  
-          table.insert(scenery,coord)
-          --we check the event scenery that died against the file of items we built
-            if table_has_key(savedSceneryTbl, EventData.IniUnitName) == true then --items below this line will execute when finding the item on the list
-              savedSceneryTbl[EventData.IniUnitName]=nil --add date?
-             --MESSAGE:New("You destroyed the target!", 20):ToAll()
-             --uncomment above if you want a custom message
+          BASE:E({"We are inside InitUnit and IniObject Scenery",EventData.IniUnit})
+          local coord=EventData.IniUnit:GetVec3()
+          local mccord = EventData.IniUnit:GetCoordinate()
+          local mctype = mccord:GetSurfaceType()
+          if useexclusions == true then
+          for i, v in pairs(exclusionzones) do
+            if v:IsCoordinateInZone(mccord) == true then
+              return
+            end
+          end
+          elseif uselandtype == true then
+            if mctype == 5 then
+              return
+            end
+          else
+            table.insert(scenery,coord)
+            --we check the event scenery that died against the file of items we built
+              if table_has_key(savedSceneryTbl, EventData.IniUnitName) == true then --items below this line will execute when finding the item on the list
+                savedSceneryTbl[EventData.IniUnitName]=nil --add date?
+               --MESSAGE:New("You destroyed the target!", 20):ToAll()
+               --uncomment above if you want a custom message
+              end
             end
           end
 end
-
-
 
 SCHEDULER:New( nil, function()
 table.save(scenery, scenerysavefile)--this is scenery persistence, nothing to do with targets
@@ -336,6 +360,8 @@ function EH1:OnEventMarkRemoved(EventData)
 
          if EventData.text == "" then
             explode(EventData.MarkCoordinate, EventData.MarkID)
+         elseif EventData.text:lower():find("type") then
+            landtype(EventData.MarkCoordinate, EventData.MarkID)
          elseif EventData.text:lower():find("coord") then
             coords(EventData.MarkCoordinate, EventData.MarkID) 
          elseif EventData.text:lower():find("tgt") then
@@ -345,7 +371,11 @@ function EH1:OnEventMarkRemoved(EventData)
          end
          
          end
-
+function landtype(coord, markID)
+  local v2 = coord:GetVec2()
+  local coord = COORDINATE:NewFromVec2(v2)
+  BASE:E({"Surface Type Request:",coord:GetSurfaceType()})
+end
 
 function explode(coord, markID)
 
@@ -359,9 +389,9 @@ function coords(coord, markID)
 
          local _MarkID = coord:MarkToAll("changeMe = COORDINATE:New("..coord.x..", "..coord.y..", "..coord.z..")")
 end
-]]
+
 SCHEDULER:New( nil, function()
 table.save(savedSceneryTbl, tgtsave)
 end, {},1, 10)
-
+]]
 env.info("Scenery Persistence Loaded")

@@ -1,5 +1,5 @@
-version = "0.85 Beta"
-lastupdate = "29 July 2020"
+version = "0.87 Beta"
+lastupdate = "10 August 2020"
 PlayerMap = {}
 PlayerRMap = {}
 PlayerBMap = {}
@@ -236,7 +236,7 @@ end
 
 function resettime()
 	SCHEDULER:New(nil,function() 
-	MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS",30):ToAll()
+	MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Prediction of Invasion Succeeding: "..  mainmission.invasionchance .. "% \n",60):ToAll()
 	hourstoreset = hourstoreset - 1
 	if hourstoreset < resethours then
 		nextreset()
@@ -244,13 +244,13 @@ function resettime()
 	end,{},60*60)
 end
 SCHEDULER:New(nil,function() 
-  MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS",30):ToAll()
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Prediction of Invasion Succeeding: "..  mainmission.invasionchance .. "% \n",60):ToAll()
   hourstoreset = hourstoreset - 1
   nextreset()	
 end,{},1)
 
 SCHEDULER:New(nil,function() 
-  MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 HOUR",11):ToAll()
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 HOUR \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Prediction of Invasion Succeeding: "..  mainmission.invasionchance .. "% \n",60):ToAll()
 end,{},((60*60) * (resethours - 1)))
 SCHEDULER:New(nil,function() 
   MESSAGE:New("MISSION CYLE WILL HAPPEN IN 30 Minutes",10):ToAll()

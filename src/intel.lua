@@ -33,7 +33,7 @@ RED_EW_SET:ForEachGroupAlive(function(g)
   local text = "CIA Report: Early Warning Radar Detected \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
   EW_INTEL[gid].text = text
   intel_reports[gid] = text
-  MESSAGE:New(text,30,"CIA Intel Update"):ToAll()  
+  MESSAGE:New(text,15,"CIA Intel Update"):ToAll()  
   local m = co:MarkToAll(EW_INTEL[gid].text,true)
   EW_INTEL[gid].markerid = m
 end)
@@ -125,7 +125,7 @@ if inteltype == 1 or inteltype == 4 or inteltype == 5 then
           local text = "CIA Report: Detected Surface to Air Installation \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.group:GetName()] = text
-          MESSAGE:New(text,20,"CIA Intel Update"):ToBlue()
+          MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
           updated = true
@@ -150,7 +150,7 @@ if inteltype == 2 or inteltype == 4 or inteltype == 6 then
           local text = "CIA Report: Detected Possible SCUD, ARTY or ARMY Staging Site. \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.group:GetName()] = text
-          MESSAGE:New(text,20,"CIA Intel Update"):ToBlue()
+          MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
           updated = true
@@ -176,7 +176,7 @@ if inteltype == 3 or inteltype == 5 or inteltype == 6 then
           local text = "CIA Report: Detected IADS Critical System. \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.static:GetName()] = text
-          MESSAGE:New(text,20,"CIA Intel Update"):ToBlue()
+          MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
           updated = true

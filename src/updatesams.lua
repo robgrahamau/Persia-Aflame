@@ -11,31 +11,45 @@ if GROUP:FindByName("RSAM South Bandar SA-10"):IsAlive() then
     if grp:GetUnit(i):IsAlive() == true then
       local type = grp:GetUnit(i):GetTypeName()
       BASE:E({"Type:",type})
-      if type == "SAM SA-10 S-300PS TR 30N6" then
+      if type == "S-300PS 40B6M tr" then
         hastr = true
-      elseif type == "SAM SA-10 S-300PS SR 64H6E" then
+      elseif type == "S-300PS 64H6E sr" then
         hassr = true
       end
     end
-    if hastr == true and hassr == true then
-      BASE:E({"Track & Search Radar exists we all good"})
-    else
-      BASE:E({"RSAM South Bandar SA-10 Missing a Search or Track Radar but still exists."})
-      if size > 1 then
-        BASE:E("RSAM South Bandar had more then 1 unit, it's been reinforced.")
-        grp:Destroy()
-        SPAWN:NewWithAlias(TEMP_SA10,"RSAM South Bandar SA-10"):InitRandomizeUnits(true,100,20):OnSpawnGroup(function(spawngroup) 
-          local pds = nil
-          if GROUP:FindByName("RSAM Bander Abbas SA-15-3"):IsAlive() == true then 
-            pds = IranIADS:getSAMSiteByGroupName('RSAM Bander Abbas SA-15-3')
-          end
-          if pds ~= nil then
-            IranIADS:addSAMSite('RSAM South Bandar SA-10'):setEngagementZone(SkynetIADSAbstractRadarElement.GO_LIVE_WHEN_IN_KILL_ZONE):addConnectionNode(IsouthNode):addConnectionNode(IsouthGroundNode):addPointDefence(pds):setIgnoreHARMSWhilePointDefencesHaveAmmo(true)
-          else
-            IranIADS:addSAMSite('RSAM South Bandar SA-10'):setEngagementZone(SkynetIADSAbstractRadarElement.GO_LIVE_WHEN_IN_KILL_ZONE):addConnectionNode(IsouthNode):addConnectionNode(IsouthGroundNode)
-          end
-        end):Spawn()
-      end
+  end
+  if hastr == true and hassr == true then
+    BASE:E({"Track & Search Radar exists we all good"})
+  else
+  _unittable={}
+    local sr = 
+    {
+        ["type"] = "S-300PS 64H6E sr",
+        ["transportable"] = true,
+        ["unitID"] = "150",
+        ["skill"] = "Average",
+        ["y"] = 19571.652343795,
+        ["x"] = 121668.07031262,
+        ["name"] = "RSAM South Bandar SA-10",
+        ["playerCanDrive"] = true,
+        ["heading"] = 200.00000008127,
+    }
+    for i = 1, size do
+      if grp:GetUnit(i):IsAlive() == true then
+        local tmpTable =
+        {   
+          ["type"]=grp:GetUnit(i):GetTypeName(),
+          ["transportable"]=true,
+          ["unitID"]=grp:GetUnit(i):GetID(),
+          ["skill"]="Average",
+          ["y"]=grp:GetUnit(i):GetVec2().y,
+          ["x"]=grp:GetUnit(i):GetVec2().x,
+          ["name"]=grp:GetUnit(i):GetName(),
+          ["playerCanDrive"]=true,
+          ["heading"]=grp:GetUnit(i):GetHeading(),
+        }
+        table.insert(_unittable,tmpTable) --add units to a temporary table
     end
   end
+  end  
 end

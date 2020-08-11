@@ -5,7 +5,7 @@
   end
 
 RAWACS = SPAWN:New("AWAC Overlord21"):InitLimit(1,8):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(300,0.5)
-RAWACS = SPAWN:New("AWAC Overlord11"):InitLimit(1,8):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(300,0.5)
+RAWACS2 = SPAWN:New("AWAC Overlord11"):InitLimit(1,8):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(300,0.5)
 
 do
 capzone1 = ZONE_POLYGON:New("CAP1",GROUP:FindByName("CAP1"))
@@ -29,10 +29,10 @@ do
   ra2disp:SetDefaultFuelThreshold(0.4)
   ra2disp:SetDefaultGrouping(2)
   ra2disp:SetDefaultOverhead(1.0)
-  ra2disp:SetSquadron("Shiraz",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},16)
-  ra2disp:SetSquadron("Shiraz1",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},16)
-  ra2disp:SetSquadron("Shiraz2",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F5_1","MIG29_1","F5_2","MIG29_2"},16)
-  ra2disp:SetSquadron("Shiraz INT",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F5_1","MIG29_1","F4_2"},12)
+  --ra2disp:SetSquadron("Shiraz",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},16)
+  --ra2disp:SetSquadron("Shiraz1",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F4_1","F4_2","SU33_1","SU33_2"},16)
+  --ra2disp:SetSquadron("Shiraz2",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F5_1","MIG29_1","F5_2","MIG29_2"},16)
+ -- ra2disp:SetSquadron("Shiraz INT",AIRBASE.PersianGulf.Shiraz_International_Airport,{"F5_1","MIG29_1","F4_2"},12)
   ra2disp:SetSquadron("Kerman",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","JF17_1","JF17_2","M2000_1"},16)
   ra2disp:SetSquadron("Kerman1",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","JF17_1","JF17_2","M2000_1"},16)
   ra2disp:SetSquadron("Kerman2",AIRBASE.PersianGulf.Kerman_Airport,{"F14_1","F14_2","M2000_1"},16)
@@ -40,13 +40,13 @@ do
   ra2disp:SetSquadron("Bandar Abbas",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG21_1","MIG29_2"},16)
   ra2disp:SetSquadron("Bandar Abbas 2",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG29_1","MIG29_2","JF17_1","JF17_2","F4_1","F4_2"},16)
   ra2disp:SetSquadron("Bandar Abbas INT",AIRBASE.PersianGulf.Havadarya,{"MIG21_2"},12)
-  ra2disp:SetSquadron("Lar",AIRBASE.PersianGulf.Lar_Airbase,{"F4_2"},8)
-  ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},12)
-  ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},12)
+ -- ra2disp:SetSquadron("Lar",AIRBASE.PersianGulf.Lar_Airbase,{"F4_2"},8)
+  --ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},12)
+  --ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},12)
   ra2disp:SetSquadron("Kuznetsov INT","Kuznetsov",{"SU33_1","SU33_2"},24)
-  ra2disp:SetSquadronOverhead("Kish",1.5)
-  ra2disp:SetSquadronOverhead("Lar",1.5)
-  ra2disp:SetSquadronOverhead("Shiraz INT",1.5)
+  --ra2disp:SetSquadronOverhead("Kish",1.5)
+  --ra2disp:SetSquadronOverhead("Lar",1.5)
+  --ra2disp:SetSquadronOverhead("Shiraz INT",1.5)
   ra2disp:SetSquadronOverhead("Bandar Abbas INT",1.5)
   ra2disp:SetDefaultTanker("Texaco11")
   ra2disp:SetEngageRadius(UTILS.NMToMeters(100))
@@ -58,13 +58,13 @@ do
   ra2disp:SetSquadronLandingAtRunway("Kuznetsov INT")
   ra2disp:SetSquadronLanguage("Kuznetsov INT","RU")
   ra2disp:SetSquadronGci("Kuznetsov INT",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
-  ra2disp:SetSquadronCap("Shiraz",capzone1,UTILS.FeetToMeters(15000),UTILS.FeetToMeters(33000),UTILS.KnotsToKmph(350),UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(500),UTILS.KnotsToKmph(750),"BARO")
-  ra2disp:SetSquadronCapInterval("Shiraz",1,(60*1),(60*15),1.0)
-  ra2disp:SetSquadronCap("Shiraz1",capzone4,UTILS.FeetToMeters(15000),UTILS.FeetToMeters(33000),UTILS.KnotsToKmph(350),UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(500),UTILS.KnotsToKmph(750),"BARO")
-  ra2disp:SetSquadronCapInterval("Shiraz",1,(60*1),(60*15),1.0)
-  ra2disp:SetSquadronCap("Shiraz2",capzone2,UTILS.FeetToMeters(15000),UTILS.FeetToMeters(33000),UTILS.KnotsToKmph(350),UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(500),UTILS.KnotsToKmph(750),"BARO")
-  ra2disp:SetSquadronCapInterval("Shiraz2",1,(60*1),(60*15),1.0)
-  ra2disp:SetSquadronGci("Shiraz INT",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
+  --ra2disp:SetSquadronCap("Shiraz",capzone1,UTILS.FeetToMeters(15000),UTILS.FeetToMeters(33000),UTILS.KnotsToKmph(350),UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(500),UTILS.KnotsToKmph(750),"BARO")
+  --ra2disp:SetSquadronCapInterval("Shiraz",1,(60*1),(60*15),1.0)
+  --ra2disp:SetSquadronCap("Shiraz1",capzone4,UTILS.FeetToMeters(15000),UTILS.FeetToMeters(33000),UTILS.KnotsToKmph(350),UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(500),UTILS.KnotsToKmph(750),"BARO")
+  --ra2disp:SetSquadronCapInterval("Shiraz",1,(60*1),(60*15),1.0)
+  --ra2disp:SetSquadronCap("Shiraz2",capzone2,UTILS.FeetToMeters(15000),UTILS.FeetToMeters(33000),UTILS.KnotsToKmph(350),UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(500),UTILS.KnotsToKmph(750),"BARO")
+ -- ra2disp:SetSquadronCapInterval("Shiraz2",1,(60*1),(60*15),1.0)
+ -- ra2disp:SetSquadronGci("Shiraz INT",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
 
   ra2disp:SetSquadronCap("Kerman",capzone2,UTILS.FeetToMeters(15000),UTILS.FeetToMeters(33000),UTILS.KnotsToKmph(350),UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(500),UTILS.KnotsToKmph(750),"BARO")
   ra2disp:SetSquadronCapInterval("Kerman",1,(60*1),(60*15),1.0)
@@ -77,9 +77,9 @@ do
   ra2disp:SetSquadronLandingAtRunway("Kerman2")
   ra2disp:SetSquadronGci("Kerman INT",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
   
-  ra2disp:SetSquadronCap("Kish",capzone5,UTILS.FeetToMeters(15000),UTILS.FeetToMeters(32000),UTILS.KnotsToKmph(350),UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(450),UTILS.KnotsToKmph(750),"BARO")
-  ra2disp:SetSquadronGci("Kish INT",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
-  ra2disp:SetSquadronCapInterval("Kish",1,(60*1),(60*15),1.0)
+  --ra2disp:SetSquadronCap("Kish",capzone5,UTILS.FeetToMeters(15000),UTILS.FeetToMeters(32000),UTILS.KnotsToKmph(350),UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(450),UTILS.KnotsToKmph(750),"BARO")
+  --ra2disp:SetSquadronGci("Kish INT",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
+  --ra2disp:SetSquadronCapInterval("Kish",1,(60*1),(60*15),1.0)
   
   ra2disp:SetSquadronCap("Bandar Abbas",capzone7,UTILS.FeetToMeters(15000),UTILS.FeetToMeters(32000),UTILS.KnotsToKmph(350),UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(450),UTILS.KnotsToKmph(750),"BARO")
   ra2disp:SetSquadronCapInterval("Bandar Abbas",1,(60*1),(60*15),1.0)
@@ -87,16 +87,10 @@ do
   ra2disp:SetSquadronCapInterval("Bandar Abbas 2",1,(60*1),(60*15),1.0)
   
   ra2disp:SetSquadronGci("Bandar Abbas INT",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
-  ra2disp:SetSquadronGci("Lar",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
+  --ra2disp:SetSquadronGci("Lar",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
   
 
   
   ra2disp:__Start(30)
   
-  RTANKER = SPAWN:NewWithAlias("Texaco11","Texaco11"):OnSpawnGroup(function(spawngroup)
-    local mtanker = spawngroup:GetUnit(1)
-    BASE:E({mtanker:GetName()})
-    ra2disp:SetDefaultTanker(mtanker:GetName())
-  end,{}):InitCleanUp(600):InitRepeatOnLanding():InitLimit(1,4):SpawnScheduled(300,0.5)
-    
  end

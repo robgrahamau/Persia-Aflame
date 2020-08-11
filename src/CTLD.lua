@@ -111,8 +111,8 @@ ctld.AASystemLimitBLUE = 10 -- Blue side limit
 
 -- ***************** JTAC CONFIGURATION *****************
 
-ctld.JTAC_LIMIT_RED = 5 -- max number of JTAC Crates for the RED Side
-ctld.JTAC_LIMIT_BLUE = 5 -- max number of JTAC Crates for the BLUE Side
+ctld.JTAC_LIMIT_RED = 3 -- max number of JTAC Crates for the RED Side
+ctld.JTAC_LIMIT_BLUE = 3 -- max number of JTAC Crates for the BLUE Side
 
 ctld.JTAC_dropEnabled = true -- allow JTAC Crate spawn from F10 menu
 
@@ -122,7 +122,7 @@ ctld.JTAC_smokeOn_RED = true -- enables marking of target with smoke for RED for
 ctld.JTAC_smokeOn_BLUE = true -- enables marking of target with smoke for BLUE forces
 
 ctld.JTAC_smokeColour_RED = 4 -- RED side smoke colour -- Green = 0 , Red = 1, White = 2, Orange = 3, Blue = 4
-ctld.JTAC_smokeColour_BLUE = 1 -- BLUE side smoke colour -- Green = 0 , Red = 1, White = 2, Orange = 3, Blue = 4
+ctld.JTAC_smokeColour_BLUE = 3 -- BLUE side smoke colour -- Green = 0 , Red = 1, White = 2, Orange = 3, Blue = 4
 
 ctld.JTAC_jtacStatusF10 = true -- enables F10 JTAC Status menu
 
@@ -151,11 +151,18 @@ ctld.JTAC_lock = "all" -- "vehicle" OR "troop" OR "all" forces JTAC to only lock
 
 --pickupZones = { "Zone name or Ship Unit Name", "smoke color", "limit (-1 unlimited)", "ACTIVE (yes/no)", "side (0 = Both sides / 1 = Red / 2 = Blue )", flag number (optional) }
 ctld.pickupZones = {
-    { "Tarawa", "none", 24, "yes", 2 },
-    { "LHA-2", "none", 24, "yes", 2 },
-    { "AbuPickup", "none", 24, "yes", 2},
-    { "MinPickup", "none", 24, "yes", 2},
-    
+    { "Tarawa", "none", 10, "yes", 2 },
+    { "LHA-2", "none", 10, "yes", 2 },
+    { "AbuPickup", "none", 10, "yes", 2},
+    { "MinPickup", "none", 10, "yes", 2},
+    { "Tunb-I", "none", 10, "yes", 1},
+    { "I-FARP", "none", 10, "yes", 1},
+    { "ZONE5", "none", 10, "yes", 1},
+    { "IFARP-2", "none", 10, "yes", 1},
+    { "IFARP-3", "none", 10,"yes", 1},
+    { "IFARP-4", "none", 10,"yes", 1},
+    { "IFARP-5", "none", 10,"yes", 1},
+    { "IFARP-6", "none", 10,"yes", 1},
 }
 
 
@@ -165,12 +172,30 @@ ctld.dropOffZones = {
     { "LHA-2", "none", 2 },
     { "AbuPickup", "none", 2},
     { "MinPickup", "none", 2},
+    { "Tunb-I", "none", 0},
+    { "I-FARP", "none", 0},
+    { "ZONE5", "none", 0},
+    { "IFARP-2", "none", "yes", 0},
+    { "IFARP-3", "none", "yes", 0},
+    { "IFARP-4", "none", "yes", 0},
+    { "IFARP-5", "none", "yes", 0},
+    { "IFARP-6", "none", "yes", 0},
 }
 
 
 --wpZones = { "Zone name", "smoke color",  "ACTIVE (yes/no)", "side (0 = Both sides / 1 = Red / 2 = Blue )", }
 ctld.wpZones = {
-
+  {"Sirri","none","yes", 0},
+  {"Abbu-M","none","yes", 0},
+  {"Tunb-K","none","yes", 0},
+  {"Tunb-I","none","yes", 0},
+  { "I-FARP", "none","yes", 0},
+  { "ZONE5", "none", "yes", 0},
+  { "IFARP-2", "none", "yes", 0},
+  { "IFARP-3", "none", "yes", 0},
+  { "IFARP-4", "none", "yes", 0},
+  { "IFARP-5", "none", "yes", 0},
+  { "IFARP-6", "none", "yes", 0},
 }
 
 
@@ -194,6 +219,46 @@ ctld.transportPilotNames = {
     "STN-LHA2-Huey334",
     "STN-LHA2-Huey335",
     "STN-LHA2-Huey336",
+    "MI8-2",
+    "MI8-1",
+    "SA342M",
+    "SA342M #001",
+    "SA342Mini #001",
+    "SA342Mini",
+    "UH1-Khasab2",
+    "UH1-Khasab",
+    "UH1-Khasab 3",
+    "UH1-Khasab 4",
+    "SA342Mist",
+    "SA342Mist #001",
+    "KA50 #001",
+    "KA50",
+    "Tunb KA50 #001",
+    "Tunb KA50",
+    "Tunb MI8 #001",
+    "Tunb MI8",
+    "Tunb UH1",
+    "Tunb UH1 #001",
+    "Bandar MI8 #001",
+    "Bandar MI8",
+    "Bandar UH1",
+    "Bandar UH1 #001",
+    "Bandar KA50",
+    "Bandar KA50 #001",
+    "BFARP KA50",
+    "BFARP KA50 #001",
+    "BFARP UH1",
+    "BFARP MI8",
+    "BFARP2 KA50",
+    "BFARP2 KA50 #001",
+    "BFARP2 UH1",
+    "BFARP2 MI8",
+    "Shiraz KA50",
+    "Shiraz KA50 #001",
+    "Shiraz UH1",
+    "Shiraz UH1 #001",
+    
+    
     -- *** AI transports names (different names only to ease identification in mission) ***
 
     -- Use any of the predefined names or set your own ones
@@ -221,6 +286,15 @@ ctld.logisticUnits = {
     "TARFARP2",
     "MINFARP",
     "AbuFarp",
+    "IRAN_FARP1",
+    "farp_resup",
+    "BandarFarp",
+    "IFRAP",
+    "IFRAP2",
+    "IFRAP3",
+    "IFRAP4",
+    "IFRAP5",
+    "IFRAP6", 
 }
 
 -- ************** UNITS ABLE TO TRANSPORT VEHICLES ******************
@@ -310,8 +384,8 @@ ctld.spawnableCrates = {
         { weight = 500, desc = "HMMWV - TOW", unit = "M1045 HMMWV TOW", side = 2 },
         { weight = 505, desc = "HMMWV - MG", unit = "M1043 HMMWV Armament", side = 2 },
         --{ weight = 800, desc = "M-2 Bradley", unit = "M-2 Bradley", side = 2, cratesRequired = 2 },
-        --{ weight = 510, desc = "BTR-D", unit = "BTR_D", side = 1 },
-        --{ weight = 515, desc = "BRDM-2", unit = "BRDM-2", side = 1 },
+        { weight = 510, desc = "BTR-D", unit = "BTR_D", side = 1 },
+        { weight = 515, desc = "BRDM-2", unit = "BRDM-2", side = 1 },
         --{ weight = 520, desc = "HMMWV - JTAC", unit = "Hummer", side = 2, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
         --{ weight = 525, desc = "SKP-11 - JTAC", unit = "SKP-11", side = 1, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
         --{ weight = 100, desc = "2B11 Mortar", unit = "2B11 mortar" },
@@ -320,20 +394,24 @@ ctld.spawnableCrates = {
         
     },
     ["SHRT AA Crates"] = {
-        --{ weight = 405, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 2 },
-        --{ weight = 405, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 2 },
-        { weight = 400, desc = "M1097 Avenger", unit = "M1097 Avenger", side = 2, cratesRequired = 3 },
+        { weight = 405, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 2 },
+        { weight = 405, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 2 },
+        { weight = 400, desc = "M1097 Avenger", unit = "M1097 Avenger", side = 2, cratesRequired = 2 },
         { weight = 402, desc = "M6 Linebacker", unit = "M6 Linebacker", side = 2, cratesRequired = 3 },
         { weight = 410, desc = "SA-15 Tor", unit = "Tor 9A331", cratesRequired = 3 },
-        { weight = 50, desc = "Stinger", unit = "Stinger manpad", side = 2 },
+        { weight = 50, desc = "Stinger", unit = "Soldier stinger", side = 2 },
+        { weight = 50, desc = "Stinger", unit = "Soldier stinger", side = 1 },
         --{ weight = 55, desc = "Igla", unit = "SA-18 Igla manpad", side = 1 },
      },
     ["MRNG AA Crates"] = {
         -- HAWK System
-        { weight = 540, desc = "HAWK Launcher", unit = "Hawk ln", side = 2},
-        { weight = 545, desc = "HAWK Search Radar", unit = "Hawk sr", side = 2 },
-        { weight = 550, desc = "HAWK Track Radar", unit = "Hawk tr", side = 2 },
-        { weight = 551, desc = "HAWK PCP", unit = "Hawk pcp" , side = 2 }, -- Remove this if on 1.2
+        { weight = 540, desc = "HAWK Launcher", unit = "Hawk ln"},
+        { weight = 545, desc = "HAWK Search Radar", unit = "Hawk sr"},
+        { weight = 550, desc = "HAWK Track Radar", unit = "Hawk tr"},
+        { weight = 551, desc = "HAWK PCP", unit = "Hawk pcp"}, -- Remove this if on 1.2
+        { weight = 500, desc = "Rapier Radar", unit = "rapier_fsa_blindfire_radar"},
+        { weight = 500, desc = "Rapier Optical Tracker", unit = "rapier_fsa_optical_tracker_unit"},
+        { weight = 500, desc = "Rapier Launcher", unit = "rapier_fsa_launcher"},
         -- End of HAWK
         -- KUB SYSTEM
         --{ weight = 560, desc = "KUB Launcher", unit = "Kub 2P25 ln", side = 1},
@@ -358,9 +436,10 @@ ctld.spawnableCrates = {
         { weight = 800, desc = "FOB Crate - Small", unit = "FOB-SMALL" }, -- Builds a FOB! - requires 3 * ctld.cratesRequiredForFOB
         { weight = 252, desc = "Ural-375 Ammo Truck", unit = "Ural-375", side = 1, cratesRequired = 1 },
         { weight = 253, desc = "M-818 Ammo Truck", unit = "M 818", side = 2, cratesRequired = 1 },       
-        { weight = 552, desc = "HAWK Repair", unit = "HAWK Repair" , side = 2 },
+        { weight = 552, desc = "HAWK Repair", unit = "HAWK Repair"},
+        { weight = 552, desc = "Rapier Repair", unit = "Rapier Repair"}
         --{ weight = 590, desc = "BUK Repair", unit = "BUK Repair"},
-        { weight = 570, desc = "KUB Repair", unit = "KUB Repair", side = 1},
+        --{ weight = 570, desc = "KUB Repair", unit = "KUB Repair", side = 1},
         --{ weight = 552, desc = "Roland Repair", unit = "Roland Repair", side = 2},    
      },
 }
@@ -1146,6 +1225,16 @@ ctld.AASystemTemplate = {
         repair = "HAWK Repair",
     },
     {
+      name = "Rapier AA System",
+      count = 3,
+      parts = {
+        {name = "rapier_fsa_blindfire_radar", desc = "Rapier Blindfire Radar" },
+        {name = "rapier_fsa_launcher", desc = "Rapier Launcher", launcher = true},
+        {name = "rapier_fsa_optical_tracker_unit", desc = "Rapier Optical Track System" },
+      },
+        repair = "Rapier Repair",
+    },
+    {
       name = "Roland AA System",
       count = 2,
       parts = {
@@ -1672,7 +1761,7 @@ function ctld.generateTroopTypes(_side, _countOrTemplate, _country)
 
         if _countOrTemplate.aa then
             if _side == 2 then
-                _troops = ctld.insertIntoTroopsArray("Stinger manpad",_countOrTemplate.aa,_troops)
+                _troops = ctld.insertIntoTroopsArray("Soldier stinger",_countOrTemplate.aa,_troops)
             else
                 _troops = ctld.insertIntoTroopsArray("SA-18 Igla manpad",_countOrTemplate.aa,_troops)
             end
@@ -1707,7 +1796,7 @@ function ctld.generateTroopTypes(_side, _countOrTemplate, _country)
                 _unitType = "Soldier M4"
 
                 if _i <= 5 and ctld.spawnStinger then
-                    _unitType = "Stinger manpad"
+                    _unitType = "Soldier stinger"
                 end
                 if _i <= 4 and ctld.spawnRPGWithCoalition then
                     _unitType = "Paratrooper RPG-16"
