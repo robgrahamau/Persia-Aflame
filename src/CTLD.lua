@@ -103,9 +103,9 @@ ctld.hoverTime = 4 -- Time to hold hover above a crate for loading in seconds
 -- When this limit is hit, a player will still be able to get crates for an AA system, just unable
 -- to unpack them
 
-ctld.AASystemLimitRED = 10 -- Red side limit
+ctld.AASystemLimitRED = 15 -- Red side limit
 
-ctld.AASystemLimitBLUE = 10 -- Blue side limit
+ctld.AASystemLimitBLUE = 15 -- Blue side limit
 
 --END AA SYSTEM CONFIG --
 
@@ -151,35 +151,33 @@ ctld.JTAC_lock = "all" -- "vehicle" OR "troop" OR "all" forces JTAC to only lock
 
 --pickupZones = { "Zone name or Ship Unit Name", "smoke color", "limit (-1 unlimited)", "ACTIVE (yes/no)", "side (0 = Both sides / 1 = Red / 2 = Blue )", flag number (optional) }
 ctld.pickupZones = {
-    { "Tarawa", "none", 10, "yes", 2 },
-    { "LHA-2", "none", 10, "yes", 2 },
-    { "AbuPickup", "none", 10, "yes", 2},
-    { "MinPickup", "none", 10, "yes", 2},
-    { "Tunb-I", "none", 10, "yes", 1},
-    { "I-FARP", "none", 10, "yes", 1},
-    { "ZONE5", "none", 10, "yes", 1},
-    { "IFARP-2", "none", 10, "yes", 1},
-    { "IFARP-3", "none", 10,"yes", 1},
-    { "IFARP-4", "none", 10,"yes", 1},
-    { "IFARP-5", "none", 10,"yes", 1},
-    { "IFARP-6", "none", 10,"yes", 1},
+    { "Tarawa", "none", 10, "yes", 2, 101 },
+    { "LHA-2", "none", 10, "yes", 2, 102 },
+    { "CTLD Al Drafra", "none", 6, "yes", 0, 103},
+    { "CTLD Al Minhad", "none", 6, "yes", 0, 104},
+    { "CTLD FBN85","none",4,"yes",0, 105},
+    { "CTLD FDP05","none",4,"yes",0, 106},
+    { "CTLD Khasab", "none", 6, "yes", 0, 107},    
+    { "CTLD Abu Nuayr", "none", 3, "yes", 0, 108},
+    { "CTLD Sirri Island", "none", 1, "yes", 0, 109},
+    { "CTLD Abu Musa", "none", 3, "yes", 0, 110},
+    { "CTLD Tunb Kochak", "none", 3, "yes", 0, 111},
+    { "CTLD Tunb Island", "none", 1, "yes", 0, 112},
+    { "CTLD Lavin Island", "none", 1, "yes", 0, 113},
+    { "CTLD Kish Island", "none", 1, "yes", 0, 114},
+    { "CTLD Bandar Abbas", "none", 6, "yes", 0, 115},
+    { "CTLD Lar AFB", "none", 1,"yes", 0,116},
+    { "CTLD FDR35", "none", 6, "yes", 0,117},
+    { "CTLD Jiroft", "none", 6, "yes", 0,118},
+    { "CTLD Shiraz", "none", 10,"yes", 1,119},
+    { "CTLD Kerman", "none", 10,"yes", 1,120},
+    { "CTLD Qeshm Island","none",1,"yes",0,121},
 }
 
 
 -- dropOffZones = {"name","smoke colour",0,side 1 = Red or 2 = Blue or 0 = Both sides}
 ctld.dropOffZones = {
-    { "Tarawa", "none", 2 },
-    { "LHA-2", "none", 2 },
-    { "AbuPickup", "none", 2},
-    { "MinPickup", "none", 2},
-    { "Tunb-I", "none", 0},
-    { "I-FARP", "none", 0},
-    { "ZONE5", "none", 0},
-    { "IFARP-2", "none", "yes", 0},
-    { "IFARP-3", "none", "yes", 0},
-    { "IFARP-4", "none", "yes", 0},
-    { "IFARP-5", "none", "yes", 0},
-    { "IFARP-6", "none", "yes", 0},
+
 }
 
 
@@ -189,16 +187,38 @@ ctld.wpZones = {
   {"Abbu-M","none","yes", 0},
   {"Tunb-K","none","yes", 0},
   {"Tunb-I","none","yes", 0},
-  { "I-FARP", "none","yes", 0},
-  { "ZONE5", "none", "yes", 0},
-  { "IFARP-2", "none", "yes", 0},
-  { "IFARP-3", "none", "yes", 0},
-  { "IFARP-4", "none", "yes", 0},
-  { "IFARP-5", "none", "yes", 0},
-  { "IFARP-6", "none", "yes", 0},
+
 }
 
 
+-- ************** Logistics UNITS FOR CRATE SPAWNING ******************
+
+-- Use any of the predefined names or set your own ones
+-- When a logistic unit is destroyed, you will no longer be able to spawn crates
+
+ctld.logisticUnits = {
+    "CTLD AbuFarp",
+    "CTLD AL_Drafra",
+    "CTLD BandarFarp",
+    "CTLD BANDAR2",
+    "CTLD FBN85",
+    "CTLD FDP05",
+    "CTLD FDR35",
+    "TARFARP2",
+    "CTLD FJiroft",
+    "CTLD Kerman",
+    "CTLD Kish",
+    "CTLD FLar",
+    "CTLD Lavin",
+    "CTLD FShiraz",
+    "CTLD Al Minhad",
+    "C TARAWA",
+    "C TARAWA2",
+    "CTLD Tnub",
+    "CTLD Abu Nuayr",
+    "CTLD Qeshm Island",
+    "CTLD Sirri Island",
+}
 -- ******************** Transports names **********************
 
 -- Use any of the predefined names or set your own ones
@@ -239,6 +259,12 @@ ctld.transportPilotNames = {
     "Tunb MI8",
     "Tunb UH1",
     "Tunb UH1 #001",
+    "Tunb US UH1",
+    "Tunb US UH1 #001",
+    "Tunb Georgia KA50",
+    "Tunb Georgia KA50 #001",
+    "Tunb Georgia MI8",
+    "Tunb Georgia MI8 #001",
     "Bandar MI8 #001",
     "Bandar MI8",
     "Bandar UH1",
@@ -249,15 +275,46 @@ ctld.transportPilotNames = {
     "BFARP KA50 #001",
     "BFARP UH1",
     "BFARP MI8",
-    "BFARP2 KA50",
-    "BFARP2 KA50 #001",
-    "BFARP2 UH1",
-    "BFARP2 MI8",
+    "Lavin Island UH1",
+    "Lavin Island UH1 #001",
+    "Lavin Island KA50 #001",
+    "Lavin Island KA50",
+    "Lavin Island MI8",
+    "Lavin Island MI8 #001",
+    "Lavin Island US KA50",
+    "Lavin Island US KA50 #001",
+    "Lavin Island US UH1",
+    "Lavin Island US UH1 #001",
+    "Lavin Island US MI8",
+    "Lavin Island US MI8 #001",
     "Shiraz KA50",
     "Shiraz KA50 #001",
     "Shiraz UH1",
     "Shiraz UH1 #001",
-    
+    "Sirri US Island UH1",
+    "Sirri US Island UH1 #001",
+    "Sirri US Island KA50",
+    "Sirri US Island KA50 #001",
+    "Sirri US Island MI8",
+    "Sirri US Island MI8 #001",
+    "Kish UH1",
+    "Kish UH1 #001",
+    "Kish Mi8",
+    "Kish Mi8 #001",
+    "Kish KA50",
+    "Kish KA50 #001",
+    "Kish US UH1",
+    "Kish US UH1 #001",
+    "Kish US KA50",
+    "Kish US KA50 #001",
+    "Qeshm Island US UH1",
+    "Qeshm Island US UH1 #001",
+    "Qeshm Island US KA50",
+    "Qeshm Island US KA50 #001",
+    "RED UH1-Khasab",
+    "RED UH1-Khasab #001",
+    "RED KA50 Khasab",
+    "RED KA50 Khasab #001",
     
     -- *** AI transports names (different names only to ease identification in mission) ***
 
@@ -276,26 +333,6 @@ ctld.extractableGroups = {
  
 }
 
--- ************** Logistics UNITS FOR CRATE SPAWNING ******************
-
--- Use any of the predefined names or set your own ones
--- When a logistic unit is destroyed, you will no longer be able to spawn crates
-
-ctld.logisticUnits = {
-    "TARFARP",
-    "TARFARP2",
-    "MINFARP",
-    "AbuFarp",
-    "IRAN_FARP1",
-    "farp_resup",
-    "BandarFarp",
-    "IFRAP",
-    "IFRAP2",
-    "IFRAP3",
-    "IFRAP4",
-    "IFRAP5",
-    "IFRAP6", 
-}
 
 -- ************** UNITS ABLE TO TRANSPORT VEHICLES ******************
 -- Add the model name of the unit that you want to be able to transport and deploy vehicles
@@ -386,8 +423,8 @@ ctld.spawnableCrates = {
         --{ weight = 800, desc = "M-2 Bradley", unit = "M-2 Bradley", side = 2, cratesRequired = 2 },
         { weight = 510, desc = "BTR-D", unit = "BTR_D", side = 1 },
         { weight = 515, desc = "BRDM-2", unit = "BRDM-2", side = 1 },
-        --{ weight = 520, desc = "HMMWV - JTAC", unit = "Hummer", side = 2, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
-        --{ weight = 525, desc = "SKP-11 - JTAC", unit = "SKP-11", side = 1, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
+        { weight = 520, desc = "HMMWV - JTAC", unit = "Hummer", side = 2, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
+        { weight = 525, desc = "SKP-11 - JTAC", unit = "SKP-11", side = 1, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
         --{ weight = 100, desc = "2B11 Mortar", unit = "2B11 mortar" },
         --{ weight = 250, desc = "SPH 2S19 Msta", unit = "SAU Msta", side = 1, cratesRequired = 3 },
         --{ weight = 255, desc = "M-109", unit = "M-109", side = 2, cratesRequired = 3 },
@@ -1462,7 +1499,7 @@ function ctld.spawnFOB(_country, _unitId, _point, _name)
         ["rate"] = 100,
         ["y"] = _point.z + -36.57142857,
         ["x"] = _point.x + 14.85714286,
-        ["name"] = "FOB Watchtower #" .. _id,
+        ["name"] = "CTLD FOB Watchtower #" .. _id,
         ["category"] = "Fortifications",
         ["canCargo"] = false,
         ["heading"] = 0,

@@ -29,7 +29,42 @@
 local SaveScheduleStatics=60 --how many seconds between each check of all the statics.
 local savefilename = "staticsave.lua"
 local savefile = lfs.writedir() .."pg\\" .. savefilename
-AllStatics = SET_STATIC:New():FilterPrefixes({"Iran","Army"}):FilterStart()
+Allstatics1 = SET_STATIC:New():FilterStart()
+Allstatics = SET_STATIC:New()
+function no_farps()
+  Allstatics1:ForEach(function (stat)
+    local _name = stat:GetName()
+    if AIRBASE:FindByName(_name) ~= nil then
+      env.info(_name.." is a type of airbase, farp or oil rig")
+      --avoid these types of static, they are really airbases
+    else
+    local prefix = "Iran"
+    local b = _name:find(prefix) == 1
+    if b == true then
+      Allstatics:AddStatic(stat)
+    end
+    prefix = "Army"
+    local b = _name:find(prefix) == 1
+    if b == true then
+      Allstatics:AddStatic(stat)
+    end
+    prefix = "CTLD"
+    local b = _name:find(prefix) == 1
+    if b == true then
+      Allstatics:AddStatic(stat)
+    end
+    prefix = "ctld"
+    local b = _name:find(prefix) == 1
+    if b == true then
+      Allstatics:AddStatic(stat)
+    end 
+  end
+  end)
+end
+no_farps()
+
+
+
  -----------------------------------
  --Do not edit below here
  -----------------------------------
@@ -118,7 +153,7 @@ if file_exists(savefile) then
   dofile(savefile)
   BASE:E({"Pikeys Simple static do file done",SaveStatics})
   --This version uses Destroy()
-  AllStatics:ForEach(function (grp)
+  Allstatics:ForEach(function (grp)
   BASE:E({"for each entered",grp,grp:GetName()})
   if SaveStatics[grp:GetName()]["dead"]==true then
     BASE:E({"attempting to get coord for Static",grp:GetName()})
@@ -136,7 +171,8 @@ end
 
 --THE SAVING SCHEDULE
 SCHEDULER:New( nil, function()
-AllStatics:ForEach(function (grp)
+no_farps()
+Allstatics:ForEach(function (grp)
 
 SaveStatics[grp:GetName()] =
 
@@ -164,4 +200,5 @@ local newMissionStr = IntegratedserializeWithCycles("SaveStatics",SaveStatics)
 writemission(newMissionStr, savefile)
 SaveStatics={} --flatten this between iterations to prevent accumulations
 --env.info("Data saved.")
+
 end, {}, 1, SaveScheduleStatics)

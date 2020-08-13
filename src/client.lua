@@ -1,5 +1,5 @@
 version = "0.87 Beta"
-lastupdate = "10 August 2020"
+lastupdate = "13 August 2020"
 PlayerMap = {}
 PlayerRMap = {}
 PlayerBMap = {}
@@ -64,7 +64,7 @@ local function permanentPlayerCheck()
       if PlayerClient:IsAlive() then
         if PlayerRMap[PlayerID] ~= true then
           PlayerRMap[PlayerID] = true
-          MESSAGE:New("Welcome to Persia Aflame By Rob Graham Version: "..version.." \n Last updated:".. lastupdate .." \n POWERED BY MOOSE, MIST, SLMOD, Lots of Pain Killers and Hamsters! \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Please Be aware This Mission is currently in a ALPHA STATE and may break/Bug out etc. \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n You are on Iran Side, Please be aware this mission is geared towards BLUE side taking down red, Red Slots are to add some spice to that. \n Your goal is to defend Irani Airspace from Coalition Violations.\n  Please Join the DISCORD SEE ALT-B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .."",30):ToClient(PlayerClient)
+          MESSAGE:New("Welcome to Persia Aflame By Rob Graham Version: "..version.." \n Last updated:".. lastupdate .." \n POWERED BY MOOSE, MIST, SLMOD, Lots of Pain Killers and Hamsters! \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Please Be aware This Mission is currently in a ALPHA STATE and may break/Bug out etc. \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n You are on Iran Side, Please be aware this mission is geared towards BLUE Coalition Forces attacking Red, Red Slots are to add some spice to that. \n Your goal is to defend Irani Airspace from Coalition Violations, use CTLD helicopters to repair defences etc.\n  Please Join the DISCORD SEE ALT-B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .."",30):ToClient(PlayerClient)
           MESSAGE:New("BEAWARE 253.00 (OVERLORDBOT) ON SRS IS FOR AWACS CALLS ONLY. \n IT IS NOT TO BE USED FOR GENERAL COMMS \n IF YOU ARE FOUND USING IT FOR SUCH YOU WILL BE BANNED FROM SRS",60):ToClient(PlayerClient)
         end
       else
@@ -82,7 +82,7 @@ local function permanentPlayerCheck()
          if PlayerClient:IsAlive() then
            if PlayerBMap[PlayerID] ~= true then
             PlayerBMap[PlayerID] = true
-             MESSAGE:New("Welcome to Persia Aflame by Rob Graham Version: "..version.." \n Last updated:".. lastupdate .." \n POWERED BY MOOSE, MUST, SLMOD, Lots of Pain Killers, Player Donations \n Kosh and Lets not forget.. Server Space Hamsters \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n You are on the Coalition Side, Please read the BRIEFING LALT+B for full Communications and other information. \n your primary goal is the destruction of Iran's IADS, Airfields and it's ability to wage war.\n Current Prediction of Invasion Succeeding: "..  mainmission.invasionchance .. "% \n Blue Airbases offer full resupply, civilian airports only offer fuel/limited resupply. \n Check the F10 Map for Intel Reports \n Please Join the DISCORD SEE ALT-B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is:" .. currenttime .. " Server Mission Cycle:" .. restarttime .."",30):ToClient(PlayerClient)                             
+             MESSAGE:New("Welcome to Persia Aflame by Rob Graham Version: "..version.." \n Last updated:".. lastupdate .." \n POWERED BY MOOSE, MUST, SLMOD, Lots of Pain Killers, Player Donations \n Kosh and Lets not forget.. Server Space Hamsters \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n You are on the Coalition Side, Please read the BRIEFING LALT+B for full Communications and other information. \n your primary goal is the destruction of Iran's IADS, Airfields and it's ability to wage war.\n Invading can be done using CTLD and the Player Helicopters \n Blue Airbases offer full resupply, civilian airports only offer fuel/limited resupply. \n Check the F10 Map for Intel Reports \n Please Join the DISCORD SEE ALT-B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is:" .. currenttime .. " Server Mission Cycle:" .. restarttime .."",30):ToClient(PlayerClient)                             
 			 MESSAGE:New("BEAWARE 253.00 (OVERLORDBOT) ON SRS IS FOR AWACS CALLS ONLY. \n IT IS NOT TO BE USED FOR GENERAL COMMS \n IF YOU ARE FOUND USING IT FOR SUCH YOU WILL BE BANNED FROM SRS",60):ToClient(PlayerClient)
            end    
          else
@@ -137,98 +137,6 @@ C_tanker = MENU_COALITION:New(coalition.side.BLUE,"Tanker Control",C_menu)
 C_Arco11 = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Change ARCO11 Speed for A10",C_tanker,Arco11A10,nil)
 
 
-
-trigger.action.setUserFlag(100,0)
-
-stn = UNIT:FindByName("Stennis")
-lh2 = UNIT:FindByName("LHA-2")
-tdy = UNIT:FindByName("TeddyR")
-tar = UNIT:FindByName("Tarawa")
-
-function stndead()
-  if stn:IsAlive() ~= true then
-    trigger.action.setUserFlag("STN_141",100)
-    trigger.action.setUserFlag("STN_142",100)
-    trigger.action.setUserFlag("STN_143",100)
-    trigger.action.setUserFlag("STN_144",100)
-    trigger.action.setUserFlag("STN_440",100)
-    trigger.action.setUserFlag("STN_441",100)
-    trigger.action.setUserFlag("STN_442",100)
-    trigger.action.setUserFlag("STN_443",100)
-    trigger.action.setUserFlag("STN_444",100)
-    
-  end
-end
-function lh2dead()
-  if lh2:IsAlive() ~= true then
-    trigger.action.setUserFlag("STN-LHA2-Huey333",100)
-    trigger.action.setUserFlag("STN-LHA2-Huey334",100)
-    trigger.action.setUserFlag("STN-LHA2-Huey335",100)
-    trigger.action.setUserFlag("STN-LHA2-Huey336",100)
-    trigger.action.setUserFlag("STN-TAR-490",100)
-    trigger.action.setUserFlag("STN-TAR-491",100)
-    trigger.action.setUserFlag("STN-TAR-492",100)
-    trigger.action.setUserFlag("STN-TAR-493",100)
-    trigger.action.setUserFlag("STN-TAR-494",100)
-  end
-end
-
-function tdydead()
-  if tdy:IsAlive() ~= true then
-    trigger.action.setUserFlag("TDY_101",100)
-    trigger.action.setUserFlag("TDY_102",100)
-    trigger.action.setUserFlag("TDY_103",100)
-    trigger.action.setUserFlag("TDY_104",100)
-    trigger.action.setUserFlag("TDY_105",100)
-    trigger.action.setUserFlag("TDY_106",100)
-    trigger.action.setUserFlag("TDY_107",100)
-    trigger.action.setUserFlag("TDY_108",100)
-    trigger.action.setUserFlag("TDY_401",100)
-    trigger.action.setUserFlag("TDY_402",100)
-    trigger.action.setUserFlag("TDY_403",100)
-    trigger.action.setUserFlag("TDY_404",100)
-    trigger.action.setUserFlag("TDY_405",100)
-    trigger.action.setUserFlag("TDY_406",100)
-    trigger.action.setUserFlag("TDY_407",100)
-    trigger.action.setUserFlag("TDY_408",100)
-    trigger.action.setUserFlag("TDY_409",100)
-    trigger.action.setUserFlag("TDY_410",100)
-    trigger.action.setUserFlag("TDY_411",100)
-    trigger.action.setUserFlag("TDY_412",100)
-  end
-end
-
-function tardead()
-  if tar:IsAlive() ~= true then
-    trigger.action.setUserFlag("TDY-TAR-480",100)
-    trigger.action.setUserFlag("TDY-TAR-481",100)
-    trigger.action.setUserFlag("TDY-TAR-482",100)
-    trigger.action.setUserFlag("TDY-TAR-484",100)
-    trigger.action.setUserFlag("TDY-TAR-Huey-303",100)
-    trigger.action.setUserFlag("TDY-TAR-Huey314",100)
-    trigger.action.setUserFlag("TDY-TAR-Huey319",100)
-    trigger.action.setUserFlag("TDY-TAR-Huey444",100)
-    trigger.action.setUserFlag("TED-TAR-KA50-21",100)
-    trigger.action.setUserFlag("TED-TAR-KA50-22",100)
-    trigger.action.setUserFlag("TED-TAR-KA50-23",100)
-    trigger.action.setUserFlag("TED-TAR-KA50-24",100)
-    trigger.action.setUserFlag("TED-TAR-Mi8-55",100)
-    trigger.action.setUserFlag("TED-TAR-Mi8-56",100)
-    trigger.action.setUserFlag("TED-TAR-SA342L-44",100)
-    trigger.action.setUserFlag("TED-TAR-SA342L-45",100)
-    trigger.action.setUserFlag("TED-TAR-SA342Min-222",100)
-    trigger.action.setUserFlag("TED-TAR-SA342Min-223",100)
-    trigger.action.setUserFlag("TED-TAR-SA342Mini-111",100)
-    trigger.action.setUserFlag("TED-TAR-SA342Mini-112",100)
-    trigger.action.setUserFlag("TED-TAR-SA342m-66",100)
-    trigger.action.setUserFlag("TED-TAR-SA342m-67",100)
-  end
-end
-
-stn:HandleEvent(EVENTS.Dead,stndead)
-lh2:HandleEvent(EVENTS.Dead,lh2dead)
-tdy:HandleEvent(EVENTS.Dead,tdydead)
-tar:HandleEvent(EVENTS.Dead,tardead)
 SCHEDULER:New(nil,permanentPlayerCheck,{},1,1)
 function nextreset()
 	resettime()
@@ -236,7 +144,7 @@ end
 
 function resettime()
 	SCHEDULER:New(nil,function() 
-	MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Prediction of Invasion Succeeding: "..  mainmission.invasionchance .. "% \n",60):ToAll()
+	MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n",60):ToAll()
 	hourstoreset = hourstoreset - 1
 	if hourstoreset < resethours then
 		nextreset()
@@ -244,13 +152,13 @@ function resettime()
 	end,{},60*60)
 end
 SCHEDULER:New(nil,function() 
-  MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Prediction of Invasion Succeeding: "..  mainmission.invasionchance .. "% \n",60):ToAll()
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n",60):ToAll()
   hourstoreset = hourstoreset - 1
   nextreset()	
 end,{},1)
 
 SCHEDULER:New(nil,function() 
-  MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 HOUR \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Prediction of Invasion Succeeding: "..  mainmission.invasionchance .. "% \n",60):ToAll()
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 HOUR \n Current Server time is: ".. nowHour .. ":" .. nowminute .."",60):ToAll()
 end,{},((60*60) * (resethours - 1)))
 SCHEDULER:New(nil,function() 
   MESSAGE:New("MISSION CYLE WILL HAPPEN IN 30 Minutes",10):ToAll()

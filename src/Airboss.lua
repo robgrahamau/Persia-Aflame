@@ -7,7 +7,7 @@ abossactive = true
 
 if abossactive == true then
 
-  awacsStennis = RECOVERYTANKER:New(UNIT:FindByName("Stennis"), "USEW Magic11")
+  awacsStennis = RECOVERYTANKER:New(UNIT:FindByName("Washington"), "USEW Magic11")
   awacsStennis:SetAWACS(true,true)
   awacsStennis:SetCallsign(CALLSIGN.AWACS.Magic,1)
   awacsStennis:SetTakeoffAir()
@@ -18,7 +18,7 @@ if abossactive == true then
   awacsStennis:Start()
   BASE:E("Stennis Tanker")
   
-  ShellStennis = RECOVERYTANKER:New(UNIT:FindByName("Stennis"), "Shell11")
+  ShellStennis = RECOVERYTANKER:New(UNIT:FindByName("Washington"), "Shell11")
   ShellStennis:SetCallsign(CALLSIGN.Tanker.Shell,1)
   ShellStennis:SetRespawnInAir()
   ShellStennis:SetSpeed(310)
@@ -49,10 +49,21 @@ if abossactive == true then
   ShellTeddy:SetLowFuelThreshold(0.2)
   ShellTeddy:Start()
   
-
+AirbossWash = AIRBOSS:New("Washington","Washington")
+AirbossWash:SetLSORadio(118.45)
+AirbossWash:SetMarshalRadio(306)
+AirbossWash:SetTACAN(25,"X","NNGW")
+AirbossWash:SetICLS(5,"WSH")
+AirbossWash:SetAirbossNiceGuy(true)
+AirbossWash:SetHandleAIOFF()
+AirbossWash:SetDespawnOnEngineShutdown(true)
+AirbossWash:SetWelcomePlayers(false)
+AirbossWash:SetDefaultMessageDuration(1)
+AirbossWash:SetEmergencyLandings(true)
+AirbossWash:SetPatrolAdInfinitum(true)
+AirbossWash:Start()
 
 AirbossTeddy = AIRBOSS:New("TeddyR","TeddyR")
-AirbossTeddy:Load()
 AirbossTeddy:SetLSORadio(118.40)
 AirbossTeddy:SetMarshalRadio(304)
 AirbossTeddy:SetTACAN(53,"X","TED")

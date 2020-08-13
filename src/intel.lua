@@ -3,8 +3,68 @@ hours = 1 -- DO NOT SET THIS TO 0, if your not using HOURS level it as 1.
 RED_EW_SET = SET_GROUP:New():FilterCoalitions("red"):FilterPrefixes("REW"):FilterStart()
 RED_SAM_SET = SET_GROUP:New():FilterCoalitions("red"):FilterActive():FilterPrefixes("RSAM"):FilterStart()
 RED_SCUD_SET = SET_GROUP:New():FilterCoalitions("red"):FilterActive():FilterPrefixes("SCUD"):FilterStart()
-RED_I_SET = SET_STATIC:New():FilterCoalitions("red"):FilterPrefixes("Iran"):FilterStart()
-RED_A_SET = SET_STATIC:New():FilterCoalitions("red"):FilterPrefixes("Army"):FilterStart()
+ALL_STATICS = SET_STATIC:New():FilterStart()
+RED_NO_FARPS = SET_STATIC:New()
+BLUE_NO_FARPS = SET_STATIC:New()
+RED_I_SET = SET_STATIC:New()
+RED_A_SET = SET_STATIC:New()
+BLUE_CTLD_SET = SET_STATIC:New()
+RED_CTLD_SET = SET_STATIC:New()
+function no_farps()
+  RED_NO_FARPS:Clear()
+  RED_I_SET:Clear()
+  RED_A_SET:Clear()
+  RED_CTLD_SET:Clear()
+  BLUE_CTLD_SET:Clear()
+  BLUE_NO_FARPS:Clear()
+
+ALL_STATICS:ForEach(function (stat)
+  local _name = stat:GetName()
+  if AIRBASE:FindByName(_name) ~= nil then
+    env.info(_name.." is a type of airbase, farp or oil rig")
+    --avoid these types of static, they are really airbases
+    else
+      if stat:GetCoalition() == 1 then
+        RED_NO_FARPS:AddStatic(stat)      
+        local prefix = "Iran"
+        local b = _name:find(prefix) == 1
+        if b == true then
+          RED_I_SET:AddStatic(stat)
+        end
+        prefix = "Army"
+        local b = _name:find(prefix) == 1
+        if b == true then
+          RED_A_SET:AddStatic(stat)
+        end
+        prefix = "CTLD"
+        local b = _name:find(prefix) == 1
+        if b == true then
+          RED_CTLD_SET:AddStatic(stat)
+        end
+        prefix = "ctld"
+        local b = _name:find(prefix) == 1
+        if b == true then
+          RED_CTLD_SET:AddStatic(stat)
+        end
+      else
+        BLUE_NO_FARPS:AddStatic(stat)
+        local prefix = "CTLD"
+        local b = _name:find(prefix) == 1
+        if b == true then
+          BLUE_CTLD_SET:AddStatic(stat)
+        end
+        prefix = "ctld"
+        local b = _name:find(prefix) == 1
+        if b == true then
+          BLUE_CTLD_SET:AddStatic(stat)
+        end     
+      end
+    end
+  end)
+
+end
+no_farps()
+
 
 ARMY_INTEL = {}
 EW_INTEL = {}
@@ -16,6 +76,10 @@ SAM_INTELOUT = 0
 SCUD_INTELOUT = 0
 INF_INTELOUT = 0
 intel_reports = {}
+ctldintelmarkers = {}
+R_CTLD_INTEL = {}
+B_CTLD_INTEL = {}
+
 InvasionSuccess = "Fail"
 -- set up our data 
 
@@ -65,45 +129,156 @@ RED_A_SET:ForEachStatic(function(g)
   intel_reports[gid] = ""
 end)
 
+function checkctldlogistics()
+RED_CTLD_SET:ForEachStatic(function(g) 
+  local gid =g:GetName()
+  local data = {static = g, displayed = false,text="",markerid = nil}
+  if g:IsAlive() == true then
+    BASE:E({"Adding new Intel"})
+    data.displayed = true
+    local co = g:GetCoordinate()
+    local lldm = co:ToStringLLDDM()
+    local llds = co:ToStringLLDMS()
+    local mgrs = co:ToStringMGRS()
+    local text = "RED CTLD Crate Pickup Point"
+    data.text = text
+    intel_reports[g:GetName()] = text
+    if R_CTLD_INTEL[gid] == nil then
+    local m = co:MarkToCoalitionRed(data.text,true)
+    data.markerid = m
+    end
+  else
+    if R_CTLD_INTEL[gid] ~= nil then
+      -- remove the marker
+      COORDINATE:RemoveMark(R_CTLD_INTEL[gid].markerid)
+    end
+    
+    intel_reports[gid] = ""    
+  end
+  R_CTLD_INTEL[gid] = data
+end)
+
+BLUE_CTLD_SET:ForEachStatic(function(g) 
+  local gid =g:GetName()
+  local data = {static = g, displayed = false,text="",markerid = nil}
+  if g:IsAlive() == true then
+    BASE:E({"Adding new Intel"})
+    data.displayed = true
+    local co = g:GetCoordinate()
+    local lldm = co:ToStringLLDDM()
+    local llds = co:ToStringLLDMS()
+    local mgrs = co:ToStringMGRS()
+    local text = "BLUE CTLD Crate Pickup Point"
+    data.text = text
+    intel_reports[g:GetName()] = text
+    if B_CTLD_INTEL[gid] == nil then
+      local m = co:MarkToCoalitionBlue(data.text,true)
+      data.markerid = m
+      -- we already have the marker      
+    end
+  else
+    if B_CTLD_INTEL[gid] ~= nil then
+      -- remove the marker
+      COORDINATE:RemoveMark(B_CTLD_INTEL[gid].markerid)
+    end
+    intel_reports[gid] = ""    
+  end
+  B_CTLD_INTEL[gid] = data
+end)
+
+end
+
+
+
+
+function ctldintelupdate(zone)
+  BASE:E({"Updating CTLD marker for Zone",zone})
+  local data = {ctldarea = ZONE:New(zone), displayed = true ,text="Pickup Zone For CTLD",markerid = nil}
+  local coord = data.ctldarea:GetCoordinate()
+  local text = "CIA/IIA Report (CTLD) Troop Pickup Point"
+  local m = coord:MarkToAll(text,true)
+  data.markerid = m
+  ctldintelmarkers[zone] = data
+end
+
+ctldintelupdate("CTLD Al Drafra")
+ctldintelupdate("CTLD Al Minhad")
+ctldintelupdate("CTLD FBN85")
+ctldintelupdate("CTLD FDP05")
+ctldintelupdate("CTLD Khasab")    
+ctldintelupdate("CTLD Abu Nuayr")
+ctldintelupdate("CTLD Sirri Island")
+ctldintelupdate("CTLD Abu Musa")
+ctldintelupdate("CTLD Tunb Kochak")
+ctldintelupdate("CTLD Tunb Island")
+ctldintelupdate("CTLD Lavin Island")
+ctldintelupdate("CTLD Kish Island")
+ctldintelupdate("CTLD Bandar Abbas")
+ctldintelupdate("CTLD Lar AFB")
+ctldintelupdate("CTLD FDR35")
+ctldintelupdate("CTLD Jiroft")
+ctldintelupdate("CTLD Shiraz")
+ctldintelupdate("CTLD Kerman")
+
+checkctldlogistics()
+
+function markerremove()
+  for i,k in pairs(EW_INTEL) do 
+    if k.group:IsAlive() ~= true and k.displayed == true then
+      COORDINATE:RemoveMark(k.markerid)
+      intel_reports[k.group:GetName()] = ""
+    end
+  end
+
+  for i,k in pairs(SAM_INTEL) do 
+    if k.group:IsAlive() ~= true and k.displayed == true then
+      COORDINATE:RemoveMark(k.markerid)
+      intel_reports[k.group:GetName()] = ""
+    end
+  end
+
+  for i,k in pairs(SCUD_INTEL) do 
+    if k.group:IsAlive() ~= true and k.displayed == true then
+      COORDINATE:RemoveMark(k.markerid)
+      intel_reports[k.group:GetName()] = ""
+    end
+  end
+
+  for i,k in pairs(INF_INTEL) do 
+    if k.static:IsAlive() ~= true and k.displayed == true then
+      COORDINATE:RemoveMark(k.markerid)
+      intel_reports[k.static:GetName()] = ""
+    end
+  end
+
+  for i,k in pairs(ARMY_INTEL) do 
+    if k.static:IsAlive() ~= true and k.displayed == true then
+      COORDINATE:RemoveMark(k.markerid)
+      intel_reports[k.static:GetName()] = ""
+    end
+  end
+
+  BASE:E({"Dead Groupss should no longer have markers"})
+
+end
+
+SCHEDULER:New(nil,markerremove,{},300,300)
+SCHEDULER:New(nil,function() 
+  no_farps()
+  RED_I_SET = RED_NO_FARPS:FilterPrefixes("Iran"):FilterOnce()
+  RED_A_SET = RED_NO_FARPS:FilterPrefixes("Army"):FilterOnce()
+  RED_CTLD_SET = RED_NO_FARPS:FilterPrefixes("CTLD"):FilterOnce()
+  BLUE_CTLD_SET = BLUE_NO_FARPS:FilterPrefixes("CTLD"):FilterOnce()
+ end,{},120,120)
 SCHEDULER:New(nil,function() 
 BASE:E({"Intelligence Update in progress"})
 BASE:E({"Checking all Markers and updating markers"})
 
-for i,k in pairs(EW_INTEL) do 
-  if k.group:IsAlive() ~= true and k.displayed == true then
-    COORDINATE:RemoveMark(k.markerid)
-    intel_reports[k.group:GetName()] = ""
-  end
-end
+markerremove()
 
-for i,k in pairs(SAM_INTEL) do 
-  if k.group:IsAlive() ~= true and k.displayed == true then
-    COORDINATE:RemoveMark(k.markerid)
-    intel_reports[k.group:GetName()] = ""
-  end
-end
+BASE:E({"CTLD LOGISTICS CHECK"})
+checkctldlogistics()
 
-for i,k in pairs(SCUD_INTEL) do 
-  if k.group:IsAlive() ~= true and k.displayed == true then
-    COORDINATE:RemoveMark(k.markerid)
-    intel_reports[k.group:GetName()] = ""
-  end
-end
-
-for i,k in pairs(INF_INTEL) do 
-  if k.static:IsAlive() ~= true and k.displayed == true then
-    COORDINATE:RemoveMark(k.markerid)
-    intel_reports[k.static:GetName()] = ""
-  end
-end
-
-for i,k in pairs(ARMY_INTEL) do 
-  if k.static:IsAlive() ~= true and k.displayed == true then
-    COORDINATE:RemoveMark(k.markerid)
-    intel_reports[k.static:GetName()] = ""
-  end
-end
-BASE:E({"Dead units should no longer have markers"})
 
 local inteltype = math.random(1,6)
   BASE:E({"Intelligence Reports Type is",inteltype})

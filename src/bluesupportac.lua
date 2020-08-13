@@ -45,7 +45,7 @@ BLandTemp = {"T_F15","T_F16"}
   ba2disp:SetDefaultFuelThreshold(0.4)
   ba2disp:SetDefaultGrouping(2)
   ba2disp:SetDefaultOverhead(1.0)
-  ba2disp:SetSquadron("Stennis","Stennis",BCarrierTEMP,12)
+  ba2disp:SetSquadron("Stennis","Washington",BCarrierTEMP,12)
   ba2disp:SetSquadron("TeddyR","TeddyR",BCarrierTEMP,12)
   ba2disp:SetSquadronTakeoffFromParkingCold("TeddyR")
   ba2disp:SetSquadronLandingAtRunway("TeddyR")
