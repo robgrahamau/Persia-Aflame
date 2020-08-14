@@ -146,16 +146,19 @@ RED_CTLD_SET:ForEachStatic(function(g)
     if R_CTLD_INTEL[gid] == nil then
     local m = co:MarkToCoalitionRed(data.text,true)
     data.markerid = m
+    R_CTLD_INTEL[gid] = data
     end
   else
     if R_CTLD_INTEL[gid] ~= nil then
       -- remove the marker
-      COORDINATE:RemoveMark(R_CTLD_INTEL[gid].markerid)
+      if R_CTLD_INTEL[gid].markerid ~= nil then
+        COORDINATE:RemoveMark(R_CTLD_INTEL[gid].markerid)
+        R_CTLD_INTEL[gid].markerid = nil
+        R_CTLD_INTEL[gid] = nil
+      end
     end
-    
     intel_reports[gid] = ""    
   end
-  R_CTLD_INTEL[gid] = data
 end)
 
 BLUE_CTLD_SET:ForEachStatic(function(g) 
@@ -174,16 +177,19 @@ BLUE_CTLD_SET:ForEachStatic(function(g)
     if B_CTLD_INTEL[gid] == nil then
       local m = co:MarkToCoalitionBlue(data.text,true)
       data.markerid = m
-      -- we already have the marker      
+      -- we already have the marker
+      B_CTLD_INTEL[gid] = data      
     end
   else
     if B_CTLD_INTEL[gid] ~= nil then
-      -- remove the marker
-      COORDINATE:RemoveMark(B_CTLD_INTEL[gid].markerid)
+      if B_CTLD_INTEL[gid].markerid ~= nil then
+        -- remove the marker
+        COORDINATE:RemoveMark(B_CTLD_INTEL[gid].markerid)
+        B_CTLD_INTEL[gid] = nil
+      end
     end
     intel_reports[gid] = ""    
   end
-  B_CTLD_INTEL[gid] = data
 end)
 
 end

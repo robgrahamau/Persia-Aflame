@@ -235,18 +235,18 @@ Tunb:AddSquadron(H02) -- AH1
 
 function redairreinforcements()
   BASE:E({"Red Airbase Reinforcements by Aircraft Type"})
-  local jf17 = random(0,6)
-  local f14 = random(0,2)
-  local f16 = random(0,4)
-  local mig29 = random(0,16)
-  local f4 = random(0,8)
-  local f5 = random(0,4)
-  local mig21 = random(0,16)
-  local su24 = random(0,8)
-  local e3 = random(1,2)
-  local kc135 = random(1,2)
-  local ah1 = random(3,12)
-  local su33 = random(2,8)
+  local jf17 = math.random(1,6)
+  local f14 = math.random(1,2)
+  local f16 = math.random(1,4)
+  local mig29 = math.random(1,16)
+  local f4 = math.random(1,8)
+  local f5 = math.random(1,4)
+  local mig21 = math.random(1,16)
+  local su24 = math.random(1,8)
+  local e3 = math.random(1,2)
+  local kc135 = math.random(1,2)
+  local ah1 = math.random(3,12)
+  local su33 = math.random(2,8)
   BASE:E({"Red Has been Sent the Following:",jf17,f14,f16,mig29,f4,f5,mig21,su24,e3,kc135,ah1})
 
   local ah1a = 0
@@ -288,6 +288,7 @@ function redairreinforcements()
     e3a = e3a + 1 
     su24a = su24a + 1
     jf17a = jf17a + 1
+    f16a = f16a+1
   end
   if Kerman:GetCoalition() == 1 then
     e3a = e3a + 1 
@@ -296,6 +297,7 @@ function redairreinforcements()
     mig21 = mig21 + 1 
   end
   BASE:E({"Reinforcing...."})  
+  if (ah1 ~= 0) and (ah1a ~= 0) then
   local distrib = math.ceil((ah1/ah1a))
   BASE:E({"We have ".. ah1a .. " ab's and each AB will get ".. distrib .."AH1's"})
   if Kish:GetCoalition() == 1 then
@@ -307,8 +309,8 @@ function redairreinforcements()
   if Bandar:GetCoalition() == 1 then
     Bandar:AddAssetToSquadron(H03,distrib)
   end
-  
-  
+  end
+  if (f4 ~= 0) and (f4a ~= 0) then
   distrib = math.ceil((f4/f4a))
   BASE:E({"We have ".. f4a .. " ab's and each AB will get ".. distrib .."f4's"})
   if distrib ~= 0 then
@@ -322,7 +324,9 @@ function redairreinforcements()
       Lar:AddAssetToSquadron(I24,distrib)
     end
   end
+  end
   
+  if (f5 ~= 0) and (f5a ~= 0) then
   distrib = math.ceil((f5/f5a))
   BASE:E({"We have ".. f5a .. " ab's and each AB will get ".. distrib .." f5's"})
   if distrib ~= 0 then
@@ -330,7 +334,9 @@ function redairreinforcements()
       Shiraz:AddAssetToSquadron(I26,distrib)
     end
   end
+  end
   
+  if (f14 ~= 0) and (f14a ~= 0) then
   distrib = math.ceil((f14/f14a))
   BASE:E({"We have ".. f14a .. " ab's and each AB will get ".. distrib .." f14's"})
   if distrib ~= 0 then
@@ -338,7 +344,8 @@ function redairreinforcements()
       Kerman:AddAssetToSquadron(I01,distrib)
     end
   end
-  
+  end
+  if (f16 ~= 0) and (f16a ~= 0) then
   distrib = math.ceil((f16/f16a))
   BASE:E({"We have ".. f16a .. " ab's and each AB will get ".. distrib .." f16's"})
   if distrib ~= 0 then
@@ -346,7 +353,10 @@ function redairreinforcements()
       Kerman:AddAssetToSquadron(P101,distrib)
     end
   end
+  end
   
+    
+  if (jf17 ~= 0) and (jf17a ~= 0) then
   distrib = math.ceil((jf17/jf17a))
   BASE:E({"We have ".. jf17a .. " ab's and each AB will get ".. distrib .." jf17's"})
   if distrib ~= 0 then
@@ -357,7 +367,9 @@ function redairreinforcements()
       Kerman:AddAssetToSquadron(I02,distrib)
     end
   end
-
+  end
+  
+  if (mig21 ~= 0) and (mig21a ~= 0) then
   distrib = math.ceil((mig21/mig21a))
   BASE:E({"We have ".. mig21a .. " ab's and each AB will get ".. distrib .." mig21's"})
   if distrib ~= 0 then
@@ -371,7 +383,9 @@ function redairreinforcements()
       Kish:AddAssetToSquadron(I39,distrib)
     end
   end
+  end
   
+  if (mig29 ~= 0) and (mig29a ~= 0) then
   distrib = math.ceil((mig29/mig29a))
   BASE:E({"We have ".. mig29a .. " ab's and each AB will get ".. distrib .." mig29's"})
   if distrib ~= 0 then
@@ -382,7 +396,9 @@ function redairreinforcements()
       Shiraz:AddAssetToSquadron(I30,distrib)
     end
   end
-
+  end
+  
+  if (su24 ~= 0) and (su24a ~= 0) then
   distrib = math.ceil((su24/su24a))
   BASE:E({"We have ".. su24a .. " ab's and each AB will get ".. distrib .." su24's"})
   if distrib ~= 0 then
@@ -390,7 +406,9 @@ function redairreinforcements()
       Shiraz:AddAssetToSquadron(S01,distrib)
     end
   end
+  end
   
+  if (su33 ~= 0) and (su33a ~= 0) then
   distrib = math.ceil((su33/su33a))
   BASE:E({"We have ".. su33a .. " ab's and each AB will get ".. distrib .." su33's"})
   if distrib ~= 0 then
@@ -398,7 +416,9 @@ function redairreinforcements()
       Shiraz:AddAssetToSquadron(k279,distrib)
     end
   end
+  end
   
+  if (e3 ~= 0) and (e3a ~= 0) then
     distrib = math.ceil((e3/e3a))
   BASE:E({"We have ".. e3 .. " ab's and each AB will get ".. distrib .." E3's"})
   if distrib ~= 0 then
@@ -409,7 +429,9 @@ function redairreinforcements()
       Kerman:AddAssetToSquadron(A2,distrib)
     end
   end
+  end
   
+  if (kc135 ~= 0) and (kc135a ~= 0) then
   distrib = math.ceil((kc135/kc135a))
   BASE:E({"We have ".. kc135a .. " ab's and each AB will get ".. distrib .." kc135's"})
   if distrib ~= 0 then
@@ -417,7 +439,7 @@ function redairreinforcements()
       Shiraz:AddAssetToSquadron(T1,distrib)
     end
   end
-  
+  end
   BASE:E({"RED REINFORCEMENT HAS BEEN COMPLETED"})
 end
 local SU24 = Shiraz:NewPayload("SU-24MSead",99,{AUFTRAG.Type.SEAD},100)

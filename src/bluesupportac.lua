@@ -22,7 +22,10 @@ Arco11Spawn = SPAWN:New("Arco 11"):InitLimit(1,18):OnSpawnGroup(function(spawngr
   Arco11 = spawngroup
 end,{}):InitRepeatOnLanding():InitCleanUp(600):SpawnScheduled(600,0.5)
 Shell21 = GROUP:FindByName("Shell21")
-
+Overlord = GROUP:FindByName("USEW Overlord")
+OverlordSpawn = SPAWN:NewWithAlias("USEW Overlord","USEW Overlord11"):OnSpawnGroup(function(spawngroup) 
+  Overlord = spawngroup
+end,{}):InitRepeatOnLanding():InitLimit(1,18):InitCleanUp(600):SpawnScheduled(600,0.5)
 CV_1_CAP = nil
 CV_2_CAP = nil
 T_CAP = nil
