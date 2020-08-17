@@ -31,7 +31,7 @@ local savefilename = "staticsave.lua"
 local savefile = lfs.writedir() .."pg\\" .. savefilename
 Allstatics1 = SET_STATIC:New():FilterStart()
 Allstatics = SET_STATIC:New()
-function no_farps()
+function staticsno_farps()
   Allstatics1:ForEach(function (stat)
     local _name = stat:GetName()
     if AIRBASE:FindByName(_name) ~= nil then
@@ -61,7 +61,7 @@ function no_farps()
   end
   end)
 end
-no_farps()
+staticsno_farps()
 
 
 
@@ -153,14 +153,20 @@ if file_exists(savefile) then
   dofile(savefile)
   BASE:E({"Pikeys Simple static do file done",SaveStatics})
   --This version uses Destroy()
+  staticsno_farps()
   Allstatics:ForEach(function (grp)
   BASE:E({"for each entered",grp,grp:GetName()})
   if SaveStatics[grp:GetName()]["dead"]==true then
     BASE:E({"attempting to get coord for Static",grp:GetName()})
+    local grpname = grp:GetName()
     local coord = grp:GetCoordinate()
     grp:Destroy()
+    local grpname = grpname:lower()
+    local prefix = "ctld"
+    if grpname:find(prefix) ~= 1 then
     coord:Explosion(250) --just a little black mark
     rngsmokes(coord)
+  end
   end
   end)
   pstatic = true
@@ -171,7 +177,7 @@ end
 
 --THE SAVING SCHEDULE
 SCHEDULER:New( nil, function()
-no_farps()
+staticsno_farps()
 Allstatics:ForEach(function (grp)
 
 SaveStatics[grp:GetName()] =

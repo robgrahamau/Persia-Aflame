@@ -6,10 +6,15 @@ SEH:HandleEvent(EVENTS.BaseCaptured)
 
 trigger.action.setUserFlag(100,0)
 
-
+TunbRed = STATIC:FindByName("CTLD Tnub")
+TunbBlue = STATIC:FindByName("CTLD Tnub B")
 function slot_tunb(coalition)
     BASE:E({"SLOTS RUNNING FOR TUNB",coalition})
     if coalition == 1 then
+      TunbBlue:Destroy()
+      if TunbRed:IsAlive() ~= true then
+        TunbRed:ReSpawn()
+      end
       trigger.action.setUserFlag("Tunb UH1 #001",0)
       trigger.action.setUserFlag("Tunb UH1",0)
       trigger.action.setUserFlag("Tunb MI8",0)
@@ -24,6 +29,10 @@ function slot_tunb(coalition)
       trigger.action.setUserFlag("Tunb Georgia MI8 #001",100)
       ctld.changeRemainingGroupsForPickupZone("CTLD Tunb Island", 4)
     else
+      TunbRed:Destroy()
+      if TunbBlue:IsAlive() ~= true then
+        TunbBlue:ReSpawn()
+      end
       trigger.action.setUserFlag("Tunb UH1 #001",100)
       trigger.action.setUserFlag("Tunb UH1",100)
       trigger.action.setUserFlag("Tunb MI8",100)
@@ -39,9 +48,17 @@ function slot_tunb(coalition)
       ctld.changeRemainingGroupsForPickupZone("CTLD Tunb Island", 4)
     end
 end
+
+SirriRed = STATIC:FindByName("CTLD Sirri Island")
+SirriBlue = STATIC:FindByName("CTLD Sirri Island B")
+
 function slot_sirri(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Sirri Island",3)
   if coalition == 1 then
+    SirriBlue:Destroy()
+    if SirriRed:IsAlive() ~= true then
+      SirriRed:ReSpawn()
+    end
     trigger.action.setUserFlag("Sirri US Island MI8", 100)
     trigger.action.setUserFlag("Sirri US Island MI8 #001", 100)
     trigger.action.setUserFlag("Sirri US Island KA50", 100)
@@ -49,6 +66,10 @@ function slot_sirri(coalition)
     trigger.action.setUserFlag("Sirri US Island UH1", 100)
     trigger.action.setUserFlag("Sirri US Island UH1 #001", 100)
   else
+    SirriRed:Destroy()
+    if SirriBlue:IsAlive() ~= true then
+      SirriBlue:ReSpawn()
+    end
     trigger.action.setUserFlag("Sirri US Island MI8", 0)
     trigger.action.setUserFlag("Sirri US Island MI8 #001", 0)
     trigger.action.setUserFlag("Sirri US Island KA50", 0)
@@ -58,9 +79,16 @@ function slot_sirri(coalition)
   end
 end
 
+LavanRed = STATIC:FindByName("CTLD Lavin")
+LavanBlue = STATIC:FindByName("CTLD Lavin B")
 function slot_lavan(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Lavin Island",3)
   if coalition == 1 then
+    LavanBlue:Destroy()
+    if LavanRed:IsAlive() ~= true then
+      LavanRed:ReSpawn()
+    end
+    
     trigger.action.setUserFlag("Lavin Island UH1", 0)
     trigger.action.setUserFlag("Lavin Island UH1 #001", 0)
     trigger.action.setUserFlag("Lavin Island KA50", 0)
@@ -74,6 +102,11 @@ function slot_lavan(coalition)
     trigger.action.setUserFlag("Lavin Island US MI8", 100)
     trigger.action.setUserFlag("Lavin Island US MI8 #001", 100)
   else
+    LavanRed:Destroy()
+    if LavanBlue:IsAlive() ~= true then
+      LavanBlue:ReSpawn()
+    end
+    
     trigger.action.setUserFlag("Lavin Island UH1", 100)
     trigger.action.setUserFlag("Lavin Island UH1 #001", 100)
     trigger.action.setUserFlag("Lavin Island KA50", 100)
@@ -88,10 +121,16 @@ function slot_lavan(coalition)
     trigger.action.setUserFlag("Lavin Island US MI8 #001", 00)
   end
 end
+KishBlue = STATIC:FindByName("CTLD Kish B")
+KishRed = STATIC:FindByName("CTLD Kish")
 
 function slot_kish(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Kish Island",3)
   if coalition == 1 then
+    KishBlue:Destroy()
+    if KishRed:IsAlive() ~= true then
+      KishRed:ReSpawn()
+    end
     trigger.action.setUserFlag("Kish UH1", 0)
     trigger.action.setUserFlag("Kish UH1 #001", 0)
     trigger.action.setUserFlag("Kish Mi8", 0)
@@ -103,6 +142,10 @@ function slot_kish(coalition)
     trigger.action.setUserFlag("Kish US KA50", 100)
     trigger.action.setUserFlag("Kish US KA50 #001", 100)
   else
+    KishRed:Destroy()
+    if KishBlue:IsAlive() ~= true then
+      KishBlue:ReSpawn()
+    end
     trigger.action.setUserFlag("Kish UH1", 100)
     trigger.action.setUserFlag("Kish UH1 #001", 100)
     trigger.action.setUserFlag("Kish Mi8", 100)
@@ -116,14 +159,27 @@ function slot_kish(coalition)
   end
 end
 
+
+
+QeshmRed = STATIC:FindByName("CTLD Qeshm Island")
+QeshmBlue = STATIC:FindByName("CTLD Qeshm Island B")
+
 function slot_qeshm(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Qeshm Island",4)
   if coalition == 1 then
+    QeshmBlue:Destroy()
+    if QeshmRed:IsAlive() ~= true then
+      QeshmRed:ReSpawn()
+    end
     trigger.action.setUserFlag("Qeshm Island US UH1", 100)
     trigger.action.setUserFlag("Qeshm Island US UH1 #001", 100)
     trigger.action.setUserFlag("Qeshm Island US KA50", 100)
     trigger.action.setUserFlag("Qeshm Island US KA50 #001", 100)
   else
+    QeshmRed:Destroy()
+    if QeshmBlue:IsAlive() ~= true then
+      QeshmBlue:ReSpawn()
+    end
     trigger.action.setUserFlag("Qeshm Island US UH1", 00)
     trigger.action.setUserFlag("Qeshm Island US UH1 #001", 00)
     trigger.action.setUserFlag("Qeshm Island US KA50", 00)
@@ -131,9 +187,15 @@ function slot_qeshm(coalition)
   end
 end
 
+KhasabRed = STATIC:FindByName("CTLD AbuFarp B")
+KhasabBlue = STATIC:FindByName("CTLD AbuFarp")
 function slot_khasab(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Khasab",4)
   if coalition == 1 then
+    KhasabBlue:Destroy()
+    if KhasabRed:IsAlive() ~= true then
+      KhasabRed:ReSpawn()
+    end
     trigger.action.setUserFlag("RED KA50 Khasab", 00)
     trigger.action.setUserFlag("RED KA50 Khasab #001", 00)
     trigger.action.setUserFlag("RED UH1 Khasab", 00)
@@ -165,6 +227,10 @@ function slot_khasab(coalition)
     trigger.action.setUserFlag("COLT5-56",100)
     trigger.action.setUserFlag("COLT5-57",100)
   else
+    KhasabRed:Destroy()
+    if KhasabBlue:IsAlive() ~= true then
+      KhasabBlue:ReSpawn()
+    end
     trigger.action.setUserFlag("RED KA50 Khasab", 100)
     trigger.action.setUserFlag("RED KA50 Khasab #001", 100)
     trigger.action.setUserFlag("RED UH1 Khasab", 100)
@@ -199,10 +265,15 @@ function slot_khasab(coalition)
 
 end
 
-
+BandarRed = STATIC:FindByName("CTLD BandarFarp")
+BandarBlue = STATIC:FindByName("CTLD BandarFarp B")
 function slot_bandar(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Bandar Abbas",4)
   if coalition == 1 then
+    BandarBlue:Destroy()
+    if BandarRed:IsAlive() ~= true then
+      BandarRed:ReSpawn()
+    end
     trigger.action.setUserFlag("Bandar MI8", 00)
     trigger.action.setUserFlag("Bandar MI8 #001", 00)
     trigger.action.setUserFlag("Bandar UH1", 00)
@@ -238,7 +309,11 @@ function slot_bandar(coalition)
     trigger.action.setUserFlag("Bandar_JF-17_Springfield4 #002",00)
     trigger.action.setUserFlag("Bandar_JF-17_Springfield4 #003",00)
   else
-     trigger.action.setUserFlag("Bandar MI8", 100)
+    BandarRed:Destroy()
+    if BandarBlue:IsAlive() ~= true then
+      BandarBlue:ReSpawn()
+    end
+    trigger.action.setUserFlag("Bandar MI8", 100)
     trigger.action.setUserFlag("Bandar MI8 #001", 100)
     trigger.action.setUserFlag("Bandar UH1", 100)
     trigger.action.setUserFlag("Bandar UH1 #001", 100)
@@ -275,17 +350,45 @@ function slot_bandar(coalition)
   end
 
 end
+
+LarsRed = STATIC:FindByName("CTLD FLar")
+LarsBlue = STATIC:FindByName("CTLD FLar B")
 function slot_lars(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Lar AFB",4)
   if coalition == 1 then
+    LarsBlue:Destroy()
+    if LarsRed:IsAlive() ~= true then
+      LarsRed:ReSpawn()
+    end
     trigger.action.setUserFlag("LARS_JF-17_Springfield7", 00)
     trigger.action.setUserFlag("LARS_JF-17_Springfield7 #001", 00)
   else
+    LarsRed:Destroy()
+    if LarsBlue:IsAlive() ~= true then
+      LarsBlue:ReSpawn()
+    end   
     trigger.action.setUserFlag("LARS_JF-17_Springfield7", 100)
     trigger.action.setUserFlag("LARS_JF-17_Springfield7 #001", 100)
   end
 end
 
+
+abunred = STATIC:FindByName("CTLD Abu Nuayr B")
+abunblue = STATIC:FindByName("CTLD Abu Nuayr")
+function slot_abun(coalition)
+  if coalition == 1 then
+    abunblue:Destroy()
+    if abunred:IsAlive() ~= true then
+      abunred:ReSpawn()
+    end
+  else
+    abunred:Destroy()
+    if abunblue:IsAlive() ~= true then
+      abunblue:ReSpawn()
+    end
+  end
+
+end
 slot_tunb(1)
 slot_sirri(1)
 slot_lavan(1)
@@ -294,6 +397,7 @@ slot_qeshm(1)
 slot_khasab(2)
 slot_bandar(1)
 slot_lars(1)
+slot_abun(2)
 
 function SEH:OnEventBaseCaptured(EventData)
  local AirbaseName = EventData.PlaceName -- The name of the airbase that was captured.
@@ -305,6 +409,7 @@ function SEH:OnEventBaseCaptured(EventData)
     AbLar = coalition
  elseif AirbaseName == AIRBASE.PersianGulf.Sir_Abu_Nuayr then
     ctld.changeRemainingGroupsForPickupZone("CTLD Abu Nuayr", 3)
+    slot_abun(2)    
  elseif AirbaseName == AIRBASE.PersianGulf.Sirri_Island then
     slot_sirri(coalition)
  elseif AirbaseName == AIRBASE.PersianGulf.Abu_Musa_Island_Airport then

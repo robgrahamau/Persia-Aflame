@@ -1,5 +1,5 @@
-version = "0.87 Beta"
-lastupdate = "13 August 2020"
+version = "0.88d Beta"
+lastupdate = "16 August 2020"
 PlayerMap = {}
 PlayerRMap = {}
 PlayerBMap = {}
@@ -64,7 +64,7 @@ local function permanentPlayerCheck()
       if PlayerClient:IsAlive() then
         if PlayerRMap[PlayerID] ~= true then
           PlayerRMap[PlayerID] = true
-          MESSAGE:New("Welcome to Persia Aflame By Rob Graham Version: "..version.." \n Last updated:".. lastupdate .." \n POWERED BY MOOSE, MIST, SLMOD, Lots of Pain Killers and Hamsters! \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Please Be aware This Mission is currently in a ALPHA STATE and may break/Bug out etc. \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n You are on Iran Side, Please be aware this mission is geared towards BLUE Coalition Forces attacking Red, Red Slots are to add some spice to that. \n Your goal is to defend Irani Airspace from Coalition Violations, use CTLD helicopters to repair defences etc.\n  Please Join the DISCORD SEE ALT-B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .."",30):ToClient(PlayerClient)
+          MESSAGE:New("Welcome to Persia Aflame By Rob Graham Version: "..version.." \n Last updated:".. lastupdate .." \n POWERED BY MOOSE, MIST, SLMOD, Lots of Pain Killers and Hamsters! \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Please Be aware This Mission is currently in a ALPHA STATE and may break/Bug out etc. \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n You are on Iran Side, Please be aware this mission is geared towards BLUE Coalition Forces attacking Red, Red Slots are to add some spice to that. \n Your goal is to defend Irani Airspace from Coalition Violations, use CTLD helicopters to repair defences etc.\n  Please Join the DISCORD SEE ALT-B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",30):ToClient(PlayerClient)
           MESSAGE:New("BEAWARE 253.00 (OVERLORDBOT) ON SRS IS FOR AWACS CALLS ONLY. \n IT IS NOT TO BE USED FOR GENERAL COMMS \n IF YOU ARE FOUND USING IT FOR SUCH YOU WILL BE BANNED FROM SRS",60):ToClient(PlayerClient)
         end
       else
@@ -82,7 +82,7 @@ local function permanentPlayerCheck()
          if PlayerClient:IsAlive() then
            if PlayerBMap[PlayerID] ~= true then
             PlayerBMap[PlayerID] = true
-             MESSAGE:New("Welcome to Persia Aflame by Rob Graham Version: "..version.." \n Last updated:".. lastupdate .." \n POWERED BY MOOSE, MUST, SLMOD, Lots of Pain Killers, Player Donations \n Kosh and Lets not forget.. Server Space Hamsters \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n You are on the Coalition Side, Please read the BRIEFING LALT+B for full Communications and other information. \n your primary goal is the destruction of Iran's IADS, Airfields and it's ability to wage war.\n Invading can be done using CTLD and the Player Helicopters \n Blue Airbases offer full resupply, civilian airports only offer fuel/limited resupply. \n Check the F10 Map for Intel Reports \n Please Join the DISCORD SEE ALT-B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is:" .. currenttime .. " Server Mission Cycle:" .. restarttime .."",30):ToClient(PlayerClient)                             
+             MESSAGE:New("Welcome to Persia Aflame by Rob Graham Version: "..version.." \n Last updated:".. lastupdate .." \n POWERED BY MOOSE, MUST, SLMOD, Lots of Pain Killers, Player Donations \n Kosh and Lets not forget.. Server Space Hamsters \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n You are on the Coalition Side, Please read the BRIEFING LALT+B for full Communications and other information. \n your primary goal is the destruction of Iran's IADS, Airfields and it's ability to wage war.\n Invading can be done using CTLD and the Player Helicopters \n Blue Airbases offer full resupply, civilian airports only offer fuel/limited resupply. \n Check the F10 Map for Intel Reports \n Please Join the DISCORD SEE ALT-B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is:" .. currenttime .. " Server Mission Cycle:" .. restarttime .."\n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",30):ToClient(PlayerClient)                             
 			 MESSAGE:New("BEAWARE 253.00 (OVERLORDBOT) ON SRS IS FOR AWACS CALLS ONLY. \n IT IS NOT TO BE USED FOR GENERAL COMMS \n IF YOU ARE FOUND USING IT FOR SUCH YOU WILL BE BANNED FROM SRS",60):ToClient(PlayerClient)
            end    
          else
@@ -96,7 +96,7 @@ C_Arco12 = nil
 
 function Arco11A10()
   local rf = ZONE:New("rf")
-  local altitude = 15000
+  local altitude = UTILS.FeetToMeters(15000)
   local speed = UTILS.KnotsToMps(260) 
   local heading = 210
   local distance = 50
@@ -114,7 +114,7 @@ end
 
 function Arco11FTR()
   local rf = ZONE:New("rf")
-  local altitude = 15000
+  local altitude = UTILS.FeetToMeters(15000)
   local speed = UTILS.KnotsToMps(360) 
   local heading = 210
   local distance = 50
@@ -144,7 +144,7 @@ end
 
 function resettime()
 	SCHEDULER:New(nil,function() 
-	MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n",60):ToAll()
+	MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
 	hourstoreset = hourstoreset - 1
 	if hourstoreset < resethours then
 		nextreset()
@@ -152,13 +152,13 @@ function resettime()
 	end,{},60*60)
 end
 SCHEDULER:New(nil,function() 
-  MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n",60):ToAll()
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
   hourstoreset = hourstoreset - 1
   nextreset()	
 end,{},1)
 
 SCHEDULER:New(nil,function() 
-  MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 HOUR \n Current Server time is: ".. nowHour .. ":" .. nowminute .."",60):ToAll()
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 HOUR \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
 end,{},((60*60) * (resethours - 1)))
 SCHEDULER:New(nil,function() 
   MESSAGE:New("MISSION CYLE WILL HAPPEN IN 30 Minutes",10):ToAll()

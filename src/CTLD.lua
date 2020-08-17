@@ -33,7 +33,7 @@ ctld.disableAllSmoke = false -- if true, all smoke is diabled at pickup and drop
 ctld.hoverPickup = false --  if set to false you can load crates with the F10 menu instead of hovering... Only if not using real crates!
 
 ctld.enableCrates = true -- if false, Helis will not be able to spawn or unpack crates so will be normal CTTS
-ctld.slingLoad = false -- if false, crates can be used WITHOUT slingloading, by hovering above the crate, simulating slingloading but not the weight...
+ctld.slingLoad = true -- if false, crates can be used WITHOUT slingloading, by hovering above the crate, simulating slingloading but not the weight...
 -- There are some bug with Sling-loading that can cause crashes, if these occur set slingLoad to false
 -- to use the other method.
 -- Set staticBugFix  to FALSE if use set ctld.slingLoad to TRUE
@@ -198,26 +198,35 @@ ctld.wpZones = {
 
 ctld.logisticUnits = {
     "CTLD AbuFarp",
+	"CTLD AbuFarp B",
     "CTLD AL_Drafra",
     "CTLD BandarFarp",
+	"CTLD BandarFarp B",
     "CTLD BANDAR2",
     "CTLD FBN85",
     "CTLD FDP05",
     "CTLD FDR35",
+	"CTLD FDR35 B",
     "TARFARP2",
     "CTLD FJiroft",
     "CTLD Kerman",
     "CTLD Kish",
+	"CTLD Kish B",
     "CTLD FLar",
+	"CTLD FLar B",
     "CTLD Lavin",
     "CTLD FShiraz",
     "CTLD Al Minhad",
     "C TARAWA",
     "C TARAWA2",
     "CTLD Tnub",
+	"CTLD Tnub B",
     "CTLD Abu Nuayr",
+	"CTLD Abu Nuayr B",
     "CTLD Qeshm Island",
+	"CTLD Qeshm Island B",
     "CTLD Sirri Island",
+	"CTLD Sirri Island B",
 }
 -- ******************** Transports names **********************
 

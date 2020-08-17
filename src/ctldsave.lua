@@ -118,10 +118,8 @@ if resetall == 0 then
     ctld.droppedVehiclesRED = ctldsave[4]
     ctld.droppedVehiclesBLUE = ctldsave[5]
     ctld.jtacUnits = ctldsave[6]
-    ctld.builtFOBS = ctldsave[7]
-    ctld.logisticUnits = ctldsave[8]
-    --ctld.droppedFOBCratesRED = ctldsave[9]
-    --ctld.droppedFOBCratesBLUE = ctldsave[10]
+    ctld.jtacGeneratedLaserCodes = ctldsave[7] -- keeps track of generated codes, cycles when they run out
+    ctld.jtacLaserPointCodes = ctldsave[8]
     env.info("Main Mission: Existing database, loading from File.")
     BASE:E({ctldsave})
     ctldper = true
@@ -138,7 +136,7 @@ end
 
 function savectldpersistence()
    BASE:E("saving ctld items")
-   ctldsave = { ctld.completeAASystems, ctld.droppedTroopsRED, ctld.droppedTroopsBLUE, ctld.droppedVehiclesRED,ctld.droppedVehiclesBLUE, ctld.jtacUnits, ctld.builtFOBS, ctld.logisticUnits,}
+   ctldsave = { ctld.completeAASystems, ctld.droppedTroopsRED, ctld.droppedTroopsBLUE, ctld.droppedVehiclesRED,ctld.droppedVehiclesBLUE, ctld.jtacUnits, ctld.jtacGeneratedLaserCodes,ctld.jtacLaserPointCodes}
 end
 
 
