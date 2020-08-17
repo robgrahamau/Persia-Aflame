@@ -130,6 +130,8 @@ RED_A_SET:ForEachStatic(function(g)
 end)
 
 function checkctldlogistics()
+no_farps()
+
 RED_CTLD_SET:ForEachStatic(function(g) 
   local gid =g:GetName()
   local data = {static = g, displayed = false,text="",markerid = nil}

@@ -115,5 +115,13 @@ end
 
 AirbossStennis:Start()
 
+function AirbossWash:OnAfterRecoveryStart(From,Event,To,Case,Offset)
+  AirbossStennis:SetRecoveryTurnTime(5)
+  AirbossStennis:RecoveryStart(Case,Offset)
+end
+function AirbossStennis:OnAfterRecoveryStart(From,Event,To,Case,Offset)
+  AirbossWash:SetRecoveryTurnTime(5)
+  AirbossWash:RecoveryStart(Case,Offset)
+end
 end
 

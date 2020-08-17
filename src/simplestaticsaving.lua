@@ -48,16 +48,6 @@ function no_farps()
     if b == true then
       Allstatics:AddStatic(stat)
     end
-    prefix = "CTLD"
-    local b = _name:find(prefix) == 1
-    if b == true then
-      Allstatics:AddStatic(stat)
-    end
-    prefix = "ctld"
-    local b = _name:find(prefix) == 1
-    if b == true then
-      Allstatics:AddStatic(stat)
-    end 
   end
   end)
 end
