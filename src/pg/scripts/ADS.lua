@@ -4,9 +4,9 @@
     return DefenderSquadron.ResourceCount 
   end
 
-RAWACS = SPAWN:New("AWAC Overlord21"):InitLimit(1,8):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(300,0.5)
-RAWACS2 = SPAWN:New("AWAC Overlord11"):InitLimit(1,8):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(300,0.5)
-TANKER = SPAWN:New("Texaco11"):InitLimit(1,8):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(300,0.5)
+RAWACS = SPAWN:New("AWAC Overlord21"):InitLimit(1,4):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(1800,0.5)
+RAWACS2 = SPAWN:New("AWAC Overlord11"):InitLimit(1,4):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(1800,0.5)
+TANKER = SPAWN:New("Texaco11"):InitLimit(1,4):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(1800,0.5)
 
 do
 capzone1 = ZONE_POLYGON:New("CAP1",GROUP:FindByName("CAP1"))
@@ -17,7 +17,6 @@ capzone5 = ZONE_POLYGON:New("CAP5",GROUP:FindByName("CAP5"))
 capzone6 = ZONE_POLYGON:New("CAP6",GROUP:FindByName("CAP6")) 
 capzone7 = ZONE_POLYGON:New("CAP7",GROUP:FindByName("CAP7"))
 capzonecow = ZONE_POLYGON:NewFromGroupName("Cow_AS")
-
 end
 
 do 
@@ -91,9 +90,7 @@ do
   
   ra2disp:SetSquadronGci("Bandar Abbas INT",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
   ra2disp:SetSquadronGci("Lar",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
-  
 
-  
   ra2disp:__Start(30)
   
  end

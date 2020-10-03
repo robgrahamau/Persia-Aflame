@@ -30,7 +30,7 @@ ctld.staticBugWorkaround = false --  DCS had a bug where destroying statics woul
 
 ctld.disableAllSmoke = false -- if true, all smoke is diabled at pickup and drop off zones regardless of settings below. Leave false to respect settings below
 
-ctld.hoverPickup = true --  if set to false you can load crates with the F10 menu instead of hovering... Only if not using real crates!
+ctld.hoverPickup = false --  if set to false you can load crates with the F10 menu instead of hovering... Only if not using real crates!
 
 ctld.enableCrates = true -- if false, Helis will not be able to spawn or unpack crates so will be normal CTTS
 ctld.slingLoad = false -- if false, crates can be used WITHOUT slingloading, by hovering above the crate, simulating slingloading but not the weight...
@@ -103,9 +103,9 @@ ctld.hoverTime = 4 -- Time to hold hover above a crate for loading in seconds
 -- When this limit is hit, a player will still be able to get crates for an AA system, just unable
 -- to unpack them
 
-ctld.AASystemLimitRED = 15 -- Red side limit
+ctld.AASystemLimitRED = 10 -- Red side limit
 
-ctld.AASystemLimitBLUE = 15 -- Blue side limit
+ctld.AASystemLimitBLUE = 10 -- Blue side limit
 
 --END AA SYSTEM CONFIG --
 
@@ -225,6 +225,8 @@ ctld.logisticUnits = {
 	"CTLD Qeshm Island B",
     "CTLD Sirri Island",
 	"CTLD Sirri Island B",
+	"CTLD BandarFarp C",
+	"CTLD BandarFarp D",
 }
 -- ******************** Transports names **********************
 
@@ -490,18 +492,17 @@ ctld.spawnableCrates = {
     },
     ["LRNG AA Crates"] = {
     -- BUK System
-        { weight = 575, desc = "BUK Launcher", unit = "SA-11 Buk LN 9A310M1", side = 1},
-        { weight = 580, desc = "BUK Search Radar", unit = "SA-11 Buk SR 9S18M1", side = 1},
-        { weight = 585, desc = "BUK CC Radar", unit = "SA-11 Buk CC 9S470M1", side = 1},
-        
+        { weight = 575, desc = "BUK Launcher", unit = "SA-11 Buk LN 9A310M1"},
+        { weight = 580, desc = "BUK Search Radar", unit = "SA-11 Buk SR 9S18M1"},
+        { weight = 585, desc = "BUK CC Radar", unit = "SA-11 Buk CC 9S470M1"},
         -- END of BUK
     },
     ["FOP & Repair"] = {
         { weight = 800, desc = "FOB Crate - Small", unit = "FOB-SMALL" }, -- Builds a FOB! - requires 3 * ctld.cratesRequiredForFOB
         { weight = 252, desc = "Ural-375 Ammo Truck", unit = "Ural-375", side = 1, cratesRequired = 1 },
         { weight = 253, desc = "M-818 Ammo Truck", unit = "M 818", side = 2, cratesRequired = 1 },       
-        { weight = 552, desc = "HAWK Repair", unit = "HAWK Repair" , side = 2 },
-        { weight = 590, desc = "BUK Repair", unit = "BUK Repair", side = 1},
+        { weight = 552, desc = "HAWK Repair", unit = "HAWK Repair"},
+        { weight = 590, desc = "BUK Repair", unit = "BUK Repair"},
         { weight = 570, desc = "KUB Repair", unit = "KUB Repair", side = 1},
         { weight = 552, desc = "Roland Repair", unit = "Roland Repair", side = 2},    
      },

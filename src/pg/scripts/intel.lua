@@ -99,6 +99,7 @@ RED_EW_SET:ForEachGroupAlive(function(g)
   intel_reports[gid] = text
   MESSAGE:New(text,15,"CIA Intel Update"):ToAll()  
   local m = co:MarkToAll(EW_INTEL[gid].text,true)
+  HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
   EW_INTEL[gid].markerid = m
 end)
 
@@ -308,6 +309,7 @@ if inteltype == 1 or inteltype == 4 or inteltype == 5 then
           local text = "CIA Report: Detected Surface to Air Installation \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.group:GetName()] = text
+		  HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
@@ -334,6 +336,7 @@ if inteltype == 2 or inteltype == 4 or inteltype == 6 then
           k.text = text
           intel_reports[k.group:GetName()] = text
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
+		  HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
           updated = true
@@ -360,6 +363,7 @@ if inteltype == 3 or inteltype == 5 or inteltype == 6 then
           k.text = text
           intel_reports[k.static:GetName()] = text
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
+		  HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
           updated = true

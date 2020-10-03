@@ -1,35 +1,7 @@
--- Simple Group Saving by Pikey May 2019 https://github.com/thebgpikester/SimpleGroupSaving/
--- Usage of this script should credit the following contributors:
- --Pikey, 
- --Speed & Grimes for their work on Serialising tables, included below,
- --FlightControl for MOOSE (Required)
- 
- --INTENDED USAGE
- --DCS Server Admins looking to do long term multi session play that will need a server reboot in between and they wish to keep the Ground 
- --Unit positions true from one reload to the next.
- 
- --USAGE
- --Ensure LFS and IO are not santitised in missionScripting.lua. This enables writing of files. If you don't know what this does, don't attempt to use this script.
- --Requires versions of MOOSE.lua supporting "SET:ForEachGroupAlive()". Should be good for 6 months or more from date of writing. 
- --MIST not required, but should work OK with it regardless.
- --Edit 'SaveScheduleUnits' below, (line 34) to the number of seconds between saves. Low impact. 10 seconds is a fast schedule.
- --Place Ground Groups wherever you want on the map as normal.
- --Run this script at Mission start
- --The script will create a small file with the list of Groups and Units.
- --At Mission Start it will check for a save file, if not there, create it fresh
- --If the table is there, it loads it and Spawns everything that was saved.
- --The table is updated throughout mission play
- --The next time the mission is loaded it goes through all the Groups again and loads them from the save file.
- 
- --LIMITATIONS
- --Only Ground Groups and Units are specified, play with the SET Filter at your own peril. Could be adjusted for just one Coalition or a FilterByName().
- --See line 107 and 168 for the SET.
- --See https://flightcontrol-master.github.io/MOOSE_DOCS_DEVELOP/Documentation/Core.Set.html##(SET_GROUP)
- --Naval Groups not Saved. If Included, there may be issues with spawned objects and Client slots where Ships have slots for aircraft/helo. Possible if not a factor
- --Statics are not included. See 'Simple Static Saving' for a solution
- --Routes are not saved. Uncomment lines 148-153 if you wish to keep them, but they won't activate them on restart. It is impossible to query a group for it's current
- --route, only for the original route it recieved from the Mission Editor. Therefore a DCS limitation.
- -----------------------------------
+defaultlogisticUnits = {
+			"CTLD AbuFarp","CTLD AbuFarp B","CTLD AL_Drafra","CTLD BandarFarp",	"CTLD BandarFarp B","CTLD BANDAR2",	"CTLD FBN85","CTLD FDP05","CTLD FDR35",	"CTLD FDR35 B",	"TARFARP2",	"CTLD FJiroft",	"CTLD Kerman",	"CTLD Kish","CTLD Kish B","CTLD FLar","CTLD FLar B","CTLD Lavin",  "CTLD FShiraz","CTLD Al Minhad","C TARAWA","C TARAWA2","CTLD Tnub","CTLD Tnub B", "CTLD Abu Nuayr","CTLD Abu Nuayr B", "CTLD Qeshm Island","CTLD Qeshm Island B",  "CTLD Sirri Island","CTLD Sirri Island B",}
+
+
  --Configurable for user:
 local SaveSchedulePersistence=60 --how many seconds between each check of all the statics.
  --AllGroups = SET_GROUP:New():FilterCategories("ground"):FilterPrefixes({"RSAM","RRSUP","REWR","BSAM","BEWR",}):FilterActive(true):FilterStart()
@@ -112,15 +84,53 @@ env.info("Loaded RIB SAVE, version " .. version)
 if resetall == 0 then
   if file_exists(savefile) then --Script has been run before, so we need to load the save
     dofile(savefile)
-    ctld.completeAASystems = ctldsave[1]
-    ctld.droppedTroopsRed = ctldsave[2]
-    ctld.droppedTroopsBLUE = ctldsave[3]
-    ctld.droppedVehiclesRED = ctldsave[4]
-    ctld.droppedVehiclesBLUE = ctldsave[5]
-    --ctld.jtacUnits = ctldsave[6]
-    ctld.builtFOBS = ctldsave[7]
-    ctld.logisticUnits = ctldsave[8]
-	ctld.extractableGroups = ctldsave[9]
+	if ctldsave[1] ~= nil then
+		ctld.completeAASystems = ctldsave[1]
+	else
+		ctld.completeAASystems = {}
+	end
+    if ctldsave[2] ~= nil then
+		ctld.droppedTroopsRED = ctldsave[2]
+	else
+		ctld.droppedTroopsRED = {}
+	end
+	if ctldsave[3] ~= nil then
+		ctld.droppedTroopsBLUE = ctldsave[3]
+	else
+		ctld.droppedTroopsBLUE = {}
+	end
+    if ctldsave[4] ~= nil then
+		ctld.droppedVehiclesRED = ctldsave[4]
+	else
+		ctld.droppedVehiclesRED = {}
+	end
+	if ctldsave[5] ~= nil then
+		ctld.droppedVehiclesBLUE = ctldsave[5]
+	else
+		ctld.droppedVehiclesBLUE = {}
+	end
+    if ctldsave[6] ~= nil then
+		ctld.jtacUnits = ctldsave[6]
+	else
+		ctld.jtacUnits = {}
+	end
+    if ctldsave[7] ~= nil then
+		ctld.builtFOBS = ctldsave[7]
+	else
+		ctld.builtFOBS = {}
+	end
+	if ctldsave[8] ~= nil then
+		ctld.logisticUnits = ctldsave[8]
+	else
+		BASE:E({"WARNING CTLD SAVE TABLE 8 WAS EMPTY!!!! GENERATING FROM DEFAULT VALUES"})
+		ctld.logisticUnits = defaultlogisticUnits
+    end
+	if ctldsave[9] ~= nil then
+		ctld.extractableGroups = ctldsave[9]
+	else
+		ctld.extractableGroups = {}
+	end
+
 	--ctld.jtacGeneratedLaserCodes = ctldsave[10]
 	--ctld.jtacLaserPointCodes = ctldsave[11]
 	--ctld.nextUnitId = ctldsave[12]
@@ -141,21 +151,19 @@ end
 
 function savectldpersistence()
    BASE:E("saving ctld items")
-   ctldsave = { 
-	ctld.completeAASystems, 
-	ctld.droppedTroopsRED, 
-	ctld.droppedTroopsBLUE, 
-	ctld.droppedVehiclesRED,
-	ctld.droppedVehiclesBLUE, 
-	ctld.jtacUnits, 
-	ctld.builtFOBS,
-	ctld.logisticUnits, 
-	ctld.extractableGroups,
-	ctld.jtacGeneratedLaserCodes,
-	ctld.jtacLaserPointCodes,
-	ctld.nextUnitId,
-	ctld.nextGroupId,
-	}
+   ctldsave[1] = ctld.completeAASystems
+   ctldsave[2] = ctld.droppedTroopsRED
+   ctldsave[3] = ctld.droppedTroopsBLUE
+   ctldsave[4] = ctld.droppedVehiclesRED
+   ctldsave[5] = ctld.droppedVehiclesBLUE
+   ctldsave[6] = ctld.jtacUnits
+   ctldsave[7] = ctld.builtFOBS
+   ctldsave[8] = ctld.logisticUnits
+   ctldsave[9] = ctld.extractableGroups
+   ctldsave[10] = ctld.jtacGeneratedLaserCodes
+   ctldsave[11] = ctld.jtacLaserPointCodes
+   ctldsave[12] = ctld.nextUnitId
+   ctldsave[13] = ctld.nextGroupId
 end
 
 

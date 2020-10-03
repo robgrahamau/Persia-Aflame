@@ -23,8 +23,8 @@ __CinC.Include = function( IncludeFile )
 end
 
 __CinC.Includes = {}
-__CinC.Include( 'Scripts/cinc/src/logger.lua' )
-__CinC.Include( 'Scripts/cinc/src/server.lua' )
-__CinC.Include( 'Scripts/cinc/src/api/get_airbases.lua' )
+__CinC.Include( lfs.writedir() .. "Scripts\\cinc\\src\\logger.lua" )
+__CinC.Include( lfs.writedir() .. "Scripts\\cinc\\src\\server.lua" )
+__CinC.Include( lfs.writedir() .. "Scripts\\cinc\\src\\get_airbases.lua" )
 
 env.info('*** CINC INCLUDE END ***')

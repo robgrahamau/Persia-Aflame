@@ -1,15 +1,127 @@
+
+--[[
+DCS-SimpleTextToSpeech
+Version 0.1
+Compatible with SRS version 1.9.0.2 +
+DCS Modification Required:
+You will need to edit MissionScripting.lua in DCS World/Scripts/MissionScripting.lua and remove the sanitisation.
+To do this remove all the code below the comment - the line starts "local function sanitizeModule(name)"
+Do this without DCS running to allow mission scripts to use os functions.
+*You WILL HAVE TO REAPPLY AFTER EVERY DCS UPDATE*
+USAGE:
+Add this script into the mission as a DO SCRIPT or DO SCRIPT FROM FILE to initialise it
+Make sure to edit the STTS.SRS_PORT and STTS.DIRECTORY to the correct values before adding to the mission.
+Then its as simple as calling the correct function in LUA as a DO SCRIPT or in your own scripts
+Example calls:
+STTS.TextToSpeech("Hello DCS WORLD","251","AM","1.0","SRS",2)
+Arguments in order are:
+ - Message to say, make sure not to use a newline (\n) !
+ - Frequency in MHz
+ - Modulation - AM/FM
+ - Volume - 1.0 max, 0.5 half
+ - Name of the transmitter - ATC, RockFM etc
+ - Coalition - 0 spectator, 1 red 2 blue
+ This example will say the words "Hello DCS WORLD" on 251 MHz AM at maximum volume with a client called SRS and to the Blue coalition only
+STTS.PlayMP3("C:\\Users\\Ciaran\\Downloads\\PR-Music.mp3","255,31","AM,FM","0.5","Multiple",0)
+Arguments in order are:
+ - FULL path to the MP3 to play
+ - Frequency in MHz - to use multiple separate with a comma - Number of frequencies MUST match number of Modulations
+ - Modulation - AM/FM - to use multiple
+ - Volume - 1.0 max, 0.5 half
+ - Name of the transmitter - ATC, RockFM etc
+ - Coalition - 0 spectator, 1 red 2 blue
+This will play that MP3 on 255MHz AM & 31 FM at half volume with a client called "Multiple" and to Spectators only
+]]
+env.info("Loading SRS stuff")
+
+STTS = {}
+-- FULL Path to the FOLDER containing DCS-SR-ExternalAudio.exe - EDIT TO CORRECT FOLDER
+STTS.DIRECTORY = "E:\\DCS-SimpleRadio-Standalone"
+STTS.SRS_PORT = 5002 -- LOCAL SRS PORT - DEFAULT IS 5002
+
+
+-- DONT CHANGE THIS UNLESS YOU KNOW WHAT YOU'RE DOING
+STTS.EXECUTABLE = "DCS-SR-ExternalAudio.exe"
+
+function STTS.TextToSpeech(message,freqs,modulations, volume,name, coalition )
+
+    message = message:gsub("\"","\\\"")
+
+    local cmd = string.format("start \"%s\" \"%s\\%s\" \"%s\" %s %s %s %s \"%s\" %s", STTS.DIRECTORY, STTS.DIRECTORY, STTS.EXECUTABLE, message, freqs, modulations, coalition,STTS.SRS_PORT, name, volume )
+
+    os.execute(cmd)
+
+end
+
+function STTS.PlayMP3(pathToMP3,freqs,modulations, volume,name, coalition )
+
+    local cmd = string.format("start \"%s\" \"%s\\%s\" \"%s\" %s %s %s %s \"%s\" %s", STTS.DIRECTORY, STTS.DIRECTORY, STTS.EXECUTABLE, pathToMP3, freqs, modulations, coalition,STTS.SRS_PORT, name, volume )
+
+    os.execute(cmd)
+
+end
+
+env.info("Loadinged SRS stuff")
+
 BASE:E({"SLOT HANDLER FOR PERSIA AFLAME LOADING"})
 trigger.action.setUserFlag("SSB",100)
 SEH = EVENTHANDLER:New()
 SEH:HandleEvent(EVENTS.BaseCaptured)
-
-
+stn = UNIT:FindByName("Stennis")
+lh2 = UNIT:FindByName("LHA-2")
+tdy = UNIT:FindByName("TeddyR")
+tar = UNIT:FindByName("Tarawa")
+GW = UNIT:FindByName("Washington")
+lh3 = UNIT:FindByName("LHA-3")
+lh4 = UNIT:FindByName("LHA-4")
+bandaractive = false
+kishactive = false
+stn:HandleEvent(EVENTS.Dead)
+lh2:HandleEvent(EVENTS.Dead)
+tdy:HandleEvent(EVENTS.Dead)
+tar:HandleEvent(EVENTS.Dead)
+GW:HandleEvent(EVENTS.Dead)
+lh3:HandleEvent(EVENTS.Dead)
+lh4:HandleEvent(EVENTS.Dead)
+am = AIRBASE:FindByName(AIRBASE.PersianGulf.Abu_Musa_Island_Airport)
+si = AIRBASE:FindByName(AIRBASE.PersianGulf.Sirri_Island)
+tk = AIRBASE:FindByName(AIRBASE.PersianGulf.Tunb_Kochak)
+ta = AIRBASE:FindByName(AIRBASE.PersianGulf.Tunb_Island_AFB)
 
 
 trigger.action.setUserFlag(100,0)
 TunbRed = STATIC:FindByName("CTLD Tnub")
 TunbBlue = STATIC:FindByName("CTLD Tnub B")
+BandarRed = STATIC:FindByName("CTLD BandarFarp")
+BandarBlue = STATIC:FindByName("CTLD BandarFarp B")
+SirriRed = STATIC:FindByName("CTLD Sirri Island")
+SirriBlue = STATIC:FindByName("CTLD Sirri Island B")
+LavanRed = STATIC:FindByName("CTLD Lavin")
+LavanBlue = STATIC:FindByName("CTLD Lavin B")
+KhasabRed = STATIC:FindByName("CTLD AbuFarp B")
+KhasabBlue = STATIC:FindByName("CTLD AbuFarp")
+LarsRed = STATIC:FindByName("CTLD FLar")
+LarsBlue = STATIC:FindByName("CTLD FLar B")
+KishBlue = STATIC:FindByName("CTLD Kish B")
+KishRed = STATIC:FindByName("CTLD Kish")
+QeshmRed = STATIC:FindByName("CTLD Qeshm Island")
+QeshmBlue = STATIC:FindByName("CTLD Qeshm Island B")
+abunred = STATIC:FindByName("CTLD Abu Nuayr B")
+abunblue = STATIC:FindByName("CTLD Abu Nuayr")
+havred = STATIC:FindByName("CTLD BandarFarp D")
+havblue = STATIC:FindByName("CTLD BandarFarp C")
+havmsg = false
+abunmsg = false
+qemsg = false
+kimsg = false
+larmsg = false
+khmsg = false
+lmsg = false
+smsg = false
+banmsg = false
 tmsg = false
+jirmsg = false
+
 function slot_tunb(coalition)
     BASE:E({"SLOTS RUNNING FOR TUNB",coalition})
     if coalition == 1 then
@@ -32,6 +144,9 @@ function slot_tunb(coalition)
       ctld.changeRemainingGroupsForPickupZone("CTLD Tunb Island", 4)
 	  if tmsg == true then
 		MESSAGE:New("Iran has Retaken Tunb from the Coalition Invaders!",30):ToAll()
+		STTS.TextToSpeech("Tunb has been retaken by Irani Forces",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("We have lost Tunb to Irani Forces",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Tunb has been taken by Iran ==============")
 		tmsg = false
 	  end
     else
@@ -54,14 +169,14 @@ function slot_tunb(coalition)
       ctld.changeRemainingGroupsForPickupZone("CTLD Tunb Island", 4)
 	  if tmsg == false then
 		MESSAGE:New("Coalition forces have liberated Tunb from Iran",30):ToAll()
+		STTS.TextToSpeech("Tunb has fallen to the capitalist infidels",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("We have liberated Tunb from Irani Forces",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Tunb has been taken by the Coalition  ==================")
 		tmsg = true
 	  end	
     end
 end
 
-SirriRed = STATIC:FindByName("CTLD Sirri Island")
-SirriBlue = STATIC:FindByName("CTLD Sirri Island B")
-smsg = false
 function slot_sirri(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Sirri Island",3)
   if coalition == 1 then
@@ -78,6 +193,9 @@ function slot_sirri(coalition)
     trigger.action.setUserFlag("Sirri US Island UH1 #001", 100)
 	if smsg == true then
 		MESSAGE:New("Iran has Retaken Sirri Island from the Coalition Invaders!",30):ToAll()
+		STTS.TextToSpeech("Sirri Island has been retaken from the US led scum",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("We have lost Sirri Island to Iran!",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Siri Island has been taken by Iran  ==================")
 		smsg = false
     end
   else
@@ -94,14 +212,14 @@ function slot_sirri(coalition)
     trigger.action.setUserFlag("Sirri US Island UH1 #001", 0)
 	if smsg == false then
 		MESSAGE:New("Coalition Forces have liberated Sirri Island from Iran",30):ToAll()
+		STTS.TextToSpeech("Sirri Island has been lost to the western invaders",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("We liberated Sirri Island from Iran!",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Siri Island has been taken by Coalition Forces  ==================")
 		smsg = true
 	end
   end
 end
 
-LavanRed = STATIC:FindByName("CTLD Lavin")
-LavanBlue = STATIC:FindByName("CTLD Lavin B")
-lmsg = false
 function slot_lavan(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Lavin Island",3)
   if coalition == 1 then
@@ -124,6 +242,9 @@ function slot_lavan(coalition)
     trigger.action.setUserFlag("Lavin Island US MI8 #001", 100)
 	if lmsg == true then
 		MESSAGE:New("Iran has retaken Lavan Island from the US Backed Infidels",30):ToAll()
+		STTS.TextToSpeech("Lavan Island is once more back in Irani Hands",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("We have lost our foothold on Lavan Island!",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Lavan Island has been taken by Iran  ==================")
 		lmsg = false
 	end
   else
@@ -146,13 +267,14 @@ function slot_lavan(coalition)
     trigger.action.setUserFlag("Lavin Island US MI8 #001", 00)
 	if lmsg == false then
 		MESSAGE:New("The US Led Coalition has liberated Lavan Island from Irani dictatorship",30):ToAll()
+		STTS.TextToSpeech("Lavan Island has fallen",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("We have gained a foothold on Lavan Island!",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Lavan Island has been taken by Coalition Forces  ==================")
 		lmsg = true
 	end
   end
 end
-KishBlue = STATIC:FindByName("CTLD Kish B")
-KishRed = STATIC:FindByName("CTLD Kish")
-kimsg = false
+
 function slot_kish(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Kish Island",3)
   if coalition == 1 then
@@ -170,10 +292,13 @@ function slot_kish(coalition)
     trigger.action.setUserFlag("Kish US UH1 #001", 100)
     trigger.action.setUserFlag("Kish US KA50", 100)
     trigger.action.setUserFlag("Kish US KA50 #001", 100)
-	ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},0)
-	ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},0)
+	ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},2)
+	ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},2)
 	if kimsg == true then
 		MESSAGE:New("Kish Island is once more under Irani Control",30):ToAll()
+		STTS.TextToSpeech("Kish Island has been retaken",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("We have lost our foothold on Lavan Island!",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Kish Island has been taken by Iran  ==================")
 		kimsg = false
 	end
   else
@@ -191,20 +316,18 @@ function slot_kish(coalition)
     trigger.action.setUserFlag("Kish US UH1 #001", 0)
     trigger.action.setUserFlag("Kish US KA50", 0)
     trigger.action.setUserFlag("Kish US KA50 #001", 0)
-	ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},2)
-	ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},2)
+	ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},-99)
+	ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},-99)
 	if kimsg == false then
 		MESSAGE:New("Kish Island has been taken by the coalition forces",30):ToAll()
+		STTS.TextToSpeech("Kish Island has fallen",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("We have gained a foothold on Kish Island!",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Kish Island has been taken by Coalition Forces  ==================")
 		kimsg = true
 	end
   end
 end
 
-
-
-QeshmRed = STATIC:FindByName("CTLD Qeshm Island")
-QeshmBlue = STATIC:FindByName("CTLD Qeshm Island B")
-qemsg = false
 function slot_qeshm(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Qeshm Island",4)
   if coalition == 1 then
@@ -218,6 +341,9 @@ function slot_qeshm(coalition)
     trigger.action.setUserFlag("Qeshm Island US KA50 #001", 100)
 	if qemsg == true then
 		MESSAGE:New("Qeshm Island has been Liberated from the Coalition invaders and Infidels",30):ToAll()
+		STTS.TextToSpeech("Qeshm Island is once more ours, we must continue to push back the infidels",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("We have lost Qeshm Island, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Qeshm Island has been taken by Iran  ==================")
 		qemsg = false
 	end
   else
@@ -232,14 +358,13 @@ function slot_qeshm(coalition)
     trigger.action.setUserFlag("Qeshm Island US KA50 #001", 00)
 	if qemsg == false then
 		MESSAGE:New("Qesh Island has been occuiped, Coalition forces are one step closer to taking Iran!",30):ToAll()
+		STTS.TextToSpeech("Qeshm Island has falledn to the infidels! We must retake it before they gain a foothold",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("Qeshm Island is now ours, we have a base on Bandar's doorstep.",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Qeshm Island has been taken by Iran  ==================")
 		qemsg = true
 	end
   end
 end
-
-KhasabRed = STATIC:FindByName("CTLD AbuFarp B")
-KhasabBlue = STATIC:FindByName("CTLD AbuFarp")
-khmsg = false
 
 function slot_khasab(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Khasab",4)
@@ -280,6 +405,9 @@ function slot_khasab(coalition)
     trigger.action.setUserFlag("COLT5-57",100)
 	if khmsg == true then
 		MESSAGE:New("Iran Forces have captured Khasab in the Omani Republic!",30):ToAll()
+		STTS.TextToSpeech("Khasab is now in Irani hands, the Omani Republic should not have backed the Infidels.",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("We have lost Khasab! We must retake it at all costs, the Irani Invaders must not be allowed to gain a foothold.",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Khasab Island has been taken by Iran  ==================")
 		khmsg = false
 	end
   else
@@ -319,6 +447,9 @@ function slot_khasab(coalition)
     trigger.action.setUserFlag("COLT5-57",00)
 	if khmsg == false then
 		MESSAGE:New("The Omani People rest easier knowing that the Coalition has retaken Khasab",30):ToAll()
+		STTS.TextToSpeech("Khasab has been lost to us, we must recover from this blow quickly.",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("Khasab is once more in the rightful hands of the Omani people.",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Khasab Island has been taken by Coalition Forces  ==================")
 		khmsg = true
 	end
   end
@@ -326,9 +457,6 @@ function slot_khasab(coalition)
 end
 
 
-BandarRed = STATIC:FindByName("CTLD BandarFarp")
-BandarBlue = STATIC:FindByName("CTLD BandarFarp B")
-banmsg = false
 function slot_bandar(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Bandar Abbas",4)
   if coalition == 1 then
@@ -370,12 +498,20 @@ function slot_bandar(coalition)
     trigger.action.setUserFlag("Bandar_JF-17_Springfield4 #001",00)
     trigger.action.setUserFlag("Bandar_JF-17_Springfield4 #002",00)
     trigger.action.setUserFlag("Bandar_JF-17_Springfield4 #003",00)
+	trigger.action.setUserFlag("Pak-F16-Bandar",00)
+	trigger.action.setUserFlag("Pak-F16-Bandar #001",00)
+	trigger.action.setUserFlag("Pak-F16-Bandar #002",00)
+	trigger.action.setUserFlag("Pak-F16-Bandar #003",00)
 	trigger.action.setUserFlag("IRAF31th",00)
 	trigger.action.setUserFlag("IRAF31th #001",00)
 	ra2disp:SetSquadron("Bandar Abbas",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG21_1","MIG29_2"},4)
 	ra2disp:SetSquadron("Bandar Abbas 2",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG29_1","MIG29_2","JF17_1","JF17_2","F4_1","F4_2"},4)
-	if banmsg == true then
+	if banmsg == false then
 		MESSAGE:New("Iran has liberated Bandar Abbas from the oppressors and it is once more in our hands!",30):ToAll()
+		STTS.TextToSpeech("Bandar is once more ours, we must continue to push back the infidels",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("We have lost Bandar Abbas, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Bandar Abbas has been taken by Iran  ==================")
+		banmsg = true
 	end
   else
     BandarRed:Destroy()
@@ -416,21 +552,25 @@ function slot_bandar(coalition)
     trigger.action.setUserFlag("Bandar_JF-17_Springfield4 #001",100)
     trigger.action.setUserFlag("Bandar_JF-17_Springfield4 #002",100)
 	trigger.action.setUserFlag("Bandar_JF-17_Springfield4 #003",100)
+	trigger.action.setUserFlag("Pak-F16-Bandar",100)
+	trigger.action.setUserFlag("Pak-F16-Bandar #001",100)
+	trigger.action.setUserFlag("Pak-F16-Bandar #002",100)
+	trigger.action.setUserFlag("Pak-F16-Bandar #003",100)
 	trigger.action.setUserFlag("IRAF31th",100)
 	trigger.action.setUserFlag("IRAF31th #001",100)
 	ra2disp:SetSquadron("Bandar Abbas",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG21_1","MIG29_2"},0)
 	ra2disp:SetSquadron("Bandar Abbas 2",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG29_1","MIG29_2","JF17_1","JF17_2","F4_1","F4_2"},0)
 	if banmsg == true then
 		MESSAGE:New("Coalition forces have occupied Bandar! We have crossed the Strait!",30):ToAll()
+		STTS.TextToSpeech("We have lost Bandar Abbas! This can not stand we must retake that airfield at all costs.",253.00,"AM",0.75,"TGW Command", 1 )
+		STTS.TextToSpeech("Bandar Abbas is now ours, we have crossed the straight of Hormoz",253.00,"AM",0.75,"TGW Command", 2 )
+		HypeMan.sendBotMessage("================= Bandar Abbas has been taken by Coalition Forces  ==================")
 		banmsg = false
 	end
   end
 
 end
 
-LarsRed = STATIC:FindByName("CTLD FLar")
-LarsBlue = STATIC:FindByName("CTLD FLar B")
-larmsg = false
 function slot_lars(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Lar AFB",4)
   if coalition == 1 then
@@ -448,6 +588,9 @@ function slot_lars(coalition)
   if larmsg == true then
 	MESSAGE:New("Lars is once more back in Irani Control",30):ToAll()
 	larmsg = true
+	STTS.TextToSpeech("Lars Airbase is once more ours.",253.00,"AM",0.75,"TGW Command", 1 )
+	STTS.TextToSpeech("We have Lars Airbase, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
+	HypeMan.sendBotMessage("================= Lar Airbase has been taken by Iran  ==================")
   end
   else
     LarsRed:Destroy()
@@ -463,15 +606,15 @@ function slot_lars(coalition)
 	ra2disp:SetSquadron("Lar Int",AIRBASE.PersianGulf.Lar_Airbase,{"F4_2"},0)
 	if larmsg == false then
 		MESSAGE:New("Lar Airbase has falledn to coalition forces",30):ToAll()
+		STTS.TextToSpeech("Lars Airbase is now under our control.",253.00,"AM",0.75,"TGW Command", 2 )
+	STTS.TextToSpeech("We have lost Lars Airbase, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 1 )
+	HypeMan.sendBotMessage("================= Lar Airbase has been taken by Coalition Forces  ==================")
 		larmsg = true
 	end
   end
 end
 
 
-abunred = STATIC:FindByName("CTLD Abu Nuayr B")
-abunblue = STATIC:FindByName("CTLD Abu Nuayr")
-abunmsg = false
 function slot_abun(coalition)
   if coalition == 1 then
     abunblue:Destroy()
@@ -480,7 +623,10 @@ function slot_abun(coalition)
     end
 	if abunmsg == true then
 		MESSAGE:New("Iran has taken Abu Nuayr!",30):ToAll()
+		STTS.TextToSpeech("We have liberated Abu Nuayr from the Coalition.",253.00,"AM",0.75,"TGW Command", 1 )
+	STTS.TextToSpeech("We have lost Abu Nuayr, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
 		abunmsg = false
+		HypeMan.sendBotMessage("================= Abu Nuayr has been taken by Iran  ==================")
 	end
   else
     abunred:Destroy()
@@ -489,15 +635,21 @@ function slot_abun(coalition)
     end
 	if abunmsg == false then
 		MESSAGE:New("Coalition Forces have retaken Abu Nuayr",30):ToAll()
+		STTS.TextToSpeech("We have liberated Abu Nuayr from the Irani forces.",253.00,"AM",0.75,"TGW Command", 2 )
+	STTS.TextToSpeech("We have lost Abu Nuayr, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 1 )
 		abunmsg = true
+		HypeMan.sendBotMessage("================= Abu Nuayr has been taken by Coalition Forces  ==================")
 	end
   end
 
 end
 
-havmsg = false
 function slot_havadarya(coalition)
 	if coalition == 1 then
+	havblue:Destroy()
+      if havred:IsAlive() ~= true then
+        havred:ReSpawn() 
+      end
 		trigger.action.setUserFlag("Frogfoot 31", 00)
 		trigger.action.setUserFlag("Frogfoot 32", 00)
 		trigger.action.setUserFlag("Frogfoot 33", 00)
@@ -513,9 +665,16 @@ function slot_havadarya(coalition)
 		ra2disp:SetSquadron("Bandar Abbas INT",AIRBASE.PersianGulf.Havadarya,{"MIG21_2"},4)
 		if havmsg == true then
 			MESSAGE:New("Havadarya has been retaken by the Irani People!",30):ToAll()
+			STTS.TextToSpeech("We have liberated Havadarya from the Coalition.",253.00,"AM",0.75,"TGW Command", 1 )
+			STTS.TextToSpeech("We have lost Havadarya to the Irani forces we must regroup and retake it.",253.00,"AM",0.75,"TGW Command", 2 )
+			HypeMan.sendBotMessage("================= Havadarya has been taken by Iran  ==================")
 			havmsg = false
 		end
 	else
+		havred:Destroy()
+		if havblue:IsAlive() ~= true then
+			havblue:ReSpawn() 
+		end
 		trigger.action.setUserFlag("Frogfoot 31", 100)
 		trigger.action.setUserFlag("Frogfoot 32", 100)
 		trigger.action.setUserFlag("Frogfoot 33", 100)
@@ -531,6 +690,9 @@ function slot_havadarya(coalition)
 		ra2disp:SetSquadron("Bandar Abbas INT",AIRBASE.PersianGulf.Havadarya,{"MIG21_2"},0)
 		if havmsg == false then
 			MESSAGE:New("Coalition forces have taken Havadarya!",30):ToAll()
+			STTS.TextToSpeech("We have taken Havadarya, now we must hold it for the Irani Army will not be pleased",253.00,"AM",0.75,"TGW Command", 2 )
+			STTS.TextToSpeech("We have lost Havadarya to the infidel invaders, we must respond immediately!.",253.00,"AM",0.75,"TGW Command", 1 )
+			HypeMan.sendBotMessage("================= Havadarya has been taken by Coalition Forces  ==================")
 			havmsg = true 
 		end
 	end
@@ -542,14 +704,96 @@ function slot_jir(coalition)
 		trigger.action.setUserFlag("Pak-F16-Jiroft", 00)
 		trigger.action.setUserFlag("Pak-F16-Jiroft #001", 00)
 		trigger.action.setUserFlag("Pak-F16-Jiroft #002", 00)
+		if larmsg == true then
+			MESSAGE:New("Jiroft has been retaken from the coalition forces",30):ToAll()
+			STTS.TextToSpeech("Jiroft is now under our control.",253.00,"AM",0.75,"TGW Command", 1 )
+			STTS.TextToSpeech("We have lost Jiroft, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
+			HypeMan.sendBotMessage("================= Jiroft has been taken by Iran  ==================")
+			larmsg = false
+		end
 	else
 		trigger.action.setUserFlag("Pak-F16-Jiroft", 100)
 		trigger.action.setUserFlag("Pak-F16-Jiroft #001", 100)
 		trigger.action.setUserFlag("Pak-F16-Jiroft #002", 100)
+		if larmsg == false then
+			MESSAGE:New("Jiroft has falled to coalition forces",30):ToAll()
+			STTS.TextToSpeech("Jiroft is now under our control.",253.00,"AM",0.75,"TGW Command", 2 )
+			STTS.TextToSpeech("We have lost Jiroft, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 1 )
+			HypeMan.sendBotMessage("================= Havadarya has been taken by Coalition Forces  ==================")
+			larmsg = true
+		end
 	end
 end
 
+function locklhab()
+	trigger.action.setUserFlag("LHA3-AV8",100)
+	trigger.action.setUserFlag("LHA3-AV8 #001",100)
+	trigger.action.setUserFlag("LHA3-AV8 #002",100)
+	trigger.action.setUserFlag("LHA3-AV8 #003",100)
+	trigger.action.setUserFlag("LHA3-KA50",100)
+	trigger.action.setUserFlag("LHA3-KA50 #001",100)
+	trigger.action.setUserFlag("LHA3-UH1",100)
+	trigger.action.setUserFlag("LHA3-UH1 #001",100)
+	trigger.action.setUserFlag("LHA3-UH1 #002",100)
+	trigger.action.setUserFlag("LHA3-UH1 #003",100)	
+end
 
+function locklha4()
+	trigger.action.setUserFlag("LHA4-UH1",100)	
+	trigger.action.setUserFlag("LHA4-UH1 #001",100)
+	trigger.action.setUserFlag("LHA4-UH1 #002",100)
+	trigger.action.setUserFlag("LHA4-UH1 #003",100)
+	trigger.action.setUserFlag("LHA4-KA50",100)
+	trigger.action.setUserFlag("LHA4-KA50 #001",100)
+	trigger.action.setUserFlag("LHA4-AV8",100)
+	trigger.action.setUserFlag("LHA4-AV8 #001",100)
+	trigger.action.setUserFlag("LHA4-AV8 #002",100)
+	trigger.action.setUserFlag("LHA4-AV8 #003",100)
+end
+
+function checkislands()
+	if (tk:GetCoalition() == 2) and (ta:GetCoalition() == 2) then
+	BASE:E({"Blue holds the Tunb Islands Activating Bandar LHA"})
+	if bandaractive == false then
+		local acti = GROUP:FindByName("LHA_BANDAR"):Activate()
+		bandaractive = true
+		MESSAGE:New("Marine Forces are moving up to the Bandar Coast Slots now Open",30):ToBlue()
+		HypeMan.sendBotMessage("================= LHA3 Slots are now Active  ==================")
+		trigger.action.setUserFlag("LHA3-AV8",00)
+		trigger.action.setUserFlag("LHA3-AV8 #001",00)
+		trigger.action.setUserFlag("LHA3-AV8 #002",00)
+		trigger.action.setUserFlag("LHA3-AV8 #003",00)
+		trigger.action.setUserFlag("LHA3-KA50",00)
+		trigger.action.setUserFlag("LHA3-KA50 #001",00)
+		trigger.action.setUserFlag("LHA3-UH1",00)
+		trigger.action.setUserFlag("LHA3-UH1 #001",00)
+		trigger.action.setUserFlag("LHA3-UH1 #002",00)
+		trigger.action.setUserFlag("LHA3-UH1 #003",00)	
+	end
+ end
+ if (am:GetCoalition() == 2) and (si:GetCoalition() == 2) then
+	BASE:E({"Blue holds the Tunb Islands Activating Bandar LHA"})
+	if kishactive == false then
+		local acti = GROUP:FindByName("LHA_KISH"):Activate()
+		kishactive = true
+		MESSAGE:New("Marine Forces are moving up towards Kish Island, Slots now Open",30):ToBlue()
+		HypeMan.sendBotMessage("================= LHA4 Slots are now Active  ==================")
+		trigger.action.setUserFlag("LHA4-UH1",00)
+		trigger.action.setUserFlag("LHA4-UH1 #001",00)
+		trigger.action.setUserFlag("LHA4-UH1 #002",00)
+		trigger.action.setUserFlag("LHA4-UH1 #003",00)
+		trigger.action.setUserFlag("LHA4-KA50",00)
+		trigger.action.setUserFlag("LHA4-KA50 #001",00)
+		trigger.action.setUserFlag("LHA4-AV8",00)
+		trigger.action.setUserFlag("LHA4-AV8 #001",00)
+		trigger.action.setUserFlag("LHA4-AV8 #002",00)
+		trigger.action.setUserFlag("LHA4-AV8 #003",00)
+	end
+ end
+end
+
+locklhab()
+locklha4()
 slot_tunb(1)
 slot_sirri(1)
 slot_lavan(1)
@@ -601,24 +845,44 @@ function SEH:OnEventBaseCaptured(EventData)
  elseif AirbaseName == AIRBASE.PersianGulf.Havadarya then
 	slot_havadarya(coalition)
  end
-
-end
-function SEH:OnEventDead(EventData)
-
-
+ 
+ -- Do a check for all 4 red islands if there blue we want to switch on the 2 tarawa's and their slots
+ checkislands()
 end
 
-stn = UNIT:FindByName("Stennis")
-lh2 = UNIT:FindByName("LHA-2")
-tdy = UNIT:FindByName("TeddyR")
-tar = UNIT:FindByName("Tarawa")
-GW = UNIT:FindByName("Washington")
 
-stn:HandleEvent(EVENTS.Dead)
-lh2:HandleEvent(EVENTS.Dead)
-tdy:HandleEvent(EVENTS.Dead)
-tar:HandleEvent(EVENTS.Dead)
-GW:HandleEvent(EVENTS.Dead)
+
+function lh3:OnEventDead(EventData)
+	BASE:E({"LHA3 end"})
+	trigger.action.setUserFlag("LHA3-AV8",100)
+	trigger.action.setUserFlag("LHA3-AV8 #001",100)
+	trigger.action.setUserFlag("LHA3-AV8 #002",100)
+	trigger.action.setUserFlag("LHA3-AV8 #003",100)
+	trigger.action.setUserFlag("LHA3-KA50",100)
+	trigger.action.setUserFlag("LHA3-KA50 #001",100)
+	trigger.action.setUserFlag("LHA3-UH1",100)
+	trigger.action.setUserFlag("LHA3-UH1 #001",100)
+	trigger.action.setUserFlag("LHA3-UH1 #002",100)
+	trigger.action.setUserFlag("LHA3-UH1 #003",100)	
+	HypeMan.sendBotMessage("================= LHA3 DESTROYED ! Slots are now locked  ==================")
+end
+
+function lh4:OnEventDead(EventData)
+	BASE:E({"LHA4 end"})
+	trigger.action.setUserFlag("LHA4-UH1",100)
+	trigger.action.setUserFlag("LHA4-UH1 #001",100)
+	trigger.action.setUserFlag("LHA4-UH1 #002",100)
+	trigger.action.setUserFlag("LHA4-UH1 #003",100)
+	trigger.action.setUserFlag("LHA4-KA50",100)
+	trigger.action.setUserFlag("LHA4-KA50 #001",100)
+	trigger.action.setUserFlag("LHA4-AV8",100)
+	trigger.action.setUserFlag("LHA4-AV8 #001",100)
+	trigger.action.setUserFlag("LHA4-AV8 #002",100)
+	trigger.action.setUserFlag("LHA4-AV8 #003",100)
+	HypeMan.sendBotMessage("================= LHA4 DESTROYED ! Slots are now locked  ==================")
+end
+
+
 function GW:OnEventDead(EventData)
   if GW:IsAlive() ~= true then
   trigger.action.setUserFlag("GW_450",100)
@@ -629,6 +893,7 @@ function GW:OnEventDead(EventData)
   trigger.action.setUserFlag("GW_222",100)
   trigger.action.setUserFlag("GW_223",100)
   trigger.action.setUserFlag("GW_224",100)
+  HypeMan.sendBotMessage("================= USS George Washington DESTROYED ! Slots are now locked  ==================")
   end
 end
 
@@ -643,6 +908,7 @@ function stn:OnEventDead(EventData)
     trigger.action.setUserFlag("STN_442",100)
     trigger.action.setUserFlag("STN_443",100)
     trigger.action.setUserFlag("STN_444",100)
+	HypeMan.sendBotMessage("================= USS Stennis DESTROYED ! Slots are now locked  ==================")
     
   end
 end
@@ -657,6 +923,7 @@ function lh2:OnEventDead(EventData)
     trigger.action.setUserFlag("STN-TAR-492",100)
     trigger.action.setUserFlag("STN-TAR-493",100)
     trigger.action.setUserFlag("STN-TAR-494",100)
+	HypeMan.sendBotMessage("================= LHA2 in the Stennis Battlegroup DESTROYED ! Slots are now locked  ==================")
   end
 end
 
@@ -682,6 +949,7 @@ function tdy:OnEventDead(EventData)
     trigger.action.setUserFlag("TDY_410",100)
     trigger.action.setUserFlag("TDY_411",100)
     trigger.action.setUserFlag("TDY_412",100)
+	HypeMan.sendBotMessage("================= USS Theodore Rosevolt DESTROYED ! Slots are now locked  ==================")
   end
 end
 
@@ -709,6 +977,7 @@ function tar:OnEventDead(EventData)
     trigger.action.setUserFlag("TED-TAR-SA342Mini-112",100)
     trigger.action.setUserFlag("TED-TAR-SA342m-66",100)
     trigger.action.setUserFlag("TED-TAR-SA342m-67",100)
+	HypeMan.sendBotMessage("================= USS TARAWA Destroyed ! Slots are now locked  ==================")
   end
 end
 

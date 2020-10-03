@@ -26,7 +26,7 @@
 --I experienced issues Spawning Statics and Destroying statics in some configurations, so I'm exploding them and not deleting them like SGS. 
 
   --Configurable for user:
-local SaveScheduleStatics=60 --how many seconds between each check of all the statics.
+local SaveScheduleStatics=120 --how many seconds between each check of all the statics.
 
 --- THIS IS NOT WORKING CORRECTLY AT THE MOMENT. NEED TO CODE OUT A BETTER MEANS.
 -- 

@@ -1,5 +1,7 @@
-reinforhrs = 4
+reinforhrs = 12
 reinformins = 0
+minreinf = 2
+maxreinf = 14
 reinforcements = ((60 * 60) * reinforhrs) + (60 * reinformins) 
 dsqnsize = 24
 dsqnlsize = 32
@@ -154,15 +156,13 @@ function loadvalues()
     mainmission.shipgroup3 = true
     mainmission.ships = true
   end
-  if mainmission.shipgroup1 == true then
-    -- local temp = GROUP:FindByName("Type 054A Frigate"):Activate()
-  end
   if mainmission.shipgroup2 == true then
     local temp = GROUP:FindByName("Cuban Tanker 1"):Activate()
   end
-  if mainmission.shipgroup3 == true then
+  if mainmission.shipgroup1 == true then
     local temp = GROUP:FindByName("Kuznetsov Group"):Activate()
   end
+  mainmission.shipgroup3 = false
   --[[Lar:Load(savepath,"lars.txt")
   Shiraz:Load(savepath,"Shiraz.txt")
   Kish:Load(savepath,"Kish.txt")
@@ -251,7 +251,7 @@ function reinforce()
         if mainmission.Shiraz < 0 then
           mainmission.Shiraz = 0
         end
-        local newval = mainmission.Shiraz + math.random(2,8)
+        local newval = mainmission.Shiraz + math.random(minreinf,maxreinf)
         if newval > dsqnsize then
           newval = dsqnsize
         end
@@ -261,7 +261,7 @@ function reinforce()
         if mainmission.Shiraz1 < 0 then
           mainmission.Shiraz1 = 0
         end
-        local newval = mainmission.Shiraz1 + math.random(2,8)
+        local newval = mainmission.Shiraz1 + math.random(minreinf,maxreinf)
         
         if newval > dsqnsize then
           newval = dsqnsize
@@ -272,7 +272,7 @@ function reinforce()
         if mainmission.Shiraz2 < 0 then
           mainmission.Shiraz2 = 0
         end
-        local newval = mainmission.Shiraz2 + math.random(2,8)
+        local newval = mainmission.Shiraz2 + math.random(minreinf,maxreinf)
         
         if newval > dsqnsize then
           newval = dsqnsize
@@ -283,7 +283,7 @@ function reinforce()
         if mainmission.Shiraz_Int < 0 then
           mainmission.Shiraz_Int = 0
         end 
-        local newval = mainmission.Shiraz_Int + math.random(2,8)
+        local newval = mainmission.Shiraz_Int + math.random(minreinf,maxreinf)
         if newval > dsqnssize then
           newval = dsqnssize
         end
@@ -293,7 +293,7 @@ function reinforce()
         if mainmission.Kerman < 0 then
           mainmission.Kerman = 0
         end 
-        local newval = mainmission.Kerman + math.random(2,8)
+        local newval = mainmission.Kerman + math.random(minreinf,maxreinf)
         if newval > dsqnsize then
           newval = dsqnsize
         end
@@ -303,7 +303,7 @@ function reinforce()
         if mainmission.Kerman1 < 0 then
           mainmission.Kerman1 = 0
         end
-        local newval = mainmission.Kerman1 + math.random(2,8)
+        local newval = mainmission.Kerman1 + math.random(minreinf,maxreinf)
         if newval > dsqnsize then
           newval = dsqnsize
         end
@@ -313,7 +313,7 @@ function reinforce()
         if mainmission.Kerman2 < 0 then
           mainmission.Kerman2 = 0
         end
-        local newval = mainmission.Kerman2 + math.random(2,8)
+        local newval = mainmission.Kerman2 + math.random(minreinf,maxreinf)
         if newval > dsqnsize then
           newval = dsqnsize
         end
@@ -323,7 +323,7 @@ function reinforce()
         if mainmission.Kerman_INT < 0 then
           mainmission.Kerman_INT = 0
         end 
-        local newval = mainmission.Kerman_INT + math.random(0,8)
+        local newval = mainmission.Kerman_INT + math.random(minreinf,maxreinf)
         if newval > dsqnssize then
           newval = dsqnssize
         end
@@ -335,7 +335,7 @@ function reinforce()
         if mainmission.Bandar_Abbas < 0 then
           mainmission.Bandar_Abbas = 0
         end 
-        local newval = mainmission.Bandar_Abbas + math.random(0,6)
+        local newval = mainmission.Bandar_Abbas + math.random(minreinf,maxreinf)
         if newval > dsqnsize then
           newval = dsqnsize
         end
@@ -345,7 +345,7 @@ function reinforce()
         if mainmission.Bandar_Abbas2 < 0 then
           mainmission.Bandar_Abbas2 = 0
         end  
-        local newval = mainmission.Bandar_Abbas2 + math.random(0,6)
+        local newval = mainmission.Bandar_Abbas2 + math.random(minreinf,maxreinf)
         if newval > dsqnsize then
           newval = dsqnsize
         end
@@ -361,7 +361,7 @@ function reinforce()
         if mainmission.Bandar_Abbas_INT < 0 then
           mainmission.Bandar_Abbas_INT = 0
         end 
-        local newval = mainmission.Bandar_Abbas_INT + math.random(0,4)
+        local newval = mainmission.Bandar_Abbas_INT + math.random(minreinf,maxreinf)
         if newval > dsqnssize then
           newval = dsqnssize 
         end
@@ -385,7 +385,7 @@ function reinforce()
       if mainmission.Kish < 0 then
           mainmission.Kish = 0
         end 
-      local newval = mainmission.Kish + math.random(0,4)
+      local newval = mainmission.Kish + math.random(minreinf,maxreinf)
       if newval > dsqnssize then
         newval = dsqnssize 
       end
@@ -395,7 +395,7 @@ function reinforce()
       if mainmission.Kish_INT < 0 then
           mainmission.Kish_INT = 0
       end 
-      local newval = mainmission.Kish_INT + math.random(0,4) 
+      local newval = mainmission.Kish_INT + math.random(minreinf,maxreinf)
       if newval > dsqnvssize then
         newval = dsqnvssize
       end
@@ -406,7 +406,7 @@ function reinforce()
           mainmission.Kuznetsov_INT = 0
         end 
       
-      local newval = mainmission.Kuznetsov_INT + math.random(0,6)
+      local newval = mainmission.Kuznetsov_INT + math.random(minreinf,maxreinf)
       if newval > dsqnlsize then 
         newval = dsqnlsize 
       end
@@ -416,7 +416,7 @@ function reinforce()
 	if mainmission.Stennis < 0 then
           mainmission.Stennis = 0
     end 
-    local newval = mainmission.Stennis + math.random(2,12)
+    local newval = mainmission.Stennis + math.random(minreinf,maxreinf)
     if newval > 18 then
       newval = 18
     end
@@ -426,7 +426,7 @@ function reinforce()
     if mainmission.TeddyR < 0 then
           mainmission.TeddyR = 0
         end 
-    local newval = mainmission.TeddyR + math.random(2,12)
+    local newval = mainmission.TeddyR + math.random(minreinf,maxreinf)
     if newval > 18 then
       newval = 18 
     end
@@ -436,7 +436,7 @@ function reinforce()
     if mainmission.Al_Dhafra < 0 then
         mainmission.Al_Dhafra = 0
     end 
-    local newval = mainmission.Al_Dhafra + math.random(4,16)
+    local newval = mainmission.Al_Dhafra + math.random(minreinf,maxreinf)
     if newval > 32 then
       newval = 32
     end
@@ -468,14 +468,20 @@ function updatevalues()
   mainmission.Lar = ra2disp:GetSquadronAmount("Lar")
   mainmission.Kish = ra2disp:GetSquadronAmount("Kish")
   mainmission.Kish_INT = ra2disp:GetSquadronAmount("Kish INT")
-
   mainmission.Stennis = ba2disp:GetSquadronAmount("Stennis")
   mainmission.TeddyR = ba2disp:GetSquadronAmount("TeddyR")
   mainmission.Al_Dhafra = ba2disp:GetSquadronAmount("Al Draf")
-  
   mainmission.shipgroup1 = false
-  mainmission.shipgroup2 = GROUP:FindByName("Cuban Tanker 1"):IsAlive()
-  mainmission.shipgroup3 = GROUP:FindByName("Kuznetsov Group"):IsAlive()
+  if GROUP:FindByName("Cuban Tanker 1"):IsAlive() == true then
+	mainmission.shipgroup2 = GROUP:FindByName("Cuban Tanker 1"):IsAlive()
+  else
+	mainmission.shipgroup2 = false
+  end
+  if GROUP:FindByName("Kuznetsov Group"):IsAlive() == true then
+	mainmission.shipgroup1 = GROUP:FindByName("Kuznetsov Group"):IsAlive()
+  else
+	mainmission.shipgroup1 = false
+  end
   --[[Shiraz:Save(savepath,"Shiraz.txt")
   Kish:Save(savepath,"Kish.txt")
   Kerman:Save(savepath,"Kerman.txt")

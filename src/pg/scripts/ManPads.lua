@@ -1,3 +1,5 @@
+
+if firstrun == true then
 BASE:E({"Loading Manpads script"})
 BASE:E({"ZONES"})
 ZONE0 = ZONE_POLYGON:New("AA_SPAWNZONE1",GROUP:FindByName("AA_SPAWNZONE1"))
@@ -27,12 +29,12 @@ init = false
 if manpadinit == false then
   MANPADS = {}
   
-  for i = 1,30 do
+  for i = 1,20 do
     BASE:E({"Manpad",i})
     u = "MANPAD" .. i
-    if i < 11 then
+    if i < 8 then
       MANPADS[i] = SPAWN:New(u):InitRandomizeTemplate({"RAA - Template 01","RAA - Template 02","RAA - Template 03","RAA - Template 04","RAA - Template 05","RAA - Template 06","RAA - Template 07"}):InitRandomizeUnits(true,750,100):InitRandomizePosition(true,500,50):SpawnInZone(ZONE0,true)
-    elseif i > 10 and i < 21 then
+    elseif i > 8 and i < 16 then
       MANPADS[i] = SPAWN:New(u):InitRandomizeTemplate({"RAA - Template 01","RAA - Template 02","RAA - Template 03","RAA - Template 04","RAA - Template 05","RAA - Template 06","RAA - Template 07"}):InitRandomizeUnits(true,750,100):InitRandomizePosition(true,500,50):SpawnInZone(ZONE1,true)
     else
       MANPADS[i] = SPAWN:New(u):InitRandomizeTemplate({"RAA - Template 01","RAA - Template 02","RAA - Template 03","RAA - Template 04","RAA - Template 05","RAA - Template 06","RAA - Template 07"}):InitRandomizeUnits(true,750,100):InitRandomizePosition(true,500,50):SpawnInZone(ZONE2,true)
@@ -40,18 +42,18 @@ if manpadinit == false then
   end
   AAA = {}
 
-  for i = 1,30 do
+  for i = 1,25 do
     BASE:E({"AAA Manpad",i})
     u = "AAA" .. i
     if i < 6 then 
       AAA[i] = SPAWN:New(u):InitRandomizeTemplate({"RAA - Template 01","RAA - Template 02","RAA - Template 03","RAA - Template 04","RAA - Template 05","RAA - Template 06","RAA - Template 07"}):InitRandomizeUnits(true,750,100):InitRandomizePosition(true,300,5):SpawnInZone(ZONE5,true)
-    elseif i > 5 and i < 11 then
+    elseif i > 5 and i < 10 then
       AAA[i] = SPAWN:New(u):InitRandomizeTemplate({"RAA - Template 01","RAA - Template 02","RAA - Template 03","RAA - Template 04","RAA - Template 05","RAA - Template 06","RAA - Template 07"}):InitRandomizeUnits(true,750,100):InitRandomizePosition(true,300,5):SpawnInZone(ZONE4,true)
-    elseif i > 10 and i < 16 then
+    elseif i > 10 and i < 13 then
       AAA[i] = SPAWN:New(u):InitRandomizeTemplate({"RAA - Template 01","RAA - Template 02","RAA - Template 03","RAA - Template 04","RAA - Template 05","RAA - Template 06","RAA - Template 07"}):InitRandomizeUnits(true,750,100):InitRandomizePosition(true,300,5):SpawnInZone(ZONE3,true)    
-    elseif i > 15 and i < 21 then
+    elseif i > 13 and i < 16 then
       AAA[i] = SPAWN:New(u):InitRandomizeTemplate({"RAA - Template 01","RAA - Template 02","RAA - Template 03","RAA - Template 04","RAA - Template 05","RAA - Template 06","RAA - Template 07"}):InitRandomizeUnits(true,750,100):InitRandomizePosition(true,300,5):SpawnInZone(ZONE6,true)
-    elseif i > 20 and i < 25 then
+    elseif i > 16 and i < 20 then
       AAA[i] = SPAWN:New(u):InitRandomizeTemplate({"RAA - Template 01","RAA - Template 02","RAA - Template 03","RAA - Template 04","RAA - Template 05","RAA - Template 06","RAA - Template 07"}):InitRandomizeUnits(true,750,100):InitRandomizePosition(true,300,5):SpawnInZone(ZONE7,true)
     else
       AAA[i] = SPAWN:New(u):InitRandomizeTemplate({"RAA - Template 01","RAA - Template 02","RAA - Template 03","RAA - Template 04","RAA - Template 05","RAA - Template 06","RAA - Template 07"}):InitRandomizeUnits(true,750,100):InitRandomizePosition(true,300,5):SpawnInZone(ZONE8,true)
@@ -61,5 +63,7 @@ if manpadinit == false then
   mainmission.manpads = true
 else
   BASE:E({"Manpads and AA where already in existance ignoring"})
+end
+
 end
 init=true

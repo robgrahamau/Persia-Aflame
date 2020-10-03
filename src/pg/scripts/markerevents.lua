@@ -188,12 +188,14 @@ local function handleWeatherRequest(text, coord, red)
     MESSAGE:New(weatherString2, 30, MESSAGE.Type.Information):ToBlue()
     MESSAGE:New(weatherString5, 30, MESSAGE.Type.Information):ToBlue()
     MESSAGE:New(weatherString10, 30, MESSAGE.Type.Information):ToBlue()
+	HypeMan.sendBotMessage('$SERVERNAME - Weather Requested \n ' .. weatherString .. '\n' .. weatherString1 .. '\n' .. weatherString2 .. '\n' .. weatherString5 .. '\n' .. weatherString10 .. '\n')
     else
     MESSAGE:New(weatherString, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString1, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString2, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString5, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString10, 30, MESSAGE.Type.Information):ToRed()
+	HypeMan.sendBotMessage('$SERVERNAME - Weather Requested \n ' .. weatherString .. '\n' .. weatherString1 .. '\n' .. weatherString2 .. '\n' .. weatherString5 .. '\n' .. weatherString10 .. '\n')
     end
 end
 
@@ -213,6 +215,28 @@ local function handleeadmin(text)
      MESSAGE:New("Admin Commands are Now Enabled",15):ToAll()
    else
      MESSAGE:New("Admin Commands are Disabled",15):ToAll()
+   end
+end
+
+
+local function rhandleeadmin(text)
+  local keywords=_split(text, ",")
+   BASE:E({keywords=keywords})
+   for _,keyphrase in pairs(keywords) do
+    if keyphrase == password then
+      if admin == false then
+        admin = true
+      else
+        admin = false
+      end
+    end
+   end
+   if admin == true then
+     BASE:E({"ADMIN ENABLED"})
+	 --MESSAGE:New("Admin Commands are Now Enabled",15):ToAll()
+   else
+	BASE:E({"ADMIN DISABLED"})
+     --MESSAGE:New("Admin Commands are Disabled",15):ToAll()
    end
 end
 
@@ -261,7 +285,7 @@ local function handlespawn(text,coord)
       su:InitRandomizeUnits(true,100,500)
     end
     if heading ~= nil then
-      su:InitHeading(heading)
+      su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
@@ -271,7 +295,7 @@ local function handlespawn(text,coord)
       su:InitRandomizeUnits(true,100,500)
     end
     if heading ~= nil then
-      su:InitHeading(heading)
+      su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
@@ -281,7 +305,7 @@ local function handlespawn(text,coord)
       su:InitRandomizeUnits(true,100,500)
     end
     if heading ~= nil then
-      su:InitHeading(heading,heading)
+      su:InitGroupHeading(heading,heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
@@ -291,7 +315,7 @@ local function handlespawn(text,coord)
       su:InitRandomizeUnits(true,100,500)
     end
     if heading ~= nil then
-      su:InitHeading(heading,heading)
+      su:InitGroupHeading(heading,heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
@@ -301,7 +325,7 @@ local function handlespawn(text,coord)
       su:InitRandomizeUnits(true,100,500)
     end
     if heading ~= nil then
-      su:InitHeading(heading,heading)
+      su:InitGroupHeading(heading,heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
@@ -311,7 +335,167 @@ local function handlespawn(text,coord)
       su:InitRandomizeUnits(true,100,500)
     end
     if heading ~= nil then
-      su:InitHeading(heading,heading)
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rsa2" then
+    local su = SPAWN:NewWithAlias("GM_SA2","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rrap" then
+    local su = SPAWN:NewWithAlias("GM_RRAP","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rew" then
+    local su = SPAWN:NewWithAlias("GM_REW","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "brap" then
+    local su = SPAWN:NewWithAlias("GM_BRAP","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+   elseif unit == "bhawk" then
+    local su = SPAWN:NewWithAlias("GM_HAWK","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "bart1" then
+    local su = SPAWN:NewWithAlias("GM_BART1","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+   elseif unit == "bart2" then
+    local su = SPAWN:NewWithAlias("GM_BART2","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+   elseif unit == "bart3" then
+    local su = SPAWN:NewWithAlias("GM_BART3","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+   elseif unit == "rart1" then
+    local su = SPAWN:NewWithAlias("GM_RART","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+   elseif unit == "rhawk" then
+    local su = SPAWN:NewWithAlias("GM_HAWKR","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "bpat" then
+    local su = SPAWN:NewWithAlias("GM_PAT","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "bah64" then
+    local su = SPAWN:NewWithAlias("GM_AH64","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "bjtac" then
+    local su = SPAWN:NewWithAlias("GM_JTAC","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+   elseif unit == "bsup" then
+    local su = SPAWN:NewWithAlias("GM_BSUP","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+   elseif unit == "rsup" then
+    local su = SPAWN:NewWithAlias("GM_RSUP","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rah1" then
+    local su = SPAWN:NewWithAlias("GM_AH1","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading,heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
@@ -321,7 +505,7 @@ local function handlespawn(text,coord)
       su:InitRandomizeUnits(true,100,200)
     end
     if heading ~= nil then
-      su:InitHeading(heading,heading)
+      su:InitGroupHeading(heading,heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
@@ -331,17 +515,17 @@ local function handlespawn(text,coord)
       su:InitRandomizeUnits(true,100,500)
     end
     if heading ~= nil then
-      su:InitHeading(heading,heading)
+      su:InitGroupHeading(heading,heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)  
-  elseif unit == "barmor" then
+  elseif unit == "barmour" then
     local su = SPAWN:NewWithAlias("GM_BArmor","GM_USAA " .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
     if heading ~= nil then
-      su:InitHeading(heading)
+      su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
@@ -352,7 +536,7 @@ local function handlespawn(text,coord)
       su:InitRandomizeUnits(true,100,500)
     end
     if heading ~= nil then
-      su:InitHeading(heading)
+      su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
@@ -363,18 +547,117 @@ local function handlespawn(text,coord)
       su:InitRandomizeUnits(true,100,500)
     end
     if heading ~= nil then
-      su:InitHeading(heading)
+      su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
-
+  elseif unit == "rsu25t" then
+    local su = SPAWN:NewWithAlias("GM_SU25T","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rsu24m2" then
+    local su = SPAWN:NewWithAlias("GM_SU24M2","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rsu24m1" then
+    local su = SPAWN:NewWithAlias("GM_SU24M1","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rsu24m" then
+    local su = SPAWN:NewWithAlias("GM_SU24M","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rmig29" then
+    local su = SPAWN:NewWithAlias("GM_MIG29","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rf14" then
+    local su = SPAWN:NewWithAlias("GM_F14","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)	
+  elseif unit == "ba10" then
+    local su = SPAWN:NewWithAlias("GM_A10","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "bf15" then
+    local su = SPAWN:NewWithAlias("GM_F15C","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "bf15e" then
+    local su = SPAWN:NewWithAlias("GM_F15E","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "afac" then
+    local su = SPAWN:NewWithAlias("GM_AFAC","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
   elseif unit == "hvt" then
     local su = SPAWN:NewWithAlias("GM_HVT","IAA " .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
     if heading ~= nil then
-      su:InitHeading(heading)
+      su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
@@ -460,6 +743,8 @@ function markRemoved(Event,EC)
           end
         elseif Event.text:lower():find("-admin") then
           handleeadmin(text)
+		elseif Event.text:lower():find("-radmin") then
+          rhandleeadmin(text)
         elseif Event.text:lower():find("-spawn") then
           if admin == true then
             handlespawn(text,coord)

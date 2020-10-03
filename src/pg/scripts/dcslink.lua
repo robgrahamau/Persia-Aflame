@@ -7,7 +7,7 @@
 do
     -- lets start commenting some of this shit.
     local PORT = 3009 -- our port
-    local DATA_TIMEOUT_SEC = 60 -- How often we send data.
+    local DATA_TIMEOUT_SEC = 300 -- How often we send data.
   
     package.path = package.path..";.\\LuaSocket\\?.lua"
     package.cpath = package.cpath..";.\\LuaSocket\\?.dll"
