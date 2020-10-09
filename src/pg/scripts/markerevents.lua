@@ -550,7 +550,26 @@ local function handlespawn(text,coord)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
-
+  elseif unit == "uh60" then
+    local su = SPAWN:NewWithAlias("GM_BH","GM_USAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "mi8" then
+    local su = SPAWN:NewWithAlias("GM_MI8","GM_IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
   elseif unit == "baaa" then
     local su = SPAWN:NewWithAlias("GM_BAAA","GM_USAA " .. name)
     if random == true then
@@ -661,6 +680,16 @@ local function handlespawn(text,coord)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
+  elseif unit == "rafac" then
+    local su = SPAWN:NewWithAlias("GM_AFAC-1","GM_IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
   elseif unit == "afac2" then
     local su = SPAWN:NewWithAlias("GM_AFAC","GM_USAA " .. name)
     if random == true then
@@ -675,6 +704,48 @@ local function handlespawn(text,coord)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
     ctld.JTACAutoLase("GM_USAA " .. name, _code) 
+  elseif unit == "rafac2" then
+    local su = SPAWN:NewWithAlias("GM_AFAC","GM_IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)	
+	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+    --put to the end
+    table.insert(ctld.jtacGeneratedLaserCodes, _code)
+    ctld.JTACAutoLase("GM_USAA " .. name, _code) 
+  elseif unit == "bjtac" then
+    local su = SPAWN:NewWithAlias("GM_BJTAC","GM_IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)	
+	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+    --put to the end
+    table.insert(ctld.jtacGeneratedLaserCodes, _code)
+    ctld.JTACAutoLase("GM_USAA " .. name, _code) 
+  elseif unit == "rjtac" then
+    local su = SPAWN:NewWithAlias("GM_RJTAC","GM_IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)	
+	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+    --put to the end
+    table.insert(ctld.jtacGeneratedLaserCodes, _code)
+    ctld.JTACAutoLase("GM_IAA " .. name, _code) 
   elseif unit == "hvt" then
     local su = SPAWN:NewWithAlias("GM_HVT","IAA " .. name)
     if random == true then
