@@ -121,8 +121,8 @@ ctld.JTAC_maxDistance = 10000 -- How far a JTAC can "see" in meters (with Line o
 ctld.JTAC_smokeOn_RED = true -- enables marking of target with smoke for RED forces
 ctld.JTAC_smokeOn_BLUE = true -- enables marking of target with smoke for BLUE forces
 
-ctld.JTAC_smokeColour_RED = 4 -- RED side smoke colour -- Green = 0 , Red = 1, White = 2, Orange = 3, Blue = 4
-ctld.JTAC_smokeColour_BLUE = 1 -- BLUE side smoke colour -- Green = 0 , Red = 1, White = 2, Orange = 3, Blue = 4
+ctld.JTAC_smokeColour_RED = 3 -- RED side smoke colour -- Green = 0 , Red = 1, White = 2, Orange = 3, Blue = 4
+ctld.JTAC_smokeColour_BLUE = 0 -- BLUE side smoke colour -- Green = 0 , Red = 1, White = 2, Orange = 3, Blue = 4
 
 ctld.JTAC_jtacStatusF10 = true -- enables F10 JTAC Status menu
 
@@ -217,6 +217,8 @@ ctld.logisticUnits = {
     "CTLD Al Minhad",
     "C TARAWA",
     "C TARAWA2",
+	"C TARAWA2-1",
+	"C TARAWA2-2",
     "CTLD Tnub",
 	"CTLD Tnub B",
     "CTLD Abu Nuayr",
@@ -348,10 +350,20 @@ ctld.transportPilotNames = {
 	"Hav US KA50 #001",
 	"Hav US KA50 #002",
 	"Hav US KA50 #003",
+	"LHA4-UH1",
+	"LHA4-UH1 #001",
+	"LHA4-UH1 #002",
+	"LHA4-UH1 #003",
+	"LHA4-KA50",
+	"LHA4-KA50 #001",
+	"LHA3-UH1",
+	"LHA3-UH1 #001",
+	"LHA3-UH1 #002",
+	"LHA3-UH1 #003",
+	"LHA3-KA50",
+	"LHA3-KA50 #001",
     -- *** AI transports names (different names only to ease identification in mission) ***
-
     -- Use any of the predefined names or set your own ones
-
     "transport1",
     "transport2",
 }
@@ -510,7 +522,7 @@ ctld.spawnableCrates = {
 
 -- if the unit is on this list, it will be made into a JTAC when deployed
 ctld.jtacUnitTypes = {
-    "SKP", "Hummer" -- there are some wierd encoding issues so if you write SKP-11 it wont match as the - sign is encoded differently...
+    "SKP", "Hummer","MQ-9 Reaper","WingLoong-I" -- there are some wierd encoding issues so if you write SKP-11 it wont match as the - sign is encoded differently...
 }
 
 

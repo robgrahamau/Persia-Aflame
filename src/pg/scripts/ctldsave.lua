@@ -1,5 +1,38 @@
 defaultlogisticUnits = {
-			"CTLD AbuFarp","CTLD AbuFarp B","CTLD AL_Drafra","CTLD BandarFarp",	"CTLD BandarFarp B","CTLD BANDAR2",	"CTLD FBN85","CTLD FDP05","CTLD FDR35",	"CTLD FDR35 B",	"TARFARP2",	"CTLD FJiroft",	"CTLD Kerman",	"CTLD Kish","CTLD Kish B","CTLD FLar","CTLD FLar B","CTLD Lavin",  "CTLD FShiraz","CTLD Al Minhad","C TARAWA","C TARAWA2","CTLD Tnub","CTLD Tnub B", "CTLD Abu Nuayr","CTLD Abu Nuayr B", "CTLD Qeshm Island","CTLD Qeshm Island B",  "CTLD Sirri Island","CTLD Sirri Island B",}
+	"CTLD AbuFarp",
+	"CTLD AbuFarp B",
+    "CTLD AL_Drafra",
+    "CTLD BandarFarp",
+	"CTLD BandarFarp B",
+    "CTLD BANDAR2",
+    "CTLD FBN85",
+    "CTLD FDP05",
+    "CTLD FDR35",
+	"CTLD FDR35 B",
+    "TARFARP2",
+    "CTLD FJiroft",
+    "CTLD Kerman",
+    "CTLD Kish",
+	"CTLD Kish B",
+    "CTLD FLar",
+	"CTLD FLar B",
+    "CTLD Lavin",
+    "CTLD FShiraz",
+    "CTLD Al Minhad",
+    "C TARAWA",
+    "C TARAWA2",
+	"C TARAWA2-1",
+	"C TARAWA2-2",
+    "CTLD Tnub",
+	"CTLD Tnub B",
+    "CTLD Abu Nuayr",
+	"CTLD Abu Nuayr B",
+    "CTLD Qeshm Island",
+	"CTLD Qeshm Island B",
+    "CTLD Sirri Island",
+	"CTLD Sirri Island B",
+	"CTLD BandarFarp C",
+	"CTLD BandarFarp D",}
 
 
  --Configurable for user:
@@ -111,6 +144,17 @@ if resetall == 0 then
 	end
     if ctldsave[6] ~= nil then
 		ctld.jtacUnits = ctldsave[6]
+		local _jtacGroupName = nil
+		local _jtacUnit = nil
+		for _jtacGroupName, _jtacDetails in pairs(ctld.jtacUnits) do
+			print("_jtacGroupName is:" .. _jtacGroupName .. "Units we don't care about")
+			local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+            --put to the end
+            table.insert(ctld.jtacGeneratedLaserCodes, _code)
+            ctld.JTACAutoLase(_jtacGroupName, _code) --(_jtacGroupName, 
+		end
+		
+		
 	else
 		ctld.jtacUnits = {}
 	end
