@@ -69,7 +69,7 @@ AirbossWash:SetWelcomePlayers(false)
 AirbossWash:SetDefaultMessageDuration(1)
 AirbossWash:SetEmergencyLandings(true)
 AirbossWash:SetPatrolAdInfinitum(true)
-AirbossWash:Start()
+-- AirbossWash:Start()
 
 
 function AirbossWash:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
@@ -111,7 +111,7 @@ end
 function AirbossTeddy:OnAfterStart(From,Event,To)
   self:DeleteAllRecoveryWindows()
 end
-AirbossTeddy:Start()
+-- AirbossTeddy:Start()
 
 AirbossStennis = AIRBOSS:New("Stennis","Stennis")
 -- Delete auto recovery window.
@@ -136,11 +136,11 @@ AirbossStennis:SetHandleAIOFF()
 function AirbossStennis:OnAfterStart(From,Event,To)
   self:DeleteAllRecoveryWindows()
 end
---[[  CV_WASH = NAVYGROUP:New("Carrier Group 6a")
+  CV_WASH = NAVYGROUP:New("Carrier Group 6a")
   CV_WASH:SetPatrolAdInfinitum(true)
   CV_TDY= NAVYGROUP:New("Carrier Group 5")
   CV_TDY:SetPatrolAdInfinitum(true)
-]]
+
 AirbossStennis:Start()
 
 
@@ -157,7 +157,7 @@ function AirbossStennis:OnAfterRecoveryStart(From,Event,To,Case,Offset)
     local timerecovery_start = UTILS.SecondsToClock(timestart,true)
     local timerecovery_end = UTILS.SecondsToClock(timeend,true)
     AirbossWash:AddRecoveryWindow(timerecovery_start,timerecovery_end,25,false,0)
-	--CV_WASH:AddTurnIntoWind(timerecovery_start,timeend,25,false,0) ]]
+	CV_WASH:AddTurnIntoWind(timerecovery_start,timeend,25,false,0) 
 end
 end
 

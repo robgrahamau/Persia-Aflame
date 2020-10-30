@@ -1,7 +1,7 @@
-reinforhrs = 12
-reinformins = 0
-minreinf = 2
-maxreinf = 14
+reinforhrs = math.random(24,48)
+reinformins = math.random(0,59)
+minreinf = 0
+maxreinf = 4
 reinforcements = ((60 * 60) * reinforhrs) + (60 * reinformins) 
 dsqnsize = 24
 dsqnlsize = 32
@@ -147,9 +147,9 @@ function loadvalues()
   ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},mainmission.Kish_INT)
   ra2disp:SetSquadron("Kuznetsov INT","Kuznetsov",{"SU33_1","SU33_2"},mainmission.Kuznetsov_INT)
   
-  ba2disp:SetSquadron("Stennis","Stennis",BCarrierTEMP,mainmission.Stennis)
-  ba2disp:SetSquadron("TeddyR","TeddyR",BCarrierTEMP,mainmission.TeddyR)
-  ba2disp:SetSquadron("Al Draf",AIRBASE.PersianGulf.Al_Dhafra_AB,BLandTemp,mainmission.Al_Dhafra)
+ -- ba2disp:SetSquadron("Stennis","Stennis",BCarrierTEMP,mainmission.Stennis)
+  --ba2disp:SetSquadron("TeddyR","TeddyR",BCarrierTEMP,mainmission.TeddyR)
+  --ba2disp:SetSquadron("Al Draf",AIRBASE.PersianGulf.Al_Dhafra_AB,BLandTemp,mainmission.Al_Dhafra)
   if mainmission.ships == nil then
     mainmission.shipgroup1 = true
     mainmission.shipgroup2 = true
@@ -412,6 +412,7 @@ function reinforce()
       end
       ra2disp:SetSquadron("Kuznetsov INT","Kuznetsov",{"SU33_1","SU33_2"},newval)
     end
+   --[[
    if mainmission.Stennis < 18 then
 	if mainmission.Stennis < 0 then
           mainmission.Stennis = 0
@@ -442,6 +443,7 @@ function reinforce()
     end
     ba2disp:SetSquadron("Al Draf",AIRBASE.PersianGulf.Al_Dhafra_AB,BLandTemp,newval)
   end
+  ]]
   mainmission.nextupdate = mnowTime + reinforcements
   
   mainmission.lastupdatehour = mnowHour
@@ -468,9 +470,9 @@ function updatevalues()
   mainmission.Lar = ra2disp:GetSquadronAmount("Lar")
   mainmission.Kish = ra2disp:GetSquadronAmount("Kish")
   mainmission.Kish_INT = ra2disp:GetSquadronAmount("Kish INT")
-  mainmission.Stennis = ba2disp:GetSquadronAmount("Stennis")
-  mainmission.TeddyR = ba2disp:GetSquadronAmount("TeddyR")
-  mainmission.Al_Dhafra = ba2disp:GetSquadronAmount("Al Draf")
+  --mainmission.Stennis = ba2disp:GetSquadronAmount("Stennis")
+  --mainmission.TeddyR = ba2disp:GetSquadronAmount("TeddyR")
+  --mainmission.Al_Dhafra = ba2disp:GetSquadronAmount("Al Draf")
   mainmission.shipgroup1 = false
   if GROUP:FindByName("Cuban Tanker 1"):IsAlive() == true then
 	mainmission.shipgroup2 = GROUP:FindByName("Cuban Tanker 1"):IsAlive()

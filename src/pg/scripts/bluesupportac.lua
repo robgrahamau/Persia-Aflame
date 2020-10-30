@@ -70,4 +70,3 @@ BLandTemp = {"T_F15","T_F16"}
   ba2disp:SetSquadronCapInterval("Al Draf",2,(60*15),(60*45),1.0)
   ba2disp:SetSquadronGci("Al Draf",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
   ba2disp:__Start(30)
-  

@@ -17,6 +17,7 @@ defaultlogisticUnits = {
     "CTLD FLar",
 	"CTLD FLar B",
     "CTLD Lavin",
+	"CTLD Lavin B",
     "CTLD FShiraz",
     "CTLD Al Minhad",
     "C TARAWA",

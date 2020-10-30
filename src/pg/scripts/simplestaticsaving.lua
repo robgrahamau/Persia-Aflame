@@ -35,7 +35,7 @@ function no_farps()
   Allstatics1:ForEach(function (stat)
     local _name = stat:GetName()
     if AIRBASE:FindByName(_name) ~= nil then
-      env.info(_name.." is a type of airbase, farp or oil rig")
+      --env.info(_name.." is a type of airbase, farp or oil rig")
       --avoid these types of static, they are really airbases
     else
     local prefix = "Iran"

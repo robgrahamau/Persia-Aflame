@@ -12,7 +12,7 @@ do
     package.path = package.path..";.\\LuaSocket\\?.lua"
     package.cpath = package.cpath..";.\\LuaSocket\\?.dll"
     
-    
+			
     
     if os ~= nil then
         nowTime = os.time()
@@ -27,6 +27,7 @@ do
     local function log(msg)
         env.info("DCS-TCP Link (t=" .. timer.getTime() .. "): " .. msg)
     end
+	fobs = true
     -- make the stuff that doesn't need to be run 'every' time.
     local clientset = SET_CLIENT:New():FilterActive(true):FilterStart()
     local redclients = clientset:FilterCoalitions("red")
@@ -189,6 +190,16 @@ do
         elseif _map == "PersianGulf" then
           for i,item in pairs(AIRBASE.PersianGulf) do
             updateairbase(item)
+          end
+        end
+        if fobs == true then
+          if AIRBASE_STATICS ~= nil then
+             AIRBASE_STATICS:ForEach(function (stat)
+                local _name = stat:GetName()
+                if AIRBASE:FindByName(_name) ~= nil then
+                  updateairbase(_name)
+                end
+              end)
           end
         end
       end

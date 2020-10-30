@@ -1,9 +1,10 @@
 minutes = 60
-hours = 1 -- DO NOT SET THIS TO 0, if your not using HOURS level it as 1.
+hours = 1 -- DO NOT SET THIS TO 0, if your not using HOURS leave it as 1.
 RED_EW_SET = SET_GROUP:New():FilterCoalitions("red"):FilterPrefixes("REW"):FilterStart()
 RED_SAM_SET = SET_GROUP:New():FilterCoalitions("red"):FilterActive():FilterPrefixes("RSAM"):FilterStart()
-RED_SCUD_SET = SET_GROUP:New():FilterCoalitions("red"):FilterActive():FilterPrefixes("SCUD"):FilterStart()
+RED_SCUD_SET = SET_GROUP:New():FilterCoalitions("red"):FilterActive():FilterPrefixes("SCUD","IAA"):FilterStart()
 ALL_STATICS = SET_STATIC:New():FilterStart()
+AIRBASE_STATICS= SET_STATIC:New()
 RED_NO_FARPS = SET_STATIC:New()
 BLUE_NO_FARPS = SET_STATIC:New()
 RED_I_SET = SET_STATIC:New()
@@ -17,11 +18,12 @@ function no_farps()
   RED_CTLD_SET:Clear()
   BLUE_CTLD_SET:Clear()
   BLUE_NO_FARPS:Clear()
-
+  AIRBASE_STATICS:Clear()
 ALL_STATICS:ForEach(function (stat)
   local _name = stat:GetName()
   if AIRBASE:FindByName(_name) ~= nil then
-    env.info(_name.." is a type of airbase, farp or oil rig")
+    AIRBASE_STATICS:AddStatic(stat)
+    --env.info(_name.." is a type of airbase, farp or oil rig")
     --avoid these types of static, they are really airbases
     else
       if stat:GetCoalition() == 1 then
@@ -148,11 +150,11 @@ RED_CTLD_SET:ForEachStatic(function(g)
     intel_reports[g:GetName()] = text
     if R_CTLD_INTEL[gid] == nil then
     local m = co:MarkToCoalitionRed(data.text,true)
-		data.markerid = m
-		R_CTLD_INTEL[gid] = data
+    data.markerid = m
+    R_CTLD_INTEL[gid] = data
     end
   else
-	if R_CTLD_INTEL[gid] ~= nil then
+  if R_CTLD_INTEL[gid] ~= nil then
       -- remove the marker
       if R_CTLD_INTEL[gid].markerid ~= nil then
         COORDINATE:RemoveMark(R_CTLD_INTEL[gid].markerid)
@@ -306,10 +308,10 @@ if inteltype == 1 or inteltype == 4 or inteltype == 5 then
           local mgrs = co:ToStringMGRS()
           BASE:E({"Get Group Type:",k.group:GetTypeName()})
           local threatlevel = k.group:GetThreatLevel()
-          local text = "CIA Report: Detected Surface to Air Installation \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
+          local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected Surface to Air Installation \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.group:GetName()] = text
-		  HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
+      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
@@ -332,11 +334,11 @@ if inteltype == 2 or inteltype == 4 or inteltype == 6 then
           local lldm = co:ToStringLLDDM()
           local llds = co:ToStringLLDMS()
           local mgrs = co:ToStringMGRS()
-          local text = "CIA Report: Detected Possible SCUD, ARTY or ARMY Staging Site. \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
+          local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected Possible SCUD, ARTY or ARMY/GROUND Force Staging Area, NOTE: DATA MAY NOT BE ACCURATE IF UNITS HAVE MOVED. \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.group:GetName()] = text
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
-		  HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
+      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
           updated = true
@@ -359,11 +361,11 @@ if inteltype == 3 or inteltype == 5 or inteltype == 6 then
           local lldm = co:ToStringLLDDM()
           local llds = co:ToStringLLDMS()
           local mgrs = co:ToStringMGRS()
-          local text = "CIA Report: Detected IADS Critical System. \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
+          local text = "CIA Report," .. nowHour .. ":" ..nowminute .. " Detected IADS Critical System. \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.static:GetName()] = text
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
-		  HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
+      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
           updated = true

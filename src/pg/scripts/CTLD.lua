@@ -40,12 +40,12 @@ ctld.slingLoad = false -- if false, crates can be used WITHOUT slingloading, by 
 
 ctld.enableSmokeDrop = true -- if false, helis and c-130 will not be able to drop smoke
 
-ctld.maxExtractDistance = 500 -- max distance from vehicle to troops to allow a group extraction
-ctld.maximumDistanceLogistic = 500 -- max distance from vehicle to logistics to allow a loading or spawning operation
+ctld.maxExtractDistance = 250 -- max distance from vehicle to troops to allow a group extraction
+ctld.maximumDistanceLogistic = 250 -- max distance from vehicle to logistics to allow a loading or spawning operation
 ctld.maximumSearchDistance = 5000 -- max distance for troops to search for enemy
-ctld.maximumMoveDistance = 500 -- max distance for troops to move from drop point if no enemy is nearby
+ctld.maximumMoveDistance = 100 -- max distance for troops to move from drop point if no enemy is nearby
 
-ctld.minimumDeployDistance = 0100 -- minimum distance from a friendly pickup zone where you can deploy a crate
+ctld.minimumDeployDistance = 100 -- minimum distance from a friendly pickup zone where you can deploy a crate
 
 ctld.numberOfTroops = 10 -- default number of troops to load on a transport heli or C-130 
               -- also works as maximum size of group that'll fit into a helicopter unless overridden
@@ -74,7 +74,7 @@ ctld.troopPickupAtFOB = true -- if true, troops can also be picked up at a creat
 
 ctld.buildTimeFOB = 120 --time in seconds for the FOB to be built
 
-ctld.crateWaitTime = 20 -- time in seconds to wait before you can spawn another crate
+ctld.crateWaitTime = 60 -- time in seconds to wait before you can spawn another crate
 
 ctld.forceCrateToBeMoved = true-- a crate must be picked up at least once and moved before it can be unpacked. Helps to reduce crate spam
 
@@ -111,8 +111,8 @@ ctld.AASystemLimitBLUE = 10 -- Blue side limit
 
 -- ***************** JTAC CONFIGURATION *****************
 
-ctld.JTAC_LIMIT_RED = 5 -- max number of JTAC Crates for the RED Side
-ctld.JTAC_LIMIT_BLUE = 5 -- max number of JTAC Crates for the BLUE Side
+ctld.JTAC_LIMIT_RED = 10 -- max number of JTAC Crates for the RED Side
+ctld.JTAC_LIMIT_BLUE = 10 -- max number of JTAC Crates for the BLUE Side
 
 ctld.JTAC_dropEnabled = true -- allow JTAC Crate spawn from F10 menu
 
@@ -151,6 +151,8 @@ ctld.JTAC_lock = "all" -- "vehicle" OR "troop" OR "all" forces JTAC to only lock
 ctld.pickupZones = {
     { "Tarawa", "none", 10, "yes", 2, 101 },
     { "LHA-2", "none", 10, "yes", 2, 102 },
+	{ "LHA-3", "none", 10, "yes", 2, 122 },
+	{ "LHA-4", "none", 10, "yes", 2, 123 },
     { "CTLD Al Drafra", "none", 6, "yes", 0, 103},
     { "CTLD Al Minhad", "none", 6, "yes", 0, 104},
     { "CTLD FBN85","none",4,"yes",0, 105},
@@ -213,6 +215,7 @@ ctld.logisticUnits = {
     "CTLD FLar",
 	"CTLD FLar B",
     "CTLD Lavin",
+	"CTLD Lavin B",
     "CTLD FShiraz",
     "CTLD Al Minhad",
     "C TARAWA",
@@ -362,10 +365,72 @@ ctld.transportPilotNames = {
 	"LHA3-UH1 #003",
 	"LHA3-KA50",
 	"LHA3-KA50 #001",
+	"LarsK -1-1",
+	"LarsK -2-1",
+	"LarsK -3-1",
+	"LarsK -4-1",
+	"LarsK -5-1",
+	"LarsK -6-1",
+	"LarsK -7-1",
+	"LarsK -8-1",
+	"LarsU -1-1",
+	"LarsU -2-1",
+	"LarsU -3-1",
+	"LarsU -4-1",
+	"LarsU -5-1",
+	"LarsU -6-1",
+	"LarsU -7-1",
+	"LarsU -8-1",
+	"EPUH2",
+	"EPUH2-1",
+	"EPKA50-2",
+	"EPKA50-3",
+	"EPMI8-2",
+	"EPMI8-3",
+	"EPUH1",
+	"EPUH1-1",
+	"EPKA50",
+	"EPKA50-1",
+	"EPMI8",
+	"EPMI8-1",
+	"EQUH2",
+	"EQUH2-1",
+	"EQUH1",
+	"EQUH1-1",
+	"ERUH2",
+	"ERUH2-1",
+	"ERUH1",
+	"ERUH1-1",
+	"FRUH2",
+	"FRUH2-1",
+	"FRUH1",
+	"FRUH1-1",
+	"BFARP KA50","BFARP KA50 #001","BFARP UH1","BFARP MI8","BFARP UH1-1","BFARP MI8-1",
+	"BFARP UH1-2","BFARP UH1-3","BFARP KA501-1","BFARP KA501","BFARP MI81","BFARP MI81-1",
+	"CRUH2-1","CRUH2","CRKA502","CRKA502-1",
+	"CRUH1","CRUH1-1","CRKA501","CRKA501-1",
+	"BQUH2","BQUH2-1","BQKA502","BQKA502-1",
+	"BQUH1","BQUH1-1","BQKA501","BQKA501-1",
+	"CQUH2","CQUH2-1","CQKA50","BQKA502-1",
+	"CQUH1","CQUH1-1","CQKA502","CQKA502-1",
+	"BRUH2","BRUH2-1",
+	"BRUH1","BRUH1-1",
+	"BSUH2","BSUH2-1","BSKA50-2","BSKA50-3",
+	"BSUH1","BSUH1-1","BSKA50","BSKA50-1",
+	"YNUH2","YNUH2-1","BSKA502","BSKA502-1",
+	"YNUH1","YNUH1-1","YNKA501","YNKA501-1",
+	"DSUH2","DSUH2-1","DSKA502","DSKA502-1",
+	"DSUH1","DSUH1-1","DSKA50-1","DSKA50",
+	"CTUH2","CTUH2-1","CTKA502","CTKA502-1",
+	"CTUH1","CTUH1-1","CTKA501","CTKA501-1",
+	"DUUH2","DUUH2-1","DUKA502","DUKA502-1",
+	"DUUH1","DUUH1-1","DUKA501","DUKA501-1",
+	
     -- *** AI transports names (different names only to ease identification in mission) ***
     -- Use any of the predefined names or set your own ones
     "transport1",
     "transport2",
+	
 }
 
 -- *************** Optional Extractable GROUPS *****************
@@ -473,15 +538,14 @@ ctld.spawnableCrates = {
         --{ weight = 100, desc = "2B11 Mortar", unit = "2B11 mortar" },
         --{ weight = 250, desc = "SPH 2S19 Msta", unit = "SAU Msta", side = 1, cratesRequired = 3 },
         --{ weight = 255, desc = "M-109", unit = "M-109", side = 2, cratesRequired = 3 },
-        
     },
     ["SHRT AA Crates"] = {
-        { weight = 405, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 2 },
-        { weight = 405, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 2 },
-        { weight = 400, desc = "M1097 Avenger", unit = "M1097 Avenger", side = 2, cratesRequired = 2 },
-        { weight = 402, desc = "M6 Linebacker", unit = "M6 Linebacker", side = 2, cratesRequired = 2 },
-        { weight = 410, desc = "SA-15 Tor", unit = "Tor 9A331", cratesRequired = 2 },
-		{ weight = 490, desc = "SA-19 Tunguska", unit = "2S6 Tunguska", side = 1, cratesRequired = 2 },
+        { weight = 405, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 3 },
+        { weight = 405, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 3 },
+        { weight = 400, desc = "M1097 Avenger", unit = "M1097 Avenger", side = 2, cratesRequired = 3 },
+        { weight = 402, desc = "M6 Linebacker", unit = "M6 Linebacker", side = 2, cratesRequired = 3 },
+        { weight = 530, desc = "SA-15 Tor", unit = "Tor 9A331", cratesRequired = 4 },
+		{ weight = 570, desc = "SA-19 Tunguska", unit = "2S6 Tunguska", side = 1, cratesRequired = 4 },
 		{ weight = 592, desc = "Roland Radar", unit = "Roland Radar", side = 2},
         { weight = 595, desc = "Roland ADS", unit = "Roland ADS", side = 2},
         --{ weight = 50, desc = "Stinger", unit = "Stinger manpad", side = 2 },
@@ -3017,11 +3081,13 @@ function ctld.unpackFOBCrates(_crates, _heli)
             elseif _nearbyCrate.details.unit == "FOB-SMALL" then
                 _smallFobCrates = _smallFobCrates + 1
                 table.insert(_nearbyMultiCrates, _nearbyCrate)
+				env.info("CTLD._smallFobCrates is equal to: " .. _smallFobCrates)
             end
 
             --catch divide by 0
             if _smallFobCrates > 0 then
                 _totalCrates = _bigFobCrates + (_smallFobCrates/3.0)
+				env.info("CTLD _totalCratess is equal to: " .. _totalCrates)
             else
                 _totalCrates = _bigFobCrates
             end
@@ -3077,7 +3143,7 @@ function ctld.unpackFOBCrates(_crates, _heli)
 
             if ctld.troopPickupAtFOB == true then
                 table.insert(ctld.builtFOBS, _fob:getName())
-
+					
                 trigger.action.outTextForCoalition(_args[3], "Finished building FOB! Crates and Troops can now be picked up.", 10)
             else
                 trigger.action.outTextForCoalition(_args[3], "Finished building FOB! Crates can now be picked up.", 10)
