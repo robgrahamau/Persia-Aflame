@@ -1,15 +1,15 @@
-Loading = true
+
 
  function AI_A2A_DISPATCHER:GetSquadronAmount(SquadronName)
     DefenderSquadron = self:GetSquadron( SquadronName )
-        self:E( { Squadron = SquadronName, SquadronResourceCount = DefenderSquadron.ResourceCount, SquadronDetails = DefenderSquadron } )
+        self:F( { Squadron = SquadronName, SquadronResourceCount = DefenderSquadron.ResourceCount, SquadronDetails = DefenderSquadron } )
     return DefenderSquadron.ResourceCount 
   end
 
 RAWACS = SPAWN:New("AWAC Overlord21"):InitLimit(1,4):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(1800,0.5)
 RAWACS2 = SPAWN:New("AWAC Overlord11"):InitLimit(1,4):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(1800,0.5)
 TANKER = SPAWN:New("Texaco11"):InitLimit(1,4):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(1800,0.5)
-
+rlooksee = SET_GROUP:New():FilterPrefixes({"REW","RSAM","RAWAC"}):FilterCoalitions("red"):FilterActive():FilterStart()
 do
 capzone1 = ZONE_POLYGON:New("CAP1",GROUP:FindByName("CAP1"))
 capzone2 = ZONE_POLYGON:New("CAP2",GROUP:FindByName("CAP2")) 
@@ -20,11 +20,12 @@ capzone6 = ZONE_POLYGON:New("CAP6",GROUP:FindByName("CAP6"))
 capzone7 = ZONE_POLYGON:New("CAP7",GROUP:FindByName("CAP7"))
 capzonecow = ZONE_POLYGON:NewFromGroupName("Cow_AS")
 end
-
-do 
+if usenew == true then
+  BASE:E({"ADS Using New Scripts"})
+else
+  do 
   BASE:E({"New Scripts was false using A2ADispatcher"})
   RAS = ZONE_POLYGON:New("RAS",GROUP:FindByName("RAS"))
-  rlooksee = SET_GROUP:New():FilterPrefixes({"REW","RSAM","RAWAC"}):FilterCoalitions("red"):FilterActive():FilterStart()
   rdet = DETECTION_AREAS:New(rlooksee,45000)
   ra2disp = AI_A2A_DISPATCHER:New(rdet)
   ra2disp:SetBorderZone(RAS)
@@ -96,3 +97,6 @@ do
   ra2disp:__Start(30)
   
  end
+   
+
+end

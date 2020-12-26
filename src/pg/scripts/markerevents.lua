@@ -65,12 +65,12 @@ local function handleBlueTankerRequest(text,coord)
             local tankername = "ARCO"
             local cooldown = currentTime - ARC_Timer
               if cooldown < TANKER_COOLDOWN then 
-                MESSAGE:New(string.format("ARCO Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60), MESSAGE.Type.Information):ToBlue()
+                MESSAGE:New(string.format("ARCO Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60),30, MESSAGE.Type.Information):ToBlue()
               return
             end
             tanker = Arco11
             if tanker:IsAlive() ~= true then
-              MESSAGE:New("ARCO is currently not avalible for tasking, it's M.I.A",MESSAGE.Type.Information):ToBlue()
+              MESSAGE:New("ARCO is currently not avalible for tasking, it's M.I.A",30,MESSAGE.Type.Information):ToBlue()
               return
             end
             ARC_Timer = currentTime
@@ -79,11 +79,11 @@ local function handleBlueTankerRequest(text,coord)
             tanker = Texaco11
             local cooldown = currentTime - TEX_Timer
               if cooldown < TANKER_COOLDOWN then 
-                MESSAGE:New(string.format("TEXACO11 Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60), MESSAGE.Type.Information):ToBlue()
+                MESSAGE:New(string.format("TEXACO11 Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60),30, MESSAGE.Type.Information):ToBlue()
               return
             end
             if tanker:IsAlive() ~= true then
-              MESSAGE:New("TEXACO11 is currently not avalible for tasking it's M.I.A",MESSAGE.Type.Information):ToBlue()
+              MESSAGE:New("TEXACO11 is currently not avalible for tasking it's M.I.A",30,MESSAGE.Type.Information):ToBlue()
               return
             end
             TEX_Timer = currentTime
@@ -92,16 +92,16 @@ local function handleBlueTankerRequest(text,coord)
             tanker = Texaco21
             local cooldown = currentTime - TEX2_Timer
               if cooldown < TANKER_COOLDOWN then 
-                MESSAGE:New(string.format("TEXACO21 Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60), MESSAGE.Type.Information):ToBlue()
+                MESSAGE:New(string.format("TEXACO21 Tanker Requests are not available at this time.\nRequests will be available again in %d minutes", (TANKER_COOLDOWN - cooldown) / 60),30, MESSAGE.Type.Information):ToBlue()
               return
             end
             if tanker:IsAlive() ~= true then
-              MESSAGE:New("TEXACO21 is currently not avalible for tasking it's M.I.A",MESSAGE.Type.Information):ToBlue()
+              MESSAGE:New("TEXACO21 is currently not avalible for tasking it's M.I.A",30,MESSAGE.Type.Information):ToBlue()
               return
             end
             TEX2_Timer = currentTime
           else
-          MESSAGE:New("No known Tanker was included in the Tanker Route Command, please select ARCO21 or TEXACO21",MESSAGE.Type.Information):ToBlue()
+          MESSAGE:New("No known Tanker was included in the Tanker Route Command, please select ARCO21 or TEXACO21",30,MESSAGE.Type.Information):ToBlue()
           return
         end
         if altitude == nil then
@@ -173,17 +173,20 @@ local function handleWeatherRequest(text, coord, red)
     local currentPressure = coord:GetPressure(0)
     local currentTemperature = coord:GetTemperature()
     local currentWindDirection, currentWindStrengh = coord:GetWind()
-    local currentWindDirection1, currentWindStrength1 = coord:GetWind(500)
-    local currentWindDirection2, currentWindStrength2 = coord:GetWind(1000)
-    local currentWindDirection5, currentWindStrength5 = coord:GetWind(2000)
-    local currentWindDirection10, currentWindStrength10 = coord:GetWind(5000)
+	local currentWindDirection1a, currentWindStrength1a = coord:GetWind(UTILS.FeetToMeters(500))
+    local currentWindDirection1, currentWindStrength1 = coord:GetWind(UTILS.FeetToMeters(1000))
+    local currentWindDirection2, currentWindStrength2 = coord:GetWind(UTILS.FeetToMeters(2000))
+    local currentWindDirection5, currentWindStrength5 = coord:GetWind(UTILS.FeetToMeters(5000))
+    local currentWindDirection10, currentWindStrength10 = coord:GetWind(UTILS.FeetToMeters(10000))
     local weatherString = string.format("Requested weather: Wind from %d@%.1fkts, QNH %.2f, Temperature %d", currentWindDirection, UTILS.MpsToKnots(currentWindStrengh), currentPressure * 0.0295299830714, currentTemperature)
-    local weatherString1 = string.format("Wind 100ft(possibly Meters): Wind from%d@%.1fkts",currentWindDirection1, UTILS.MpsToKnots(currentWindStrength1))
-    local weatherString2 = string.format("Wind 1,000ft(possibly Meters): Wind from%d@%.1fkts",currentWindDirection2, UTILS.MpsToKnots(currentWindStrength2))
-    local weatherString5 = string.format("Wind 2,000ft(possibly Meters): Wind from%d@%.1fkts",currentWindDirection5, UTILS.MpsToKnots(currentWindStrength5))
-    local weatherString10 = string.format("Wind 5,000ft(possibly Meters): Wind from%d@%.1fkts",currentWindDirection10, UTILS.MpsToKnots(currentWindStrength10))
+    local weatherString1 = string.format("Wind 500ft MSL: Wind from%d@%.1fkts",currentWindDirection1, UTILS.MpsToKnots(currentWindStrength1a))
+    local weatherString2a = string.format("Wind 1,000ft MSL: Wind from%d@%.1fkts",currentWindDirection2, UTILS.MpsToKnots(currentWindStrength1))
+	local weatherString2 = string.format("Wind 2,000ft MSL: Wind from%d@%.1fkts",currentWindDirection2, UTILS.MpsToKnots(currentWindStrength2))
+    local weatherString5 = string.format("Wind 5,000ft MSL: Wind from%d@%.1fkts",currentWindDirection5, UTILS.MpsToKnots(currentWindStrength5))
+    local weatherString10 = string.format("Wind 10,000ft MSL: Wind from%d@%.1fkts",currentWindDirection10, UTILS.MpsToKnots(currentWindStrength10))
     if red == false then
     MESSAGE:New(weatherString, 30, MESSAGE.Type.Information):ToBlue()
+	MESSAGE:New(weatherString2a, 30, MESSAGE.Type.Information):ToBlue()
     MESSAGE:New(weatherString1, 30, MESSAGE.Type.Information):ToBlue()
     MESSAGE:New(weatherString2, 30, MESSAGE.Type.Information):ToBlue()
     MESSAGE:New(weatherString5, 30, MESSAGE.Type.Information):ToBlue()
@@ -192,6 +195,7 @@ local function handleWeatherRequest(text, coord, red)
     else
     MESSAGE:New(weatherString, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString1, 30, MESSAGE.Type.Information):ToRed()
+	MESSAGE:New(weatherString2a, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString2, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString5, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString10, 30, MESSAGE.Type.Information):ToRed()
@@ -294,6 +298,32 @@ local function handlespawn(text,coord)
     table.insert(adminspawned,su)
   elseif unit == "rarmour2" then
     local su = SPAWN:NewWithAlias("GM_Tanks-2","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,150,400)
+    end
+    if heading ~= nil then
+      BASE:E({"HEADING ACTUALLY WAS NOT NIL WAS",heading})
+      su:InitHeading(heading)
+    else
+    BASE:E({"HEADING ACTUALLY WAS NIL WAS",heading})
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rfalk" then
+    local su = SPAWN:NewWithAlias("GM_FLAK_RED","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,150,400)
+    end
+    if heading ~= nil then
+      BASE:E({"HEADING ACTUALLY WAS NOT NIL WAS",heading})
+      su:InitHeading(heading)
+    else
+    BASE:E({"HEADING ACTUALLY WAS NIL WAS",heading})
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+   elseif unit == "rfalk1" then
+    local su = SPAWN:NewWithAlias("GM_BO_RED","IAA " .. name)
     if random == true then
       su:InitRandomizeUnits(true,150,400)
     end
@@ -792,7 +822,7 @@ local function handlespawn(text,coord)
 	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
-    ctld.JTACAutoLase("GM_USAA " .. name, _code) 
+    ctld.JTACAutoLase("GM_IAA " .. name, _code) 
   elseif unit == "bjtac1" then
     local su = SPAWN:NewWithAlias("GM_BJTAC","GM_IAA " .. name)
     if random == true then
@@ -920,6 +950,12 @@ function markRemoved(Event,EC)
             handlespawn(text,coord)
           else
             MESSAGE:New("Admin Commands need to be active to spawn new units",15):ToAll()
+          end
+		elseif Event.text:lower():find("-load") then
+          if admin == true then
+            dofile(lfs.writedir() .."pg\\input.lua")
+          else
+            MESSAGE:New("Admin Commands need to be active to input a file",15):ToAll()
           end
        elseif Event.text:lower():find("-despawn") then
           if admin == true then

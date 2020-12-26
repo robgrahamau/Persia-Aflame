@@ -92,17 +92,21 @@ RED_EW_SET:ForEachGroupAlive(function(g)
   EW_INTEL[gid] = data
   EW_INTEL[gid].group = g
   EW_INTEL[gid].displayed = true
-  local co = g:GetCoordinate()
-  local lldm = co:ToStringLLDDM()
-  local llds = co:ToStringLLDMS()
-  local mgrs = co:ToStringMGRS()
-  local text = "CIA Report: Early Warning Radar Detected \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
-  EW_INTEL[gid].text = text
-  intel_reports[gid] = text
-  MESSAGE:New(text,15,"CIA Intel Update"):ToAll()  
-  local m = co:MarkToAll(EW_INTEL[gid].text,true)
-  HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
-  EW_INTEL[gid].markerid = m
+  if co ~= nil then
+	local co = g:GetCoordinate()
+	local lldm = co:ToStringLLDDM()
+	local llds = co:ToStringLLDMS()
+	local mgrs = co:ToStringMGRS()
+	local text = "CIA Report: Early Warning Radar Detected \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
+	EW_INTEL[gid].text = text
+	intel_reports[gid] = text
+	MESSAGE:New(text,15,"CIA Intel Update"):ToAll()  
+	local m = co:MarkToAll(EW_INTEL[gid].text,true)
+	HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
+	EW_INTEL[gid].markerid = m
+  else
+	BASE:E({"We had a NIL COORD in EW SET:",gid})
+  end
 end)
 
 RED_SAM_SET:ForEachGroupAlive(function(g) 
@@ -142,17 +146,21 @@ RED_CTLD_SET:ForEachStatic(function(g)
     BASE:E({"Adding new Intel"})
     data.displayed = true
     local co = g:GetCoordinate()
-    local lldm = co:ToStringLLDDM()
-    local llds = co:ToStringLLDMS()
-    local mgrs = co:ToStringMGRS()
-    local text = "RED CTLD Crate Pickup Point"
-    data.text = text
-    intel_reports[g:GetName()] = text
-    if R_CTLD_INTEL[gid] == nil then
-    local m = co:MarkToCoalitionRed(data.text,true)
-    data.markerid = m
-    R_CTLD_INTEL[gid] = data
-    end
+	if co ~= nil then 
+		local lldm = co:ToStringLLDDM()
+		local llds = co:ToStringLLDMS()
+		local mgrs = co:ToStringMGRS()
+		local text = "RED CTLD Crate Pickup Point"
+		data.text = text
+		intel_reports[g:GetName()] = text
+		if R_CTLD_INTEL[gid] == nil then
+		local m = co:MarkToCoalitionRed(data.text,true)
+		data.markerid = m
+		R_CTLD_INTEL[gid] = data
+	    end
+	else
+		BASE:E({"We had a NIL COORD in RED_CTLD_SET:",gid})
+	end
   else
   if R_CTLD_INTEL[gid] ~= nil then
       -- remove the marker
@@ -173,18 +181,22 @@ BLUE_CTLD_SET:ForEachStatic(function(g)
     BASE:E({"Adding new Intel"})
     data.displayed = true
     local co = g:GetCoordinate()
-    local lldm = co:ToStringLLDDM()
-    local llds = co:ToStringLLDMS()
-    local mgrs = co:ToStringMGRS()
-    local text = "BLUE CTLD Crate Pickup Point"
-    data.text = text
-    intel_reports[g:GetName()] = text
-    if B_CTLD_INTEL[gid] == nil then
-      local m = co:MarkToCoalitionBlue(data.text,true)
-      data.markerid = m
-      -- we already have the marker
-      B_CTLD_INTEL[gid] = data      
-    end
+    if co == nil then
+		BASE:E({"We had a NIL COORD in BLUE CTLD SET:",gid})
+	else
+		local lldm = co:ToStringLLDDM()
+		local llds = co:ToStringLLDMS()
+		local mgrs = co:ToStringMGRS()
+		local text = "BLUE CTLD Crate Pickup Point"
+		data.text = text
+		intel_reports[g:GetName()] = text
+		if B_CTLD_INTEL[gid] == nil then
+			local m = co:MarkToCoalitionBlue(data.text,true)
+			data.markerid = m
+			-- we already have the marker
+			B_CTLD_INTEL[gid] = data      
+		end
+	end
   else
     if B_CTLD_INTEL[gid] ~= nil then
       if B_CTLD_INTEL[gid].markerid ~= nil then
@@ -236,20 +248,25 @@ checkctldlogistics()
 function markerremove()
   for i,k in pairs(EW_INTEL) do 
     if k.group:IsAlive() ~= true and k.displayed == true then
-      COORDINATE:RemoveMark(k.markerid)
-      intel_reports[k.group:GetName()] = ""
+		if k.markerid ~= nil then
+			COORDINATE:RemoveMark(k.markerid)
+			intel_reports[k.group:GetName()] = ""
+		end
     end
   end
 
   for i,k in pairs(SAM_INTEL) do 
     if k.group:IsAlive() ~= true and k.displayed == true then
-      COORDINATE:RemoveMark(k.markerid)
-      intel_reports[k.group:GetName()] = ""
+		if k.markerid ~= nil then
+			COORDINATE:RemoveMark(k.markerid)
+			intel_reports[k.group:GetName()] = ""
+		end
     end
   end
 
   for i,k in pairs(SCUD_INTEL) do 
     if k.group:IsAlive() ~= true and k.displayed == true then
+	
       COORDINATE:RemoveMark(k.markerid)
       intel_reports[k.group:GetName()] = ""
     end

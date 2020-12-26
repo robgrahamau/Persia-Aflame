@@ -24,7 +24,7 @@ if abossactive == true then
   
   ShellStennis = RECOVERYTANKER:New(UNIT:FindByName("Washington"), "Shell11")
   ShellStennis:SetCallsign(CALLSIGN.Tanker.Shell,1)
-  ShellStennis:SetRespawnInAir()
+  ShellStennis:SetTakeoffCold()
   ShellStennis:SetSpeed(310)
   ShellStennis:SetRacetrackDistances(15,10)
   ShellStennis:SetPatternUpdateDistance(25)
@@ -44,7 +44,7 @@ if abossactive == true then
   awacsTeddy:Start()
   
   ShellTeddy = RECOVERYTANKER:New(UNIT:FindByName("TeddyR"), "Shell21")
-  ShellTeddy:SetTakeoffAir()
+  ShellTeddy:SetTakeoffCold()
   ShellTeddy:SetCallsign(CALLSIGN.Tanker.Shell,2)
   ShellTeddy:SetSpeed(310)
   ShellTeddy:SetRadio(257)

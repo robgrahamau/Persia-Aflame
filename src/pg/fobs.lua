@@ -21,6 +21,7 @@ function fob:New(name,redspawn,bluespawn,coalition)
   self.coalition = coalition
   self.redspawn = redspawn
   self.bluespawn = bluespawn
+  self.marker = nil
   BASE:E({self.fobname,"Created",self.coalition})
   return self
 end
@@ -95,12 +96,18 @@ end
 
 function fob:Startup()
   BASE:E({self.fobname,"Starting up"})
+  local col = "Iran"
   if self.coalition == 1 then
     self:FlipRed()
+    
   else
     self:FlipBlue()
+    col = "Coalition"
   end
+  
   self:HandleEvent(EVENTS.BaseCaptured) 
+  local co = self.fobunit:GetCoordinate()
+  self.marker = co:MarkToAll("Helicopter Forward Operating Base, Currently Owned by: ".. col .."",true)
 end
 
 
@@ -122,10 +129,16 @@ function fob:OnEventBaseCaptured(EventData)
   if coalition == 2 then
       if self:IsBlue() ~= true then
         self:FlipBlue()
+        local col = "Coalition"
+        COORDINATE:RemoveMark(self.marker)
+        self.marker = co:MarkToAll("Helicopter Forward Operating Base, Currently Owned by: ".. col .."",true)
       end
   elseif coalition == 1 then
       if self:IsBlue() == true then
         self:FlipRed()
+        local col = "Coalition"
+        COORDINATE:RemoveMark(self.marker)
+        self.marker = co:MarkToAll("Helicopter Forward Operating Base, Currently Owned by: ".. col .."",true)
       end
   end
  end

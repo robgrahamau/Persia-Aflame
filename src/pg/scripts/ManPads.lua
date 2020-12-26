@@ -17,9 +17,11 @@ if mainmission.manpads == nil then
 end
 
 if mainmission.manpads == false then
+   mainmission.manpads = false
   manpadinit = false
 else
   manpadinit = true
+  mainmission.manpads = true
 end
 
 

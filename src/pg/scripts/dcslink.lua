@@ -7,19 +7,17 @@
 do
     -- lets start commenting some of this shit.
     local PORT = 3009 -- our port
-    local DATA_TIMEOUT_SEC = 300 -- How often we send data.
+    local DATA_TIMEOUT_SEC = 600 -- How often we send data.
   
     package.path = package.path..";.\\LuaSocket\\?.lua"
     package.cpath = package.cpath..";.\\LuaSocket\\?.dll"
-    
-			
-    
+ 
     if os ~= nil then
         nowTime = os.time()
     else
         nowTime = 000000000
     end
-     
+    
     local socket = require("socket") -- load in socket
     local JSON = loadfile("Scripts\\JSON.lua")() -- load in json.
     -- require = nil -- really need to delete this i don't like it unseting shit on me will fix later

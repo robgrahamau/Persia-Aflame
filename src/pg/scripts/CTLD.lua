@@ -57,6 +57,10 @@ ctld.vehiclesForTransportBLUE = { "M1045 HMMWV TOW", "M1043 HMMWV Armament","M11
 
 ctld.aaLaunchers = 2 -- controls how many launchers to add to the kub/buk when its spawned.
 ctld.hawkLaunchers = 5 -- controls how many launchers to add to the hawk when its spawned.
+ctld.sa10Launchers = 4
+ctld.patlaunchers = 4
+ctld.buklaunchers = 3
+ctld.rolandlaunchers = 3
 
 ctld.spawnRPGWithCoalition = true --spawns a friendly RPG unit with Coalition forces
 ctld.spawnStinger = true -- spawns a stinger / igla soldier with a group of 6 or more soldiers!
@@ -76,7 +80,7 @@ ctld.buildTimeFOB = 120 --time in seconds for the FOB to be built
 
 ctld.crateWaitTime = 60 -- time in seconds to wait before you can spawn another crate
 
-ctld.forceCrateToBeMoved = true-- a crate must be picked up at least once and moved before it can be unpacked. Helps to reduce crate spam
+ctld.forceCrateToBeMoved = false-- a crate must be picked up at least once and moved before it can be unpacked. Helps to reduce crate spam
 
 ctld.radioSound = "beacon.ogg" -- the name of the sound file to use for the FOB radio beacons. If this isnt added to the mission BEACONS WONT WORK!
 ctld.radioSoundFC3 = "beaconsilent.ogg" -- name of the second silent radio file, used so FC3 aircraft dont hear ALL the beacon noises... :)
@@ -103,9 +107,9 @@ ctld.hoverTime = 4 -- Time to hold hover above a crate for loading in seconds
 -- When this limit is hit, a player will still be able to get crates for an AA system, just unable
 -- to unpack them
 
-ctld.AASystemLimitRED = 10 -- Red side limit
+ctld.AASystemLimitRED = 20 -- Red side limit
 
-ctld.AASystemLimitBLUE = 10 -- Blue side limit
+ctld.AASystemLimitBLUE = 20 -- Blue side limit
 
 --END AA SYSTEM CONFIG --
 
@@ -425,7 +429,14 @@ ctld.transportPilotNames = {
 	"CTUH1","CTUH1-1","CTKA501","CTKA501-1",
 	"DUUH2","DUUH2-1","DUKA502","DUKA502-1",
 	"DUUH1","DUUH1-1","DUKA501","DUKA501-1",
-	
+	"STN KA50","STN KA50 -1",
+	"YKUH1","YKUH1-2","YKUH2-1","YKUH2-2",
+	"BQ51UH","BQ51UH1-2","BQ51UH2-1","BQ51UH2",
+	"Qeshm Island IRAN KA50-1",
+	"Qeshm Island IRAN KA50-2",
+	"Qeshm Island IRAN UH-1-2",
+	"Qeshm Island IRAN UH-1",
+
     -- *** AI transports names (different names only to ease identification in mission) ***
     -- Use any of the predefined names or set your own ones
     "transport1",
@@ -530,24 +541,22 @@ ctld.spawnableCrates = {
         -- dont use that option with the HAWK Crates
         { weight = 500, desc = "HMMWV - TOW", unit = "M1045 HMMWV TOW", side = 2 },
         { weight = 505, desc = "HMMWV - MG", unit = "M1043 HMMWV Armament", side = 2 },
-        --{ weight = 800, desc = "M-2 Bradley", unit = "M-2 Bradley", side = 2, cratesRequired = 2 }, -- DO NOT USE THIS!
-        { weight = 510, desc = "BTR-D", unit = "BTR_D", side = 1 },
-        { weight = 515, desc = "BRDM-2", unit = "BRDM-2", side = 1 },
+        { weight = 610, desc = "BTR-D", unit = "BTR_D", side = 1 },
+        { weight = 615, desc = "BRDM-2", unit = "BRDM-2", side = 1 },
         { weight = 520, desc = "HMMWV - JTAC", unit = "Hummer", side = 2, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
         { weight = 525, desc = "SKP-11 - JTAC", unit = "SKP-11", side = 1, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
-        --{ weight = 100, desc = "2B11 Mortar", unit = "2B11 mortar" },
-        --{ weight = 250, desc = "SPH 2S19 Msta", unit = "SAU Msta", side = 1, cratesRequired = 3 },
-        --{ weight = 255, desc = "M-109", unit = "M-109", side = 2, cratesRequired = 3 },
+        { weight = 750, desc = "SPH 2S19 Msta", unit = "SAU Msta", side = 1, cratesRequired = 3 },
+        { weight = 755, desc = "M-109", unit = "M-109", side = 2, cratesRequired = 3 },
     },
     ["SHRT AA Crates"] = {
         { weight = 405, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 3 },
-        { weight = 405, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 3 },
-        { weight = 400, desc = "M1097 Avenger", unit = "M1097 Avenger", side = 2, cratesRequired = 3 },
-        { weight = 402, desc = "M6 Linebacker", unit = "M6 Linebacker", side = 2, cratesRequired = 3 },
-        { weight = 530, desc = "SA-15 Tor", unit = "Tor 9A331", cratesRequired = 4 },
-		{ weight = 570, desc = "SA-19 Tunguska", unit = "2S6 Tunguska", side = 1, cratesRequired = 4 },
-		{ weight = 592, desc = "Roland Radar", unit = "Roland Radar", side = 2},
-        { weight = 595, desc = "Roland ADS", unit = "Roland ADS", side = 2},
+        { weight = 656, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 3 },
+        { weight = 633, desc = "M1097 Avenger", unit = "M1097 Avenger", side = 2, cratesRequired = 3 },
+        { weight = 642, desc = "M6 Linebacker", unit = "M6 Linebacker", side = 2, cratesRequired = 3 },
+        { weight = 730, desc = "SA-15 Tor", unit = "Tor 9A331", side = 1, cratesRequired = 3 },
+		{ weight = 770, desc = "SA-19 Tunguska", unit = "2S6 Tunguska", side = 1, cratesRequired = 3 },
+		{ weight = 742, desc = "Roland Radar", unit = "Roland Radar", side = 2},
+        { weight = 745, desc = "Roland ADS", unit = "Roland ADS", side = 2},
         --{ weight = 50, desc = "Stinger", unit = "Stinger manpad", side = 2 },
         --{ weight = 55, desc = "Igla", unit = "SA-18 Igla manpad", side = 1 },
      },
@@ -561,26 +570,43 @@ ctld.spawnableCrates = {
         -- KUB SYSTEM
         { weight = 560, desc = "KUB Launcher", unit = "Kub 2P25 ln", side = 1},
         { weight = 565, desc = "KUB Radar", unit = "Kub 1S91 str", side = 1 },
-        
-        -- End of KUB
-        --{ weight = 595, desc = "Early Warning Radar", unit = "1L13 EWR", side = 1 }, -- cant be used by BLUE coalition
-
-    },
-    ["LRNG AA Crates"] = {
-    -- BUK System
-        { weight = 575, desc = "BUK Launcher", unit = "SA-11 Buk LN 9A310M1"},
-        { weight = 580, desc = "BUK Search Radar", unit = "SA-11 Buk SR 9S18M1"},
-        { weight = 585, desc = "BUK CC Radar", unit = "SA-11 Buk CC 9S470M1"},
+		-- End of KUB
+            -- BUK System
+        { weight = 603, desc = "BUK Launcher", unit = "SA-11 Buk LN 9A310M1"},
+        { weight = 602, desc = "BUK Search Radar", unit = "SA-11 Buk SR 9S18M1"},
+        { weight = 601, desc = "BUK CC Radar", unit = "SA-11 Buk CC 9S470M1"},
         -- END of BUK
+        { weight = 595, desc = "Early Warning Radar", unit = "1L13 EWR", side = 1 }, -- cant be used by BLUE coalition
+        -- roland
+        { weight = 592, desc = "Roland Radar", unit = "Roland Radar", side = 2},
+        { weight = 596, desc = "Roland ADS", unit = "Roland ADS", side = 2},
+        -- end roland
     },
-    ["FOP & Repair"] = {
+	["LRNG AA Crates"] = {
+		{ weight = 670, desc = "Patriot AMG", unit = "Patriot AMG", side = 2},
+        { weight = 611, desc = "Patriot ECS", unit = "Patriot ECS", side = 2},
+		{ weight = 612, desc = "Patriot EPP", unit = "Patriot EPP", side = 2},
+        { weight = 613, desc = "Patriot cp", unit = "Patriot cp", side = 2},
+		{ weight = 614, desc = "Patriot ln", unit = "Patriot ln",side = 2},
+		{ weight = 609, desc = "Patriot str", unit = "Patriot str", side =2},
+		{ weight = 615, desc = "S-300PS 40B6M tr", unit = "S-300PS 40B6M tr", side = 1},
+        { weight = 616, desc = "S-300PS 64H6E sr", unit = "S-300PS 64H6E sr", side = 1},
+		{ weight = 617, desc = "S-300PS 40B6MD sr", unit = "S-300PS 40B6MD sr", side = 1},
+        { weight = 618, desc = "S-300PS 54K6 cp", unit = "S-300PS 54K6 cp", side = 1},
+		{ weight = 619, desc = "S-300PS 5P85D ln", unit = "S-300PS 5P85D ln",side = 1},
+		{ weight = 620, desc = "S-300PS 5P85C ln", unit = "S-300PS 5P85C ln", side =1},
+		
+    },
+       ["FOP & Repair"] = {
         { weight = 800, desc = "FOB Crate - Small", unit = "FOB-SMALL" }, -- Builds a FOB! - requires 3 * ctld.cratesRequiredForFOB
         { weight = 252, desc = "Ural-375 Ammo Truck", unit = "Ural-375", side = 1, cratesRequired = 1 },
         { weight = 253, desc = "M-818 Ammo Truck", unit = "M 818", side = 2, cratesRequired = 1 },       
-        { weight = 552, desc = "HAWK Repair", unit = "HAWK Repair"},
-        { weight = 590, desc = "BUK Repair", unit = "BUK Repair"},
-        { weight = 570, desc = "KUB Repair", unit = "KUB Repair", side = 1},
-        { weight = 552, desc = "Roland Repair", unit = "Roland Repair", side = 2},    
+        { weight = 952, desc = "HAWK Repair", unit = "HAWK Repair" , side = 2 },
+        { weight = 990, desc = "BUK Repair", unit = "BUK Repair"},
+        { weight = 970, desc = "KUB Repair", unit = "KUB Repair", side = 1},
+		{ weight = 971, desc = "SA-10 Repair", unit = "SA-10 Repair", side = 1},
+        { weight = 953, desc = "Roland Repair", unit = "Roland Repair", side = 2},    
+		{ weight = 957, desc = "Patriot Repair", unit = "Patriot Repair", side = 2},    
      },
 }
 
@@ -1392,6 +1418,34 @@ ctld.AASystemTemplate = {
         },
         repair = "KUB Repair",
     },
+	{
+		name = "Patriot AA System",
+		count = 6,
+		parts = 
+		{
+			{ name = "Patriot AMG", desc = "Patriot AMG"},
+			{ name = "Patriot ECS", desc = "Patriot ECS"},
+			{ name = "Patriot EPP", desc = "Patriot EPP"},
+			{ name = "Patriot cp", desc = "Patriot CP"},
+			{ name = "Patriot ln",desc = "Patriot Launcher", launcher = true},
+			{ name = "Patriot str", desc = "Patriot str"},
+		},
+		repair = "Patriot Repair",
+	},
+	{
+		name = "SA-10 AA SYSTEM",
+		count = 6,
+		parts = {
+		{ name = "S-300PS 40B6M tr", desc = "S-300PS 40B6M tr"},
+        { name = "S-300PS 64H6E sr", desc = "S-300PS 64H6E sr"},
+		{ name = "S-300PS 40B6MD sr", desc = "S-300PS 40B6MD sr"},
+        { name = "S-300PS 54K6 cp", desc = "S-300PS 54K6 cp"},
+		{ name = "S-300PS 5P85D ln", desc = "S-300PS 5P85D ln", launcher = true},
+		{ name = "S-300PS 5P85C ln", desc = "S-300PS 5P85C ln"},
+		},
+		repair = "SA-10 Repair",
+	
+	}
 }
 
 
@@ -3742,6 +3796,14 @@ function ctld.unpackAASystem(_heli, _nearestCrate, _nearbyCrates,_aaSystemTempla
 
                 if _name == "Hawk ln" then
                     _launchers = ctld.hawkLaunchers
+				elseif _name == "S-300PS 5P85D ln" then
+					_launchers = ctld.sa10Launchers
+				elseif _name == "SA-11 Buk LN 9A310M1" then
+					_launchers = ctld.buklaunchers
+				elseif _name == "Patriot ln" then
+					_launchers = ctld.patlaunchers
+				elseif _name == "Roland ADS" then
+					_launchers = ctld.rolandlaunchers
                 end
 
                 for _i = 1, _launchers do
@@ -4443,7 +4505,7 @@ function ctld.inLogisticsZone(_heli)
     for _, _name in pairs(ctld.logisticUnits) do
 
         local _logistic = StaticObject.getByName(_name)
-        BASE:E({_logistic,_heli})
+        BASE:F({_logistic,_heli})
         if _logistic ~= nil and _logistic:getCoalition() == _heli:getCoalition() then
 
             --get distance
@@ -5194,7 +5256,9 @@ function ctld.createSmokeMarker(_enemyUnit, _colour)
 
     -- move smoke 2 meters above target for ease
     local _enemyPoint = _enemyUnit:getPoint()
-    trigger.action.smoke({ x = _enemyPoint.x, y = _enemyPoint.y + 2.0, z = _enemyPoint.z }, _colour)
+	local xadjust = math.random(-30,30)
+	local zadjust = math.random(-30,30)
+    trigger.action.smoke({ x = (_enemyPoint.x + xadjust), y = _enemyPoint.y + 2.0, z = (_enemyPoint.z + zadjust)}, _colour)
 end
 
 function ctld.cancelLase(_jtacGroupName)

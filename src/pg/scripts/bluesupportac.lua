@@ -5,7 +5,7 @@ ARC_Timer = 0
 ARC2_Timer = 0
  function AI_A2A_DISPATCHER:GetSquadronAmount(SquadronName)
     DefenderSquadron = self:GetSquadron( SquadronName )
-        self:E( { Squadron = SquadronName, SquadronResourceCount = DefenderSquadron.ResourceCount, SquadronDetails = DefenderSquadron } )
+        self:F( { Squadron = SquadronName, SquadronResourceCount = DefenderSquadron.ResourceCount, SquadronDetails = DefenderSquadron } )
     return DefenderSquadron.ResourceCount 
   end
 do
@@ -30,7 +30,7 @@ CV_1_CAP = nil
 CV_2_CAP = nil
 T_CAP = nil
 end
-
+usenew = true
 
 BAS = ZONE_POLYGON:NewFromGroupName("AS1")
 CV1_CAP = ZONE_POLYGON:NewFromGroupName("CV1_CAP")
@@ -39,9 +39,22 @@ T_CAP = ZONE_POLYGON:NewFromGroupName("T_CAP")
 BCarrierTEMP = {"T_Hornet1","T_Hornet2"}
 BLandTemp = {"T_F15","T_F16"}
 
+if usenew == true then
+ BASE:E({"Blue Sup Using New Scripts"})
+--[[
+CAP1N = math.random(8,24)
+cap1 = SPAWN:NewWithAlias("USCAP1","US CAP PATROL"):InitLimit(2,CAP1N):InitCleanUp(300):InitRepeatOnEngineShutDown():InitRandomizeRoute(2,5,15000,UTILS.FeetToMeters(5000)):SpawnScheduled(600,0.5)
+cap2 = SPAWN:NewWithAlias("USCAP2","US CAP PATROL 2"):InitLimit(2,CAP1N):InitCleanUp(300):InitRepeatOnEngineShutDown():InitRandomizeRoute(2,5,15000,UTILS.FeetToMeters(5000)):SpawnScheduled(600,0.5)
+cap3 = SPAWN:NewWithAlias("USCAP3","US CAP PATROL 3"):InitLimit(2,CAP1N):InitCleanUp(300):InitRepeatOnEngineShutDown():InitRandomizeRoute(2,5,15000,UTILS.FeetToMeters(5000)):SpawnScheduled(600,0.5)
+cap4 = SPAWN:NewWithAlias("USCAP4","US CAP PATROL 4"):InitLimit(2,CAP1N):InitCleanUp(300):InitRepeatOnEngineShutDown():InitRandomizeRoute(2,5,15000,UTILS.FeetToMeters(5000)):SpawnScheduled(600,0.5)
+cap5 = SPAWN:NewWithAlias("USCAP5","US CARRIER CAP"):InitLimit(2,CAP1N):InitCleanUp(300):InitRepeatOnEngineShutDown():InitRandomizeRoute(2,5,15000,UTILS.FeetToMeters(5000)):SpawnScheduled(600,0.5)
+cap6 = SPAWN:NewWithAlias("USCAP6","US CARRIER CAP 2"):InitLimit(2,CAP1N):InitCleanUp(300):InitRepeatOnEngineShutDown():InitRandomizeRoute(2,5,15000,UTILS.FeetToMeters(5000)):SpawnScheduled(600,0.5)
+]]
+else
+
  BASE:E({"New Scripts was false using A2ADispatcher"})
   BAS = ZONE_POLYGON:New("RAS",GROUP:FindByName("RAS"))
-  blooksee = SET_GROUP:New():FilterPrefixes({"USEW",}):FilterCoalitions("blue"):FilterActive():FilterStart()
+  blooksee = SET_GROUP:New():FilterPrefixes({"USEW","BSAM",}):FilterCoalitions("blue"):FilterActive():FilterStart()
   bdet = DETECTION_AREAS:New(blooksee,45000)
   ba2disp = AI_A2A_DISPATCHER:New(bdet)
   ba2disp:SetBorderZone(BAS)
@@ -70,3 +83,4 @@ BLandTemp = {"T_F15","T_F16"}
   ba2disp:SetSquadronCapInterval("Al Draf",2,(60*15),(60*45),1.0)
   ba2disp:SetSquadronGci("Al Draf",UTILS.KnotsToKmph(550),UTILS.KnotsToKmph(800))
   ba2disp:__Start(30)
+end
