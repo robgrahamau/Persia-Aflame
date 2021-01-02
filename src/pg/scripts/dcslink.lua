@@ -218,6 +218,10 @@ do
         cacheDB[unitID] = {}
         
         local mooseunit = UNIT:Find(unit) -- this needs to be here moron so that the units actually ALIVE when we request it
+		if mooseunit == nil then
+			BASE:E({"moose unit was nil",unit})
+			return
+		end
         cacheDB[unitID].lat = lat
         cacheDB[unitID].lon = lon
         cacheDB[unitID].alt = alt

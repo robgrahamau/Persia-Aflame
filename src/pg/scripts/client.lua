@@ -1,5 +1,5 @@
-version = "1.4"
-lastupdate = "19/11/2020"
+version = "1.15.0"
+lastupdate = "2/1/2021"
 PlayerMap = {}
 PlayerRMap = {}
 PlayerBMap = {}
@@ -55,7 +55,7 @@ local function permanentPlayerCheck()
         nowminute = "test"
     end
     currenttime = "H" .. nowHour .. ":" .. nowminute
-    
+
     SetPlayer:ForEachClient(function(PlayerClient)
       local PlayerID = PlayerClient.ObjectName
       local Coalition = PlayerClient:GetCoalition()

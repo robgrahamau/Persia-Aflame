@@ -103,9 +103,9 @@ function writemission(data, file)--Function for saving to file (commonly found)
   File:write(data)
   File:close()
 end
-
+  local spawncounter = 0
 --SCRIPT START
-env.info("Loaded Simple Group Saving, by Pikey, 2018, version " .. version)
+env.info("Loaded Admin Group Saving version " .. version)
 if resetall == 0 then
   if file_exists(savefile) then --Script has been run before, so we need to load the save
     env.info("Existing database, loading from File.")
@@ -115,7 +115,9 @@ if resetall == 0 then
       grp:Destroy()
     end)
     env.info("Destroyed a total of ".. destroycounter .." Groups")
+	HypeMan.sendBotMessage("Admin Group Saving: Destroyed a total of ".. destroycounter .." Groups")
   dofile(savefile)
+
   tempTable={}
   Spawn={}
 --RUN THROUGH THE KEYS IN THE TABLE (GROUPS)
@@ -123,7 +125,7 @@ if resetall == 0 then
     units={}
 --RUN THROUGH THE UNITS IN EACH GROUP
       for i= 1, #(SaveUnits[k]["units"]) do 
-  
+		spawncounter = spawncounter + 1
 tempTable =
 
   { 
@@ -145,7 +147,9 @@ tempTable =
 groupData = 
 
   {
-    ["visible"] = true,
+    ["visible"] = false,
+	["hiddenOnPlanner"] = true,
+	["hiddenOnMFD"] = true,
     --["lateActivation"] = false,
     ["tasks"] = {}, -- end of ["tasks"]
     ["uncontrollable"] = false,
@@ -180,7 +184,7 @@ else
   SaveUnits={}
 
 end
-
+HypeMan.sendBotMessage("Admin Group Saving: spawned in a total of ".. spawncounter .." Groups")
 --THE SAVING SCHEDULE
 SCHEDULER:New( nil, function()
   AdminGroups:ForEachGroupAlive(function (grp)

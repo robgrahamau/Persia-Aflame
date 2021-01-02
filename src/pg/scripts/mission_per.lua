@@ -83,6 +83,19 @@ mainmission = {
   ['shipgroup1'] = true,
   ['shipgroup2'] = true,
   ['shipgroup3'] = true,
+  ['SoldierUnitID'] = 12000,
+  ['SoldierGroupID'] = 12000,
+  ['bandarspawn'] = false,
+  ['tunbspawn'] = false,
+  ['sirrispawn'] = false,
+  ['lavanspawn'] = false,
+  ['khasabspawn'] = false,
+  ['larsspawn'] = false,
+  ['kishspawn'] = false,
+  ['qeshmspawn'] = false,
+  ['abunspawn'] = false,
+  ['havspawn'] = false,
+  ['bandarlspawn'] = false,
 }
 local savefilename = "mainmissionsave.lua"
  
@@ -161,6 +174,7 @@ end
 function loadvalues()
   if usenew == true then
     BASE:E({"Loading in values from mainmission to new sqns"})
+	HypeMan.sendBotMessage("Now loading main mission persistence data")
     i30th:SetSqnCount(mainmission.i30th)
     i30th_1:SetSqnCount(mainmission.i30th_1)
     i30th_2:SetSqnCount(mainmission.i30th_2)
@@ -228,6 +242,39 @@ function loadvalues()
     local temp = GROUP:FindByName("Kuznetsov Group"):Activate()
   end
   mainmission.shipgroup3 = false
+  if mainmission.SoldierUnitID == nil then
+	BASE:E({"SoldierUnitID was nil"})
+	SoldierGroupID = 12000
+	SoldierUnitID = 12000
+ else 
+	SoldierUnitID = mainmission.SoldierUnitID
+	SoldierGroupID = mainmission.SoldierGroupID
+  end
+  if mainmission.bandarspawn == nil then
+	bandarspawn = false
+	tunbspawn = false
+	sirrispawn = false
+	lavanspawn = false
+	khasabspawn = false
+	larsspawn = false
+	kishspawn = false
+	qeshmspawn = false
+	abunspawn = false
+	havspawn = false
+	bandarlspawn = false
+  else
+	bandarspawn = mainmission.bandarlspawn
+	tunbspawn = mainmission.tunbspawn
+	sirrispawn = mainmission.sirrispawn
+	lavanspawn = mainmission.lavanspawn
+	khasabspawn = mainmission.khasabspawn
+	larsspawn = mainmission.larsspawn
+	kishspawn = mainmission.kishspawn
+	qeshmspawn = mainmission.qeshmspawn
+	abunspawn = mainmission.abunspawn
+	havspawn = mainmission.havspawn
+	bandarlspawn = mainmission.bandarlspawn
+  end
 end
 --SCRIPT START
 env.info("Loaded PD SAVE, version " .. version)
@@ -571,6 +618,7 @@ function reinforce()
   end
   
   
+  
   mainmission.nextupdate = mnowTime + reinforcements
   mainmission.lastupdatehour = mnowHour
   mainmission.lastupdateminute = mnowminute
@@ -641,6 +689,21 @@ function updatevalues()
   else
   mainmission.shipgroup1 = false
   end
+  mainmission.SoldierGroupID = SoldierGroupID
+  mainmission.SoldierUnitID = SoldierUnitID
+  
+  mainmission.bandarlspawn = bandarspawn
+  mainmission.tunbspawn = tunbspawn 
+  mainmission.sirrispawn = sirrispawn
+  mainmission.lavanspawn = lavanspawn
+  mainmission.khasabspawn = khasabspawn
+  mainmission.larsspawn = larsspawn
+  mainmission.kishspawn = kishspawn
+  mainmission.qeshmspawn = qeshmspawn
+  mainmission.abunspawn = abunspawn
+  mainmission.havspawn = havspawn
+  mainmission.bandarlspawn = bandarlspawn
+  
   BASE:E({"Values updated"})
 end
 

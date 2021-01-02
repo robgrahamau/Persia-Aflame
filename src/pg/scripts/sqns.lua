@@ -75,6 +75,7 @@ function sqn:Spawn()
 end
 
 function sqn:Check()
+  BASE:E({"sqn check",self.sqnname})
   if self.srunning == true then
     self.sqntimer = SCHEDULER:New(nil,function() 
       self:Check()
@@ -138,7 +139,7 @@ function sqn:SetSqnCount(count)
 end
 
 function sqn:Start()
-  BASE:E({"Starting Cap Script for Sqn",self.sqnname})
+  BASE:E({"Starting Cap Script for Sqn",self.sqnname,self.sqntime})
   self.srunning = true
   self.sqntimer = SCHEDULER:New(nil,function() 
     self:Check()

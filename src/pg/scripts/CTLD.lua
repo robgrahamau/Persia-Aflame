@@ -53,7 +53,7 @@ ctld.enableFastRopeInsertion = true -- allows you to drop troops by fast rope
 ctld.fastRopeMaximumHeight = 18.28 -- in meters which is 60 ft max fast rope (not rappell) safe height
 
 ctld.vehiclesForTransportRED = { "BRDM-2", "BTR_D","Strela-1 9P31","BMP-1" } -- vehicles to load onto Il-76 - Alternatives {"Strela-1 9P31","BMP-1"}
-ctld.vehiclesForTransportBLUE = { "M1045 HMMWV TOW", "M1043 HMMWV Armament","M1128 Stryker MGS","M1097 Avenger" } -- vehicles to load onto c130 - Alternatives {"M1128 Stryker MGS","M1097 Avenger"}
+ctld.vehiclesForTransportBLUE = { "M1045 HMMWV TOW", "M1043 HMMWV Armament","M1128 Stryker MGS","M1097 Avenger","M6 Linebacker" } -- vehicles to load onto c130 - Alternatives {"M1128 Stryker MGS","M1097 Avenger"}
 
 ctld.aaLaunchers = 2 -- controls how many launchers to add to the kub/buk when its spawned.
 ctld.hawkLaunchers = 5 -- controls how many launchers to add to the hawk when its spawned.
@@ -414,7 +414,7 @@ ctld.transportPilotNames = {
 	"CRUH2-1","CRUH2","CRKA502","CRKA502-1",
 	"CRUH1","CRUH1-1","CRKA501","CRKA501-1",
 	"BQUH2","BQUH2-1","BQKA502","BQKA502-1",
-	"BQUH1","BQUH1-1","BQKA501","BQKA501-1",
+	"BQUH1","BQUH1-1","CRUH1-13-1","CRUH2-13-1","CRUH2-12-1","BQKA501","BQKA501-1",
 	"CQUH2","CQUH2-1","CQKA50","BQKA502-1",
 	"CQUH1","CQUH1-1","CQKA502","CQKA502-1",
 	"BRUH2","BRUH2-1",
@@ -436,7 +436,14 @@ ctld.transportPilotNames = {
 	"Qeshm Island IRAN KA50-2",
 	"Qeshm Island IRAN UH-1-2",
 	"Qeshm Island IRAN UH-1",
-
+	"PINTO11",
+	"PINTO12",
+	"PINTO13",
+	"PINTO14",
+	"Trojan 51",
+	"Trojan 52",
+	"Trojan 53",
+	"Trojan 54",
     -- *** AI transports names (different names only to ease identification in mission) ***
     -- Use any of the predefined names or set your own ones
     "transport1",
@@ -461,6 +468,7 @@ ctld.extractableGroups = {
 ctld.vehicleTransportEnabled = {
     "76MD", -- the il-76 mod doesnt use a normal - sign so il-76md wont match... !!!! GRR
     "C-130",
+	"Hercules",
 }
 
 
@@ -589,7 +597,7 @@ ctld.spawnableCrates = {
         { weight = 613, desc = "Patriot cp", unit = "Patriot cp", side = 2},
 		{ weight = 614, desc = "Patriot ln", unit = "Patriot ln",side = 2},
 		{ weight = 609, desc = "Patriot str", unit = "Patriot str", side =2},
-		{ weight = 615, desc = "S-300PS 40B6M tr", unit = "S-300PS 40B6M tr", side = 1},
+		{ weight = 621, desc = "S-300PS 40B6M tr", unit = "S-300PS 40B6M tr", side = 1},
         { weight = 616, desc = "S-300PS 64H6E sr", unit = "S-300PS 64H6E sr", side = 1},
 		{ weight = 617, desc = "S-300PS 40B6MD sr", unit = "S-300PS 40B6MD sr", side = 1},
         { weight = 618, desc = "S-300PS 54K6 cp", unit = "S-300PS 54K6 cp", side = 1},
@@ -5256,8 +5264,8 @@ function ctld.createSmokeMarker(_enemyUnit, _colour)
 
     -- move smoke 2 meters above target for ease
     local _enemyPoint = _enemyUnit:getPoint()
-	local xadjust = math.random(-30,30)
-	local zadjust = math.random(-30,30)
+	local xadjust = math.random(-130,130)
+	local zadjust = math.random(-130,130)
     trigger.action.smoke({ x = (_enemyPoint.x + xadjust), y = _enemyPoint.y + 2.0, z = (_enemyPoint.z + zadjust)}, _colour)
 end
 

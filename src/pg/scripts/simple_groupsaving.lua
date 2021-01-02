@@ -33,8 +33,8 @@ resetall = 0
  -----------------------------------
  --Configurable for user:
  local SaveScheduleUnits=600 --how many seconds between each check of all the Units.
- AllGroups = SET_GROUP:New():FilterCategories("ground"):FilterPrefixes({"RSAM","REW","SCUD","MANPAD","BSAM","USEW","AAA","RDEF","CTLD","ctld"}):FilterActive(true):FilterStart()
- local savefilename = "pg.lua"
+ AllGroups = SET_GROUP:New():FilterCategories("ground"):FilterPrefixes({"RSAM","REW","SCUD","BSAM","USEW","AAA","RDEF",}):FilterActive(true):FilterStart()
+ local savefilename = "pg_groups.lua"
  
 local savefile = lfs.writedir() .."pg\\" .. savefilename
  -----------------------------------
@@ -103,9 +103,9 @@ function writemission(data, file)--Function for saving to file (commonly found)
   File:write(data)
   File:close()
 end
-
+local spawncounter = 0
 --SCRIPT START
-env.info("Loaded Simple Group Saving, by Pikey, 2018, version " .. version)
+env.info("Loaded Group Saving, by Pikey, 2018, version " .. version)
 if resetall == 0 then
   if file_exists(savefile) then --Script has been run before, so we need to load the save
     env.info("Existing database, loading from File.")
@@ -115,6 +115,7 @@ if resetall == 0 then
       grp:Destroy()
     end)
     env.info("Destroyed a total of ".. destroycounter .." Groups")
+	HypeMan.sendBotMessage("SimpleGroupSaving - Destroyed a total of ".. destroycounter .." Groups")
   dofile(savefile)
   tempTable={}
   Spawn={}
@@ -123,7 +124,7 @@ if resetall == 0 then
     units={}
 --RUN THROUGH THE UNITS IN EACH GROUP
       for i= 1, #(SaveUnits[k]["units"]) do 
-  
+	  spawncounter = spawncounter + 1
 tempTable =
 
   { 
@@ -145,7 +146,8 @@ tempTable =
 groupData = 
 
   {
-    ["visible"] = true,
+    ["visible"] = false,
+	["hiddenOnPlanner"] = true,
     --["lateActivation"] = false,
     ["tasks"] = {}, -- end of ["tasks"]
     ["uncontrollable"] = false,
@@ -180,7 +182,7 @@ else
   SaveUnits={}
 
 end
-
+HypeMan.sendBotMessage("SimpleGroupSaving - Spawned a total of ".. spawncounter .." Groups")
 --THE SAVING SCHEDULE
 SCHEDULER:New( nil, function()
   AllGroups:ForEachGroupAlive(function (grp)
