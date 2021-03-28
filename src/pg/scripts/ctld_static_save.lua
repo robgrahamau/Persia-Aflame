@@ -34,23 +34,25 @@ local savefilename = "ctldstaticsave.lua"
 local savefile = lfs.writedir() .."pg\\" .. savefilename
 CTLDStatics = SET_STATIC:New()
 local function ctldsave_no_farps()
+  CTLDStatics:Clear()
   Allstatics1:ForEach(function (stat)
     local _name = stat:GetName()
     if AIRBASE:FindByName(_name) ~= nil then
       --env.info(_name.." is a type of airbase, farp or oil rig")
       --avoid these types of static, they are really airbases
     else
-    local prefix = "CTLD"
-    local b = _name:find(prefix) == 1
-    if b == true then
-      CTLDStatics:AddStatic(stat)
-    end
-    prefix = "ctld"
-    local b = _name:find(prefix) == 1
-    if b == true then
-      CTLDStatics:AddStatic(stat)
-    end
-  end
+		local prefix = "CTLD"
+		local b = _name:find(prefix) == 1
+		local a = stat:IsAlive()
+		if (b == true and a == true) then
+			CTLDStatics:AddStatic(stat)
+		end
+		prefix = "ctld"
+		local b = _name:find(prefix) == 1
+		if (b == true and a == true) then
+			CTLDStatics:AddStatic(stat)
+		end
+	end
   end)
 end
 no_farps()
@@ -136,7 +138,7 @@ end
 end
 
 --SCRIPT START
-env.info("Loaded Simple Statics Saving, by Pikey, 2018, (updated Dec 2019) version " .. version)
+env.info("Loaded CTLD STATICS SAVE, version " .. version)
 
 if file_exists(savefile) then
   env.info("Script loading existing database")
@@ -179,7 +181,6 @@ end
 --THE SAVING SCHEDULE
 SCHEDULER:New( nil, function()
 ctldsave_no_farps()
-
 CTLDStatics:ForEach(function (grp)
 	local tempstatic = STATIC:FindByName(grp:GetName())
 	if tempstatic:IsAlive() == true then
@@ -257,5 +258,5 @@ end)--end of the for each groupAlive iteration
 local newMissionStr = IntegratedserializeWithCycles("CTLDSaveStatics",CTLDSaveStatics)
 writemission(newMissionStr, savefile)
 CTLDSaveStatics={} --flatten this between iterations to prevent accumulations
---env.info("Data saved.")
+env.info(" CTLD Statics - Data saved.")
 end, {}, 1, SaveScheduleStatics)

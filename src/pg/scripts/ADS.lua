@@ -6,8 +6,19 @@
     return DefenderSquadron.ResourceCount 
   end
 
-RAWACS = SPAWN:New("AWAC Overlord21"):InitLimit(1,4):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(1800,0.5)
-RAWACS2 = SPAWN:New("AWAC Overlord11"):InitLimit(1,4):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(1800,0.5)
+RAWACS2 = SPAWN:New("AWAC Overlord21"):InitKeepUnitNames(true):InitLimit(1,4):InitCleanUp(600):OnSpawnGroup(function(spawngroup) 
+trawac = spawngroup 
+tunit = trawac:GetUnit(1)
+BASE:E({"respawned RAWACS2 unit name is:",tunit:GetName()})
+hm("> Darkstar Stalin's Crew has arrived at Aircraft: ".. tunit:GetName() .." ")
+end,{}):InitRepeatOnLanding():SpawnScheduled(1800,0.5)
+
+RAWACS = SPAWN:New("AWAC Overlord11"):InitKeepUnitNames(true):InitLimit(1,4):InitCleanUp(600):OnSpawnGroup(function(spawngroup) 
+trawac = spawngroup 
+tunit = trawac:GetUnit(1)
+BASE:E({"respawned RAWACS unit name is:",tunit:GetName()})
+hm("> Overlord Stalin's Crew has arrived at Aircraft: ".. tunit:GetName() .." ")
+end,{}):InitRepeatOnLanding():SpawnScheduled(1800,0.5)
 TANKER = SPAWN:New("Texaco11"):InitLimit(1,4):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(1800,0.5)
 rlooksee = SET_GROUP:New():FilterPrefixes({"REW","RSAM","RAWAC"}):FilterCoalitions("red"):FilterActive():FilterStart()
 do

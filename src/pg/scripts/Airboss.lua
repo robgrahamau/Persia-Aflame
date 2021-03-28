@@ -7,18 +7,37 @@ env.info("--------------USES MOOSE AND CTDL ------------------------")
 abossactive = true
 washingtonactive = true
 teddyairboss = true
+useawacs = false
 
 if abossactive == true then
-
+	if useawacs == true then
   awacsStennis = RECOVERYTANKER:New(UNIT:FindByName("Washington"), "USEW Magic11")
   awacsStennis:SetAWACS(true,true)
   awacsStennis:SetCallsign(CALLSIGN.AWACS.Magic,1)
+  awacsStennis:SetRecoveryAirboss(false)
   awacsStennis:SetTakeoffAir()
   awacsStennis:SetAltitude(20000)
   awacsStennis:SetRadio(250)
-  awacsStennis:SetTACAN(44,"MGK")
+  awacsStennis:SetModex(332)
+  -- awacsStennis:SetTACAN(44,"MGK")
   awacsStennis:SetSpeed(330)
   awacsStennis:Start()
+  
+  
+  awacsTeddy = RECOVERYTANKER:New(UNIT:FindByName("TeddyR"), "USEW Wizard11")
+  awacsTeddy:SetAWACS(true,true)
+  awacsTeddy:SetTakeoffCold()
+  awacsTeddy:SetRecoveryAirboss(false)
+  awacsTeddy:SetCallsign(CALLSIGN.AWACS.Wizard,1)
+  awacsTeddy:SetAltitude(20000)
+  awacsTeddy:SetRadio(252)
+  awacsTeddy:SetSpeed(350)
+  awacsTeddy:SetModex(232)
+  --awacsTeddy:SetTACAN(48,"WIZ")
+  awacsTeddy:Start()
+  
+	end
+  
   BASE:E("Stennis Tanker")
   
   ShellStennis = RECOVERYTANKER:New(UNIT:FindByName("Washington"), "Shell11")
@@ -26,29 +45,22 @@ if abossactive == true then
   ShellStennis:SetTakeoffCold()
   ShellStennis:SetSpeed(310)
   ShellStennis:SetRacetrackDistances(15,10)
-  ShellStennis:SetPatternUpdateDistance(25)
+  ShellStennis:SetPatternUpdateDistance(15)
+  ShellStennis:SetRecoveryAirboss(false)
   ShellStennis:SetRadio(255)
-  ShellStennis:SetModex(911)
-  ShellStennis:SetTACAN(9,"SHL")
+  ShellStennis:SetModex(913)
+  ShellStennis:SetTACAN(49,"SHL")
   ShellStennis:Start()
   
-  awacsTeddy = RECOVERYTANKER:New(UNIT:FindByName("TeddyR"), "USEW Wizard11")
-  awacsTeddy:SetAWACS(true,true)
-  awacsTeddy:SetTakeoffCold()
-  awacsTeddy:SetCallsign(CALLSIGN.AWACS.Wizard,1)
-  awacsTeddy:SetAltitude(20000)
-  awacsTeddy:SetRadio(252)
-  awacsTeddy:SetSpeed(350)
-  awacsTeddy:SetTACAN(48,"WIZ")
-  awacsTeddy:Start()
   
   ShellTeddy = RECOVERYTANKER:New(UNIT:FindByName("TeddyR"), "Shell21")
   ShellTeddy:SetTakeoffCold()
+  ShellTeddy:SetRecoveryAirboss(false)
   ShellTeddy:SetCallsign(CALLSIGN.Tanker.Shell,2)
   ShellTeddy:SetSpeed(310)
   ShellTeddy:SetRadio(257)
   ShellTeddy:SetModex(910)
-  ShellTeddy:SetTACAN(7,"SHL")
+  ShellTeddy:SetTACAN(47,"SHL")
   ShellTeddy:SetLowFuelThreshold(0.2)
   ShellTeddy:Start()
   

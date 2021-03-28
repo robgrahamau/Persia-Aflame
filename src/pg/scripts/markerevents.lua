@@ -11,7 +11,7 @@ function _split(str, sep)
 end
 
 admin = false
-password = "tgw2020"
+password = "fuck"
 adminspawned = {} 
 SupportHandler = EVENTHANDLER:New()
 
@@ -255,7 +255,6 @@ local function handlespawn(text,coord)
     local str=_split(keyphrase, " ")
     local key=str[1]
     local val=str[2]
-    -- BASE:E(string.format("%s, keyphrase = %s, key = %s, val = %s", "route", tostring(keyphrase), tostring(key), tostring(val)))
     if key:lower():find("u") then
       unit = val
     elseif key:lower():find("n") then
@@ -311,6 +310,45 @@ local function handlespawn(text,coord)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
+  elseif unit == "rsa15" then
+    local su = SPAWN:NewWithAlias("GM_RSA15","IAA SHORAD " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,150,400)
+    end
+    if heading ~= nil then
+      BASE:E({"HEADING ACTUALLY WAS NOT NIL WAS",heading})
+      su:InitHeading(heading)
+    else
+    BASE:E({"HEADING ACTUALLY WAS NIL WAS",heading})
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rbuk" then
+    local su = SPAWN:NewWithAlias("GM_RBUK","IAA SAM " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,150,400)
+    end
+    if heading ~= nil then
+      BASE:E({"HEADING ACTUALLY WAS NOT NIL WAS",heading})
+      su:InitHeading(heading)
+    else
+    BASE:E({"HEADING ACTUALLY WAS NIL WAS",heading})
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+  elseif unit == "rsa19" then
+    local su = SPAWN:NewWithAlias("GM_RSA19","IAA SHORAD " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,150,400)
+    end
+    if heading ~= nil then
+      BASE:E({"HEADING ACTUALLY WAS NOT NIL WAS",heading})
+      su:InitHeading(heading)
+    else
+    BASE:E({"HEADING ACTUALLY WAS NIL WAS",heading})
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
   elseif unit == "rflak" then
     local su = SPAWN:NewWithAlias("GM_FLAK_RED","IAA " .. name)
     if random == true then
@@ -340,7 +378,7 @@ local function handlespawn(text,coord)
   elseif unit == "rinf" then
     local su = SPAWN:NewWithAlias("GM_Infantry","IAA " .. name)
     if random == true then
-      su:InitRandomizeUnits(true,100,500)
+      su:InitRandomizeUnits(true,200,500)
     end
     if heading ~= nil then
       su:InitGroupHeading(heading)
@@ -350,7 +388,7 @@ local function handlespawn(text,coord)
   elseif unit == "rinf1" then
     local su = SPAWN:NewWithAlias("GM_Infantry-1","IAA " .. name)
     if random == true then
-      su:InitRandomizeUnits(true,100,500)
+      su:InitRandomizeUnits(true,200,500)
     end
     if heading ~= nil then
       su:InitGroupHeading(heading)
@@ -360,7 +398,7 @@ local function handlespawn(text,coord)
   elseif unit == "raaa" then
     local su = SPAWN:NewWithAlias("GM_AAA","IAA " .. name)
     if random == true then
-      su:InitRandomizeUnits(true,100,500)
+      su:InitRandomizeUnits(true,200,500)
     end
     if heading ~= nil then
       su:InitGroupHeading(heading)
@@ -370,7 +408,7 @@ local function handlespawn(text,coord)
   elseif unit == "rmpad" then
     local su = SPAWN:NewWithAlias("GM_AAA-1","IAA " .. name)
     if random == true then
-      su:InitRandomizeUnits(true,100,500)
+      su:InitRandomizeUnits(true,200,500)
     end
     if heading ~= nil then
       su:InitGroupHeading(heading)
@@ -378,9 +416,9 @@ local function handlespawn(text,coord)
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)	
   elseif unit == "rsam" then
-    local su = SPAWN:NewWithAlias("GM_SA10","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_SA10","IAA SAM " .. name)
     if random == true then
-      su:InitRandomizeUnits(true,100,500)
+      su:InitRandomizeUnits(true,300,800)
     end
     if heading ~= nil then
       su:InitGroupHeading(heading,heading)
@@ -428,7 +466,7 @@ local function handlespawn(text,coord)
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "rsa2" then
-    local su = SPAWN:NewWithAlias("GM_SA2","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_SA2","IAA SAM" .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -438,7 +476,7 @@ local function handlespawn(text,coord)
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "rrap" then
-    local su = SPAWN:NewWithAlias("GM_RRAP","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_RRAP","IAA SAM " .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -448,7 +486,7 @@ local function handlespawn(text,coord)
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "rew" then
-    local su = SPAWN:NewWithAlias("GM_REW","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_REW","IAA EW " .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -518,7 +556,7 @@ local function handlespawn(text,coord)
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
    elseif unit == "rhawk" then
-    local su = SPAWN:NewWithAlias("GM_HAWKR","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_HAWKR","IAA SAM " .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -608,7 +646,7 @@ local function handlespawn(text,coord)
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "rsa6" then
-    local su = SPAWN:NewWithAlias("GM_SA6","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_SA6","IAA SHORAD " .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -739,6 +777,16 @@ elseif unit == "barmour2" then
     table.insert(adminspawned,su)
   elseif unit == "rmig29" then
     local su = SPAWN:NewWithAlias("GM_MIG29","IAA " .. name)
+    if random == true then
+      su:InitRandomizeUnits(true,100,500)
+    end
+    if heading ~= nil then
+      su:InitGroupHeading(heading)
+    end
+    su = su:SpawnFromCoordinate(coord)
+    table.insert(adminspawned,su)
+   elseif unit == "rjf17" then
+    local su = SPAWN:NewWithAlias("GM_JF17","IAA " .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -933,8 +981,6 @@ elseif unit == "barmour2" then
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)	
-	
-	
   else
     MESSAGE:New("Banner: I tried Tony, I really tried...",10):ToAll()
   end
@@ -985,6 +1031,7 @@ local function newhandlespawn(text,coord)
     MESSAGE:New("Banner: I tried Tony, I really tried...",10):ToAll()
   end
 end
+
 local function handledespawn(text)
   BASE:E({"DeSpawn Request",text})
   local keywords=_split(text, ",")
@@ -1003,6 +1050,15 @@ local function handledespawn(text)
     BASE:E({"Despawning Unit",unit})
     MESSAGE:New("And with a finger snap " .. unit .. " has become dust in the wind",10):ToAll()
   end
+end
+
+local function msgtoall(text)
+	BASE:E({"Msg to all",text})
+	local keywords=_split(text,"|")
+	msg = keywords[2]
+	if msg ~= nil then
+		MESSAGE:New(msg,15):ToAll()
+	end
 end
 function markRemoved(Event,EC)
     if Event.text~=nil and Event.text:lower():find("-") then 
@@ -1039,7 +1095,11 @@ function markRemoved(Event,EC)
             coord:FlareRed(math.random(0,20))
           end,{},30)
         elseif Event.text:lower():find("-light") then
-          coord:IlluminationBomb(100000)
+		  coord.y = coord.y + 1500
+          coord:IlluminationBomb(1000)
+	    elseif Event.text:lower():find("-lightbright") then
+		  coord.y = coord.y + 2000
+          coord:IlluminationBomb(10000)
         elseif Event.text:lower():find("-explode") then
           if admin == true then
             coord:Explosion(250)
@@ -1085,6 +1145,12 @@ function markRemoved(Event,EC)
        elseif Event.text:lower():find("-despawn") then
           if admin == true then
             handledespawn(text2)
+          else
+            MESSAGE:New("Admin Commands need to be active to despawn units",15):ToAll()
+          end
+		elseif Event.text:lower():find("-msgall") then
+          if admin == true then
+            msgtoall(text2)
           else
             MESSAGE:New("Admin Commands need to be active to despawn units",15):ToAll()
           end

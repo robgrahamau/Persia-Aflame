@@ -12,7 +12,7 @@ __CinC = {}
 __CinC.Include = function( IncludeFile )
   if not __CinC.Includes[ IncludeFile ] then
     __CinC.Includes[IncludeFile] = IncludeFile
-    local f = assert( base.loadfile( IncludeFile ) )
+    local f = assert( base.loadfile( lfs.writedir() .. IncludeFile ) )
     if f == nil then
       error ("CINC: Could not load CINC file " .. IncludeFile )
     else
@@ -23,8 +23,9 @@ __CinC.Include = function( IncludeFile )
 end
 
 __CinC.Includes = {}
-__CinC.Include( lfs.writedir() .. "Scripts\\cinc\\src\\logger.lua" )
-__CinC.Include( lfs.writedir() .. "Scripts\\cinc\\src\\server.lua" )
-__CinC.Include( lfs.writedir() .. "Scripts\\cinc\\src\\get_airbases.lua" )
+__CinC.Include( 'Scripts/cinc/src/logger.lua' )
+__CinC.Include( 'Scripts/cinc/src/server.lua' )
+__CinC.Include( 'Scripts/cinc/src/api/get_airbases.lua' )
+__CinC.Include( 'Scripts/cinc/src/api/get_markers.lua' )
 
 env.info('*** CINC INCLUDE END ***')

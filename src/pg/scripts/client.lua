@@ -1,5 +1,5 @@
-version = "1.15.0"
-lastupdate = "2/1/2021"
+version = "1.19.0"
+lastupdate = "4/3/2021"
 PlayerMap = {}
 PlayerRMap = {}
 PlayerBMap = {}
@@ -55,7 +55,39 @@ local function permanentPlayerCheck()
         nowminute = "test"
     end
     currenttime = "H" .. nowHour .. ":" .. nowminute
-
+	if nowHour == 19 then
+		if nowminute == 0 then
+			if hrleft ~= true then
+				MESSAGE:New("8pm Server Restart in 1 hour",15):ToAll()
+				hrleft = true
+			end
+		elseif nowminute == 30 then
+			if left30 ~= true then
+				MESSAGE:New("8pm Server Restart in 30 Minutes",15):ToAll()
+				left30 = true
+			end
+		elseif nowminute == 45 then
+			if left45 ~= true then
+				MESSAGE:New("8pm Server Restart in 15 Minutes",15):ToAll()
+				left45 = true
+			end
+		elseif nowminute == 50 then
+			if left50 ~= true then
+				MESSAGE:New("8pm Server Restart in 10 Minutes",15):ToAll()
+				left50 = true
+			end
+		elseif nowminute == 55 then
+			if left55 ~= true then
+				MESSAGE:New("8pm Server Restart in 5 Minutes",15):ToAll()
+				left55 = true
+			end
+		elseif nowminute == 59 then
+			if left59 ~= true then
+				MESSAGE:New("8pm Server Restart in 1 Minute",15):ToAll()
+				left59 = true
+			end
+		end
+	end
     SetPlayer:ForEachClient(function(PlayerClient)
       local PlayerID = PlayerClient.ObjectName
       local Coalition = PlayerClient:GetCoalition()
@@ -67,9 +99,9 @@ local function permanentPlayerCheck()
       if PlayerClient:IsAlive() then
         if PlayerMap[PlayerID] ~= true then
           PlayerMap[PlayerID] = true
-          local MessageText = "Welcome to Persia Aflame by Rob Graham Version: "..version.." Last update:"..lastupdate.." ".. PlayerName .. "\n Powered By Moose, Player Donations, OverlordBot, Lots of Pain Killers, Kosh Purrs, Midgets and lets not forget the space server Hamsters! \n THE EYES BOO GO FOR THE EYES! \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n, You are on " ..col..", Please be aware this mission is geared towards Coalition Forces attacking Iran is defending by and large. Please check the mission brief for more information ALT+B \n Please Join the DISCORD SEE ALT+B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard \n Merry Christmas and a Happy New Year from all of us at TGW."
+          local MessageText = "Welcome to Persia Aflame by Rob Graham Version: "..version.." Last update:"..lastupdate.." ".. PlayerName .. "\n Powered By Moose, Player Donations, OverlordBot, Lots of Pain Killers, Kosh Purrs, Midgets and lets not forget the space server Hamsters! \n THE EYES BOO GO FOR THE EYES! \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n, You are on " ..col..", Please be aware this mission is geared towards Coalition Forces attacking Iran is defending by and large. Please check the mission brief for more information ALT+B \n Please Join the DISCORD SEE ALT+B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard \n UNICOM is 122.80 VHF, use for ATC please."
           MESSAGE:New(MessageText,15,"Server Info",true):ToClient(PlayerClient)
-          HypeMan.sendBotMessage("` $SERVERNAME - Ground Crew:` " .. PlayerClient:GetPlayerName() .. " is in the pit, straps are tight, their " ..PlayerClient:GetTypeName() .. " belonging to " .. col .. " is fueled and ready to go ")
+          HypeMan.sendBotMessage(">` $SERVERNAME - Ground Crew:` " .. PlayerClient:GetPlayerName() .. " is in the pit, straps are tight, their " ..PlayerClient:GetTypeName() .. " belonging to " .. col .. " is fueled and ready to go \n > Good Luck Out there")
         end
       else
         if PlayerMap[PlayerID] ~= false then
@@ -146,7 +178,7 @@ end
 C_menu = MENU_COALITION:New(coalition.side.BLUE,"AI CONTROL")
 --C_TDY = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Request Teddy Turn into Wind",C_menu,tdy_wind,{})
 C_tanker = MENU_COALITION:New(coalition.side.BLUE,"Tanker Control",C_menu)
---C_Arco11 = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Change ARCO11 Speed for A10",C_tanker,Arco11A10,nil)
+C_Arco11 = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Change ARCO11 Speed for A10",C_tanker,Arco11A10,nil)
 
 
 

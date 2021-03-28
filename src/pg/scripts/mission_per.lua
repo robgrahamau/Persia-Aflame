@@ -1,4 +1,4 @@
-reinforhrs = 7
+reinforhrs = 16
 reinformins = 0
 minreinf = 2
 maxreinf = 14

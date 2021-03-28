@@ -3,7 +3,7 @@
 -- Heavily Modified by Rob Graham.
 -- for use on Red Iberia.
 ---------------------------------------
-
+linkactive = true
 do
     -- lets start commenting some of this shit.
     local PORT = 3009 -- our port
@@ -370,10 +370,12 @@ do
     end
 
     timer.scheduleFunction(function(arg, time)
-        local success, error = pcall(step)
-        if not success then
-            log("Error: " .. error)
-        end
-        return timer.getTime() + DATA_TIMEOUT_SEC
-    end, nil, timer.getTime() + DATA_TIMEOUT_SEC)
+		if linkactive == true then
+			local success, error = pcall(step)
+			if not success then
+				log("Error: " .. error)
+			end
+			return timer.getTime() + DATA_TIMEOUT_SEC
+		end
+	end, nil, timer.getTime() + DATA_TIMEOUT_SEC)
 end

@@ -148,6 +148,7 @@ groupData =
   {
     ["visible"] = false,
 	["hiddenOnPlanner"] = true,
+	["hiddenOnMFD"] = true,
     --["lateActivation"] = false,
     ["tasks"] = {}, -- end of ["tasks"]
     ["uncontrollable"] = false,

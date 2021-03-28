@@ -22,10 +22,42 @@ Arco11Spawn = SPAWN:New("Arco 11"):InitLimit(1,4):OnSpawnGroup(function(spawngro
   Arco11 = spawngroup
 end,{}):InitRepeatOnLanding():InitCleanUp(600):SpawnScheduled(1800,0.5)
 Shell21 = GROUP:FindByName("Shell21")
+
+function OverlordDead(EventData)
+	MESSAGE:New("Overlord is Down, I repeat Overlord is down",30):ToBlue()
+	hm("> Coalition: Overlord11 Was shot down ")
+end
+
+function MagicDead(EventData)
+	MESSAGE:New("Magic is Down",30):ToBlue()
+	hm("> Coalition: Magic11 Was shot down ")
+end
+
+
 Overlord = GROUP:FindByName("USEW Overlord")
-OverlordSpawn = SPAWN:NewWithAlias("USEW Overlord","USEW Overlord11"):OnSpawnGroup(function(spawngroup) 
+
+OverlordSpawn = SPAWN:NewWithAlias("USEW Overlord","USEW Overlord11"):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
   Overlord = spawngroup
+  trawac = spawngroup 
+  tunit = trawac:GetUnit(1)
+  tunit = trawac:GetUnit(1)
+  tunit:HandleEvent( EVENTS.Dead,OverlordDead )
+  MESSAGE:New("Overlord is warming up for Take off",15):ToBlue()
+  BASE:E({"respawned Overlord unit name is:",tunit:GetName()})
+  hm("> Overlord Crew has arrived at Aircraft: ".. tunit:GetName() .." ")
 end,{}):InitRepeatOnLanding():InitLimit(1,4):InitCleanUp(600):SpawnScheduled(1800,0.5)
+
+USMagic = GROUP:FindByName("USEW Overlord")
+USMagicSpawn = SPAWN:NewWithAlias("USEW Magic","USEW Magic11"):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
+  USMagic = spawngroup
+  trawac = spawngroup 
+  tunit = trawac:GetUnit(1)
+  tunit:HandleEvent( EVENTS.Dead,MagicDead )
+  MESSAGE:New("Magic is warming up for Take off",15):ToBlue()
+  BASE:E({"respawned USMagic unit name is:",tunit:GetName()})
+  hm("> Magic Crew has arrived at Aircraft: ".. tunit:GetName() .." ")
+end,{}):InitRepeatOnLanding():InitLimit(1,4):InitCleanUp(600):SpawnScheduled(1800,0.5)
+
 CV_1_CAP = nil
 CV_2_CAP = nil
 T_CAP = nil

@@ -1,8 +1,8 @@
 minutes = 60
 hours = 1 -- DO NOT SET THIS TO 0, if your not using HOURS leave it as 1.
-RED_EW_SET = SET_GROUP:New():FilterCoalitions("red"):FilterPrefixes("REW"):FilterStart()
-RED_SAM_SET = SET_GROUP:New():FilterCoalitions("red"):FilterActive():FilterPrefixes("RSAM"):FilterStart()
-RED_SCUD_SET = SET_GROUP:New():FilterCoalitions("red"):FilterActive():FilterPrefixes("SCUD","IAA"):FilterStart()
+RED_EW_SET = SET_GROUP:New():FilterCoalitions("red"):FilterPrefixes({"IAA EW","REW"}):FilterStart()
+RED_SAM_SET = SET_GROUP:New():FilterCoalitions("red"):FilterActive():FilterPrefixes({"IAA SAM","IAA SHORAD","RSAM","RAA"}):FilterStart()
+RED_SCUD_SET = SET_GROUP:New():FilterCoalitions("red"):FilterActive():FilterPrefixes({"SCUD","IAA"}):FilterStart()
 ALL_STATICS = SET_STATIC:New():FilterStart()
 AIRBASE_STATICS= SET_STATIC:New()
 RED_NO_FARPS = SET_STATIC:New()
@@ -243,7 +243,7 @@ ctldintelupdate("CTLD Jiroft")
 ctldintelupdate("CTLD Shiraz")
 ctldintelupdate("CTLD Kerman")
 
-checkctldlogistics()
+--checkctldlogistics()
 
 function markerremove()
   for i,k in pairs(EW_INTEL) do 
@@ -305,7 +305,7 @@ BASE:E({"Checking all Markers and updating markers"})
 markerremove()
 
 BASE:E({"CTLD LOGISTICS CHECK"})
-checkctldlogistics()
+--checkctldlogistics()
 
 
 local inteltype = math.random(1,6)
@@ -328,7 +328,7 @@ if inteltype == 1 or inteltype == 4 or inteltype == 5 then
           local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected Surface to Air Installation \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.group:GetName()] = text
-      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
+      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. '```')
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
@@ -355,7 +355,7 @@ if inteltype == 2 or inteltype == 4 or inteltype == 6 then
           k.text = text
           intel_reports[k.group:GetName()] = text
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
-      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
+      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. '```')
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
           updated = true
@@ -382,7 +382,7 @@ if inteltype == 3 or inteltype == 5 or inteltype == 6 then
           k.text = text
           intel_reports[k.static:GetName()] = text
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
-      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
+      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. '```')
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
           updated = true

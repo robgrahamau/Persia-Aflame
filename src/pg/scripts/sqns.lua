@@ -52,7 +52,7 @@ function sqn:Spawn()
   BASE:E({"Attempting to spawn for Sqn:",self.sqnname,self.sqnunit,self.sqnamount})
   self.sqnspawner = SPAWN:NewWithAlias(self.sqnunit,self.sqnname)
     :InitCleanUp(self.sqncleanup)
-    :InitAirbase(self.airbase,SPAWN.Takeoff.Cold)
+    :InitAirbase(self.airbase,SPAWN.Takeoff.Air)
     :InitGrouping(self.flightsize)
     :OnSpawnGroup(function(spawngroup) 
       self.sqnamount = self.sqnamount - self.flightsize
@@ -75,44 +75,57 @@ function sqn:Spawn()
 end
 
 function sqn:Check()
-  BASE:E({"sqn check",self.sqnname})
-  if self.srunning == true then
-    self.sqntimer = SCHEDULER:New(nil,function() 
-      self:Check()
-    end,{},math.random((self.sqntime /2),self.sqntime))
-    if self.spawnedunit ~= nil then
-      BASE:E({"SQN CHECK START:",self.sqnname,self.spawnedunit:IsAirborne(),self.takeoff})
-      if (self.spawnedunit:IsAirborne(true) ~= true) and (self.takeoff == true)  then
-        if self.spawnedunit:IsAlive() == true then
-          for _,units in pairs(self.spawnedunit:GetUnits()) do
-            if units:IsAlive() == true then
-              self.sqnamount = self.sqnamount + 1
-            end
-          end
-        end
-        self.spawnedunit:Destroy()
-        self.takeoff = false
-      elseif (self.spawnedunit:IsAirborne() == true) and (self.takeoff == false ) then
-        self.takeoff = true
-      elseif self.spawnedunit:IsAlive() ~= true then
-        self.takeoff = false
-      end
-      BASE:E({"SQN CHECK END:",self.sqnname,self.spawnedunit:IsAirborne(),self.takeoff})
-    end
-    if self.sqnamount > 0 then
-      if self.spawnedunit ~= nil then
-        if self.spawnedunit:IsAlive() ~= true then
-          self.spawnedunit:Destroy()
-          self:Spawn()
-        end
-      else
-        self:Spawn()
-      end
-    end
-  else
-    BASE:E({self.sqnname,"Was Stopped so check was not carried out"})
-  end
+	BASE:E({"sqn check",self.sqnname})
+	-- if we are running
+	if self.srunning == true then
+		-- schedule to self ourself again.
+		self.sqntimer = SCHEDULER:New(nil,function() 
+			self:Check()
+		end,{},math.random((self.sqntime /2),self.sqntime))
+		-- if we are not nil.
+		if self.spawnedunit ~= nil then
+			BASE:E({"SQN CHECK START:",self.sqnname,self.spawnedunit:IsAirborne(),self.takeoff})
+			-- if we are not in the air and we have taken off 
+			if (self.spawnedunit:IsAirborne() ~= true) and (self.takeoff == true)  then
+				-- if we are alive
+				if self.spawnedunit:IsAlive() == true then
+					-- return each unit to the table.
+					for _,units in pairs(self.spawnedunit:GetUnits()) do
+						if units:IsAlive() == true then
+							self.sqnamount = self.sqnamount + 1
+						end
+					end   
+					-- destroy and set us to false.
+					self.spawnedunit:Destroy()
+					self.takeoff = false
+					-- set the spawned unit to nil.
+					self.spawnedunit = nil
+				end
+			elseif (self.spawnedunit:IsAirborne() == true) and (self.takeoff == false ) then
+				-- if we are in the air and take off is false set to true.
+				self.takeoff = true
+			elseif self.spawnedunit:IsAlive() ~= true then
+				-- if we aren't alive then yeah set false and nil.
+				self.takeoff = false
+				self.spawnedunit = nil
+			else
+				BASE:E({"SQN CHECK: Is in air",self.sqnname})
+			end
+			if self.spawnedunit ~= nil then
+				BASE:E({"SQN CHECK END:",self.sqnname,self.spawnedunit:IsAirborne(),self.takeoff})
+			else
+				BASE:E({"SQN CHECK END:",self.sqnname,"Destroyed, now Nil",self.takeoff})
+			end
+		else
+			if self.sqnamount > 0 then
+				self:Spawn()
+			end
+		end  
+	else
+		BASE:E({self.sqnname,"Was Stopped so check was not carried out"})
+	end
 end
+
 
 
 function sqn:SetRouteStart(route)
