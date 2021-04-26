@@ -92,6 +92,7 @@ RED_EW_SET:ForEachGroupAlive(function(g)
   EW_INTEL[gid] = data
   EW_INTEL[gid].group = g
   EW_INTEL[gid].displayed = true
+  local co = g:GetCoordinate()
   if co ~= nil then
 	local co = g:GetCoordinate()
 	local lldm = co:ToStringLLDDM()
@@ -325,10 +326,10 @@ if inteltype == 1 or inteltype == 4 or inteltype == 5 then
           local mgrs = co:ToStringMGRS()
           BASE:E({"Get Group Type:",k.group:GetTypeName()})
           local threatlevel = k.group:GetThreatLevel()
-          local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected Surface to Air Installation \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
+          local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected a known Surface to Air Installation \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.group:GetName()] = text
-      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. '```')
+		  HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. ' threat level is: ' .. threatlevel ..'```')
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
@@ -351,7 +352,7 @@ if inteltype == 2 or inteltype == 4 or inteltype == 6 then
           local lldm = co:ToStringLLDDM()
           local llds = co:ToStringLLDMS()
           local mgrs = co:ToStringMGRS()
-          local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected Possible SCUD, ARTY or ARMY/GROUND Force Staging Area, NOTE: DATA MAY NOT BE ACCURATE IF UNITS HAVE MOVED. \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
+          local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected Possible Hostile Ground Force, NOTE: DATA MAY NOT BE ACCURATE IF UNITS HAVE MOVED. \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.group:GetName()] = text
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()

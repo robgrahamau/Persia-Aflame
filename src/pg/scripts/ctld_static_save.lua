@@ -147,12 +147,14 @@ if file_exists(savefile) then
   --This version uses Destroy()
 	ctldsave_no_farps()
   for k, v in pairs(CTLDSaveStatics) do
-      --BASE:E({"Found a CTLD Static Item is",v})
+      BASE:E({"Found a CTLD Static Item is",v})
       if STATIC:FindByName(v.name,false) ~= nil then
-        --BASE:E({"We have ctld item in game"})
+        BASE:E({"We have ctld item in game"})
         local static = STATIC:FindByName(v.name)
         if v.dead == true then
-          static:Destroy()
+          local c = static:GetCoordinate()
+		  c:Explode(500)
+		  BASE:E({"Exploded the Static"})
         end
       else
         BASE:E({"We have a ctld item but it's NOT in the game yet."})

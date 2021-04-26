@@ -123,29 +123,29 @@ function spawnislands()
     spawnnumber = spawnnumber + 1
     if spawner == nil then
       spawner = SPAWN:NewWithAlias("IslandSead","SEADFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-	  HypeMan.sendBotMessage("> DB1 SEDFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
+	  HypeMan.sendBotMessage("> 2.7 DB1 SEDFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
     else
       if spawner:IsAlive() ~= true then
         spawner = SPAWN:NewWithAlias("IslandSead","SEADFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-		HypeMan.sendBotMessage("> DB1 SEDFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
+		HypeMan.sendBotMessage("> 2.7 DB1 SEDFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
       end
     end
     if spawner2 == nil then
       spawner2 = SPAWN:NewWithAlias("IslandCAS","CASFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,3,10000,1000):InitCleanUp(300):Spawn()
-	  HypeMan.sendBotMessage("> DB1 CASFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
+	  HypeMan.sendBotMessage("> 2.7 DB1 CASFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
     else
       if spawner2:IsAlive() ~= true then
         spawner2 = SPAWN:NewWithAlias("IslandCAS","CASFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,3,10000,1000):InitCleanUp(300):Spawn()
-		HypeMan.sendBotMessage("> DB1 CASFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
+		HypeMan.sendBotMessage(">2.7 DB1 CASFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
       end
     end
     if spawner3 == nil then
       spawner3 = SPAWN:NewWithAlias("IslandCAP","CAPFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-	  HypeMan.sendBotMessage("> DB1 CAPFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
+	  HypeMan.sendBotMessage(">2.7 DB1 CAPFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
     else
       if spawner3:IsAlive() ~= true then
         spawner3 = SPAWN:NewWithAlias("IslandCAP","CAPFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-		HypeMan.sendBotMessage("> DB1 CAPFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
+		HypeMan.sendBotMessage(">2.7 DB1 CAPFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
       end
     end
     allowislands = false
@@ -160,30 +160,30 @@ function spawnmainland()
     spawnnumber = spawnnumber + 1
     if spawner4 == nil then
     spawner4 = SPAWN:NewWithAlias("QeshmSead","SEADFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-	HypeMan.sendBotMessage("> DB2 SEADFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
+	HypeMan.sendBotMessage(">2.7 DB2 SEADFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
   else
     if spawner4:IsAlive() ~= true then
       spawner4 = SPAWN:NewWithAlias("QeshmSead","SEADFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-	  HypeMan.sendBotMessage("> DB2 SEADFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
+	  HypeMan.sendBotMessage(">2.7 DB2 SEADFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
     end
   end
   if spawner5 == nil then
     spawner5 = SPAWN:NewWithAlias("mainlandcap","CAPFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-	HypeMan.sendBotMessage("> DB2 CAPFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
+	HypeMan.sendBotMessage(">2.7 DB2 CAPFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
   
   else
     if spawner5:IsAlive() ~= true then
       spawner5 = SPAWN:NewWithAlias("mainlandcap","CAPFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-	  HypeMan.sendBotMessage("> DB2 CAPFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")	
+	  HypeMan.sendBotMessage(">2.7 DB2 CAPFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")	
     end
   end
     if spawner6 == nil then
     spawner6 = SPAWN:NewWithAlias("ManlandCas","CASFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,3,10000,1000):InitCleanUp(300):InitRepeatOnLanding():Spawn()    
-	HypeMan.sendBotMessage("> DB2 CASFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
+	HypeMan.sendBotMessage(">2.7 DB2 CASFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
   else
     if spawner6:IsAlive() ~= true then
       spawner6 = SPAWN:NewWithAlias("ManlandCas","CASFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,3,10000,1000):InitCleanUp(300):InitRepeatOnLanding():Spawn()    
-	  HypeMan.sendBotMessage("> DB2 CASFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
+	  HypeMan.sendBotMessage(">2.7 DB2 CASFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
     end
   end
   end
@@ -231,33 +231,48 @@ function spawndefenders(groupname)
 	end
 end
 
+function spawnctld(airbase,country,heading,distance)
+	if heading == nil then
+		heading = math.random(0,359)
+	end
+	if distance == nil then
+		distance = math.random(200,750)
+	end
+	local ab = AIRBASE:FindByName(airbase)
+	local co = ab:GetCoordinate()
+	co:Translate(distance,heading,false,true)
+	local vec3 = co:GetVec3()
+	local _unitId = ctld.getNextUnitId()
+	local _name = "ctld Deployed FOB #" .. _unitId
+	local _fob = nil
+	_fob = ctld.spawnFOB(country, 211, vec3, _name)
+	table.insert(ctld.logisticUnits, _fob:getName())
+end
+
 function slot_tunb(coalition)
     BASE:E({"SLOTS RUNNING FOR TUNB",coalition})
     if coalition == 1 then
-      TunbBlue:Destroy()
-      if TunbRed:IsAlive() ~= true then
-        TunbRed:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Tnub"):Spawn()
-      end
-    if tmsg ~= false then
-      trigger.action.setUserFlag("Tunb UH1 #001",0)
-      trigger.action.setUserFlag("Tunb UH1",0)
-      trigger.action.setUserFlag("Tunb MI8",0)
-      trigger.action.setUserFlag("Tunb MI8 #001",0)
-      trigger.action.setUserFlag("Tunb KA50",0)
-      trigger.action.setUserFlag("Tunb KA50 #001",0)
-      trigger.action.setUserFlag("Tunb US UH1",100)
-      trigger.action.setUserFlag("Tunb US UH1 #001",100)
-      trigger.action.setUserFlag("Tunb Georgia KA50",100)
-      trigger.action.setUserFlag("Tunb Georgia KA50 #001",100)
-      trigger.action.setUserFlag("Tunb Georgia MI8",100)
-      trigger.action.setUserFlag("Tunb Georgia MI8 #001",100)
-      ctld.changeRemainingGroupsForPickupZone("CTLD Tunb Island", 4)
-      MESSAGE:New("Iran has Retaken Tunb from the Coalition Invaders!",30):ToAll()
+		if tmsg ~= false then
+		trigger.action.setUserFlag("Tunb UH1 #001",0)
+		trigger.action.setUserFlag("Tunb UH1",0)
+		trigger.action.setUserFlag("Tunb MI8",0)
+		trigger.action.setUserFlag("Tunb MI8 #001",0)
+		trigger.action.setUserFlag("Tunb KA50",0)
+		trigger.action.setUserFlag("Tunb KA50 #001",0)
+		trigger.action.setUserFlag("Tunb US UH1",100)
+		trigger.action.setUserFlag("Tunb US UH1 #001",100)
+		trigger.action.setUserFlag("Tunb Georgia KA50",100)
+		trigger.action.setUserFlag("Tunb Georgia KA50 #001",100)
+		trigger.action.setUserFlag("Tunb Georgia MI8",100)
+		trigger.action.setUserFlag("Tunb Georgia MI8 #001",100)
+		ctld.changeRemainingGroupsForPickupZone("CTLD Tunb Island", 4)
+		MESSAGE:New("Iran has Retaken Tunb from the Coalition Invaders!",30):ToAll()
       --STTS.TextToSpeech("Tunb has been retaken by Irani Forces",253.00,"AM",0.75,"TGW Command", 1 )
 --      STTS.TextToSpeech("We have lost Tunb to Irani Forces",253.00,"AM",0.75,"TGW Command", 2 )
-      HypeMan.sendBotMessage("> Tunb has been taken by Iran ")
-      tmsg = false
-    end
+		HypeMan.sendBotMessage(">2.7 Tunb has been taken by Iran ")
+		tmsg = false
+		spawnctld(AIRBASE.PersianGulf.Tunb_Island_AFB,34,270,100)
+		end
     else
       TunbRed:Destroy()
       if TunbBlue:IsAlive() ~= true then
@@ -283,6 +298,7 @@ function slot_tunb(coalition)
           HypeMan.sendBotMessage("> Tunb has been taken by the Coalition ")
           tmsg = true
           SCHEDULER:New(nil,spawnislands,{},math.random(5,1200))
+		  spawnctld(AIRBASE.PersianGulf.Tunb_Island_AFB,2,280,100)
         end 
     end
 end
@@ -305,9 +321,10 @@ function slot_sirri(coalition)
 		MESSAGE:New("Iran has Retaken Sirri Island from the Coalition Invaders!",30):ToAll()
 		-- STTS.TextToSpeech("Sirri Island has been retaken from the US led scum",253.00,"AM",0.75,"TGW Command", 1 )
 		-- STTS.TextToSpeech("We have lost Sirri Island to Iran!",253.00,"AM",0.75,"TGW Command", 2 )
-		HypeMan.sendBotMessage("> Siri Island has been taken by Iran ")
+		HypeMan.sendBotMessage(">2.7 Siri Island has been taken by Iran ")
 		smsg = false
 		sirrispawn = false
+		spawnctld(AIRBASE.PersianGulf.Sirri_Island,34,0,100)
     end
   else
     SirriRed:Destroy()
@@ -325,7 +342,7 @@ function slot_sirri(coalition)
 		MESSAGE:New("Coalition Forces have liberated Sirri Island from Iran",30):ToAll()
 		--STTS.TextToSpeech("Sirri Island has been lost to the western invaders",253.00,"AM",0.75,"TGW Command", 1 )
 		--STTS.TextToSpeech("We liberated Sirri Island from Iran!",253.00,"AM",0.75,"TGW Command", 2 )
-		HypeMan.sendBotMessage("> Siri Island has been taken by Coalition Forces  ")
+		HypeMan.sendBotMessage(">2.7 Siri Island has been taken by Coalition Forces  ")
 		SCHEDULER:New(nil,spawnislands,{},math.random(60,1200))
 		if init ~= true then
 		SCHEDULER:New(nil,function() 
@@ -334,6 +351,7 @@ function slot_sirri(coalition)
 		end,{},math.random(60,300))
 		end
 		smsg = true
+		spawnctld(AIRBASE.PersianGulf.Sirri_Island,2,30,100)
   end
   end
 end
@@ -364,9 +382,10 @@ function slot_lavan(coalition)
     MESSAGE:New("Iran has retaken Lavan Island from the US Backed Infidels",30):ToAll()
     --STTS.TextToSpeech("Lavan Island is once more back in Irani Hands",253.00,"AM",0.75,"TGW Command", 1 )
     --STTS.TextToSpeech("We have lost our foothold on Lavan Island!",253.00,"AM",0.75,"TGW Command", 2 )
-    HypeMan.sendBotMessage("> Lavan Island has been taken by Iran")
+    HypeMan.sendBotMessage(">2.7 Lavan Island has been taken by Iran")
     lmsg = false
 	lavanspawn = false
+	spawnctld(AIRBASE.PersianGulf.Lavan_Island_Airport,34,0,50)
   end
   else
 	if allowfobs == true then
@@ -393,7 +412,7 @@ function slot_lavan(coalition)
     MESSAGE:New("The US Led Coalition has liberated Lavan Island from Irani dictatorship",30):ToAll()
     --STTS.TextToSpeech("Lavan Island has fallen",253.00,"AM",0.75,"TGW Command", 1 )
     --STTS.TextToSpeech("We have gained a foothold on Lavan Island!",253.00,"AM",0.75,"TGW Command", 2 )
-    HypeMan.sendBotMessage("> Lavan Island has been taken by Coalition Forces")
+    HypeMan.sendBotMessage(">2.7 Lavan Island has been taken by Coalition Forces")
     SCHEDULER:New(nil,spawnislands,{},math.random(5,1200))
     if init == true then
 		SCHEDULER:New(nil,function() 
@@ -401,6 +420,7 @@ function slot_lavan(coalition)
 		end,{},math.random(60,300))
 	end
     lmsg = true
+	spawnctld(AIRBASE.PersianGulf.Lavan_Island_Airport,2,10,50)
   end
   end
 end
@@ -462,9 +482,10 @@ function slot_kish(coalition)
     MESSAGE:New("Kish Island is once more under Irani Control",30):ToAll()
     --STTS.TextToSpeech("Kish Island has been retaken",253.00,"AM",0.75,"TGW Command", 1 )
     --STTS.TextToSpeech("We have lost our foothold on Lavan Island!",253.00,"AM",0.75,"TGW Command", 2 )
-    HypeMan.sendBotMessage("> Kish Island has been taken by Iran")
+    HypeMan.sendBotMessage(">2.7 Kish Island has been taken by Iran")
     kimsg = false
 	kishspawn = false
+	spawnctld(AIRBASE.PersianGulf.Kish_International_Airport,34,20,200)
   end
   else
 	if allowfobs == true then
@@ -513,7 +534,7 @@ function slot_kish(coalition)
     MESSAGE:New("Kish Island has been taken by the coalition forces",30):ToAll()
     --STTS.TextToSpeech("Kish Island has fallen",253.00,"AM",0.75,"TGW Command", 1 )
     --STTS.TextToSpeech("We have gained a foothold on Kish Island!",253.00,"AM",0.75,"TGW Command", 2 )
-    HypeMan.sendBotMessage("> Kish Island has been taken by Coalition Forces")
+    HypeMan.sendBotMessage(">2.7 Kish Island has been taken by Coalition Forces")
     kimsg = true
     SCHEDULER:New(nil,spawnislands,{},math.random(5,1200))
     if init == true then
@@ -521,6 +542,7 @@ function slot_kish(coalition)
 			spawndefenders("kishspawn")
 		end,{},math.random(60,300))
 	end
+	spawnctld(AIRBASE.PersianGulf.Kish_International_Airport,2,10,200)
   end
   end
 end
@@ -553,9 +575,10 @@ function slot_qeshm(coalition)
     MESSAGE:New("Qeshm Island has been Liberated from the Coalition invaders and Infidels",30):ToAll()
     --STTS.TextToSpeech("Qeshm Island is once more ours, we must continue to push back the infidels",253.00,"AM",0.75,"TGW Command", 1 )
     --STTS.TextToSpeech("We have lost Qeshm Island, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
-    HypeMan.sendBotMessage("> Qeshm Island has been taken by Iran")
+    HypeMan.sendBotMessage(">2.7 Qeshm Island has been taken by Iran")
     qeshmspawn = false
 	qemsg = false
+	spawnctld(AIRBASE.PersianGulf.Qeshm_Island,34,320,100)
   end
   else
     if allowfobs == true then
@@ -585,7 +608,7 @@ function slot_qeshm(coalition)
     MESSAGE:New("Qesh Island has been occuiped, Coalition forces are one step closer to taking Iran!",30):ToAll()
     --STTS.TextToSpeech("Qeshm Island has falledn to the infidels! We must retake it before they gain a foothold",253.00,"AM",0.75,"TGW Command", 1 )
     --STTS.TextToSpeech("Qeshm Island is now ours, we have a base on Bandar's doorstep.",253.00,"AM",0.75,"TGW Command", 2 )
-    HypeMan.sendBotMessage("> Qeshm Island has been taken by Iran")
+    HypeMan.sendBotMessage(">2.7 Qeshm Island has been taken by Iran")
     qemsg = true
     SCHEDULER:New(nil,spawnmainland,{},math.random(5,1200))
     if init == false then
@@ -593,6 +616,7 @@ function slot_qeshm(coalition)
       spawndefenders("qeshmspawn")
     end,{},math.random(60,300))
 	end
+	spawnctld(AIRBASE.PersianGulf.Qeshm_Island,2,330,100)
   end
   end
 end
@@ -660,6 +684,7 @@ function slot_khasab(coalition)
     end
     khmsg = false
 	khasabspawn = false
+	spawnctld(AIRBASE.PersianGulf.Khasab,34,000,500)
   end
   else
 	KhasabRed:Destroy()
@@ -713,6 +738,7 @@ function slot_khasab(coalition)
     --STTS.TextToSpeech("Khasab is once more in the rightful hands of the Omani people.",253.00,"AM",0.75,"TGW Command", 2 )
     HypeMan.sendBotMessage("> Khasab Island has been taken by Coalition Forces")
     khmsg = true
+	spawnctld(AIRBASE.PersianGulf.Khasab,2,000,500)
   end
   end
 
@@ -805,6 +831,7 @@ function slot_bandar(coalition)
       HypeMan.sendBotMessage("> Bandar Abbas has been taken by Iran this is a Glorious Day!")
       banmsg = true
 	  bandarspawn = false
+	  spawnctld(AIRBASE.PersianGulf.Bandar_Abbas_Intl,34,0,1000)
     end
   else
     
@@ -859,7 +886,6 @@ function slot_bandar(coalition)
     trigger.action.setUserFlag("Bandar SU-33-1",100)
     trigger.action.setUserFlag("Bandar_J11",100)
     trigger.action.setUserFlag("Bandar_J11-1",100)
-  
     if usenew == false then
       ra2disp:SetSquadron("Bandar Abbas",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG21_1","MIG29_2"},0)
       ra2disp:SetSquadron("Bandar Abbas 2",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG29_1","MIG29_2","JF17_1","JF17_2","F4_1","F4_2"},0)
@@ -884,6 +910,7 @@ function slot_bandar(coalition)
     end,{},math.random(60,300))
 	end
     banmsg = false
+	spawnctld(AIRBASE.PersianGulf.Bandar_Abbas_Intl,2,0,1000)
   end
   end
 
@@ -924,12 +951,13 @@ function slot_lars(coalition)
       ra2disp:SetSquadron("Lar",AIRBASE.PersianGulf.Lar_Airbase,{"F4_2"},2)
       ra2disp:SetSquadron("Lar Int",AIRBASE.PersianGulf.Lar_Airbase,{"F4_2"},2)
     end
-    MESSAGE:New("Lars is once more back in Irani Control",30):ToAll()
+    MESSAGE:New("Lar is once more back in Irani Control",30):ToAll()
     larmsg = true
 	larspawn = false
    -- STTS.TextToSpeech("Lars Airbase is once more ours.",253.00,"AM",0.75,"TGW Command", 1 )
    -- STTS.TextToSpeech("We have Lars Airbase, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
     HypeMan.sendBotMessage("> Lar Airbase has been taken by Iran  ")
+	spawnctld(AIRBASE.PersianGulf.Lar_Airbase,34,0,500)
   end
   else
 	if larmsg ~= true then
@@ -976,6 +1004,7 @@ function slot_lars(coalition)
 		end,{},math.random(60,300))
 	end
     larmsg = true
+	spawnctld(AIRBASE.PersianGulf.Lar_Airbase,2,0,500)
   end
   end
 end
@@ -993,6 +1022,7 @@ function slot_abun(coalition)
      -- STTS.TextToSpeech("We have lost Abu Nuayr, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
       abunmsg = false
       HypeMan.sendBotMessage("> Abu Nuayr has been taken by Iran ")
+	  spawnctld(AIRBASE.PersianGulf.Sir_Abu_Nuayr,34,320,500)
     end
   else
   if abunmsg ~= true then
@@ -1005,6 +1035,7 @@ function slot_abun(coalition)
    -- STTS.TextToSpeech("We have lost Abu Nuayr, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 1 )
     abunmsg = true
     HypeMan.sendBotMessage("> Abu Nuayr has been taken by Coalition Forces  ")
+	spawnctld(AIRBASE.PersianGulf.Sir_Abu_Nuayr,2,320,500)
     end
   end
 
@@ -1018,6 +1049,7 @@ function slot_ejask(coalition)
 		end
 		trigger.action.setUserFlag("ASJ37 - Bandar-e-jask 1-1",00)
 		trigger.action.setUserFlag("ASJ37 - Bandar-e-jask 1-2",00)
+		spawnctld(AIRBASE.PersianGulf.Bandar_e_Jask_airfield,34,50,500)
 	else
 		if (ejaskmsg == nil) or (ejaskmsg == true) then
 			MESSAGE:New("Bandar E-Jask Has been taken by the Coalition",30):ToAll()
@@ -1026,6 +1058,7 @@ function slot_ejask(coalition)
 		end
 		trigger.action.setUserFlag("ASJ37 - Bandar-e-jask 1-1",100)
 		trigger.action.setUserFlag("ASJ37 - Bandar-e-jask 1-2",100)
+		spawnctld(AIRBASE.PersianGulf.Bandar_e_Jask_airfield,2,50,500)
 	end
 end
 function slot_havadarya(coalition)
@@ -1073,6 +1106,7 @@ function slot_havadarya(coalition)
       HypeMan.sendBotMessage("> Havadarya has been taken by Iran ")
 	  havspawn = false
       havmsg = false
+	  spawnctld(AIRBASE.PersianGulf.Havadarya,34,0,500)
     end
   else
     if havmsg ~= true then
@@ -1114,11 +1148,12 @@ function slot_havadarya(coalition)
       HypeMan.sendBotMessage("> Havadarya has been taken by Coalition Forces")
       havmsg = true 
       SCHEDULER:New(nil,spawnmainland,{},math.random(5,1200))
-	  if init == true then
-      SCHEDULER:New(nil,function() 
-        spawndefenders("havspawn")
-      end,{},math.random(60,300))
-	  end
+		if init == true then
+		SCHEDULER:New(nil,function() 
+			spawndefenders("havspawn")
+		end,{},math.random(60,300))
+		end
+		spawnctld(AIRBASE.PersianGulf.Havadarya,2,010,500)
     end
   end
 end
@@ -1143,6 +1178,7 @@ function slot_bandarlengeh(coalition)
       HypeMan.sendBotMessage("> Bandar Lengeh has been taken by Iran  ")
       blenmsg = false
 	  bandarlspawn = false
+	  spawnctld(AIRBASE.PersianGulf.Bandar_Lengeh,34,0,500)
     end
   else
     if blenmsg ~= true then
@@ -1162,6 +1198,7 @@ function slot_bandarlengeh(coalition)
       end,{},math.random(60,300))
 	  end
       blenmsg = true
+	  spawnctld(AIRBASE.PersianGulf.Bandar_Lengeh,2,0,500)
     end
   end
 
@@ -1178,6 +1215,7 @@ function slot_jir(coalition)
  --     STTS.TextToSpeech("We have lost Jiroft, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
       HypeMan.sendBotMessage("> Jiroft has been taken by Iran")
       jirmsg = false
+	  spawnctld(AIRBASE.PersianGulf.Jiroft_Airport,34,40,500)
     end
   else
     if jirmsg ~= false then
@@ -1191,6 +1229,7 @@ function slot_jir(coalition)
       HypeMan.sendBotMessage("> Havadarya has been taken by Coalition Forces  ")
       jirmsg = true
       SCHEDULER:New(nil,spawnmainland,{},math.random(5,1200))
+	  spawnctld(AIRBASE.PersianGulf.Jiroft_Airport,2,40,500)
     end
   end
 end
@@ -1525,8 +1564,28 @@ function fob:New(name,redspawn,bluespawn,coalition)
   self.fobname = name
   self.fobunit = STATIC:FindByName(name)
   self.coalition = coalition
-  self.redspawn = redspawn
-  self.bluespawn = bluespawn
+  self.lastcoalition = coalition
+  self.group = nil
+  self.redspawn = redspawn:InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
+		local co = spawngroup:GetCoordinate()
+		co:Translate(500,000,false,true)
+		local vec3 = co:GetVec3()
+		local _unitId = ctld.getNextUnitId()
+		local _name = "ctld Deployed FOB #" .. _unitId
+		local _fob = nil
+		_fob = ctld.spawnFOB(34, 211, vec3, _name)
+		table.insert(ctld.logisticUnits, _fob:getName())
+  end)
+  self.bluespawn = bluespawn:InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
+		local co = spawngroup:GetCoordinate()
+		co:Translate(500,000,false,true)
+		local vec3 = co:GetVec3()
+		local _unitId = ctld.getNextUnitId()
+		local _name = "ctld Deployed FOB #" .. _unitId
+		local _fob = nil
+		_fob = ctld.spawnFOB(2, 211, vec3, _name)
+		table.insert(ctld.logisticUnits, _fob:getName())
+  end)
   self.marker = nil
   BASE:E({self.fobname,"Created",self.coalition})
   return self
@@ -1559,16 +1618,36 @@ function fob:FlipRed()
 	for k,v in pairs(self.bluestaticlist) do 
 		local s = STATIC:FindByName(v)
 		BASE:E({s})
-		s:Destroy()
+		local c = s:GetCoordinate()
+		c:Explode(500)
+		local tempctld = {}
+		for k,v in pairs (ctld.logisticUnits) do
+			if v == s then
+				BASE:E({"we don't exist anymore",v,s})
+			else
+				BASE:E({"we added",v})
+				table.insert(tempctld,v)
+			end
+		end
+		BASE:E({"we are updating CTLD"})
+		ctld.logisticUnits = tempctld
 	end
-	for k,v in pairs(self.redstaticlist) do 
+		for k,v in pairs(self.redstaticlist) do 
 		local s = STATIC:FindByName(v)
 		BASE:E({s})
 		s:ReSpawn()
+		table.insert(ctld.logisticUnits,v)
+	end
+  end
+  if self.group ~= nil then
+	if self.group:IsAlive() == true then
+		self.group:Destroy()
 	end
   end
   self.group = self.redspawn:Spawn()
   self.coalition = 1
+  self.lastcoalition = 2
+
 end
 
 function fob:FlipBlue()
@@ -1585,16 +1664,35 @@ function fob:FlipBlue()
 	for k,v in pairs(self.redstaticlist) do 
 		local s = STATIC:FindByName(v)
 		BASE:E({s})
-		s:Destroy()
+		local c = s:GetCoordinate()
+		c:Explode(500)
+		local tempctld = {}
+		for k,v in pairs (ctld.logisticUnits) do
+			if v == s then
+				BASE:E({"we don't exist anymore",v,s})
+			else
+				BASE:E({"we added",v})
+				table.insert(tempctld,v)
+			end
+		end
+		BASE:E({"we are updating CTLD"})
+		ctld.logisticUnits = tempctld
 	end
 		for k,v in pairs(self.bluestaticlist) do 
 		local s = STATIC:FindByName(v)
 		BASE:E({s})
 		s:ReSpawn()
+		table.insert(ctld.logisticUnits,v)
+	end
+  end
+  if self.group ~= nil then
+	if self.group:IsAlive() == true then
+		self.group:Destroy()
 	end
   end
   self.group = self.bluespawn:Spawn()
   self.coalition = 2
+  self.lastcoalition = 1
 end
 
 function fob:AddBlueStatics(statics)
@@ -1609,12 +1707,11 @@ function fob:Startup()
   local col = "Iran"
   if self.coalition == 1 then
     self:FlipRed()
-    
   else
     self:FlipBlue()
     col = "Coalition"
-  end
-  
+	self.coalition = 2
+  end  
   self:HandleEvent(EVENTS.BaseCaptured) 
   local co = self.fobunit:GetCoordinate()
   --elf.marker = co:MarkToAll("Helicopter Forward Operating Base, Currently Owned by: ".. col .."",true)
@@ -1636,7 +1733,7 @@ function fob:OnEventBaseCaptured(EventData)
  local coalition = ABItem:GetCoalition()
  --BASE:E({self.fobname,"Base capture",coalition})
  if AirbaseName == self.fobname then
-  if coalition == 2 then
+  if coalition == 2 and self.coalition ~= 2 then
       if self:IsBlue() ~= true then
         self:FlipBlue()
         local col = "Coalition"
@@ -1644,7 +1741,7 @@ function fob:OnEventBaseCaptured(EventData)
     local co = self.fobunit:GetCoordinate()
         --self.marker = co:MarkToAll("Helicopter Forward Operating Base, Currently Owned by: ".. col .."",true)
       end
-  elseif coalition == 1 then
+  elseif coalition == 1 and self.coalition ~= 1 then
       if self:IsBlue() == true then
         self:FlipRed()
         local col = "Coalition"
@@ -1706,6 +1803,9 @@ BQ:AddBlueStatics({"BQBLOG"})
 BQ:AddRedSlots({"BQUH2","BQUH2-1","BQKA502","BQKA502-1"})
 BQ:AddBlueSlots({"BQUH1","BQUH1-1","BQKA501","BQKA501-1"})
 BQ:Startup()
+
+
+
 
 CQ = fob:New("CQ",SPAWN:New("red_CQ"),SPAWN:New("blue_CQ"),1)
 CQ:AddRedStatics({"CQRLOG"})

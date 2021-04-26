@@ -1100,6 +1100,26 @@ function markRemoved(Event,EC)
 	    elseif Event.text:lower():find("-lightbright") then
 		  coord.y = coord.y + 2000
           coord:IlluminationBomb(10000)
+		elseif Event.text:lower():find("-ctldfob") then
+          -- ctld drop.
+			if admin == true then
+			BASE:E({"attempting to spawn a fob"})
+			MESSAGE:New("Attempting to spawn a fob lets see if it breaks",30):ToAll()
+			local _unitId = ctld.getNextUnitId()
+			local _name = "ctld Deployed FOB #" .. _unitId
+			local _fob = nil
+			BASE:E({"ctld",text})
+			local keywords=_split(text,"|")
+			local s = keywords[2]
+			if (s == "blue") then
+				_fob = ctld.spawnFOB(2, 211, vec3, _name)
+			elseif (s == "red") then
+				_fob = ctld.spawnFOB(34, 211, vec3, _name)
+			else
+				_fob = ctld.spawnFOB(2, 211, vec3, _name)
+			end
+			table.insert(ctld.logisticUnits, _fob:getName())
+			end
         elseif Event.text:lower():find("-explode") then
           if admin == true then
             coord:Explosion(250)
