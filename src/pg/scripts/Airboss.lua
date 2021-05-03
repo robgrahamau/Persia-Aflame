@@ -1,7 +1,7 @@
 
 env.info("--------------Persia Aflame AIRBOSS CONTROLLER----------------------")
 env.info("--------------By Robert Graham for TGW -------------------")
-env.info("--------------LAST CHANGED IN VER: 0.69.00 -------------------")
+env.info("--------------LAST CHANGED IN VER: 1.26.00 -------------------")
 env.info("--------------USES MOOSE AND CTDL ------------------------")
 
 abossactive = true
@@ -80,7 +80,7 @@ if abossactive == true then
 	AirbossWash:SetPatrolAdInfinitum(true)
 	if washingtonactive == true then
 		AirbossWash:Start()
-		hm("Airboss is started for Washington, 118.45, 306, 25x, 5ICLS")
+		hm("Washington Airboss has been activated. \n > LSO is Now online on 118.45, Marshall 306 \n > TACAN 25x > ICLS 5 > RECOVERY PERIOD: 30 Minutes > Recovery Speed: 25 Knots")
 	else
 		CV_WASH = NAVYGROUP:New("Carrier Group 6a")
 		CV_WASH:SetPatrolAdInfinitum(true)
@@ -100,6 +100,7 @@ if abossactive == true then
 	AirbossTeddy:SetLSORadio(118.40)
 	AirbossTeddy:SetMarshalRadio(304)
 	AirbossTeddy:SetTACAN(53,"X","TED")
+	AirbossTeddy:SetBeaconRefresh(600)
 	AirbossTeddy:SetICLS(7,"RSE")
 	AirbossTeddy:SetAirbossNiceGuy(true)
 	AirbossTeddy:SetMenuRecovery(45,25,false,0)
@@ -128,6 +129,7 @@ if abossactive == true then
 	end
 	if teddyairboss == true then
 		AirbossTeddy:Start()
+		hm("TEDDY's Airboss has been activated. \n > LSO is Now online on 118.40, Marshall 304 \n > TACAN 53x > ICLS 7 > RECOVERY PERIOD: 45 Minutes > Recovery Speed: 20 Knots")
 		hm("Airboss is started for Teddy, 118.40, 304, 53x, 7ICLS")
 	else
 		CV_TDY= NAVYGROUP:New("Carrier Group 5")
@@ -158,7 +160,7 @@ if abossactive == true then
 		self:DeleteAllRecoveryWindows()
 	end
 	AirbossStennis:Start()
-	
+	hm("Back of the Bus (Stennis) Airboss has been activated. \n > LSO is Now online on 119.25, Marshall 305 \n > TACAN 35x > ICLS 3 > RECOVERY PERIOD: 30 Minutes > Recovery Speed: 25 Knots")
 	function AirbossStennis:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
 		myGrade.messageType = 2
 		myGrade.name = playerData.name

@@ -11,6 +11,8 @@ RED_I_SET = SET_STATIC:New()
 RED_A_SET = SET_STATIC:New()
 BLUE_CTLD_SET = SET_STATIC:New()
 RED_CTLD_SET = SET_STATIC:New()
+giveintel = false
+
 function no_farps()
   RED_NO_FARPS:Clear()
   RED_I_SET:Clear()
@@ -19,52 +21,52 @@ function no_farps()
   BLUE_CTLD_SET:Clear()
   BLUE_NO_FARPS:Clear()
   AIRBASE_STATICS:Clear()
-ALL_STATICS:ForEach(function (stat)
-  local _name = stat:GetName()
-  if AIRBASE:FindByName(_name) ~= nil then
-    AIRBASE_STATICS:AddStatic(stat)
-    --env.info(_name.." is a type of airbase, farp or oil rig")
-    --avoid these types of static, they are really airbases
-    else
-      if stat:GetCoalition() == 1 then
-        RED_NO_FARPS:AddStatic(stat)      
-        local prefix = "Iran"
-        local b = _name:find(prefix) == 1
-        if b == true then
-          RED_I_SET:AddStatic(stat)
-        end
-        prefix = "Army"
-        local b = _name:find(prefix) == 1
-        if b == true then
-          RED_A_SET:AddStatic(stat)
-        end
-        prefix = "CTLD"
-        local b = _name:find(prefix) == 1
-        if b == true then
-          RED_CTLD_SET:AddStatic(stat)
-        end
-        prefix = "ctld"
-        local b = _name:find(prefix) == 1
-        if b == true then
-          RED_CTLD_SET:AddStatic(stat)
-        end
-      else
-        BLUE_NO_FARPS:AddStatic(stat)
-        local prefix = "CTLD"
-        local b = _name:find(prefix) == 1
-        if b == true then
-          BLUE_CTLD_SET:AddStatic(stat)
-        end
-        prefix = "ctld"
-        local b = _name:find(prefix) == 1
-        if b == true then
-          BLUE_CTLD_SET:AddStatic(stat)
-        end     
-      end
-    end
+  ALL_STATICS:ForEach(function (stat)
+	local _name = stat:GetName()
+	if AIRBASE:FindByName(_name) ~= nil then
+		AIRBASE_STATICS:AddStatic(stat)
+		--env.info(_name.." is a type of airbase, farp or oil rig")
+		--avoid these types of static, they are really airbases
+		else
+			if stat:GetCoalition() == 1 then
+				RED_NO_FARPS:AddStatic(stat)      
+				local prefix = "Iran"
+				local b = _name:find(prefix) == 1
+				if b == true then
+					RED_I_SET:AddStatic(stat)
+				end
+				prefix = "Army"
+				local b = _name:find(prefix) == 1
+				if b == true then
+					RED_A_SET:AddStatic(stat)
+				end
+				prefix = "CTLD"
+				local b = _name:find(prefix) == 1
+				if b == true then
+					RED_CTLD_SET:AddStatic(stat)
+				end
+				prefix = "ctld"
+				local b = _name:find(prefix) == 1
+				if b == true then
+					RED_CTLD_SET:AddStatic(stat)
+				end
+			else
+				BLUE_NO_FARPS:AddStatic(stat)
+				local prefix = "CTLD"
+				local b = _name:find(prefix) == 1
+				if b == true then
+					BLUE_CTLD_SET:AddStatic(stat)
+				end
+				prefix = "ctld"
+				local b = _name:find(prefix) == 1
+				if b == true then
+					BLUE_CTLD_SET:AddStatic(stat)
+				end     
+			end
+		end
   end)
-
 end
+
 no_farps()
 
 
@@ -92,6 +94,7 @@ RED_EW_SET:ForEachGroupAlive(function(g)
   EW_INTEL[gid] = data
   EW_INTEL[gid].group = g
   EW_INTEL[gid].displayed = true
+  local co = g:GetCoordinate()
   if co ~= nil then
 	local co = g:GetCoordinate()
 	local lldm = co:ToStringLLDDM()
@@ -290,14 +293,18 @@ function markerremove()
 
 end
 
-SCHEDULER:New(nil,markerremove,{},300,300)
+if giveintel == true then
+	SCHEDULER:New(nil,markerremove,{},300,300)
+end
 SCHEDULER:New(nil,function() 
   no_farps()
   RED_I_SET = RED_NO_FARPS:FilterPrefixes("Iran"):FilterOnce()
   RED_A_SET = RED_NO_FARPS:FilterPrefixes("Army"):FilterOnce()
   RED_CTLD_SET = RED_NO_FARPS:FilterPrefixes("CTLD"):FilterOnce()
   BLUE_CTLD_SET = BLUE_NO_FARPS:FilterPrefixes("CTLD"):FilterOnce()
- end,{},120,120)
+ end,{},120,300)
+ 
+if giveintel == true then 
 SCHEDULER:New(nil,function() 
 BASE:E({"Intelligence Update in progress"})
 BASE:E({"Checking all Markers and updating markers"})
@@ -325,10 +332,10 @@ if inteltype == 1 or inteltype == 4 or inteltype == 5 then
           local mgrs = co:ToStringMGRS()
           BASE:E({"Get Group Type:",k.group:GetTypeName()})
           local threatlevel = k.group:GetThreatLevel()
-          local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected Surface to Air Installation \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
+          local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected a known Surface to Air Installation \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.group:GetName()] = text
-      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. '```')
+		  HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. ' threat level is: ' .. threatlevel ..'```')
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
@@ -351,7 +358,7 @@ if inteltype == 2 or inteltype == 4 or inteltype == 6 then
           local lldm = co:ToStringLLDDM()
           local llds = co:ToStringLLDMS()
           local mgrs = co:ToStringMGRS()
-          local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected Possible SCUD, ARTY or ARMY/GROUND Force Staging Area, NOTE: DATA MAY NOT BE ACCURATE IF UNITS HAVE MOVED. \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
+          local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected Possible Hostile Ground Force, NOTE: DATA MAY NOT BE ACCURATE IF UNITS HAVE MOVED. \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.group:GetName()] = text
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
@@ -497,3 +504,5 @@ else
 end
 mainmission.invasionchance = invasionchance
 end,{},30,((60*minutes) * hours))
+
+end

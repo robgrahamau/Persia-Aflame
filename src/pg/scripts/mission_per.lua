@@ -83,6 +83,9 @@ mainmission = {
   ['shipgroup1'] = true,
   ['shipgroup2'] = true,
   ['shipgroup3'] = true,
+  ['carrier5dead'] = false,
+  ['carrier6dead'] = false,
+  ['carrier6adead'] = false,
   ['SoldierUnitID'] = 12000,
   ['SoldierGroupID'] = 12000,
   ['bandarspawn'] = false,
@@ -174,7 +177,7 @@ end
 function loadvalues()
   if usenew == true then
     BASE:E({"Loading in values from mainmission to new sqns"})
-	HypeMan.sendBotMessage("Now loading main mission persistence data")
+  HypeMan.sendBotMessage("Now loading main mission persistence data")
     i30th:SetSqnCount(mainmission.i30th)
     i30th_1:SetSqnCount(mainmission.i30th_1)
     i30th_2:SetSqnCount(mainmission.i30th_2)
@@ -240,40 +243,83 @@ function loadvalues()
   end
   if mainmission.shipgroup1 == true then
     local temp = GROUP:FindByName("Kuznetsov Group"):Activate()
+  else
+  hm("** WARNING KUZNETSOV GROUP WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
   end
+  if mainmission.carrier5dead == nil then
+	mainmission.carrier5dead = false
+	mainmission.carrier6dead = false
+	mainmission.carrier6adead = false  
+  end
+  if mainmission.carrier5dead == true then
+	local cg5 = GROUP:FindByName("Carrier Group 5")
+	cg5:Destroy()
+	hm("** WARNING CARRIER GROUP 5 USS Theodore Rosevelte WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
+	ShellTeddy:Stop()
+	if useawacs == true then
+		awacsTeddy:Stop()
+	end
+	if abossactive == true then
+		AirbossTeddy:Stop()
+	end
+  end
+  if mainmission.carrier6dead == true then
+	local cg6 = GROUP:FindByName("Carrier Group 6")
+	cg6:Destroy()
+	hm("** WARNING CARRIER GROUP 6 USS Stennis WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
+	if abossactive  == true then
+		AirbossStennis:Stop()
+	end
+	ShellStennis:Stop()
+	if useawacs == true then
+		awacsStennis:Stop()
+	end
+  end
+  if mainmission.carrier6adead == true then
+	local cg6 = GROUP:FindByName("Carrier Group 6a")
+	cg6:Destroy()
+	if abossactive  == true then
+		if washingtonactive == true then
+			AirbossWash:Stop()
+		end
+	end
+	hm("** WARNING CARRIER GROUP 6a USS Washington WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
+  end
+  
+  
   mainmission.shipgroup3 = false
   if mainmission.SoldierUnitID == nil then
-	BASE:E({"SoldierUnitID was nil"})
-	SoldierGroupID = 12000
-	SoldierUnitID = 12000
+  BASE:E({"SoldierUnitID was nil"})
+  SoldierGroupID = 12000
+  SoldierUnitID = 12000
  else 
-	SoldierUnitID = mainmission.SoldierUnitID
-	SoldierGroupID = mainmission.SoldierGroupID
+  SoldierUnitID = mainmission.SoldierUnitID
+  SoldierGroupID = mainmission.SoldierGroupID
   end
   if mainmission.bandarspawn == nil then
-	bandarspawn = false
-	tunbspawn = false
-	sirrispawn = false
-	lavanspawn = false
-	khasabspawn = false
-	larsspawn = false
-	kishspawn = false
-	qeshmspawn = false
-	abunspawn = false
-	havspawn = false
-	bandarlspawn = false
+  bandarspawn = false
+  tunbspawn = false
+  sirrispawn = false
+  lavanspawn = false
+  khasabspawn = false
+  larsspawn = false
+  kishspawn = false
+  qeshmspawn = false
+  abunspawn = false
+  havspawn = false
+  bandarlspawn = false
   else
-	bandarspawn = mainmission.bandarlspawn
-	tunbspawn = mainmission.tunbspawn
-	sirrispawn = mainmission.sirrispawn
-	lavanspawn = mainmission.lavanspawn
-	khasabspawn = mainmission.khasabspawn
-	larsspawn = mainmission.larsspawn
-	kishspawn = mainmission.kishspawn
-	qeshmspawn = mainmission.qeshmspawn
-	abunspawn = mainmission.abunspawn
-	havspawn = mainmission.havspawn
-	bandarlspawn = mainmission.bandarlspawn
+  bandarspawn = mainmission.bandarlspawn
+  tunbspawn = mainmission.tunbspawn
+  sirrispawn = mainmission.sirrispawn
+  lavanspawn = mainmission.lavanspawn
+  khasabspawn = mainmission.khasabspawn
+  larsspawn = mainmission.larsspawn
+  kishspawn = mainmission.kishspawn
+  qeshmspawn = mainmission.qeshmspawn
+  abunspawn = mainmission.abunspawn
+  havspawn = mainmission.havspawn
+  bandarlspawn = mainmission.bandarlspawn
   end
 end
 --SCRIPT START
@@ -348,7 +394,73 @@ function updatesqn(s,size,am,mm)
     logoutput(s.sqnname,o,c)
   end
 end
+function CheckCarriers()
 
+if allowrespawn ~= false then
+  if mainmission.carrier5dead == true then
+    local r = math.random(1,100)
+    if r > 75 then
+      BASE:E({"r was higher then 75 for Teddy"})
+      mainmission.carrier5dead = false
+      MESSAGE:New("Command reports a repaired Teddy has returned to the AO",15):ToBlue()
+      hm("** US COALITION COMMAND REPORTS A REPAIRED TEDDY HAS RETURNED TO THE AO**")
+      local cg = GROUP:FindByName("Carrier Group 5")
+      cg:OnReSpawn(function(group) 
+        if abossactive  == true then
+          AirbossTeddy:Start()
+        end
+        ShellTeddy:Start()
+        if useawacs == true then
+          awacsTeddy:Start()
+        end
+      end)
+      cg:Respawn()
+      BASE:E({"Teddy Should be respawned"})
+    end
+  end
+  
+  if mainmission.carrier6dead == true then
+    local r = math.random(1,100)
+    if r > 75 then
+      BASE:E({"r was higher then 75 for Stennis"})
+      mainmission.carrier6dead = false
+      MESSAGE:New("Command reports a repaired Stennis has arrived in the AO",15):ToBlue()
+      hm("** US COALITION COMMAND REPORTS A REPAIRED STENNIS HAS RETURNED TO THE AO**")
+      local cg = GROUP:FindByName("Carrier Group 6")
+      cg:OnReSpawn(function(group) 
+        if abossactive  == true then
+          AirbossStennis:Start()
+        end
+        ShellStennis:Start()
+        if useawacs == true then
+          awacsStennis:Start()
+        end
+      end)
+      cg:Respawn()
+      BASE:E({"Stennis Should be respawned"})
+    end
+  end
+  
+  if mainmission.carrier6adead == true then
+    local r = math.random(1,100)
+      if r > 75 then
+        BASE:E({"R was higher then 75 for Washington"})
+        mainmission.carrier6adead = false
+        MESSAGE:New("Command reports a repaired Washington has arrived in the AO",15):ToBlue()
+        hm("** US COALITION COMMAND REPORTS A REPAIRED WASHINGTON HAS RETURNED TO THE AO**")
+        local cg = GROUP:FindByName("Carrier Group 6a")
+        cg:OnReSpawn(function(group) 
+        if abossactive  == true then
+          AirbossWash:Start()
+        end
+      end)
+      cg:Respawn()
+      BASE:E({"Wash Should be respawned"})
+      end
+    end
+end
+
+end
 
 function reinforce()
    if os ~= nil then
@@ -586,15 +698,15 @@ function reinforce()
       ra2disp:SetSquadron("Kuznetsov INT","Kuznetsov",{"SU33_1","SU33_2"},newval)
     end
    if mainmission.Stennis < 18 then
-  if mainmission.Stennis < 0 then
+    if mainmission.Stennis < 0 then
           mainmission.Stennis = 0
     end 
     local newval = mainmission.Stennis + math.random(minreinf,maxreinf)
     if newval > 18 then
       newval = 18
     end
-     ba2disp:SetSquadron("Stennis","Stennis",BCarrierTEMP,newval)
-   end
+    ba2disp:SetSquadron("Stennis","Stennis",BCarrierTEMP,newval)
+  end
    if mainmission.TeddyR < 18 then
     if mainmission.TeddyR < 0 then
           mainmission.TeddyR = 0
@@ -616,8 +728,7 @@ function reinforce()
       ba2disp:SetSquadron("Al Draf",AIRBASE.PersianGulf.Al_Dhafra_AB,BLandTemp,newval)
     end
   end
-  
-  
+  CheckCarriers()
   
   mainmission.nextupdate = mnowTime + reinforcements
   mainmission.lastupdatehour = mnowHour
@@ -703,6 +814,29 @@ function updatevalues()
   mainmission.abunspawn = abunspawn
   mainmission.havspawn = havspawn
   mainmission.bandarlspawn = bandarlspawn
+  BASE:E({"updating carrier values",mainmission.carrier5dead,mainmission.carrier6dead,mainmission.carrier6adead})
+  if mainmission.carrier5dead == false then
+    local cg5 = GROUP:FindByName("Carrier Group 5")
+      if cg5:IsAlive() ~= true then
+        mainmission.carrier5dead = true
+      end
+   end
+  
+  
+  if mainmission.carrier6dead == false then
+    local cg6 = GROUP:FindByName("Carrier Group 6")
+      if cg6:IsAlive() ~= true then
+        mainmission.carrier6dead = true
+      end
+   end
+  
+  
+  if mainmission.carrier6adead == false then
+    local cg6a = GROUP:FindByName("Carrier Group 6a")
+      if cg6a:IsAlive() ~= true then
+        mainmission.carrier6adead = true
+      end
+   end
   
   BASE:E({"Values updated"})
 end

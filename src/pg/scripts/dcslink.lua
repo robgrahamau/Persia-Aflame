@@ -25,7 +25,7 @@ do
     local function log(msg)
         env.info("DCS-TCP Link (t=" .. timer.getTime() .. "): " .. msg)
     end
-	fobs = true
+  fobs = true
     -- make the stuff that doesn't need to be run 'every' time.
     local clientset = SET_CLIENT:New():FilterActive(true):FilterStart()
     local redclients = clientset:FilterCoalitions("red")
@@ -87,24 +87,24 @@ do
       }
       payload.missiondata = curmisdata -- update our data.
       local function updatemarkers()
-		local makers = world.getMarkPanels()
-		for k, v in pairs(makers) do
-		local lat,lon,alt = coord.LOtoLL(v.pos)
-		latlonmarker = {
-			["coalition"]= v.coalition,
-			["idx"] = v.idx,
-			["time"] = v.time,
-			["author"] = v.author,
-			["text"] = v.text,
-			["groupID"] = v.groupID,
-			["lat"] = lat,
-			["lon"] = lon,
-			["alt"] = alt,
-		}
-		table.insert(payload.markers,latlonmarker)
-		end
-	  end
-	  updatemarkers()
+    local makers = world.getMarkPanels()
+    for k, v in pairs(makers) do
+    local lat,lon,alt = coord.LOtoLL(v.pos)
+    latlonmarker = {
+      ["coalition"]= v.coalition,
+      ["idx"] = v.idx,
+      ["time"] = v.time,
+      ["author"] = v.author,
+      ["text"] = v.text,
+      ["groupID"] = v.groupID,
+      ["lat"] = lat,
+      ["lon"] = lon,
+      ["alt"] = alt,
+    }
+    table.insert(payload.markers,latlonmarker)
+    end
+    end
+    updatemarkers()
       local function updateintel(g,type)
         local co = g:GetCoordinate()
         local lat, lon, alt = coord.LOtoLL(co:GetVec3())
@@ -218,10 +218,10 @@ do
         cacheDB[unitID] = {}
         
         local mooseunit = UNIT:Find(unit) -- this needs to be here moron so that the units actually ALIVE when we request it
-		if mooseunit == nil then
-			BASE:E({"moose unit was nil",unit})
-			return
-		end
+    if mooseunit == nil then
+      BASE:E({"moose unit was nil",unit})
+      return
+    end
         cacheDB[unitID].lat = lat
         cacheDB[unitID].lon = lon
         cacheDB[unitID].alt = alt
@@ -345,7 +345,6 @@ do
   -- starts a client, 
     local client
     local function step()
-
         if not client then
             tcp:settimeout(0.001)
             client = tcp:accept()
@@ -355,27 +354,39 @@ do
                 log("Connection established")
             end
         end
-
- 
         if client then
             local msg = JSON:encode(getDataMessage()).."\n"
             --env.info(msg)
             local bytes, status, lastbyte = client:send(msg)
             if not bytes then
                 log("Connection lost")
-        cacheDB = {} -- clean out the cache we'll need to resend it because chances are the servers reset.
+                cacheDB = {} -- clean out the cache we'll need to resend it because chances are the servers reset.
                 client = nil
             end
+            local line, err = client:receive()
+            if err then
+              env.info("DCS LINK: read error: "..err)
+            else
+              env.info("DCS LINK: received data: ".. line)
+              msg = JSON:decode(line)
+              if msg then 
+                if msg.command == "status" then
+                  env.info("status command")      
+                end
+              elseif msg.command == "order" then
+                env.info("order")
+              end
+          end
         end
     end
 
     timer.scheduleFunction(function(arg, time)
-		if linkactive == true then
-			local success, error = pcall(step)
-			if not success then
-				log("Error: " .. error)
-			end
-			return timer.getTime() + DATA_TIMEOUT_SEC
-		end
-	end, nil, timer.getTime() + DATA_TIMEOUT_SEC)
+    if linkactive == true then
+      local success, error = pcall(step)
+      if not success then
+        log("Error: " .. error)
+      end
+      return timer.getTime() + DATA_TIMEOUT_SEC
+    end
+  end, nil, timer.getTime() + DATA_TIMEOUT_SEC)
 end

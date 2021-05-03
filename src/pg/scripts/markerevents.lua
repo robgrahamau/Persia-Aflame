@@ -1,5 +1,3 @@
-
-
 function _split(str, sep)
   BASE:E({str=str, sep=sep})  
   local result = {}
@@ -11,7 +9,7 @@ function _split(str, sep)
 end
 
 admin = false
-password = "fuck"
+password = "yeahnahyoudontneedtoknowthisanditsnotfuckseither."
 adminspawned = {} 
 SupportHandler = EVENTHANDLER:New()
 
@@ -173,7 +171,7 @@ local function handleWeatherRequest(text, coord, red)
     local currentPressure = coord:GetPressure(0)
     local currentTemperature = coord:GetTemperature()
     local currentWindDirection, currentWindStrengh = coord:GetWind()
-	local currentWindDirection1a, currentWindStrength1a = coord:GetWind(UTILS.FeetToMeters(500))
+  local currentWindDirection1a, currentWindStrength1a = coord:GetWind(UTILS.FeetToMeters(500))
     local currentWindDirection1, currentWindStrength1 = coord:GetWind(UTILS.FeetToMeters(1000))
     local currentWindDirection2, currentWindStrength2 = coord:GetWind(UTILS.FeetToMeters(2000))
     local currentWindDirection5, currentWindStrength5 = coord:GetWind(UTILS.FeetToMeters(5000))
@@ -181,25 +179,25 @@ local function handleWeatherRequest(text, coord, red)
     local weatherString = string.format("Requested weather: Wind from %d@%.1fkts, QNH %.2f, Temperature %d", currentWindDirection, UTILS.MpsToKnots(currentWindStrengh), currentPressure * 0.0295299830714, currentTemperature)
     local weatherString1 = string.format("Wind 500ft MSL: Wind from%d@%.1fkts",currentWindDirection1, UTILS.MpsToKnots(currentWindStrength1a))
     local weatherString2a = string.format("Wind 1,000ft MSL: Wind from%d@%.1fkts",currentWindDirection2, UTILS.MpsToKnots(currentWindStrength1))
-	local weatherString2 = string.format("Wind 2,000ft MSL: Wind from%d@%.1fkts",currentWindDirection2, UTILS.MpsToKnots(currentWindStrength2))
+  local weatherString2 = string.format("Wind 2,000ft MSL: Wind from%d@%.1fkts",currentWindDirection2, UTILS.MpsToKnots(currentWindStrength2))
     local weatherString5 = string.format("Wind 5,000ft MSL: Wind from%d@%.1fkts",currentWindDirection5, UTILS.MpsToKnots(currentWindStrength5))
     local weatherString10 = string.format("Wind 10,000ft MSL: Wind from%d@%.1fkts",currentWindDirection10, UTILS.MpsToKnots(currentWindStrength10))
     if red == false then
     MESSAGE:New(weatherString, 30, MESSAGE.Type.Information):ToBlue()
-	MESSAGE:New(weatherString2a, 30, MESSAGE.Type.Information):ToBlue()
+  MESSAGE:New(weatherString2a, 30, MESSAGE.Type.Information):ToBlue()
     MESSAGE:New(weatherString1, 30, MESSAGE.Type.Information):ToBlue()
     MESSAGE:New(weatherString2, 30, MESSAGE.Type.Information):ToBlue()
     MESSAGE:New(weatherString5, 30, MESSAGE.Type.Information):ToBlue()
     MESSAGE:New(weatherString10, 30, MESSAGE.Type.Information):ToBlue()
-	HypeMan.sendBotMessage('$SERVERNAME - Weather Requested \n ' .. weatherString .. '\n' .. weatherString1 .. '\n' .. weatherString2 .. '\n' .. weatherString5 .. '\n' .. weatherString10 .. '\n')
+  HypeMan.sendBotMessage('$SERVERNAME - Weather Requested \n ' .. weatherString .. '\n' .. weatherString1 .. '\n' .. weatherString2 .. '\n' .. weatherString5 .. '\n' .. weatherString10 .. '\n')
     else
     MESSAGE:New(weatherString, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString1, 30, MESSAGE.Type.Information):ToRed()
-	MESSAGE:New(weatherString2a, 30, MESSAGE.Type.Information):ToRed()
+  MESSAGE:New(weatherString2a, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString2, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString5, 30, MESSAGE.Type.Information):ToRed()
     MESSAGE:New(weatherString10, 30, MESSAGE.Type.Information):ToRed()
-	HypeMan.sendBotMessage('$SERVERNAME - Weather Requested \n ' .. weatherString .. '\n' .. weatherString1 .. '\n' .. weatherString2 .. '\n' .. weatherString5 .. '\n' .. weatherString10 .. '\n')
+  HypeMan.sendBotMessage('$SERVERNAME - Weather Requested \n ' .. weatherString .. '\n' .. weatherString1 .. '\n' .. weatherString2 .. '\n' .. weatherString5 .. '\n' .. weatherString10 .. '\n')
     end
 end
 
@@ -237,11 +235,82 @@ local function rhandleeadmin(text)
    end
    if admin == true then
      BASE:E({"ADMIN ENABLED"})
-	 --MESSAGE:New("Admin Commands are Now Enabled",15):ToAll()
+   --MESSAGE:New("Admin Commands are Now Enabled",15):ToAll()
    else
-	BASE:E({"ADMIN DISABLED"})
+  BASE:E({"ADMIN DISABLED"})
      --MESSAGE:New("Admin Commands are Disabled",15):ToAll()
    end
+end
+local function newhandlespawn(text,coord)
+  BASE:E({"Spawn Request",text,coord})
+  local keywords=_split(text, ",")
+  local unit = nil
+  local name = nil
+  local heading = nil
+  local uheading = nil
+  local side = 1
+  local ran = false
+  for _,keyphrase in pairs(keywords) do
+   local str=_split(keyphrase, " ")
+	local key=str[1]
+    local val=str[2]
+  if key:lower():find("u") then
+    unit = val
+  elseif key:lower():find("n") then
+    name = val
+  elseif key:lower():find("h") then
+    heading = tonumber(val)
+   elseif key:lower():find("uh") then
+    uheading = tonumber(val)
+  elseif key:lower():find("r") then
+    if val:lower() == "true" then
+      ran = true 
+    else
+      ran = false
+    end
+  elseif key:lower():find("s") then
+    if val:lower()  == "blue" then
+      side = 2
+    else
+      side = 1
+    end
+   end
+  end
+  local sp = nil
+  if (name ~= nil) and (unit ~= nil) then
+    local tempgroup = GROUP:FindByName(unit)
+    if tempgroup ~= nil then
+      if side == 1 then
+        sp = SPAWN:NewWithAlias(unit,"IAA " .. name):InitCountry(34)
+      else
+        sp = SPAWN:NewWithAlias(unit,"GM_USAA " .. name):InitCountry(2)
+      end
+      if ran == true then
+        sp:InitRandomizeUnits(true,150,400)
+      end
+      if heading ~= nil then
+        BASE:E({"HEADING ACTUALLY WAS NOT NIL WAS",heading})
+        sp:InitGroupHeading(heading)
+      else
+        BASE:E({"HEADING ACTUALLY WAS NIL WAS",heading})
+      end
+	  if uheading ~= nil then
+        BASE:E({"UNIT HEADING ACTUALLY WAS NOT NIL WAS",heading})
+        sp:InitHeading(heading)
+      else
+        BASE:E({"UNIT HEADING ACTUALLY WAS NIL WAS",heading})
+      end
+      BASE:E({"Spawning:",u,side,ran,heading})
+      sp = sp:SpawnFromCoordinate(coord)
+      table.insert(adminspawned,sp)
+    else
+      MESSAGE:New("Unable to spawn requested group, template group does not exist",15):ToAll()
+      BASE:E({"Unable to spawn group:",unit})
+    end
+  else
+    BASE:E({"Name was Nil! or unit was nil",unit,name})
+    MESSAGE:New("unable to spawn requested group as you left out information",15):ToAll()
+  end
 end
 
 local function handlespawn(text,coord)
@@ -414,7 +483,7 @@ local function handlespawn(text,coord)
       su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
-    table.insert(adminspawned,su)	
+    table.insert(adminspawned,su) 
   elseif unit == "rsam" then
     local su = SPAWN:NewWithAlias("GM_SA10","IAA SAM " .. name)
     if random == true then
@@ -585,7 +654,7 @@ local function handlespawn(text,coord)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
-	elseif unit == "bjtac" then
+  elseif unit == "bjtac" then
     local su = SPAWN:NewWithAlias("GM_JTAC","GM_USAA " .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
@@ -595,7 +664,7 @@ local function handlespawn(text,coord)
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
-  	elseif unit == "bfac" then
+    elseif unit == "bfac" then
     local su = SPAWN:NewWithAlias("GM_BFAC","GM_USAA " .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
@@ -804,7 +873,7 @@ elseif unit == "barmour2" then
       su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
-    table.insert(adminspawned,su)	
+    table.insert(adminspawned,su) 
   elseif unit == "ba10" then
     local su = SPAWN:NewWithAlias("GM_A10","GM_USAA " .. name)
     if random == true then
@@ -864,8 +933,8 @@ elseif unit == "barmour2" then
       su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
-    table.insert(adminspawned,su)	
-	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+    table.insert(adminspawned,su) 
+  local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
     ctld.JTACAutoLase("GM_USAA " .. name, _code) 
@@ -878,8 +947,8 @@ elseif unit == "barmour2" then
       su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
-    table.insert(adminspawned,su)	
-	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+    table.insert(adminspawned,su) 
+  local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
     ctld.JTACAutoLase("GM_IAA " .. name, _code) 
@@ -892,8 +961,8 @@ elseif unit == "barmour2" then
       su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
-    table.insert(adminspawned,su)	
-	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+    table.insert(adminspawned,su) 
+  local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
     ctld.JTACAutoLase("GM_USAA " .. name, _code) 
@@ -906,8 +975,8 @@ elseif unit == "barmour2" then
       su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
-    table.insert(adminspawned,su)	
-	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+    table.insert(adminspawned,su) 
+  local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
     ctld.JTACAutoLase("GM_IAA " .. name, _code) 
@@ -970,8 +1039,8 @@ elseif unit == "barmour2" then
       su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
-    table.insert(adminspawned,su)	
-	elseif unit == "il74" then
+    table.insert(adminspawned,su) 
+  elseif unit == "il74" then
     local su = SPAWN:NewWithAlias("GM_IL76","GM_USAA " .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
@@ -980,7 +1049,7 @@ elseif unit == "barmour2" then
       su:InitGroupHeading(heading)
     end
     su = su:SpawnFromCoordinate(coord)
-    table.insert(adminspawned,su)	
+    table.insert(adminspawned,su) 
   else
     MESSAGE:New("Banner: I tried Tony, I really tried...",10):ToAll()
   end
@@ -988,49 +1057,6 @@ end
 
 
 
-local function newhandlespawn(text,coord)
-  BASE:E({"Spawn Request",text,coord})
-  local keywords=_split(text, ",")
-  local unit = nil
-  local name = nil
-  local heading = nil
-  local random = false
-  for _,keyphrase in pairs(keywords) do
-    local str=_split(keyphrase, " ")
-    local key=str[1]
-    local val=str[2]
-    -- BASE:E(string.format("%s, keyphrase = %s, key = %s, val = %s", "route", tostring(keyphrase), tostring(key), tostring(val)))
-    if key:lower():find("u") then
-      unit = val
-    elseif key:lower():find("n") then
-      name = val
-    elseif key:lower():find("h") then
-      heading = tonumber(val)
-    elseif key:lower():find("r") then
-      if val:lower() == "true" then
-        random = true
-      else
-        random = false
-      end  
-    end
-  end
-  if unit ~= nil and name ~= nil  then
-	local su = SPAWN:NewWithAlias(unit, "GM_USAA " .. name)
-	if random == true then
-      su:InitRandomizeUnits(true,150,400)
-    end
-	if heading ~= nil then
-      BASE:E({"HEADING ACTUALLY WAS NOT NIL WAS",heading})
-      su:InitHeading(heading)
-    else
-    BASE:E({"HEADING ACTUALLY WAS NIL WAS",heading})
-    end
-    su = su:SpawnFromCoordinate(coord)
-    table.insert(adminspawned,su)
-  else
-    MESSAGE:New("Banner: I tried Tony, I really tried...",10):ToAll()
-  end
-end
 
 local function handledespawn(text)
   BASE:E({"DeSpawn Request",text})
@@ -1053,12 +1079,12 @@ local function handledespawn(text)
 end
 
 local function msgtoall(text)
-	BASE:E({"Msg to all",text})
-	local keywords=_split(text,"|")
-	msg = keywords[2]
-	if msg ~= nil then
-		MESSAGE:New(msg,15):ToAll()
-	end
+  BASE:E({"Msg to all",text})
+  local keywords=_split(text,"|")
+  msg = keywords[2]
+  if msg ~= nil then
+    MESSAGE:New(msg,15):ToAll()
+  end
 end
 function markRemoved(Event,EC)
     if Event.text~=nil and Event.text:lower():find("-") then 
@@ -1095,11 +1121,31 @@ function markRemoved(Event,EC)
             coord:FlareRed(math.random(0,20))
           end,{},30)
         elseif Event.text:lower():find("-light") then
-		  coord.y = coord.y + 1500
+      coord.y = coord.y + 1500
           coord:IlluminationBomb(1000)
-	    elseif Event.text:lower():find("-lightbright") then
-		  coord.y = coord.y + 2000
+      elseif Event.text:lower():find("-lightbright") then
+      coord.y = coord.y + 2000
           coord:IlluminationBomb(10000)
+    elseif Event.text:lower():find("-ctldfob") then
+          -- ctld drop.
+      if admin == true then
+      BASE:E({"attempting to spawn a fob"})
+      MESSAGE:New("Attempting to spawn a fob lets see if it breaks",30):ToAll()
+      local _unitId = ctld.getNextUnitId()
+      local _name = "ctld Deployed FOB #" .. _unitId
+      local _fob = nil
+      BASE:E({"ctld",text})
+      local keywords=_split(text,"|")
+      local s = keywords[2]
+      if (s == "blue") then
+        _fob = ctld.spawnFOB(2, 211, vec3, _name)
+      elseif (s == "red") then
+        _fob = ctld.spawnFOB(34, 211, vec3, _name)
+      else
+        _fob = ctld.spawnFOB(2, 211, vec3, _name)
+      end
+      table.insert(ctld.logisticUnits, _fob:getName())
+      end
         elseif Event.text:lower():find("-explode") then
           if admin == true then
             coord:Explosion(250)
@@ -1122,21 +1168,21 @@ function markRemoved(Event,EC)
           end
         elseif Event.text:lower():find("-admin") then
           handleeadmin(text)
-		elseif Event.text:lower():find("-radmin") then
+    elseif Event.text:lower():find("-radmin") then
           rhandleeadmin(text)
         elseif Event.text:lower():find("-spawn") then
           if admin == true then
-            handlespawn(text,coord)
+            handlespawn(text2,coord)
           else
             MESSAGE:New("Admin Commands need to be active to spawn new units",15):ToAll()
           end
-		elseif Event.text:lower():find("-rspawn") then
+    elseif Event.text:lower():find("-rspawn") then
           if admin == true then
-            newhandlespawn(text,coord)
+            newhandlespawn(text2,coord)
           else
             MESSAGE:New("Admin Commands need to be active to spawn new units",15):ToAll()
           end
-		elseif Event.text:lower():find("-load") then
+    elseif Event.text:lower():find("-load") then
           if admin == true then
             dofile(lfs.writedir() .."pg\\input.lua")
           else
@@ -1148,7 +1194,7 @@ function markRemoved(Event,EC)
           else
             MESSAGE:New("Admin Commands need to be active to despawn units",15):ToAll()
           end
-		elseif Event.text:lower():find("-msgall") then
+    elseif Event.text:lower():find("-msgall") then
           if admin == true then
             msgtoall(text2)
           else
@@ -1172,4 +1218,3 @@ end
 
 
 world.addEventHandler(SupportHandler)
-

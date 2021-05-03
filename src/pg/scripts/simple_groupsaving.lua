@@ -33,7 +33,7 @@ resetall = 0
  -----------------------------------
  --Configurable for user:
  local SaveScheduleUnits=600 --how many seconds between each check of all the Units.
- AllGroups = SET_GROUP:New():FilterCategories("ground"):FilterPrefixes({"RSAM","REW","SCUD","BSAM","USEW","AAA","RDEF",}):FilterActive(true):FilterStart()
+ AllGroups = SET_GROUP:New():FilterCategories("ground"):FilterPrefixes({"RSAM","REW","SCUD","BSAM","USEW","AAA","RDEF","Iran Ammo"}):FilterActive(true):FilterStart()
  local savefilename = "pg_groups.lua"
  
 local savefile = lfs.writedir() .."pg\\" .. savefilename

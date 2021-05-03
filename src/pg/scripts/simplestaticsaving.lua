@@ -122,7 +122,19 @@ function writemission(data, file)--Function for saving to file (commonly found)
 end
 
 function Alive(grp)
-if grp:IsAlive() then return false else return true end
+	if STATIC:FindByName(grp:GetName()) == nil then
+		return false
+	else
+		if grp:IsAlive() ~= nil then 
+			if grp:IsAlive() == true then
+				return true
+			else 
+				return false
+			end
+		else
+			return false
+		end
+	end
 end
 
 function rngsmokes(coordinate)
@@ -144,7 +156,7 @@ if file_exists(savefile) then
   BASE:E({"Pikeys Simple static do file done",SaveStatics})
   --This version uses Destroy()
   Allstatics:ForEach(function (grp)
-  BASE:E({"for each entered",grp,grp:GetName()})
+	BASE:E({"for each entered",grp,grp:GetName()})
   if SaveStatics[grp:GetName()]["dead"]==true then
     BASE:E({"attempting to get coord for Static",grp:GetName()})
     local coord = grp:GetCoordinate()

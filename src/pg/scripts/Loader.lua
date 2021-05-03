@@ -1,3 +1,9 @@
+
+carrier5dead = false
+carrier6dead = false
+carrier6adead = false
+kuzremoved = false
+
 env.info("Persia Aflame Loader")
 env.info("Mission by Robert Graham")
 env.info("Mission Script Loader Active")
@@ -40,8 +46,8 @@ dofile(lfs.writedir() .. [[pg\scripts\simplestaticsaving.lua]])
 hm("> Persia Aflame simple_scenery_persistence.lua")
 dofile(lfs.writedir() .. [[pg\scripts\simple_scenery_persistence.lua]])
 hm("> Persia Aflame ctld_static_save.lua")
-dofile(lfs.writedir() .. [[pg\scripts\ctld_static_save.lua]])
-hm("> Persia Aflame simple_mpadgroupsaving.lua")
+--dofile(lfs.writedir() .. [[pg\scripts\ctld_static_save.lua]])
+--hm("> Persia Aflame simple_mpadgroupsaving.lua")
 dofile(lfs.writedir() .. [[pg\scripts\simple_mpadgroupsaving.lua]])
 hm("> Persia Aflame simple_hercgroupsaving.lua")
 dofile(lfs.writedir() .. [[pg\scripts\simple_hercgroupsaving.lua]])
@@ -68,3 +74,46 @@ hm("> Persia Aflame client.lua")
 dofile(lfs.writedir() .. [[pg\scripts\client.lua]])
 hm("> Persia Falme: ALL SCRIPTS LOADED, HAVE A GOOD 8 HRS.")
 hm("=============================================")
+--[[
+if kuzremoved == true then
+	local kuz = GROUP:FindByName("Kuznetsov Group")
+	kuz:Destroy()
+	hm("** WARNING KUZNETSOV GROUP WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
+end
+if carrier5dead == true then
+	local cg5 = GROUP:FindByName("Carrier Group 5")
+	cg5:Destroy()
+	hm("** WARNING CARRIER GROUP 5 USS Theodore Rosevelte WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
+	ShellTeddy:Stop()
+	if useawacs == true then
+		awacsTeddy:Stop()
+	end
+	if abossactive == true then
+		AirbossTeddy:Stop()
+	end
+end
+
+if carrier6dead == true then
+	local cg6 = GROUP:FindByName("Carrier Group 6")
+	cg6:Destroy()
+	hm("** WARNING CARRIER GROUP 6 USS Stennis WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
+	if abossactive  == true then
+		AirbossStennis:Stop()
+	end
+	ShellStennis:Stop()
+	if useawacs == true then
+		awacsStennis:Stop()
+	end
+end
+
+if carrier6adead == true then
+	local cg6 = GROUP:FindByName("Carrier Group 6a")
+	cg6:Destroy()
+	if abossactive  == true then
+		if washingtonactive == true then
+			AirbossWash:Stop()
+		end
+	end
+	hm("** WARNING CARRIER GROUP 6a USS Washington WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
+end
+]]

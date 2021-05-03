@@ -10,15 +10,15 @@ ARC2_Timer = 0
   end
 do
 Texaco11 = GROUP:FindByName("Texaco 11")
-Texaco11Spawn = SPAWN:New("Texaco 11"):InitLimit(1,4):OnSpawnGroup(function(spawngroup) 
+Texaco11Spawn = SPAWN:New("Texaco 11"):InitLimit(1,3):OnSpawnGroup(function(spawngroup) 
   Texaco = spawngroup
 end,{}):InitRepeatOnLanding():InitCleanUp(600):SpawnScheduled(1800,0.5)
 Texaco21 = GROUP:FindByName("Texaco 21")
-Texaco21Spawn = SPAWN:New("Texaco 21"):InitLimit(1,4):OnSpawnGroup(function(spawngroup) 
+Texaco21Spawn = SPAWN:New("Texaco 21"):InitLimit(1,3):OnSpawnGroup(function(spawngroup) 
   Texaco21 = spawngroup
 end,{}):InitRepeatOnLanding():InitCleanUp(600):SpawnScheduled(1800,0.5)
 Arco11 = GROUP:FindByName("Arco 11")
-Arco11Spawn = SPAWN:New("Arco 11"):InitLimit(1,4):OnSpawnGroup(function(spawngroup) 
+Arco11Spawn = SPAWN:New("Arco 11"):InitLimit(1,3):OnSpawnGroup(function(spawngroup) 
   Arco11 = spawngroup
 end,{}):InitRepeatOnLanding():InitCleanUp(600):SpawnScheduled(1800,0.5)
 Shell21 = GROUP:FindByName("Shell21")
@@ -45,7 +45,7 @@ OverlordSpawn = SPAWN:NewWithAlias("USEW Overlord","USEW Overlord11"):InitKeepUn
   MESSAGE:New("Overlord is warming up for Take off",15):ToBlue()
   BASE:E({"respawned Overlord unit name is:",tunit:GetName()})
   hm("> Overlord Crew has arrived at Aircraft: ".. tunit:GetName() .." ")
-end,{}):InitRepeatOnLanding():InitLimit(1,4):InitCleanUp(600):SpawnScheduled(1800,0.5)
+end,{}):InitRepeatOnLanding():InitLimit(1,2):InitCleanUp(600):SpawnScheduled(1800,0.5)
 
 USMagic = GROUP:FindByName("USEW Overlord")
 USMagicSpawn = SPAWN:NewWithAlias("USEW Magic","USEW Magic11"):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
@@ -56,7 +56,7 @@ USMagicSpawn = SPAWN:NewWithAlias("USEW Magic","USEW Magic11"):InitKeepUnitNames
   MESSAGE:New("Magic is warming up for Take off",15):ToBlue()
   BASE:E({"respawned USMagic unit name is:",tunit:GetName()})
   hm("> Magic Crew has arrived at Aircraft: ".. tunit:GetName() .." ")
-end,{}):InitRepeatOnLanding():InitLimit(1,4):InitCleanUp(600):SpawnScheduled(1800,0.5)
+end,{}):InitRepeatOnLanding():InitLimit(1,2):InitCleanUp(600):SpawnScheduled(1800,0.5)
 
 CV_1_CAP = nil
 CV_2_CAP = nil
