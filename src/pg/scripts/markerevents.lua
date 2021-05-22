@@ -31,7 +31,7 @@ function hevent:handlehelp(coalition)
 					-smokered,-smokegreen,-smokeblue (Spawn a random smoke near the location) \n
 					-flare (fire flares from the location) \n
 					-weather (request a GRIBS weather report from the location of the marker) \n
-					-tanker (more information soon) \n
+					-tanker (more information soon as i need to rework this command) \n
 					arty (arty command valid methods include: arty engage,battery \"<name>\",shots #,type gun/missile or arty request, battery <name>,ammo \n
 					valid Battery Names are: Carrier Group 5, Carrier Group 6, Carrier Group 6a & Red Alias "Kuz" (replace battery with Alias). \n%d
 					"
