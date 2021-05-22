@@ -9,8 +9,8 @@ function _split(str, sep)
 end
 
 admin = false
-password = "ReallyYouThinkIamThatDumb?"
-ADMINPASSWORD2 = "HA_YEAHJF17S_SUCKBALLS_F16S_RULE"
+password = "hogsarebest"
+ADMINPASSWORD2 = "tgw"
 adminspawned = {} 
 -- SupportHandler = EVENTHANDLER:New()
 
@@ -32,7 +32,7 @@ function hevent:handlehelp(coalition)
 					-flare (fire flares from the location) \n
 					-weather (request a GRIBS weather report from the location of the marker) \n
 					-tanker (more information soon) \n
-					arty (arty command valid methods include: arty engage,battery "<name>",shots #,type gun/missile or arty request, battery <name>,ammo \n
+					arty (arty command valid methods include: arty engage,battery \"<name>\",shots #,type gun/missile or arty request, battery <name>,ammo \n
 					valid Battery Names are: Carrier Group 5, Carrier Group 6, Carrier Group 6a & Red Alias "Kuz" (replace battery with Alias). \n%d
 					"
 	if coalition == 1 then
