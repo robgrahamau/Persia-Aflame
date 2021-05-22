@@ -9,8 +9,8 @@ function _split(str, sep)
 end
 
 admin = false
-password = "hogsarebest"
-ADMINPASSWORD2 = "tgw"
+assword = "ReallyYouThinkIamThatDumb?"
+ADMINPASSWORD2 = "HA_YEAHJF17S_SUCKBALLS_F16S_RULE"
 adminspawned = {} 
 -- SupportHandler = EVENTHANDLER:New()
 
