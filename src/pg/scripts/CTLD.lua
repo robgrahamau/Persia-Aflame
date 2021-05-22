@@ -47,7 +47,7 @@ ctld.maximumMoveDistance = 100 -- max distance for troops to move from drop poin
 
 ctld.minimumDeployDistance = 100 -- minimum distance from a friendly pickup zone where you can deploy a crate
 
-ctld.numberOfTroops = 10 -- default number of troops to load on a transport heli or C-130 
+ctld.numberOfTroops = 8 -- default number of troops to load on a transport heli or C-130 
               -- also works as maximum size of group that'll fit into a helicopter unless overridden
 ctld.enableFastRopeInsertion = true -- allows you to drop troops by fast rope
 ctld.fastRopeMaximumHeight = 18.28 -- in meters which is 60 ft max fast rope (not rappell) safe height
@@ -61,9 +61,10 @@ ctld.sa10Launchers = 4
 ctld.patlaunchers = 4
 ctld.buklaunchers = 3
 ctld.rolandlaunchers = 3
+ctld.hq7 = 3
 
 ctld.spawnRPGWithCoalition = true --spawns a friendly RPG unit with Coalition forces
-ctld.spawnStinger = true -- spawns a stinger / igla soldier with a group of 6 or more soldiers!
+ctld.spawnStinger = false -- spawns a stinger / igla soldier with a group of 6 or more soldiers!
 
 ctld.enabledFOBBuilding = true -- if true, you can load a crate INTO a C-130 than when unpacked creates a Forward Operating Base (FOB) which is a new place to spawn (crates) and carry crates from
 -- In future i'd like it to be a FARP but so far that seems impossible...
@@ -120,7 +121,7 @@ ctld.JTAC_LIMIT_BLUE = 10 -- max number of JTAC Crates for the BLUE Side
 
 ctld.JTAC_dropEnabled = true -- allow JTAC Crate spawn from F10 menu
 
-ctld.JTAC_maxDistance = 10000 -- How far a JTAC can "see" in meters (with Line of Sight)
+ctld.JTAC_maxDistance = 6000 -- How far a JTAC can "see" in meters (with Line of Sight)
 
 ctld.JTAC_smokeOn_RED = true -- enables marking of target with smoke for RED forces
 ctld.JTAC_smokeOn_BLUE = true -- enables marking of target with smoke for BLUE forces
@@ -131,7 +132,7 @@ ctld.JTAC_smokeColour_BLUE = 0 -- BLUE side smoke colour -- Green = 0 , Red = 1,
 ctld.JTAC_jtacStatusF10 = true -- enables F10 JTAC Status menu
 
 ctld.JTAC_location = true -- shows location of target in JTAC message
-ctld.location_DMS = true -- shows coordinates as Degrees Minutes Seconds instead of Degrees Decimal minutes
+ctld.location_DMS = false -- shows coordinates as Degrees Minutes Seconds instead of Degrees Decimal minutes
 
 ctld.JTAC_lock = "all" -- "vehicle" OR "troop" OR "all" forces JTAC to only lock vehicles or troops or all ground units
 
@@ -451,6 +452,13 @@ ctld.transportPilotNames = {
 	"Trojan 52",
 	"Trojan 53",
 	"Trojan 54",
+	"DAF UH1-1",
+	"DAF UH1",
+	"DAF MI8",
+	"DAF KA50-1",
+	"DAF KA50",
+	"DAF Mi8-1",
+	
     -- *** AI transports names (different names only to ease identification in mission) ***
     -- Use any of the predefined names or set your own ones
     "transport1",
@@ -489,10 +497,11 @@ ctld.vehicleTransportEnabled = {
 -- Make sure the unit name is exactly right or it wont work
 
 ctld.unitLoadLimits = {
-    -- Remove the -- below to turn on options
+	 ["UH-1H"] = 8,
      ["SA342Mistral"] = 4,
      ["SA342L"] = 4,
      ["SA342M"] = 4,
+	 ["Mi-8MT"] = 16,
 
 }
 
@@ -518,7 +527,7 @@ ctld.unitActions = {
      ["SA342L"] = {crates=false, troops=true},
      ["SA342M"] = {crates=false, troops=true},
      ["Ka-50"] = {crates = true, troops=false}
-
+	
 }
 
 
@@ -533,10 +542,14 @@ ctld.unitActions = {
 -- You can also add an optional coalition side to limit the group to one side
 -- for the side - 2 is BLUE and 1 is RED
 ctld.loadableGroups = {
-    {name = "Standard Group", inf = 6, mg = 2, at = 2 }, -- will make a loadable group with 5 infantry, 2 MGs and 2 anti-tank for both coalitions
-    {name = "Anti Air", inf = 2, aa = 3  },
-    {name = "Anti Tank", inf = 2, at = 6  },
-    {name = "Mortar Squad", mortar = 6 },
+    {name = "16 Man Platoon", inf = 10, mg = 2, at = 2, aa = 2 },
+	{name = "8 Man Squad", inf = 4, mg = 2, at = 1, aa = 1 }, -- will make a loadable group with 5 infantry, 2 MGs and 2 anti-tank for both coalitions
+    {name = "Anti Tank Squad (8)", inf = 4, at = 4  },
+	{name = "Motor Squad (8)", inf = 4, mortar = 4 },
+	{name = "Fire Team (4)", inf = 2, mg = 1, aa = 1  },
+	{name = "Anti Air Fire Team (4)", inf = 2, aa = 2  },
+    
+    
     -- {name = "Mortar Squad Red", inf = 2, mortar = 5, side =1 }, --would make a group loadable by RED only
 }
 
@@ -561,7 +574,11 @@ ctld.spawnableCrates = {
         { weight = 520, desc = "HMMWV - JTAC", unit = "Hummer", side = 2, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
         { weight = 525, desc = "SKP-11 - JTAC", unit = "SKP-11", side = 1, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
         { weight = 750, desc = "SPH 2S19 Msta", unit = "SAU Msta", side = 1, cratesRequired = 3 },
-        { weight = 755, desc = "M-109", unit = "M-109", side = 2, cratesRequired = 3 },
+        { weight = 755, desc = "M-109 Paladin", unit = "M-109", side = 2, cratesRequired = 3 },
+		{ weight = 666, desc = "M1126 Stryker ICV", unit = "M1126 Stryker ICV", side = 2 , cratesRequired = 2},
+		{ weight = 667, desc = "M-1 Abrams", unit = "M-1 Abrams", side = 2 , cratesRequired = 3},
+		{ weight = 668, desc = "T72B", unit = "T-72B", side = 1 , cratesRequired = 3},
+		
     },
     ["SHRT AA Crates"] = {
         { weight = 405, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 3 },
@@ -572,6 +589,10 @@ ctld.spawnableCrates = {
 		{ weight = 770, desc = "SA-19 Tunguska", unit = "2S6 Tunguska", side = 1, cratesRequired = 3 },
 		{ weight = 742, desc = "Roland Radar", unit = "Roland Radar", side = 2},
         { weight = 745, desc = "Roland ADS", unit = "Roland ADS", side = 2},
+		{ weight = 746, desc = "HQ7 LN", unit = "HQ-7_LN_SP", side = 1},
+        { weight = 747, desc = "HQ7 STR", unit = "HQ-7_STR_SP", side = 1},
+		--{ weight = 431, decs = "HQ7 Launcher", unit = "HQ-7_LN_SP", side = 1},
+		--{ weight = 432, decs = "HQ7 STR", unit = "HQ-7_STR_SP", side = 1},
         --{ weight = 50, desc = "Stinger", unit = "Stinger manpad", side = 2 },
         --{ weight = 55, desc = "Igla", unit = "SA-18 Igla manpad", side = 1 },
      },
@@ -619,6 +640,7 @@ ctld.spawnableCrates = {
         { weight = 952, desc = "HAWK Repair", unit = "HAWK Repair" , side = 2 },
         { weight = 990, desc = "BUK Repair", unit = "BUK Repair"},
         { weight = 970, desc = "KUB Repair", unit = "KUB Repair", side = 1},
+		{ weight = 433, desc = "HQ7 Repair", unit = "HQ7 Repair", side = 2},
 		{ weight = 971, desc = "SA-10 Repair", unit = "SA-10 Repair", side = 1},
         { weight = 953, desc = "Roland Repair", unit = "Roland Repair", side = 2},    
 		{ weight = 957, desc = "Patriot Repair", unit = "Patriot Repair", side = 2},    
@@ -1413,6 +1435,15 @@ ctld.AASystemTemplate = {
         {name = "Roland Radar", desc = "Roland Radar"},
       },
       repair = "Roland Repair",
+    },
+	 {
+      name = "HQ7 AA System",
+      count = 2,
+      parts = {
+        {name = "HQ-7_LN_SP", desc = "HQ-7 Launcher", launcher = true},
+        {name = "HQ-7_STR_SP", desc = "HQ-7 STR"},
+      },
+      repair = "HQ7 Repair",
     },
     {
         name = "BUK AA System",
@@ -3042,7 +3073,7 @@ function ctld.unpackCrates(_arguments)
 
                 return
 
-            elseif _crate ~= nil and _crate.dist < 200 then
+            elseif _crate ~= nil and _crate.dist < 100 then
 
                 if ctld.forceCrateToBeMoved and ctld.crateMove[_crate.crateUnit:getName()] then
                     ctld.displayMessageToGroup(_heli,"Sorry you must move this crate before you unpack it!", 20)
@@ -3819,6 +3850,8 @@ function ctld.unpackAASystem(_heli, _nearestCrate, _nearbyCrates,_aaSystemTempla
 					_launchers = ctld.patlaunchers
 				elseif _name == "Roland ADS" then
 					_launchers = ctld.rolandlaunchers
+				elseif _name == "HQ-7_LN_SP" then
+					_launchers = ctld.hq7
                 end
 
                 for _i = 1, _launchers do
@@ -5423,7 +5456,6 @@ function ctld.findNearestVisibleEnemy(_jtacUnit, _targetType,_distance)
 
     local _search = function(_unit, _coa)
         pcall(function()
-
             if _unit ~= nil
                     and _unit:getLife() > 0
                     and _unit:isActive()

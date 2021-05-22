@@ -29,6 +29,7 @@ if os ~= nil then
 
 missionstarttime = nowYear .. "/" .. nowMonth .. "/" .. nowDay .. " @ " .. nowHour .. ":" .. nowminute 
 restarthour = nowHour + resethours
+serverrestart = 19
   if restarthour > 23 then 
     restarthour = restarthour - 24
   end
@@ -55,35 +56,35 @@ local function permanentPlayerCheck()
         nowminute = "test"
     end
     currenttime = "H" .. nowHour .. ":" .. nowminute
-	if nowHour == 19 then
+	if nowHour == (serverrestart - 1) then
 		if nowminute == 0 then
 			if hrleft ~= true then
-				MESSAGE:New("8pm Server Restart in 1 hour",15):ToAll()
+				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 1 hour",15):ToAll()
 				hrleft = true
 			end
 		elseif nowminute == 30 then
 			if left30 ~= true then
-				MESSAGE:New("8pm Server Restart in 30 Minutes",15):ToAll()
+				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 30 Minutes",15):ToAll()
 				left30 = true
 			end
 		elseif nowminute == 45 then
 			if left45 ~= true then
-				MESSAGE:New("8pm Server Restart in 15 Minutes",15):ToAll()
+				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 15 Minutes",15):ToAll()
 				left45 = true
 			end
 		elseif nowminute == 50 then
 			if left50 ~= true then
-				MESSAGE:New("8pm Server Restart in 10 Minutes",15):ToAll()
+				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 10 Minutes",15):ToAll()
 				left50 = true
 			end
 		elseif nowminute == 55 then
 			if left55 ~= true then
-				MESSAGE:New("8pm Server Restart in 5 Minutes",15):ToAll()
+				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 5 Minutes",15):ToAll()
 				left55 = true
 			end
 		elseif nowminute == 59 then
 			if left59 ~= true then
-				MESSAGE:New("8pm Server Restart in 1 Minute",15):ToAll()
+				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 1 Minute",15):ToAll()
 				left59 = true
 			end
 		end
@@ -99,7 +100,7 @@ local function permanentPlayerCheck()
       if PlayerClient:IsAlive() then
         if PlayerMap[PlayerID] ~= true then
           PlayerMap[PlayerID] = true
-          local MessageText = "Welcome to Persia Aflame by Rob Graham Version: "..version.." Last update:"..lastupdate.." ".. PlayerName .. "\n Powered By Moose, Player Donations, OverlordBot, Lots of Pain Killers, Kosh Purrs, Midgets and lets not forget the space server Hamsters! \n THE EYES BOO GO FOR THE EYES! \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n, You are on " ..col..", Please be aware this mission is geared towards Coalition Forces attacking Iran is defending by and large. Please check the mission brief for more information ALT+B \n Please Join the DISCORD SEE ALT+B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard \n UNICOM is 122.80 VHF, use for ATC please."
+          local MessageText = "Welcome to Persia Aflame by Rob Graham Version: "..version.." Last update:"..lastupdate.." ".. PlayerName .. "\n Powered By Moose, Player Donations, OverlordBot, Lots of Pain Killers, Kosh Purrs, Midgets and lets not forget the space server Hamsters! \n THE EYES BOO GO FOR THE EYES! \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n, You are on " ..col..", Please be aware this mission is geared towards Coalition Forces attacking Iran is defending by and large. Please check the mission brief for more information ALT+B \n Please Join the DISCORD SEE ALT+B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard \n UNICOM is 122.80 VHF, use for ATC please."
           MESSAGE:New(MessageText,15,"Server Info",true):ToClient(PlayerClient)
           hm(">` $SERVERNAME - Ground Crew:` " .. PlayerClient:GetPlayerName() .. " is in the pit, straps are tight, their " ..PlayerClient:GetTypeName() .. " belonging to " .. col .. " is fueled and ready to go \n > Good Luck Out there")
         end
@@ -191,8 +192,8 @@ end
 
 function resettime()
   SCHEDULER:New(nil,function() 
-  MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
-  hm("` $SERVERNAME - Server Info: ` MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard")
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
+  hm("` $SERVERNAME - Server Info: ` MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard")
   hourstoreset = hourstoreset - 1
   if hourstoreset < resethours then
     nextreset()
@@ -200,15 +201,15 @@ function resettime()
   end,{},60*60)
 end
 SCHEDULER:New(nil,function() 
-  MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
-  hm("` $SERVERNAME - Server Info` MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard")
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
+  hm("` $SERVERNAME - Server Info` MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard")
   hourstoreset = hourstoreset - 1
   nextreset() 
 end,{},1)
 
 SCHEDULER:New(nil,function() 
-  MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 HOUR \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
-  hm("` $SERVERNAME - Server Info ` MISSION CYLE WILL HAPPEN IN 1 HOUR \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at 20:00 Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard")
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN 1 HOUR \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
+  hm("` $SERVERNAME - Server Info ` MISSION CYLE WILL HAPPEN IN 1 HOUR \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard")
 end,{},((60*60) * (resethours - 1)))
 SCHEDULER:New(nil,function() 
   MESSAGE:New("MISSION CYLE WILL HAPPEN IN Aprox 45 Minutes",10):ToAll()
@@ -239,8 +240,13 @@ SCHEDULER:New(nil,function()
   hm("` $SERVERNAME - Server Info:` Mission Cycle will happen in 3 Minutes")
 end,{},(((60*60) *(resethours)) - (60*3)))
 SCHEDULER:New(nil,function() 
-  MESSAGE:New("MISSION CYLE WILL HAPPEN IN Aprox 2 Minute",10):ToAll()
-  hm("` $SERVERNAME - Server Info:` Mission Cycle will happen in 2 Minutes")
+  MESSAGE:New("MISSION CYLE WILL HAPPEN IN Aprox 2 Minute \n Persistance Data is now being saved, Nothing beyond this point will save until restart has happened.",10):ToAll()
+  updatevalues()
+  save()
+  ctldsavedata()
+  saveadmingroups()
+  save_groups()
+  hm("` $SERVERNAME - Server Info:` Mission Cycle will happen in 2 Minutes \n - Persistance Data is now being saved, Nothing beyond this point will save until restart has happened.")
 end,{},(((60*60) *(resethours)) - (60*2)))
 SCHEDULER:New(nil,function() 
   MESSAGE:New("MISSION CYLE WILL HAPPEN IN Aprox 1 Minute",10):ToAll()

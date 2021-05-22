@@ -43,7 +43,7 @@ local SaveSchedulePersistence=60 --how many seconds between each check of all th
  ctldsave = {}
 local savefilename = "ctldsave.lua"
  
-local savefile = lfs.writedir() .."pg\\" .. savefilename
+ctldsavefile = lfs.writedir() .."pg\\" .. savefilename
  -----------------------------------
  --Do not edit below here
  -----------------------------------
@@ -116,8 +116,8 @@ end
 --SCRIPT START
 env.info("Loaded RIB SAVE, version " .. version)
 if resetall == 0 then
-  if file_exists(savefile) then --Script has been run before, so we need to load the save
-    dofile(savefile)
+  if file_exists(ctldsavefile) then --Script has been run before, so we need to load the save
+    dofile(ctldsavefile)
 	if ctldsave[1] ~= nil then
 		ctld.completeAASystems = ctldsave[1]
 	else
@@ -211,15 +211,17 @@ function savectldpersistence()
    ctldsave[13] = ctld.nextGroupId
 end
 
-
+function ctldsavedata()
+  savectldpersistence()
+  newMissionStr = IntegratedserializeWithCycles("ctldsave",ctldsave) --save the Table as a serialised type with key SaveUnits
+  writemission(newMissionStr, ctldsavefile)--write the file from the above to SaveUnits.lua
+  env.info("Data saved.")
+  ctldsave = {} -- clean out the table for next time.
+end
 --THE SAVING SCHEDULE
 SCHEDULER:New( nil, function()
 if init == true then
-  savectldpersistence()
-  newMissionStr = IntegratedserializeWithCycles("ctldsave",ctldsave) --save the Table as a serialised type with key SaveUnits
-  writemission(newMissionStr, savefile)--write the file from the above to SaveUnits.lua
-  env.info("Data saved.")
-  ctldsave = {} -- clean out the table for next time.
+  ctldsavedata()
 else
   env.info("init was not true not saving")
 end

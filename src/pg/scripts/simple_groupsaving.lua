@@ -36,7 +36,7 @@ resetall = 0
  AllGroups = SET_GROUP:New():FilterCategories("ground"):FilterPrefixes({"RSAM","REW","SCUD","BSAM","USEW","AAA","RDEF","Iran Ammo"}):FilterActive(true):FilterStart()
  local savefilename = "pg_groups.lua"
  
-local savefile = lfs.writedir() .."pg\\" .. savefilename
+groupsavefile = lfs.writedir() .."pg\\" .. savefilename
  -----------------------------------
  --Do not edit below here
  -----------------------------------
@@ -103,11 +103,13 @@ function writemission(data, file)--Function for saving to file (commonly found)
   File:write(data)
   File:close()
 end
+
 local spawncounter = 0
 --SCRIPT START
 env.info("Loaded Group Saving, by Pikey, 2018, version " .. version)
+
 if resetall == 0 then
-  if file_exists(savefile) then --Script has been run before, so we need to load the save
+  if file_exists(groupsavefile) then --Script has been run before, so we need to load the save
     env.info("Existing database, loading from File.")
     local destroycounter = 0
     AllGroups:ForEachGroup(function (grp)
@@ -116,7 +118,7 @@ if resetall == 0 then
     end)
     env.info("Destroyed a total of ".. destroycounter .." Groups")
 	HypeMan.sendBotMessage("SimpleGroupSaving - Destroyed a total of ".. destroycounter .." Groups")
-  dofile(savefile)
+  dofile(groupsavefile)
   tempTable={}
   Spawn={}
 --RUN THROUGH THE KEYS IN THE TABLE (GROUPS)
@@ -185,7 +187,8 @@ else
 end
 HypeMan.sendBotMessage("SimpleGroupSaving - Spawned a total of ".. spawncounter .." Groups")
 --THE SAVING SCHEDULE
-SCHEDULER:New( nil, function()
+
+function save_groups()
   AllGroups:ForEachGroupAlive(function (grp)
   local DCSgroup = Group.getByName(grp:GetName() )
   local size = DCSgroup:getSize()
@@ -234,7 +237,10 @@ SaveUnits[grp:GetName()] =
 end)
 
 newMissionStr = IntegratedserializeWithCycles("SaveUnits",SaveUnits) --save the Table as a serialised type with key SaveUnits
-writemission(newMissionStr, savefile)--write the file from the above to SaveUnits.lua
+writemission(newMissionStr, groupsavefile)--write the file from the above to SaveUnits.lua
 SaveUnits={}--clear the table for a new write.
 env.info("Data saved.")
+end
+SCHEDULER:New( nil, function()
+save_groups()
 end, {}, 60, SaveScheduleUnits)

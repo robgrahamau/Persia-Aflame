@@ -363,6 +363,7 @@ do
                 cacheDB = {} -- clean out the cache we'll need to resend it because chances are the servers reset.
                 client = nil
             end
+			--[[
             local line, err = client:receive()
             if err then
               env.info("DCS LINK: read error: "..err)
@@ -377,6 +378,7 @@ do
                 env.info("order")
               end
           end
+		  ]]
         end
     end
 

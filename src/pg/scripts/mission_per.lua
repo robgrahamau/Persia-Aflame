@@ -102,7 +102,7 @@ mainmission = {
 }
 local savefilename = "mainmissionsave.lua"
  
-local savefile = lfs.writedir() .."pg\\" .. savefilename
+persavefile = lfs.writedir() .."pg\\" .. savefilename
 local savepath = lfs.writedir() .."pg\\"
  -----------------------------------
  --Do not edit below here
@@ -243,6 +243,17 @@ function loadvalues()
   end
   if mainmission.shipgroup1 == true then
     local temp = GROUP:FindByName("Kuznetsov Group"):Activate()
+	kovarty=ARTY:New(GROUP:FindByName("Kuznetsov Group","Koz"))
+	kovarty:SetAlias("Kuz")
+	kovarty:SetMarkAssignmentsOn()
+	kovarty:SetSmokeShells(20,SMOKECOLOR.Blue)
+	kovarty:SetSmokeShells(20,SMOKECOLOR.Red)
+	kovarty:SetSmokeShells(20,SMOKECOLOR.Orange)
+	kovarty:SetSmokeShells(20,SMOKECOLOR.White)
+	kovarty:SetMissileTypes({"P_500"})
+	kovarty:SetShellTypes({"AK176"})
+	kovarty:SetIlluminationShells(20,1)
+	kovarty:Start()
   else
   hm("** WARNING KUZNETSOV GROUP WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
   end
@@ -262,6 +273,20 @@ function loadvalues()
 	if abossactive == true then
 		AirbossTeddy:Stop()
 	end
+		tdyslot()
+		tar_slot()
+  else
+	carrier5arty=ARTY:New(GROUP:FindByName("Carrier Group 5","CG5"))
+	carrier5arty:SetShellTypes({"MK45_127"})
+	carrier5arty:SetMissileTypes({"BGM"})
+	carrier5arty:SetAlias("CG5")
+	carrier5arty:SetMarkAssignmentsOn()
+	carrier5arty:SetSmokeShells(20,SMOKECOLOR.Blue)
+	carrier5arty:SetSmokeShells(20,SMOKECOLOR.Red)
+	carrier5arty:SetSmokeShells(20,SMOKECOLOR.Orange)
+	carrier5arty:SetSmokeShells(20,SMOKECOLOR.White)
+	carrier5arty:SetIlluminationShells(20,1)
+	carrier5arty:Start()
   end
   if mainmission.carrier6dead == true then
 	local cg6 = GROUP:FindByName("Carrier Group 6")
@@ -274,6 +299,20 @@ function loadvalues()
 	if useawacs == true then
 		awacsStennis:Stop()
 	end
+	slot_stennis()
+	lh2slot()
+  else
+	carrier6arty=ARTY:New(GROUP:FindByName("Carrier Group 6","CG6"))
+	carrier6arty:SetShellTypes({"MK45_127"})
+	carrier6arty:SetMissileTypes({"BGM"})
+	carrier6arty:SetAlias("CG6")
+	carrier6arty:SetMarkAssignmentsOn()
+	carrier6arty:SetSmokeShells(20,SMOKECOLOR.Blue)
+	carrier6arty:SetSmokeShells(20,SMOKECOLOR.Red)
+	carrier6arty:SetSmokeShells(20,SMOKECOLOR.Orange)
+	carrier6arty:SetSmokeShells(20,SMOKECOLOR.White)
+	carrier6arty:SetIlluminationShells(20,1)
+	carrier6arty:Start()
   end
   if mainmission.carrier6adead == true then
 	local cg6 = GROUP:FindByName("Carrier Group 6a")
@@ -283,7 +322,20 @@ function loadvalues()
 			AirbossWash:Stop()
 		end
 	end
+	slot_wash()
 	hm("** WARNING CARRIER GROUP 6a USS Washington WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
+  else
+	carrier6aarty=ARTY:New(GROUP:FindByName("Carrier Group 6a","CG6a"))
+	carrier6aarty:SetShellTypes({"MK45_127"})
+	carrier6aarty:SetMissileTypes({"BGM"})
+	carrier6aarty:SetMarkAssignmentsOn()
+	carrier6aarty:SetAlias("CG6a")
+	carrier6aarty:SetSmokeShells(20,SMOKECOLOR.Blue)
+	carrier6aarty:SetSmokeShells(20,SMOKECOLOR.Red)
+	carrier6aarty:SetSmokeShells(20,SMOKECOLOR.Orange)
+	carrier6aarty:SetSmokeShells(20,SMOKECOLOR.White)
+	carrier6aarty:SetIlluminationShells(20,1)
+	carrier6aarty:Start()
   end
   
   
@@ -324,8 +376,8 @@ function loadvalues()
 end
 --SCRIPT START
 env.info("Loaded PD SAVE, version " .. version)
-if file_exists(savefile) then --Script has been run before, so we need to load the save
-    dofile(savefile)
+if file_exists(persavefile) then --Script has been run before, so we need to load the save
+    dofile(persavefile)
     env.info("Main Mission: Existing database, loading from File.")
     BASE:E({mainmission})
     loadvalues()
@@ -372,7 +424,7 @@ end
 function save()
   env.info("FORCE DATA Data SAVE!!!!!!!!!!.")
   newMissionStr = IntegratedserializeWithCycles("mainmission",mainmission) --save the Table as a serialised type with key SaveUnits
-  writemission(newMissionStr, savefile)--write the file from the above to SaveUnits.lua
+  writemission(newMissionStr, persavefile)--write the file from the above to SaveUnits.lua
   env.info("Data saved.")
 end
 
@@ -414,7 +466,22 @@ if allowrespawn ~= false then
           awacsTeddy:Start()
         end
       end)
-      cg:Respawn()
+		cg:Respawn()
+		if carrier5arty ~= nil then
+			carrier5arty:Stop()
+		end
+		carrier5arty=ARTY:New(GROUP:FindByName("Carrier Group 5","CG5"))
+		carrier5arty:SetShellTypes({"MK45_127"})
+		carrier5arty:SetMissileTypes({"BGM"})
+		carrier5arty:SetMarkAssignmentsOn()
+		carrier5arty:SetSmokeShells(20,SMOKECOLOR.Blue)
+		carrier5arty:SetSmokeShells(20,SMOKECOLOR.Red)
+		carrier5arty:SetSmokeShells(20,SMOKECOLOR.Orange)
+		carrier5arty:SetSmokeShells(20,SMOKECOLOR.White)
+		carrier5arty:SetIlluminationShells(20,1)
+		carrier5arty:Start()
+		tdyslot()
+		tar_slot()
       BASE:E({"Teddy Should be respawned"})
     end
   end
@@ -438,6 +505,21 @@ if allowrespawn ~= false then
       end)
       cg:Respawn()
       BASE:E({"Stennis Should be respawned"})
+		slot_stennis()
+		lh2slot()
+	    if carrier6arty ~= nil then
+			carrier6arty:Stop()
+		end
+		carrier6arty=ARTY:New(GROUP:FindByName("Carrier Group 6","CG6"))
+		carrier6arty:SetShellTypes({"MK45_127"})
+		carrier6arty:SetMissileTypes({"BGM"})
+		carrier6arty:SetMarkAssignmentsOn()
+		carrier6arty:SetSmokeShells(20,SMOKECOLOR.Blue)
+		carrier6arty:SetSmokeShells(20,SMOKECOLOR.Red)
+		carrier6arty:SetSmokeShells(20,SMOKECOLOR.Orange)
+		carrier6arty:SetSmokeShells(20,SMOKECOLOR.White)
+		carrier6arty:SetIlluminationShells(20,1)
+		carrier6arty:Start()
     end
   end
   
@@ -456,6 +538,20 @@ if allowrespawn ~= false then
       end)
       cg:Respawn()
       BASE:E({"Wash Should be respawned"})
+	  slot_wash()
+	  	 if carrier6aarty ~= nil then
+			carrier6aarty:Stop()
+		end
+		carrier6aarty=ARTY:New(GROUP:FindByName("Carrier Group 6","CG6"))
+		carrier6aarty:SetShellTypes({"MK45_127"})
+		carrier6aarty:SetMissileTypes({"BGM"})
+		carrier6aarty:SetMarkAssignmentsOn()
+		carrier6aarty:SetSmokeShells(20,SMOKECOLOR.Blue)
+		carrier6aarty:SetSmokeShells(20,SMOKECOLOR.Red)
+		carrier6aarty:SetSmokeShells(20,SMOKECOLOR.Orange)
+		carrier6aarty:SetSmokeShells(20,SMOKECOLOR.White)
+		carrier6aarty:SetIlluminationShells(20,1)
+		carrier6aarty:Start()
       end
     end
 end

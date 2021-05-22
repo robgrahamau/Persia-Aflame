@@ -9,19 +9,240 @@ function _split(str, sep)
 end
 
 admin = false
-password = "yeahnahyoudontneedtoknowthisanditsnotfuckseither."
+password = "ReallyYouThinkIamThatDumb?"
+ADMINPASSWORD2 = "HA_YEAHJF17S_SUCKBALLS_F16S_RULE"
 adminspawned = {} 
-SupportHandler = EVENTHANDLER:New()
+-- SupportHandler = EVENTHANDLER:New()
+
+hevent = {
+ClassName = "Handle_Events",}
+
+function hevent:New()
+  local self = BASE:Inherit(self,BASE:New())
+  self:E("Initalising Handle Events")
+  self:HandleEvent(EVENTS.MarkRemoved)
+  -- self:HandleEvent(EVENTS.LandingQualityMark)
+  return self
+end
+
+function hevent:handlehelp(coalition)
+	local msgtext = "Map Command Help Requested. The Following are valid commands for markers any with a - at the start require you to delete the marker. \n
+					-help (this command) \n
+					-smokered,-smokegreen,-smokeblue (Spawn a random smoke near the location) \n
+					-flare (fire flares from the location) \n
+					-weather (request a GRIBS weather report from the location of the marker) \n
+					-tanker (more information soon) \n
+					arty (arty command valid methods include: arty engage,battery "<name>",shots #,type gun/missile or arty request, battery <name>,ammo \n
+					valid Battery Names are: Carrier Group 5, Carrier Group 6, Carrier Group 6a & Red Alias "Kuz" (replace battery with Alias). \n%d
+					"
+	if coalition == 1 then
+		MESSAGE:New(msgtext,15):ToRed()
+	else
+		MESSAGE:New(msgtext,15):ToBlue()
+	end
+end
+
+function hevent:OnEventMarkRemoved(EventData)
+    if EventData.text~=nil and EventData.text:lower():find("-") then 
+        local text = EventData.text:lower()
+        local text2 = EventData.text
+        local vec3={y=EventData.pos.y, x=EventData.pos.x, z=EventData.pos.z}
+        local coord = COORDINATE:NewFromVec3(vec3)
+		local coalition = EventData.coalition
+		local red = false
+		if coalition == 1 then
+			red = true
+		end
+        coord.y = coord:GetLandHeight()
+        if EventData.text:lower():find("-weather") then
+              handleWeatherRequest(text,coord,red)
+        elseif EventData.text:lower():find("-tanker") then
+           if red == false then
+            handleBlueTankerRequest(text,coord)        
+           else
+            handleRedTankerRequest(text,coord)
+           end
+		elseif lowertext:find("-help") then
+			self:handlehelp(red)
+        elseif EventData.text:lower():find("-smokered") then
+          local nc = coord:GetRandomCoordinateInRadius(500,100)
+		  nc:SmokeRed()
+        elseif EventData.text:lower():find("-smokeblue") then
+          local nc = coord:GetRandomCoordinateInRadius(500,100)
+		  nc:SmokeBlue()
+        elseif EventData.text:lower():find("-smokegreen") then
+          local nc = coord:GetRandomCoordinateInRadius(500,100)
+		  nc:SmokeGreen()
+        elseif EventData.text:lower():find("-smokeorange") then
+          local nc = coord:GetRandomCoordinateInRadius(500,100)
+		  nc:SmokeOrange()
+        elseif EventData.text:lower():find("-smoke") then
+          self:handleSmoke(text,coord,coalition)
+        elseif EventData.text:lower():find("-flare") then
+          coord:FlareRed(math.random(0,360))
+          SCHEDULER:New(nil,function() 
+            coord:FlareRed(math.random(0,20))
+          end,{},30)
+        elseif EventData.text:lower():find("-light") then
+      coord.y = coord.y + 1500
+          coord:IlluminationBomb(1000)
+      elseif EventData.text:lower():find("-lightbright") then
+      coord.y = coord.y + 2000
+          coord:IlluminationBomb(10000)
+    elseif EventData.text:lower():find("-ctldfob") then
+          -- ctld drop.
+      if admin == true then
+      BASE:E({"attempting to spawn a fob"})
+      MESSAGE:New("Attempting to spawn a fob lets see if it breaks",30):ToAll()
+      local _unitId = ctld.getNextUnitId()
+      local _name = "ctld Deployed FOB #" .. _unitId
+      local _fob = nil
+      BASE:E({"ctld",text})
+      local keywords=_split(text,"|")
+      local s = keywords[2]
+      if (s == "blue") then
+        _fob = ctld.spawnFOB(2, 211, vec3, _name)
+      elseif (s == "red") then
+        _fob = ctld.spawnFOB(34, 211, vec3, _name)
+      else
+        _fob = ctld.spawnFOB(2, 211, vec3, _name)
+      end
+      table.insert(ctld.logisticUnits, _fob:getName())
+		if ctld.troopPickupAtFOB == true then
+			table.insert(ctld.builtFOBS, _fob:getName())
+		end
+      end
+     elseif EventData.text:lower():find("-explode") then
+			if admin == true then
+				self:handleExplosion(text,coord)
+			else
+				MESSAGE:New("Unable, Admin Commands need to be active to use that command",15):ToAll()
+			end
+        elseif EventData.text:lower():find("-admin") then
+          handleeadmin(text)
+    elseif EventData.text:lower():find("-radmin") then
+          rhandleeadmin(text)
+        elseif EventData.text:lower():find("-spawn") then
+          if admin == true then
+            handlespawn(text2,coord)
+          else
+            MESSAGE:New("Admin Commands need to be active to spawn new units",15):ToAll()
+          end
+    elseif EventData.text:lower():find("-rspawn") then
+          if admin == true then
+            newhandlespawn(text2,coord)
+          else
+            MESSAGE:New("Admin Commands need to be active to spawn new units",15):ToAll()
+          end
+    elseif EventData.text:lower():find("-load") then
+          if admin == true then
+            dofile(lfs.writedir() .."pg\\input.lua")
+          else
+            MESSAGE:New("Admin Commands need to be active to input a file",15):ToAll()
+          end
+       elseif EventData.text:lower():find("-despawn") then
+          if admin == true then
+            handledespawn(text2)
+          else
+            MESSAGE:New("Admin Commands need to be active to despawn units",15):ToAll()
+          end
+	elseif EventData.text:lower():find("-runscript") then
+        hm("Wow ok, some ones attempting to run a script.. hope they know the magic words")
+        self:handleScript(text)
+    elseif EventData.text:lower():find("-msgall") then
+          if admin == true then
+            msgtoall(text2)
+          else
+            MESSAGE:New("Admin Commands need to be active to despawn units",15):ToAll()
+          end
+        end
+    end
+end
+
+function hevent:handleSmoke(text,coord,col)
+  local keywords=UTILS.Split(text, ",")
+  BASE:E({keywords})
+  local keyphrase = keywords[2]
+  if col == nil then
+	col = 2
+	hm("***WARNING ERROR HAPPENED IN SMOKE COL WAS NIL**")
+  elseif col ~= 1 then
+	col = 2
+  end
+  hm("Firehawk, this is breaker Nine nine requesting smoke at the following coordinates.")
+  local tz = ZONE_RADIUS:New("tz",COORDINATE.GetVec2(coord),20000)
+  if tz:IsSomeInZoneOfCoalition(col) then
+    if keyphrase:lower():find("red") then
+      local nc = coord:GetRandomCoordinateInRadius(500,100)
+		nc:SmokeRed() 
+      return           
+    elseif keyphrase:lower():find("blue") then
+      local nc = coord:GetRandomCoordinateInRadius(500,100)
+		  nc:SmokeBlue()
+      return
+    elseif keyphrase:lower():find("green") then
+      local nc = coord:GetRandomCoordinateInRadius(500,100)
+		  nc:SmokeGreen()
+      return
+    elseif keyphrase:lower():find("orange") then
+      local nc = coord:GetRandomCoordinateInRadius(500,100)
+		  nc:SmokeOrange()
+      return
+    else
+      local nc = coord:GetRandomCoordinateInRadius(500,100)
+		  nc:SmokeWhite()
+      return
+    end
+  else
+    local msg = MESSAGE:New("Unable to launch smoke, no friendly units close enough for to launch rounds for marking, all units outside 10KM",15)
+    if col == 1 then
+      msg:ToRed()
+    else
+      msg:ToBlue()
+    end
+  end
+end
 
 
 
 
+function hevent:handleScript(text)
+  local keywords = UTILS.Split(text,";")
+  local doublecheck = keywords[2]
+  local script = keywords[3]
+  if (admin == true) and (doublecheck == ADMINPASSWORD2) then
+    BASE:E({"attempting to run script"})
+    hm("Some one knew both the magic words Now do they know how to code?")
+    assert(loadstring(script))()
+    MESSAGE:New("Admin Script was successful")
+    hm("Some one knew both the magic words and their script was correct!")
+  else
+    MESSAGE:New("Uh, uh, uh.. You didn't say the magic word.")
+    hm("***Ohhh, some ones being Naughty***, \n `Uh, uh, uh.. you didn't say the magic word` \n https://tenor.com/view/jurassic-park-nedry-dennis-no-no-nah-you-didnt-say-the-magic-word-gif-16617306 ")
+  end
+end
 
-local function tankerCooldownHelp(tankername)
+
+
+function hevent:handleExplosion(text,coord)
+  local keywords=UTILS.Split(text, ",")
+  local yeild = keywords[2]
+  yeild = tonumber(yeild)
+  if yeild == nil then
+    yeild = 250
+    hm("Ok, who let sock near the armory? were the hell has 250pounds of TnT gone?")
+  end
+  if admin == true then
+    coord:Explosion(yeild)
+    hm("Oh shit... I swore there was " .. yeild .. " more of this shit arou.... Ohhh there it is")
+  end
+end
+
+function tankerCooldownHelp(tankername)
   MESSAGE:New(string.format("Tanker routing is now available again for %s. Use the following marker commands:\n-tanker route %s \n-tanker route %s ,h <0-360>,d <5-100>,a <10-30,000>,s <250-400> \nFor more control",tankername,tankername,tankername), MESSAGE.Type.Information):ToBlue()
 end
 
-local function handleBlueTankerRequest(text,coord)
+function handleBlueTankerRequest(text,coord)
   local currentTime = os.time()
   if text:find("route") then
         local keywords=_split(text, ",")
@@ -158,7 +379,7 @@ local function handleBlueTankerRequest(text,coord)
         SCHEDULER:New(nil, tankerCooldownHelp, {tankername}, TANKER_COOLDOWN)
     end
 end
-local function handleRedTankerRequest(text,coord)
+function handleRedTankerRequest(text,coord)
   MESSAGE:New("Tanker Routing Commands are Currently Not Supported",30,"Info"):ToRed()
 end
 
@@ -167,7 +388,7 @@ end
 
 
 
-local function handleWeatherRequest(text, coord, red)
+ function handleWeatherRequest(text, coord, red)
     local currentPressure = coord:GetPressure(0)
     local currentTemperature = coord:GetTemperature()
     local currentWindDirection, currentWindStrengh = coord:GetWind()
@@ -201,7 +422,7 @@ local function handleWeatherRequest(text, coord, red)
     end
 end
 
-local function handleeadmin(text)
+function handleeadmin(text)
   local keywords=_split(text, ",")
    BASE:E({keywords=keywords})
    for _,keyphrase in pairs(keywords) do
@@ -221,7 +442,7 @@ local function handleeadmin(text)
 end
 
 
-local function rhandleeadmin(text)
+function rhandleeadmin(text)
   local keywords=_split(text, ",")
    BASE:E({keywords=keywords})
    for _,keyphrase in pairs(keywords) do
@@ -241,7 +462,7 @@ local function rhandleeadmin(text)
      --MESSAGE:New("Admin Commands are Disabled",15):ToAll()
    end
 end
-local function newhandlespawn(text,coord)
+function newhandlespawn(text,coord)
   BASE:E({"Spawn Request",text,coord})
   local keywords=_split(text, ",")
   local unit = nil
@@ -313,7 +534,7 @@ local function newhandlespawn(text,coord)
   end
 end
 
-local function handlespawn(text,coord)
+function handlespawn(text,coord)
   BASE:E({"Spawn Request",text,coord})
   local keywords=_split(text, ",")
   local unit = nil
@@ -952,8 +1173,8 @@ elseif unit == "barmour2" then
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
     ctld.JTACAutoLase("GM_IAA " .. name, _code) 
-  elseif unit == "bjtac1" then
-    local su = SPAWN:NewWithAlias("GM_BJTAC","GM_IAA " .. name)
+	elseif unit == "bjtac1" then
+    local su = SPAWN:NewWithAlias("GM_BJTAC","GM_USAA " .. name)
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -962,7 +1183,7 @@ elseif unit == "barmour2" then
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su) 
-  local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
     ctld.JTACAutoLase("GM_USAA " .. name, _code) 
@@ -1058,7 +1279,7 @@ end
 
 
 
-local function handledespawn(text)
+function handledespawn(text)
   BASE:E({"DeSpawn Request",text})
   local keywords=_split(text, ",")
   local unit = nil
@@ -1078,7 +1299,7 @@ local function handledespawn(text)
   end
 end
 
-local function msgtoall(text)
+function msgtoall(text)
   BASE:E({"Msg to all",text})
   local keywords=_split(text,"|")
   msg = keywords[2]
@@ -1086,135 +1307,5 @@ local function msgtoall(text)
     MESSAGE:New(msg,15):ToAll()
   end
 end
-function markRemoved(Event,EC)
-    if Event.text~=nil and Event.text:lower():find("-") then 
-        local text = Event.text:lower()
-        local text2 = Event.text
-        local vec3={y=Event.pos.y, x=Event.pos.x, z=Event.pos.z}
-        local coord = COORDINATE:NewFromVec3(vec3)
-        coord.y = coord:GetLandHeight()
-        if Event.text:lower():find("-weather") then
-            if EC == 2 then
-              handleWeatherRequest(text, coord,false)
-            else
-              handleWeatherRequest(text, coord,true)
-            end
-        elseif Event.text:lower():find("-tanker") then
-           if EC == 2 then
-            handleBlueTankerRequest(text,coord)        
-           else
-            handleRedTankerRequest(text,coord)
-           end
-        elseif Event.text:lower():find("-smokered") then
-          coord:SmokeRed()
-        elseif Event.text:lower():find("-smokeblue") then
-          coord:SmokeBlue()
-        elseif Event.text:lower():find("-smokegreen") then
-          coord:SmokeGreen()
-        elseif Event.text:lower():find("-smokeorange") then
-          coord:SmokeOrange()
-        elseif Event.text:lower():find("-smoke") then
-          coord:SmokeWhite()
-        elseif Event.text:lower():find("-flare") then
-          coord:FlareRed(math.random(0,360))
-          SCHEDULER:New(nil,function() 
-            coord:FlareRed(math.random(0,20))
-          end,{},30)
-        elseif Event.text:lower():find("-light") then
-      coord.y = coord.y + 1500
-          coord:IlluminationBomb(1000)
-      elseif Event.text:lower():find("-lightbright") then
-      coord.y = coord.y + 2000
-          coord:IlluminationBomb(10000)
-    elseif Event.text:lower():find("-ctldfob") then
-          -- ctld drop.
-      if admin == true then
-      BASE:E({"attempting to spawn a fob"})
-      MESSAGE:New("Attempting to spawn a fob lets see if it breaks",30):ToAll()
-      local _unitId = ctld.getNextUnitId()
-      local _name = "ctld Deployed FOB #" .. _unitId
-      local _fob = nil
-      BASE:E({"ctld",text})
-      local keywords=_split(text,"|")
-      local s = keywords[2]
-      if (s == "blue") then
-        _fob = ctld.spawnFOB(2, 211, vec3, _name)
-      elseif (s == "red") then
-        _fob = ctld.spawnFOB(34, 211, vec3, _name)
-      else
-        _fob = ctld.spawnFOB(2, 211, vec3, _name)
-      end
-      table.insert(ctld.logisticUnits, _fob:getName())
-      end
-        elseif Event.text:lower():find("-explode") then
-          if admin == true then
-            coord:Explosion(250)
-            local rnd = math.random(1,5)
-            if rnd == 1 then
-              MESSAGE:New("Have you ever seen what happens to a toad that's struck by lightening?",15):ToAll()            
-            elseif rnd == 2 then
-              MESSAGE:New("Oh Boy.. that's not gonna buff out",15):ToAll()            
-            elseif rnd == 3 then
-              MESSAGE:New("Nuke it from orbit, it's the only way to be sure",15):ToAll()            
-            elseif rnd == 4 then
-              MESSAGE:New("This marker will self destruct in 5...4...3..2...1... Good Bye",15):ToAll()            
-            elseif rnd == 5 then
-              MESSAGE:New("Xenos Filth detected, Exterminatus in effect",15):ToAll()            
-            else
-              MESSAGE:New("If this plays something screwed up and well Something just went boom.",15):ToAll()            
-            end
-          else
-            MESSAGE:New("Admin Commands need to be active to cause explosions from Unhigh",15):ToAll()
-          end
-        elseif Event.text:lower():find("-admin") then
-          handleeadmin(text)
-    elseif Event.text:lower():find("-radmin") then
-          rhandleeadmin(text)
-        elseif Event.text:lower():find("-spawn") then
-          if admin == true then
-            handlespawn(text2,coord)
-          else
-            MESSAGE:New("Admin Commands need to be active to spawn new units",15):ToAll()
-          end
-    elseif Event.text:lower():find("-rspawn") then
-          if admin == true then
-            newhandlespawn(text2,coord)
-          else
-            MESSAGE:New("Admin Commands need to be active to spawn new units",15):ToAll()
-          end
-    elseif Event.text:lower():find("-load") then
-          if admin == true then
-            dofile(lfs.writedir() .."pg\\input.lua")
-          else
-            MESSAGE:New("Admin Commands need to be active to input a file",15):ToAll()
-          end
-       elseif Event.text:lower():find("-despawn") then
-          if admin == true then
-            handledespawn(text2)
-          else
-            MESSAGE:New("Admin Commands need to be active to despawn units",15):ToAll()
-          end
-    elseif Event.text:lower():find("-msgall") then
-          if admin == true then
-            msgtoall(text2)
-          else
-            MESSAGE:New("Admin Commands need to be active to despawn units",15):ToAll()
-          end
-        end
-    end
-end
 
-function SupportHandler:onEvent(Event)
-    if Event.id == world.event.S_EVENT_MARK_ADDED then
-        env.info(string.format("RIB: Support got event ADDED id %s idx %s coalition %s group %s text %s", Event.id, Event.idx, Event.coalition, Event.groupID, Event.text))
-    elseif Event.id == world.event.S_EVENT_MARK_CHANGE then
-        -- nothing atm
-    elseif Event.id == world.event.S_EVENT_MARK_REMOVED then
-         env.info(string.format("RIB: Support got event ADDED id %s idx %s coalition %s group %s text %s", Event.id, Event.idx, Event.coalition, Event.groupID, Event.text))
-         env.info(Event)
-        markRemoved(Event,Event.coalition)
-    end
-end
-
-
-world.addEventHandler(SupportHandler)
+myevents = hevent:New()

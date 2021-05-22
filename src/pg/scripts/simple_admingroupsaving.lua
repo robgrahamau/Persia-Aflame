@@ -36,7 +36,7 @@ resetall = 0
  AdminGroups = SET_GROUP:New():FilterCategories("ground"):FilterPrefixes({"IAA","GM_USAA"}):FilterActive(true):FilterStart()
  local savefilename = "pg_admingroups.lua"
  
-local savefile = lfs.writedir() .."pg\\" .. savefilename
+adminsavefile = lfs.writedir() .."pg\\" .. savefilename
  -----------------------------------
  --Do not edit below here
  -----------------------------------
@@ -107,7 +107,7 @@ end
 --SCRIPT START
 env.info("Loaded Admin Group Saving version " .. version)
 if resetall == 0 then
-  if file_exists(savefile) then --Script has been run before, so we need to load the save
+  if file_exists(adminsavefile) then --Script has been run before, so we need to load the save
     env.info("Existing database, loading from File.")
     local destroycounter = 0
     AdminGroups:ForEachGroup(function (grp)
@@ -116,7 +116,7 @@ if resetall == 0 then
     end)
     env.info("Destroyed a total of ".. destroycounter .." Groups")
 	HypeMan.sendBotMessage("Admin Group Saving: Destroyed a total of ".. destroycounter .." Groups")
-  dofile(savefile)
+  dofile(adminsavefile)
 
   tempTable={}
   Spawn={}
@@ -186,7 +186,8 @@ else
 end
 HypeMan.sendBotMessage("Admin Group Saving: spawned in a total of ".. spawncounter .." Groups")
 --THE SAVING SCHEDULE
-SCHEDULER:New( nil, function()
+
+function saveadmingroups()
   AdminGroups:ForEachGroupAlive(function (grp)
   local DCSgroup = Group.getByName(grp:GetName() )
   local size = DCSgroup:getSize()
@@ -235,7 +236,10 @@ SaveUnits[grp:GetName()] =
 end)
 
 newMissionStr = IntegratedserializeWithCycles("SaveUnits",SaveUnits) --save the Table as a serialised type with key SaveUnits
-writemission(newMissionStr, savefile)--write the file from the above to SaveUnits.lua
+writemission(newMissionStr, adminsavefile)--write the file from the above to SaveUnits.lua
 SaveUnits={}--clear the table for a new write.
 env.info("Data saved.")
+end
+SCHEDULER:New( nil, function()
+ saveadmingroups()
 end, {}, 60, SaveScheduleUnits)
