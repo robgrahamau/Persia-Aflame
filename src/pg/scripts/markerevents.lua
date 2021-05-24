@@ -13,9 +13,8 @@ assword = "ReallyYouThinkIamThatDumb?"
 ADMINPASSWORD2 = "HA_YEAHJF17S_SUCKBALLS_F16S_RULE"
 adminspawned = {} 
 -- SupportHandler = EVENTHANDLER:New()
-
 hevent = {
-ClassName = "Handle_Events",}
+  ClassName = "Handle_Events",}
 
 function hevent:New()
   local self = BASE:Inherit(self,BASE:New())
@@ -26,15 +25,7 @@ function hevent:New()
 end
 
 function hevent:handlehelp(coalition)
-	local msgtext = "Map Command Help Requested. The Following are valid commands for markers any with a - at the start require you to delete the marker. \n
-					-help (this command) \n
-					-smokered,-smokegreen,-smokeblue (Spawn a random smoke near the location) \n
-					-flare (fire flares from the location) \n
-					-weather (request a GRIBS weather report from the location of the marker) \n
-					-tanker (more information soon as i need to rework this command) \n
-					arty (arty command valid methods include: arty engage,battery \"<name>\",shots #,type gun/missile or arty request, battery <name>,ammo \n
-					valid Battery Names are: Carrier Group 5, Carrier Group 6, Carrier Group 6a & Red Alias \"Kuz\" (replace battery with Alias). \n%d
-					"
+	local msgtext = "Map Command Help Requested. The Following are valid commands for markers any with a - at the start require you to delete the marker. \n -help (this command) \n -smokered,-smokegreen,-smokeblue (Spawn a random smoke near the location) \n -flare (fire flares from the location) \n -weather (request a GRIBS weather report from the location of the marker) \n -tanker (more information soon) \n arty (arty command valid methods include: arty engage,battery \"<name>\",shots #,type gun/missile or arty request, battery <name>,ammo \n valid Battery Names are: Carrier Group 5, Carrier Group 6, Carrier Group 6a & Red Alias \"Kuz\" (replace battery with Alias). \n%d"
 	if coalition == 1 then
 		MESSAGE:New(msgtext,15):ToRed()
 	else
@@ -62,7 +53,7 @@ function hevent:OnEventMarkRemoved(EventData)
            else
             handleRedTankerRequest(text,coord)
            end
-		elseif lowertext:find("-help") then
+		elseif EventData.text:lower():find("-help") then
 			self:handlehelp(red)
         elseif EventData.text:lower():find("-smokered") then
           local nc = coord:GetRandomCoordinateInRadius(500,100)
