@@ -12,7 +12,7 @@ RED_A_SET = SET_STATIC:New()
 BLUE_CTLD_SET = SET_STATIC:New()
 RED_CTLD_SET = SET_STATIC:New()
 giveintel = false
-
+newintel = true
 function no_farps()
   RED_NO_FARPS:Clear()
   RED_I_SET:Clear()
@@ -504,5 +504,19 @@ else
 end
 mainmission.invasionchance = invasionchance
 end,{},30,((60*minutes) * hours))
+
+end
+
+if newintel == true then
+
+abg = SET_GROUP:New():FilterCoalitions("blue"):FilterActive(true):FilterStart()
+blueintel = INTEL:New(abg,"blue","CIA")
+blueintel:SetClusterAnalysis(true,true)
+blueintel:Start()
+function blueintel:OnAfterNewCluster(From, Event, To, Contact, Cluster)
+   local text = string.format("NEW cluster %d size %d with contact %s", Cluster.index, Cluster.size, Contact.groupname)  
+   local m = MESSAGE:New(text,15,"CIA"):ToBlue()  
+end
+
 
 end

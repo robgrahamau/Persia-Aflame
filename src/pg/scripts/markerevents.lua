@@ -9,12 +9,13 @@ function _split(str, sep)
 end
 
 admin = false
-assword = "ReallyYouThinkIamThatDumb?"
-ADMINPASSWORD2 = "HA_YEAHJF17S_SUCKBALLS_F16S_RULE"
+password = "yeahnahfuckoff"
+ADMINPASSWORD2 = "nopenotthatdumb"
 adminspawned = {} 
 -- SupportHandler = EVENTHANDLER:New()
+
 hevent = {
-  ClassName = "Handle_Events",}
+ClassName = "Handle_Events",}
 
 function hevent:New()
   local self = BASE:Inherit(self,BASE:New())
@@ -1146,7 +1147,7 @@ elseif unit == "barmour2" then
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su) 
-  local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
     ctld.JTACAutoLase("GM_USAA " .. name, _code) 
@@ -1160,7 +1161,7 @@ elseif unit == "barmour2" then
     end
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su) 
-  local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
     ctld.JTACAutoLase("GM_IAA " .. name, _code) 
