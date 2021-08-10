@@ -108,9 +108,9 @@ ctld.hoverTime = 4 -- Time to hold hover above a crate for loading in seconds
 -- When this limit is hit, a player will still be able to get crates for an AA system, just unable
 -- to unpack them
 
-ctld.AASystemLimitRED = 20 -- Red side limit
+ctld.AASystemLimitRED = 10 -- Red side limit
 
-ctld.AASystemLimitBLUE = 20 -- Blue side limit
+ctld.AASystemLimitBLUE = 10 -- Blue side limit
 
 --END AA SYSTEM CONFIG --
 
@@ -121,8 +121,8 @@ ctld.JTAC_LIMIT_BLUE = 10 -- max number of JTAC Crates for the BLUE Side
 
 ctld.JTAC_dropEnabled = true -- allow JTAC Crate spawn from F10 menu
 
-ctld.JTAC_maxDistance = 6000 -- How far a JTAC can "see" in meters (with Line of Sight)
-
+ctld.JTAC_maxDistance = 7000 -- How far a JTAC can "see" in meters (with Line of Sight)
+ctld.JTAC_maxSpot = 7000
 ctld.JTAC_smokeOn_RED = true -- enables marking of target with smoke for RED forces
 ctld.JTAC_smokeOn_BLUE = true -- enables marking of target with smoke for BLUE forces
 
@@ -458,7 +458,62 @@ ctld.transportPilotNames = {
 	"DAF KA50-1",
 	"DAF KA50",
 	"DAF Mi8-1",
-	
+	"MI8_Fujairah_02-2",
+	"MI8_Fujairah_02-1",
+	"UH1_Fujairah_02-1",
+	"UH1_Fujairah_02-2",
+	"KA50_Fujairah_02-1",
+	"KA50_Fujairah_02-2",
+	"MI8_Fujairah_01-2",
+	"MI8_Fujairah_01-1",
+	"UH1_Fujairah_01-1",
+	"UH1_Fujairah_01-2",
+	"KA50_Fujairah_01-1",
+	"KA50_Fujairah_01-2",
+	"bandar_hind",
+	"bandar_hind-1",
+	"Hav_hind",
+	"Hav_hind-1",
+	"Qeshm_hind",
+	"Qeshm_hind-1",
+	"Qeshm_hind-2",
+	"Qeshm_hind-3",
+	"Lar_hind",
+	"Lar_hind-1",
+	"Lar_hind-2",
+	"Lar_hind-3",
+	"Kish_Hind",
+	"Kish_Hind-1",
+	"Kish_Hind-2",
+	"Kish_Hind-3",
+	"Sirri_Hind",
+	"Sirri_Hind-1",
+	"Tunb_Hind",
+	"Tunb_Hind-1",
+	"Tunb-Hind-2",
+	"Tunb_Hind-3",
+	"Khasab_Hind",
+	"Khasab_Hind-1",
+	"Khasab_Hind-2",
+	"Khasab_Hind-3",
+	"Fujairah_Hind",
+	"Fujairah_Hind-1",
+	"Fujairah_Hind-2",
+	"Fujairah_Hind-3",
+	"DAF Hind",
+	"DAF Hind-1",
+	"Min Hind",
+	"Min Hind-1",
+	"Min Hind-2",
+	"Min Hind-3",
+	"Hind_e_jask",
+	"Hind_e_jask-1",
+	"Hind_e_jask-2",
+	"Hind_e_jask-3",
+	"UH1_e_jask-1",
+	"UH1_e_jask-2",
+	"UH1_e_jask-3",
+	"UH1_e_jask-4",
     -- *** AI transports names (different names only to ease identification in mission) ***
     -- Use any of the predefined names or set your own ones
     "transport1",
@@ -502,6 +557,7 @@ ctld.unitLoadLimits = {
      ["SA342L"] = 4,
      ["SA342M"] = 4,
 	 ["Mi-8MT"] = 16,
+	 ["Mi-24P"] = 8,
 
 }
 
@@ -545,7 +601,7 @@ ctld.loadableGroups = {
     {name = "16 Man Platoon", inf = 10, mg = 2, at = 2, aa = 2 },
 	{name = "8 Man Squad", inf = 4, mg = 2, at = 1, aa = 1 }, -- will make a loadable group with 5 infantry, 2 MGs and 2 anti-tank for both coalitions
     {name = "Anti Tank Squad (8)", inf = 4, at = 4  },
-	{name = "Motor Squad (8)", inf = 4, mortar = 4 },
+	{name = "Mortar Squad (8)", inf = 4, mortar = 4 },
 	{name = "Fire Team (4)", inf = 2, mg = 1, aa = 1  },
 	{name = "Anti Air Fire Team (4)", inf = 2, aa = 2  },
     

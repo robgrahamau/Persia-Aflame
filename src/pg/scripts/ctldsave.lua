@@ -178,8 +178,8 @@ if resetall == 0 then
 
 	--ctld.jtacGeneratedLaserCodes = ctldsave[10]
 	--ctld.jtacLaserPointCodes = ctldsave[11]
-	--ctld.nextUnitId = ctldsave[12]
-	--ctld.nextGroupId = ctldsave[13]
+	ctld.nextUnitId = ctldsave[12]
+	ctld.nextGroupId = ctldsave[13]
     env.info("Main Mission: Existing database, loading from File.")
     BASE:E({ctldsave})
     ctldper = true

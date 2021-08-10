@@ -1,7 +1,7 @@
-reinforhrs = 24
+reinforhrs = 16
 reinformins = 0
 minreinf = 2
-maxreinf = 14
+maxreinf = 18
 reinforcements = ((60 * 60) * reinforhrs) + (60 * reinformins) 
 dsqnsize = 24
 dsqnlsize = 32
@@ -246,9 +246,11 @@ function loadvalues()
     mainmission.ships = true
   end
   if mainmission.shipgroup2 == true then
+	BASE:E({"Ship Group 2 is true"})
     local temp = GROUP:FindByName("Cuban Tanker 1"):Activate()
   end
   if mainmission.shipgroup1 == true then
+	BASE:E({"Ship Group 1 (Koz Group) is true"})
     kovgroup = GROUP:FindByName("Kuznetsov Group"):Activate()
 	kuzlife = kovgroup:GetLife()
 	kovarty=ARTY:New(GROUP:FindByName("Kuznetsov Group","Koz"))
@@ -270,11 +272,21 @@ function loadvalues()
 	mainmission.chinafleetdead = false
   end
   if mainmission.chinafleetdead == false then
+	BASE:E({"China group is not dead"})
 	chinagroup = GROUP:FindByName("China_fleet1"):Activate()
 	chinalife = chinagroup:GetLife()
 	china_arty = ARTY:New(GROUP:FindByName("China_fleet1","China"))
 	china_arty:SetAlias("China")
 	china_arty:SetMarkAssignmentsOn()
+	chinagroup:HandleEvent(EVENTS.Hit)
+	function chinagroup:OnEventHit(EventData)
+		if chinagroupmsg ~= true then
+			MESSAGE:New("Warning Chinese Naval Group has sustained damage",15):ToRed()
+			chinagroupmsg = true
+			SCHEDULER:New(nil,function() groupmsg = false end,{},600)
+		end
+	end
+
   else
 	chinagroup = GROUP:FindByName("China_fleet1")
   end
@@ -284,6 +296,7 @@ function loadvalues()
 	mainmission.carrier6adead = false  
   end
   if mainmission.carrier5dead == true then
+	BASE:E({"CG5 dead is true"})
 	cg5 = GROUP:FindByName("Carrier Group 5")
 	cg5:Destroy()
 	hm("** WARNING CARRIER GROUP 5 USS Theodore Rosevelte WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
@@ -299,14 +312,6 @@ function loadvalues()
   else
 	cg5 = GROUP:FindByName("Carrier Group 5")
 	cg5life = cg5:GetLife()
-	chinagroup:HandleEvent(EVENTS.Hit)
-	function chinagroup:OnEventHit(EventData)
-		if chinagroupmsg ~= true then
-			MESSAGE:New("Warning Chinese Naval Group has sustained damage",15):ToRed()
-			chinagroupmsg = true
-			SCHEDULER:New(nil,function() groupmsg = false end,{},600)
-		end
-	end
 	carrier5arty=ARTY:New(GROUP:FindByName("Carrier Group 5","CG5"))
 	carrier5arty:SetShellTypes({"MK45_127"})
 	carrier5arty:SetMissileTypes({"BGM"})
@@ -320,6 +325,7 @@ function loadvalues()
 	carrier5arty:Start()
   end
   if mainmission.carrier6dead == true then
+  
 	cg6 = GROUP:FindByName("Carrier Group 6")
 	cg6:Destroy()
 	hm("** WARNING CARRIER GROUP 6 USS Stennis WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
@@ -529,6 +535,7 @@ if allowrespawn ~= false then
 			chinalife = group:GetLife()
 		end)
 		chinagroup:Respawn()
+		chinagroup:Activate()
 		china_arty = ARTY:New(GROUP:FindByName("China_fleet1","China"))
 		china_arty:SetAlias("China")
 		china_arty:SetMarkAssignmentsOn()
@@ -623,14 +630,14 @@ function reinforce()
       BASE:E({"Reinforcements arriving"})
       if usenew == true then
         BASE:E({"Updating New SQNS"})
-        updatesqn(cap1,16,8,mainmission.cap1)
-        updatesqn(cap2,16,8,mainmission.cap2)
-        updatesqn(cap3,16,8,mainmission.cap3)        
-        updatesqn(cap4,16,8,mainmission.cap4)
-        updatesqn(cap5,24,12,mainmission.cap5)        
-        updatesqn(cap6,24,12,mainmission.cap6)
-        updatesqn(cv5alert,12,6,mainmission.cv5alert)
-        updatesqn(cv6alert,12,6,mainmission.cv6alert)
+        updatesqn(cap1,24,16,mainmission.cap1)
+        updatesqn(cap2,24,16,mainmission.cap2)
+        updatesqn(cap3,24,16,mainmission.cap3)        
+        updatesqn(cap4,24,16,mainmission.cap4)
+        updatesqn(cap5,32,16,mainmission.cap5)        
+        updatesqn(cap6,32,16,mainmission.cap6)
+        updatesqn(cv5alert,24,12,mainmission.cv5alert)
+        updatesqn(cv6alert,24,12,mainmission.cv6alert)
         local ABItem = AIRBASE:FindByName(AIRBASE.PersianGulf.Shiraz_International_Airport)
         local col = ABItem:GetCoalition()
         if col == 1 then

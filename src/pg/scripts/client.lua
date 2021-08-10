@@ -1,5 +1,5 @@
-version = "1.19.0"
-lastupdate = "4/3/2021"
+version = "1.41.0"
+lastupdate = "10/08/2021"
 PlayerMap = {}
 PlayerRMap = {}
 PlayerBMap = {}
@@ -79,12 +79,22 @@ local function permanentPlayerCheck()
 			end
 		elseif nowminute == 55 then
 			if left55 ~= true then
-				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 5 Minutes",15):ToAll()
+				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 5 Minutes Forced Save has occured.",15):ToAll()
+				updatevalues()
+				save()
+				ctldsavedata()
+				saveadmingroups()
+				save_groups()
 				left55 = true
 			end
 		elseif nowminute == 59 then
 			if left59 ~= true then
-				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 1 Minute",15):ToAll()
+				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 1 Minute All items now saved",15):ToAll()
+				updatevalues()
+				save()
+				ctldsavedata()
+				saveadmingroups()
+				save_groups()
 				left59 = true
 			end
 		end
@@ -100,7 +110,7 @@ local function permanentPlayerCheck()
       if PlayerClient:IsAlive() then
         if PlayerMap[PlayerID] ~= true then
           PlayerMap[PlayerID] = true
-          local MessageText = "Welcome to Persia Aflame by Rob Graham Version: "..version.." Last update:"..lastupdate.." ".. PlayerName .. "\n Powered By Moose, Player Donations, OverlordBot, Lots of Pain Killers, Kosh Purrs, Midgets and lets not forget the space server Hamsters! \n THE EYES BOO GO FOR THE EYES! \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n, You are on " ..col..", Please be aware this mission is geared towards Coalition Forces attacking Iran is defending by and large. Please check the mission brief for more information ALT+B \n Please Join the DISCORD SEE ALT+B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard \n UNICOM is 122.80 VHF, use for ATC please."
+          local MessageText = "Welcome to Persia Aflame by Rob Graham Version: "..version.." Last update:"..lastupdate.." ".. PlayerName .. "\n Powered By Moose, Player Donations, OverlordBot, Lots of Pain Killers, Kosh Purrs, Midgets and lets not forget the space server Hamsters! \n THE EYES BOO GO FOR THE EYES! \n Be aware you will need to check F10 map stores limits as DCS in game Rearm/Refuel counts are broken. \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n, You are on " ..col..", Please be aware this mission is geared towards Coalition Forces attacking Iran is defending by and large. Please check the mission brief for more information ALT+B \n Please Join the DISCORD SEE ALT+B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard \n UNICOM is 122.80 VHF, use for ATC please."
           MESSAGE:New(MessageText,15,"Server Info",true):ToClient(PlayerClient)
           hm(">` $SERVERNAME - Ground Crew:` " .. PlayerClient:GetPlayerName() .. " is in the pit, straps are tight, their " ..PlayerClient:GetTypeName() .. " belonging to " .. col .. " is fueled and ready to go \n > Good Luck Out there")
         end

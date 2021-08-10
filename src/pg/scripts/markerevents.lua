@@ -9,9 +9,10 @@ function _split(str, sep)
 end
 
 admin = false
-password = "yeahnahfuckoff"
-ADMINPASSWORD2 = "nopenotthatdumb"
+password = "everyonehatesjf (really you think 'm this dumb to not change it for github?'"
+ADMINPASSWORD2 = "keepondreaming"
 adminspawned = {} 
+newlandingmark = true
 -- SupportHandler = EVENTHANDLER:New()
 
 hevent = {
@@ -21,8 +22,33 @@ function hevent:New()
   local self = BASE:Inherit(self,BASE:New())
   self:E("Initalising Handle Events")
   self:HandleEvent(EVENTS.MarkRemoved)
-  -- self:HandleEvent(EVENTS.LandingQualityMark)
+  if newlandingmark ~= false then
+	self:HandleEvent(EVENTS.LandingQualityMark)
+  end
   return self
+end
+
+function hevent:OnEventLandingQualityMark(EventData) 
+  BASE:E({"Landing Quality Mark",EventData})
+  local comment = EventData.comment
+  local who = EventData.IniPlayerName
+  if who == nil then
+	who = EventData.IniUnitName
+	BASE:E({"NPC Landed",who})
+	return
+  end
+  if who == nil then
+	who = "Unknown"
+  end
+  local t = EventData.IniTypeName
+  if t == nil then
+	t = "Unknown"
+  end
+  local where = EventData.PlaceName
+  BASE:E({comment,who,where,t})
+  lsomsg = 
+  hm("**Super Carrier LSO** \n> ** " .. where .. "** \n> **Landing Grade for  " .. who .. " **Aircraft Type:** " .. t .. " \n> **Grade:** " .. comment .. "." )
+  hmlso( "**Super Carrier LSO** \n> ** " .. where .. "** \n> **Landing Grade for  " .. who .. " **Aircraft Type:** " .. t .. " \n> **Grade:** " .. comment .. "."  )
 end
 
 function hevent:handlehelp(coalition)
@@ -57,8 +83,13 @@ function hevent:OnEventMarkRemoved(EventData)
 		elseif EventData.text:lower():find("-help") then
 			self:handlehelp(red)
         elseif EventData.text:lower():find("-smokered") then
-          local nc = coord:GetRandomCoordinateInRadius(500,100)
-		  nc:SmokeRed()
+			if admin == true then
+				local nc = coord:GetRandomCoordinateInRadius(100,50)
+				nc:SmokeRed()
+			else
+				local nc = coord:GetRandomCoordinateInRadius(200,100)
+				nc:SmokeRed()
+			end
         elseif EventData.text:lower():find("-smokeblue") then
           local nc = coord:GetRandomCoordinateInRadius(500,100)
 		  nc:SmokeBlue()
@@ -104,23 +135,41 @@ function hevent:OnEventMarkRemoved(EventData)
 			table.insert(ctld.builtFOBS, _fob:getName())
 		end
       end
-     elseif EventData.text:lower():find("-explode") then
+	 elseif EventData.text:lower():find("-routeside") or EventData.text:lower():find("-rs")then
+			if admin == true then
+				routemassgroup(text,coord)
+			else
+				MESSAGE:New("Unable, Admin Commands need to be active to use that command",15):ToAll()
+			end
+	 elseif EventData.text:lower():find("-mainland") then
+			if admin == true then
+				spawnmainland()
+			else
+				MESSAGE:New("Unable, Admin Commands need to be active to use that command",15):ToAll()
+			end
+     elseif EventData.text:lower():find("-island") then
+			if admin == true then
+				spawnislands()
+			else
+				MESSAGE:New("Unable, Admin Commands need to be active to use that command",15):ToAll()
+			end
+	 elseif EventData.text:lower():find("-explode") then
 			if admin == true then
 				self:handleExplosion(text,coord)
 			else
 				MESSAGE:New("Unable, Admin Commands need to be active to use that command",15):ToAll()
 			end
-        elseif EventData.text:lower():find("-admin") then
+    elseif EventData.text:lower():find("-admin") then
           handleeadmin(text)
     elseif EventData.text:lower():find("-radmin") then
           rhandleeadmin(text)
-        elseif EventData.text:lower():find("-spawn") then
+    elseif EventData.text:lower():find("-spawn") or EventData.text:lower():find("-sp") then
           if admin == true then
             handlespawn(text2,coord)
           else
             MESSAGE:New("Admin Commands need to be active to spawn new units",15):ToAll()
           end
-    elseif EventData.text:lower():find("-rspawn") then
+    elseif EventData.text:lower():find("-rspawn") or EventData.text:lower():find("-rs") or EventData.text:lower():find("-ts") then
           if admin == true then
             newhandlespawn(text2,coord)
           else
@@ -132,7 +181,7 @@ function hevent:OnEventMarkRemoved(EventData)
           else
             MESSAGE:New("Admin Commands need to be active to input a file",15):ToAll()
           end
-       elseif EventData.text:lower():find("-despawn") then
+       elseif EventData.text:lower():find("-despawn") or EventData.text:lower():find("-ds") then
           if admin == true then
             handledespawn(text2)
           else
@@ -140,8 +189,8 @@ function hevent:OnEventMarkRemoved(EventData)
           end
 	elseif EventData.text:lower():find("-runscript") then
         hm("Wow ok, some ones attempting to run a script.. hope they know the magic words")
-        self:handleScript(text)
-    elseif EventData.text:lower():find("-msgall") then
+        self:handleScript(text2)
+    elseif EventData.text:lower():find("-msgall") or EventData.text:lower():find("-ma") then
           if admin == true then
             msgtoall(text2)
           else
@@ -525,7 +574,22 @@ function newhandlespawn(text,coord)
     MESSAGE:New("unable to spawn requested group as you left out information",15):ToAll()
   end
 end
-
+function routemassgroup(text,coord)
+	local keywords=split(text,",")
+	local dist = 25000
+	local col = "Red"
+	for _,keyphrase in pairs(keywords) do
+		local str=_split(keyphrase, " ")
+		local key=str[1]
+		local val=str[2]
+		if key:lower():find("d") then
+			dist = tonumber(val)
+		end
+		if key:lower():find("c") then
+			col = val
+	end
+	routegroups(coord,dist,col)
+end
 function handlespawn(text,coord)
   BASE:E({"Spawn Request",text,coord})
   local keywords=_split(text, ",")

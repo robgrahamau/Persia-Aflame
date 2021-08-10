@@ -376,27 +376,26 @@ function startred()
 -- iran units
 -- IRAF01,IRAF02,IRAF03,IRAF31th,IRAF32nd,IRAF33rd,IRAF33rd-1,IRAF91
 -- Shiraz Units
-SCHEDULER:New(nil,function() i30th:Start() end,{},math.random(1,320))
-SCHEDULER:New(nil,function() i30th_1:Start() end,{},math.random(1,320))
-SCHEDULER:New(nil,function() i30th_2:Start() end,{},math.random(1,320))
-SCHEDULER:New(nil,function() i25th:Start() end,{},math.random(1,320))
-SCHEDULER:New(nil,function() i25th_1:Start() end,{},math.random(1,320))
-SCHEDULER:New(nil,function() i26th:Start() end,{},math.random(1,320))
+i30th:Start()
+i30th_1:Start()
+i30th_2:Start() 
+i25th:Start() 
+i25th_1:Start()
+i26th:Start()
 -- Kerman Units
-SCHEDULER:New(nil,function() i01st:Start() end,{},math.random(1,260))
-SCHEDULER:New(nil,function() i02nd:Start() end,{},math.random(1,260))
-SCHEDULER:New(nil,function() i03rd:Start() end,{},math.random(1,260))
+i01st:Start()
+i02nd:Start()
+i03rd:Start()
 -- Bandar Units
-SCHEDULER:New(nil,function() i31st:Start() end,{},math.random(1,120))
-SCHEDULER:New(nil,function() i32nd:Start() end,{},math.random(1,120))
-SCHEDULER:New(nil,function() i33rd:Start() end,{},math.random(1,120))
+i31st:Start()
+i32nd:Start() 
+i33rd:Start() 
 -- Bandar Intercept.
 i33rd_2:Start()
 -- Havadaria Intercept
 i33rd_1:Start()
-
 --kish
-SCHEDULER:New(nil,function() i91st:Start() end,{},math.random(1,120))
+i91st:Start()
 --intercept
 i91st_1:Start()
 end

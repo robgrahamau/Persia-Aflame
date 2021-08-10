@@ -11,7 +11,7 @@ ARC2_Timer = 0
 do
 Texaco11 = GROUP:FindByName("Texaco 11")
 Texaco11Spawn = SPAWN:New("Texaco 11"):InitLimit(1,3):OnSpawnGroup(function(spawngroup) 
-  Texaco = spawngroup
+  Texaco11 = spawngroup
 end,{}):InitRepeatOnLanding():InitCleanUp(600):SpawnScheduled(1800,0.5)
 Texaco21 = GROUP:FindByName("Texaco 21")
 Texaco21Spawn = SPAWN:New("Texaco 21"):InitLimit(1,3):OnSpawnGroup(function(spawngroup) 

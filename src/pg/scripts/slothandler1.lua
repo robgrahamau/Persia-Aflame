@@ -5,11 +5,10 @@ STTS = {}
 -- FULL Path to the FOLDER containing DCS-SR-ExternalAudio.exe - EDIT TO CORRECT FOLDER
 STTS.DIRECTORY = "E:\\DCS-SimpleRadio-Standalone"
 STTS.SRS_PORT = 5002 -- LOCAL SRS PORT - DEFAULT IS 5002
-
-
 -- DONT CHANGE THIS UNLESS YOU KNOW WHAT YOU'RE DOING
 STTS.EXECUTABLE = "DCS-SR-ExternalAudio.exe"
 spawned = {}
+
 function STTS.TextToSpeech(message,freqs,modulations, volume,name, coalition )
 
     message = message:gsub("\"","\\\"")
@@ -89,6 +88,7 @@ lmsg = nil
 smsg = nil
 banmsg = nil
 tmsg = nil
+fujmsg = nil
 jirmsg = nil
 ejaskmsg = nil
 shiraz = nil
@@ -106,6 +106,7 @@ kishspawn = false
 qeshmspawn = false
 abunspawn = false
 havspawn = false
+fujspawn = false
 bandarlspawn = false
 spawnnumber = 1
 spawner = nil
@@ -191,6 +192,8 @@ function spawnmainland()
   SCHEDULER:New(nil,function() allowmain = true end,{},math.random(300,600))
   end
 end
+
+
 spawned = {}
 function spawndefenders(groupname)
   BASE:E({"SPAWNING DEFENDERS IF Loading == False",Loading,groupname})
@@ -231,6 +234,72 @@ function spawndefenders(groupname)
 	end
 end
 
+
+function randomform()
+  local rndnum = math.random(1,7)
+  BASE:E({"Random Form number is",rndnum})
+  if rndnum == 1 then
+    return "Off road"
+  elseif rndnum == 2 then
+    return "Line abreast"
+  elseif rndnum == 3 then
+    return "Cone"
+  elseif rndnum == 4 then
+    return "Vee"
+  elseif rndnum == 5 then
+    return "Diamond"
+  elseif rndnum == 6 then
+    return "Echelon Left"
+  elseif rndnum == 7 then
+    return "Echelon Right"
+  else
+    return "Off road"   
+  end  
+  -- return "Off road" -- try and fix the @$@ routing issues of late.
+end
+rbg = SET_GROUP:New():FilterCoalitions("red"):FilterActive(true):FilterStart()
+abg = SET_GROUP:New():FilterCoalitions("blue"):FilterActive(true):FilterStart()
+
+function routegroups(_coord,dist,coalition)
+	if coalition == "blue" or coalition == "Blue" or coalition == "BLUE" then
+		local gunits = abg:FilterCategoryGround():FilterActive(true):FilterOnce()
+		gunits:ForEach(function(g)  
+			if g:IsAlive() == true then
+				local _group = GROUP:FindByName(g:GetName())
+				gc = _group:GetCoordinate()
+				if gc == nil then
+					BASE:E({"Could not get Coord for group:",g:GetName(),g:GetCoordinate(),gc})
+				else
+					local d = gc:Get2DDistance(_coord)
+					if d < dist then
+						local rcoord = _coord:GetRandomCoordinateInRadius(500,100)
+						g:RouteGroundTo(rcoord,math.random(10,20),randomform(),5)
+					end
+				end
+			end
+		end)
+	else
+		local gunits = rbg:FilterCategoryGround():FilterActive(true):FilterOnce()
+		gunits:ForEach(function(g)
+			if g:IsAlive() == true then
+				local _group = GROUP:FindByName(g:GetName())
+				gc = _group:GetCoordinate()
+				if gc == nil then
+					BASE:E({"Could not get Coord for group:",g:GetName(),g:GetCoordinate(),gc})
+				else
+					local d = gc:Get2DDistance(_coord)
+					if d < dist then
+						local rcoord = _coord:GetRandomCoordinateInRadius(500,100)
+						g:RouteGroundTo(rcoord,math.random(10,20),randomform(),5)
+					end
+				end
+			else
+				BASE:E({"Group is dead",g:GetName()})
+			end
+		end)
+	end
+end
+
 function spawnctld(airbase,country,heading,distance)
 	if heading == nil then
 		heading = math.random(0,359)
@@ -260,8 +329,15 @@ end
 
 function slot_tunb(coalition)
     BASE:E({"SLOTS RUNNING FOR TUNB",coalition})
+	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Tunb_Island_AFB)
+	local _coord = ab:GetCoordinate()
     if coalition == 1 then
 		if tmsg ~= false then
+		routegroups(_coord,15000,"blue")
+		trigger.action.setUserFlag("Tunb_Hind",0)
+		trigger.action.setUserFlag("Tunb_Hind-1",0)
+		trigger.action.setUserFlag("Tunb_Hind-2",100)
+		trigger.action.setUserFlag("Tunb_Hind-3",100)
 		trigger.action.setUserFlag("Tunb UH1 #001",0)
 		trigger.action.setUserFlag("Tunb UH1",0)
 		trigger.action.setUserFlag("Tunb MI8",0)
@@ -288,6 +364,7 @@ function slot_tunb(coalition)
         TunbBlue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Tnub B"):Spawn()
       end
         if tmsg ~= true then
+		  routegroups(_coord,15000,"red")
           trigger.action.setUserFlag("Tunb UH1 #001",100)
           trigger.action.setUserFlag("Tunb UH1",100)
           trigger.action.setUserFlag("Tunb MI8",100)
@@ -300,6 +377,10 @@ function slot_tunb(coalition)
           trigger.action.setUserFlag("Tunb Georgia KA50 #001",0)
           trigger.action.setUserFlag("Tunb Georgia MI8",0)
           trigger.action.setUserFlag("Tunb Georgia MI8 #001",0)
+		  trigger.action.setUserFlag("Tunb_Hind",100)
+			trigger.action.setUserFlag("Tunb_Hind-1",100)
+			trigger.action.setUserFlag("Tunb_Hind-2",00)
+			trigger.action.setUserFlag("Tunb_Hind-3",00)
           ctld.changeRemainingGroupsForPickupZone("CTLD Tunb Island", 4)
           MESSAGE:New("Coalition forces have liberated Tunb from Iran",30):ToAll()
          -- STTS.TextToSpeech("Tunb has fallen to the capitalist infidels",253.00,"AM",0.75,"TGW Command", 1 )
@@ -313,6 +394,7 @@ function slot_tunb(coalition)
 end
 
 function slot_sirri(coalition)
+	BASE:E({"Slots Sirri"})
   ctld.changeRemainingGroupsForPickupZone("CTLD Sirri Island",3)
   if coalition == 1 then
     SirriBlue:Destroy()
@@ -321,19 +403,24 @@ function slot_sirri(coalition)
     BASE:E({"LETS GET Sirri Red's name",SirriRed:GetName()})
     end
 	if smsg ~= false then
+	    local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Sirri_Island)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,15000,"blue")
 		trigger.action.setUserFlag("Sirri US Island MI8", 100)
 		trigger.action.setUserFlag("Sirri US Island MI8 #001", 100)
 		trigger.action.setUserFlag("Sirri US Island KA50", 100)
 		trigger.action.setUserFlag("Sirri US Island KA50 #001", 100)
 		trigger.action.setUserFlag("Sirri US Island UH1", 100)
 		trigger.action.setUserFlag("Sirri US Island UH1 #001", 100)
+		trigger.action.setUserFlag("Sirri_Hind", 00)
+		trigger.action.setUserFlag("Sirri_Hind-1", 100)
 		MESSAGE:New("Iran has Retaken Sirri Island from the Coalition Invaders!",30):ToAll()
 		-- STTS.TextToSpeech("Sirri Island has been retaken from the US led scum",253.00,"AM",0.75,"TGW Command", 1 )
 		-- STTS.TextToSpeech("We have lost Sirri Island to Iran!",253.00,"AM",0.75,"TGW Command", 2 )
 		hm("> Siri Island has been taken by Iran ")
 		smsg = false
 		sirrispawn = false
-		spawnctld(AIRBASE.PersianGulf.Sirri_Island,34,0,100)
+		spawnctld(AIRBASE.PersianGulf.Sirri_Island,34,0,250)
     end
   else
     SirriRed:Destroy()
@@ -342,12 +429,17 @@ function slot_sirri(coalition)
 		BASE:E({"LETS GET Sirri Blue's name",SirriBlue:GetName()})
     end
 	if smsg ~= true then
+		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Sirri_Island)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,15000,"red")
 		trigger.action.setUserFlag("Sirri US Island MI8", 0)
 		trigger.action.setUserFlag("Sirri US Island MI8 #001", 0)
 		trigger.action.setUserFlag("Sirri US Island KA50", 0)
 		trigger.action.setUserFlag("Sirri US Island KA50 #001", 0)
 		trigger.action.setUserFlag("Sirri US Island UH1", 0)
 		trigger.action.setUserFlag("Sirri US Island UH1 #001", 0)
+		trigger.action.setUserFlag("Sirri_Hind", 100)
+		trigger.action.setUserFlag("Sirri_Hind-1", 00)
 		MESSAGE:New("Coalition Forces have liberated Sirri Island from Iran",30):ToAll()
 		--STTS.TextToSpeech("Sirri Island has been lost to the western invaders",253.00,"AM",0.75,"TGW Command", 1 )
 		--STTS.TextToSpeech("We liberated Sirri Island from Iran!",253.00,"AM",0.75,"TGW Command", 2 )
@@ -360,12 +452,13 @@ function slot_sirri(coalition)
 		end,{},math.random(60,300))
 		end
 		smsg = true
-		spawnctld(AIRBASE.PersianGulf.Sirri_Island,2,30,100)
+		spawnctld(AIRBASE.PersianGulf.Sirri_Island,2,30,250)
   end
   end
 end
 
 function slot_lavan(coalition)
+	BASE:E({"Slots Lavan"})
   ctld.changeRemainingGroupsForPickupZone("CTLD Lavin Island",3)
   if coalition == 1 then
 	LavanBlue:Destroy()
@@ -373,7 +466,9 @@ function slot_lavan(coalition)
       LavanRed:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Lavin"):Spawn()
     end
   if lmsg ~= false then
-    
+    local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Lavan_Island_Airport)
+	local _coord = ab:GetCoordinate()
+	routegroups(_coord,15000,"blue")
     trigger.action.setUserFlag("Lavin Island UH1", 0)
     trigger.action.setUserFlag("Lavin Island UH1 #001", 0)
     trigger.action.setUserFlag("Lavin Island KA50", 0)
@@ -404,6 +499,9 @@ function slot_lavan(coalition)
 		end
 	end
   if lmsg ~= true then
+	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Lavan_Island_Airport)
+	local _coord = ab:GetCoordinate()
+	routegroups(_coord,15000,"red")
     trigger.action.setUserFlag("Lavin Island UH1", 100)
     trigger.action.setUserFlag("Lavin Island UH1 #001", 100)
     trigger.action.setUserFlag("Lavin Island KA50", 100)
@@ -435,6 +533,7 @@ function slot_lavan(coalition)
 end
 
 function slot_kish(coalition)
+	BASE:E({"Slots Kish"})
   ctld.changeRemainingGroupsForPickupZone("CTLD Kish Island",3)
   if coalition == 1 then
 	if KishBlue ~= nil then
@@ -448,7 +547,14 @@ function slot_kish(coalition)
 		KishRed = SPAWNSTATIC:NewFromStatic("CTLD Kish"):Spawn()		
 	end
   if kimsg ~= false then
+	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Kish_International_Airport)
+	local _coord = ab:GetCoordinate()
+	routegroups(_coord,15000,"blue")
     trigger.action.setUserFlag("Kish UH1", 0)
+	trigger.action.setUserFlag("Kish_Hind", 0)
+	trigger.action.setUserFlag("Kish_Hind-1", 0)
+	trigger.action.setUserFlag("Kish_Hind-2", 100)
+	trigger.action.setUserFlag("Kish_Hind-3", 100)
     trigger.action.setUserFlag("Kish UH1 #001", 0)
     trigger.action.setUserFlag("Kish Mi8", 0)
     trigger.action.setUserFlag("Kish Mi8 #001", 0)
@@ -508,6 +614,9 @@ function slot_kish(coalition)
 		end
 	end
   if kimsg ~= true then
+	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Kish_International_Airport)
+	local _coord = ab:GetCoordinate()
+	routegroups(_coord,15000,"red")
      trigger.action.setUserFlag("Kish UH1", 100)
     trigger.action.setUserFlag("Kish UH1 #001", 100)
     trigger.action.setUserFlag("Kish Mi8", 100)
@@ -529,11 +638,16 @@ function slot_kish(coalition)
     trigger.action.setUserFlag("KishBoar -1",00)
     trigger.action.setUserFlag("KishBoar -2",00)
     trigger.action.setUserFlag("KishBoar -3",00)
-    trigger.action.setUserFlag("KishBoar -4",00)
+    trigger.action.setUserFlag("KishBoar -4",00)	
+	trigger.action.setUserFlag("Kish_Hind", 100)
+	trigger.action.setUserFlag("Kish_Hind-1", 100)
+	trigger.action.setUserFlag("Kish_Hind-2", 00)
+	trigger.action.setUserFlag("Kish_Hind-3", 00)
     if usenew == false then
       ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},-99)
       ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},-99)    
     else
+	 BASE:E({"Kish Should be 0"})
       i91st:SetSqnCount(0)
       i91st:Stop()
       --intercept
@@ -564,10 +678,17 @@ function slot_qeshm(coalition)
       QeshmRed:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Qeshm Island"):Spawn()
     end
   if qemsg ~= false then
+	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Qeshm_Island)
+	local _coord = ab:GetCoordinate()
+	routegroups(_coord,15000,"blue")
     trigger.action.setUserFlag("Qeshm Island US UH1", 100)
     trigger.action.setUserFlag("Qeshm Island US UH1 #001", 100)
     trigger.action.setUserFlag("Qeshm Island US KA50", 100)
     trigger.action.setUserFlag("Qeshm Island US KA50 #001", 100)
+	trigger.action.setUserFlag("Qeshm_hind",100)
+	trigger.action.setUserFlag("Qeshm_hind-1",100)
+	trigger.action.setUserFlag("Qeshm_hind-2",00)
+	trigger.action.setUserFlag("Qeshm_hind-3",00)
     trigger.action.setUserFlag("Qeshm F14-1",00)
     trigger.action.setUserFlag("Qeshm F14",00)
     trigger.action.setUserFlag("Qeshm F16-1",00)
@@ -597,10 +718,17 @@ function slot_qeshm(coalition)
         end
 	end
   if qemsg ~= true then
+	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Qeshm_Island)
+	local _coord = ab:GetCoordinate()
+	routegroups(_coord,25000,"red")
     trigger.action.setUserFlag("Qeshm Island US UH1", 00)
     trigger.action.setUserFlag("Qeshm Island US UH1 #001", 00)
     trigger.action.setUserFlag("Qeshm Island US KA50", 00)
     trigger.action.setUserFlag("Qeshm Island US KA50 #001", 00)
+	trigger.action.setUserFlag("Qeshm_hind",00)
+	trigger.action.setUserFlag("Qeshm_hind-1",00)
+	trigger.action.setUserFlag("Qeshm_hind-2",100)
+	trigger.action.setUserFlag("Qeshm_hind-3",100)
     trigger.action.setUserFlag("Qeshm F14-1",100)
     trigger.action.setUserFlag("Qeshm F14",100)
     trigger.action.setUserFlag("Qeshm F16-1",100)
@@ -625,7 +753,7 @@ function slot_qeshm(coalition)
       spawndefenders("qeshmspawn")
     end,{},math.random(60,300))
 	end
-	spawnctld(AIRBASE.PersianGulf.Qeshm_Island,2,330,100)
+	spawnctld(AIRBASE.PersianGulf.Qeshm_Island,2,330,150)
   end
   end
 end
@@ -639,9 +767,16 @@ function slot_khasab(coalition)
 	end
 	
   if khmsg ~= false then
+	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Khasab)
+	local _coord = ab:GetCoordinate()
+	routegroups(_coord,15000,"blue")
     MESSAGE:New("Iran Forces have captured Khasab in the Omani Republic! And began to Steal US Aircraft!",30):ToAll()
     hm("> Khasab Island has been taken by Iran US AIRCRAFT BEING STOLEN")
-    trigger.action.setUserFlag("RED KA50 Khasab", 00)
+    trigger.action.setUserFlag("Khasab_Hind", 00)
+	trigger.action.setUserFlag("Khasab_Hind-1", 00)
+	trigger.action.setUserFlag("Khasab_Hind-2", 100)
+	trigger.action.setUserFlag("Khasab_Hind-3", 100)
+	trigger.action.setUserFlag("RED KA50 Khasab", 00)
     trigger.action.setUserFlag("RED KA50 Khasab #001", 00)
     trigger.action.setUserFlag("RED UH1 Khasab", 00)
     trigger.action.setUserFlag("RED UH1 Khasab #001", 00)
@@ -693,7 +828,7 @@ function slot_khasab(coalition)
     end
     khmsg = false
 	khasabspawn = false
-	spawnctld(AIRBASE.PersianGulf.Khasab,34,000,500)
+	spawnctld(AIRBASE.PersianGulf.Khasab,34,345,500)
   end
   else
 	KhasabRed:Destroy()
@@ -702,6 +837,9 @@ function slot_khasab(coalition)
     end
   
   if khmsg ~= true then
+	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Khasab)
+	local _coord = ab:GetCoordinate()
+	routegroups(_coord,15000,"red")
     trigger.action.setUserFlag("RED KA50 Khasab", 100)
     trigger.action.setUserFlag("RED KA50 Khasab #001", 100)
     trigger.action.setUserFlag("RED UH1 Khasab", 100)
@@ -747,7 +885,7 @@ function slot_khasab(coalition)
     --STTS.TextToSpeech("Khasab is once more in the rightful hands of the Omani people.",253.00,"AM",0.75,"TGW Command", 2 )
     hm("> Khasab Island has been taken by Coalition Forces")
     khmsg = true
-	spawnctld(AIRBASE.PersianGulf.Khasab,2,000,500)
+	spawnctld(AIRBASE.PersianGulf.Khasab,2,345,500)
   end
   end
 
@@ -762,6 +900,9 @@ function slot_bandar(coalition)
       if BandarRed:IsAlive() ~= true then
         BandarRed:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD BandarFarp"):Spawn()
       end
+	  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Bandar_Abbas_Intl)
+	local _coord = ab:GetCoordinate()
+	routegroups(_coord,11000,"blue")
       trigger.action.setUserFlag("Bandar MI8", 00)
     trigger.action.setUserFlag("Bandar MI8 #001", 00)
     trigger.action.setUserFlag("Bandar UH1", 00)
@@ -806,6 +947,8 @@ function slot_bandar(coalition)
     trigger.action.setUserFlag("Bandar SU-33-1",00)
     trigger.action.setUserFlag("Bandar_J11",00)
     trigger.action.setUserFlag("Bandar_J11-1",00)
+	trigger.action.setUserFlag("bandar_hind",00)
+	trigger.action.setUserFlag("bandar_hind-1",00)
       if usenew == false then
         ra2disp:SetSquadron("Bandar Abbas",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG21_1","MIG29_2"},4)
         ra2disp:SetSquadron("Bandar Abbas 2",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG29_1","MIG29_2","JF17_1","JF17_2","F4_1","F4_2"},4)
@@ -851,6 +994,9 @@ function slot_bandar(coalition)
 			BandarBlue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD BandarFarp B"):Spawn()
 		end
 	end
+	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Bandar_Abbas_Intl)
+	local _coord = ab:GetCoordinate()
+	routegroups(_coord,20000,"red")
     trigger.action.setUserFlag("Bandar MI8", 100)
     trigger.action.setUserFlag("Bandar MI8 #001", 100)
     trigger.action.setUserFlag("Bandar UH1", 100)
@@ -895,6 +1041,8 @@ function slot_bandar(coalition)
     trigger.action.setUserFlag("Bandar SU-33-1",100)
     trigger.action.setUserFlag("Bandar_J11",100)
     trigger.action.setUserFlag("Bandar_J11-1",100)
+	trigger.action.setUserFlag("bandar_hind",00)
+	trigger.action.setUserFlag("bandar_hind-1",00)
     if usenew == false then
       ra2disp:SetSquadron("Bandar Abbas",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG21_1","MIG29_2"},0)
       ra2disp:SetSquadron("Bandar Abbas 2",AIRBASE.PersianGulf.Bandar_Abbas_Intl,{"MIG29_1","MIG29_2","JF17_1","JF17_2","F4_1","F4_2"},0)
@@ -935,7 +1083,14 @@ function slot_lars(coalition)
 		if LarsRed:IsAlive() ~= true then
 			LarsRed:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD FLar B"):Spawn()
 		end
+		 local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Lar_Airbase)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,25000,"blue")
 		BASE:E({"Lars shuld be locked to Blue"})
+		trigger.action.setUserFlag("Lar_hind", 00)
+		trigger.action.setUserFlag("Lar_hind-1", 00)
+		trigger.action.setUserFlag("Lar_hind-2", 100)
+		trigger.action.setUserFlag("Lar_hind-3", 100)
 		trigger.action.setUserFlag("LarsK -1", 100)
 		trigger.action.setUserFlag("LarsK -2", 100)
 		trigger.action.setUserFlag("LarsK -3", 100)
@@ -979,6 +1134,9 @@ function slot_lars(coalition)
 				LarsBlue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD FLar"):Spawn()
 			end   
 		end
+		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Lar_Airbase)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,25000,"red")
 		BASE:E({"Lars shuld be locked to Red"})
 		trigger.action.setUserFlag("LarsK -1", 00)
 		trigger.action.setUserFlag("LarsK -2", 00)
@@ -988,6 +1146,10 @@ function slot_lars(coalition)
 		trigger.action.setUserFlag("LarsU -2", 00)
 		trigger.action.setUserFlag("LarsU -3", 00)
 		trigger.action.setUserFlag("LarsU -4", 00)
+		trigger.action.setUserFlag("Lar_hind", 100)
+		trigger.action.setUserFlag("Lar_hind-1", 100)
+		trigger.action.setUserFlag("Lar_hind-2", 00)
+		trigger.action.setUserFlag("Lar_hind-3", 00)
 		trigger.action.setUserFlag("LARS_JF-17_Springfield7", 100)
 		trigger.action.setUserFlag("LARS_JF-17_Springfield7 #001", 100)
 		trigger.action.setUserFlag("Pak-F16-Lar",100)
@@ -1064,7 +1226,17 @@ function slot_ejask(coalition)
 		end
 		trigger.action.setUserFlag("JF17 - Bandar-e-jask 1-1",00)
 		trigger.action.setUserFlag("JF17 - Bandar-e-jask 1-2",00)
-		
+		trigger.action.setUserFlag("Hind_e_jask",00)
+		trigger.action.setUserFlag("Hind_e_jask-1",00)
+		trigger.action.setUserFlag("Hind_e_jask-2",100)
+		trigger.action.setUserFlag("Hind_e_jask-3",100)
+		trigger.action.setUserFlag("UH1_e_jask-1",100)
+		trigger.action.setUserFlag("UH1_e_jask-2",100)
+		trigger.action.setUserFlag("UH1_e_jask-3",00)
+		trigger.action.setUserFlag("UH1_e_jask-4",00)
+		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Bandar_e_Jask_airfield)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,15000,"blue")
 	else
 		if (ejaskmsg == nil) or (ejaskmsg == true) then
 			MESSAGE:New("Bandar E-Jask Has been taken by the Coalition",30):ToAll()
@@ -1072,9 +1244,19 @@ function slot_ejask(coalition)
 			hm("> Bandar-E-Jask Taken by Iran, Slots closed")
 			spawnctld(AIRBASE.PersianGulf.Bandar_e_Jask_airfield,2,50,500)
 		end
+		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Bandar_e_Jask_airfield)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,25000,"red")
 		trigger.action.setUserFlag("JF17 - Bandar-e-jask 1-1",100)
 		trigger.action.setUserFlag("JF17 - Bandar-e-jask 1-2",100)
-		
+		trigger.action.setUserFlag("Hind_e_jask",100)
+		trigger.action.setUserFlag("Hind_e_jask-1",100)
+		trigger.action.setUserFlag("Hind_e_jask-2",00)
+		trigger.action.setUserFlag("Hind_e_jask-3",00)
+		trigger.action.setUserFlag("UH1_e_jask-1",00)
+		trigger.action.setUserFlag("UH1_e_jask-2",00)
+		trigger.action.setUserFlag("UH1_e_jask-3",100)
+		trigger.action.setUserFlag("UH1_e_jask-4",100)
 	end
 end
 function slot_havadarya(coalition)
@@ -1084,10 +1266,15 @@ function slot_havadarya(coalition)
       if havred:IsAlive() ~= true then
         havred:ReSpawn() 
       end
+	  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Havadarya)
+	  local _coord = ab:GetCoordinate()
+	  routegroups(_coord,11000,"blue")
       trigger.action.setUserFlag("Frogfoot 31", 00)
       trigger.action.setUserFlag("Frogfoot 32", 00)
       trigger.action.setUserFlag("Frogfoot 33", 00)
       trigger.action.setUserFlag("Frogfoot 34", 00)
+	  trigger.action.setUserFlag("Hav_hind", 100)
+	  trigger.action.setUserFlag("Hav_hind-1", 100)
       trigger.action.setUserFlag("Hav US UH1", 100)
       trigger.action.setUserFlag("Hav US UH1 #001", 100)
       trigger.action.setUserFlag("Hav US UH1 #002", 100)
@@ -1132,6 +1319,9 @@ function slot_havadarya(coalition)
 			havblue:ReSpawn() 
 		end
 	end
+	  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Havadarya)
+	  local _coord = ab:GetCoordinate()
+	  routegroups(_coord,8000,"red")
       trigger.action.setUserFlag("Frogfoot 31", 100)
       trigger.action.setUserFlag("Frogfoot 32", 100)
       trigger.action.setUserFlag("Frogfoot 33", 100)
@@ -1152,6 +1342,8 @@ function slot_havadarya(coalition)
       trigger.action.setUserFlag("Hav US KA50 #001", 00)
       trigger.action.setUserFlag("Hav US KA50 #002", 00)
       trigger.action.setUserFlag("Hav US KA50 #003", 00)
+	  trigger.action.setUserFlag("Hav_hind", 00)
+	  trigger.action.setUserFlag("Hav_hind-1", 00)
       if usenew == false then
         ra2disp:SetSquadron("Bandar Abbas INT",AIRBASE.PersianGulf.Havadarya,{"MIG21_2"},0)      
       else
@@ -1177,7 +1369,10 @@ function slot_bandarlengeh(coalition)
   if coalition == 1 then
     
     if blenmsg ~= false then
-      trigger.action.setUserFlag("Lengeh_JF11",00)
+      local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Bandar_Lengeh)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,25000,"blue")
+	  trigger.action.setUserFlag("Lengeh_JF11",00)
       trigger.action.setUserFlag("Lengeh_F14",00)
       trigger.action.setUserFlag("Lengeh_MiG29",00)
     
@@ -1198,6 +1393,9 @@ function slot_bandarlengeh(coalition)
     end
   else
     if blenmsg ~= true then
+		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Bandar_Lengeh)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,25000,"red")
       trigger.action.setUserFlag("Lengeh_JF11",100)
       trigger.action.setUserFlag("Lengeh_F14",100)
       trigger.action.setUserFlag("Lengeh_MiG29",100)
@@ -1231,6 +1429,9 @@ function slot_jir(coalition)
  --     STTS.TextToSpeech("We have lost Jiroft, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
       hm("> Jiroft has been taken by Iran")
       jirmsg = false
+	  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Jiroft_Airport)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,25000,"blue")
 	  spawnctld(AIRBASE.PersianGulf.Jiroft_Airport,34,40,500)
     end
   else
@@ -1245,10 +1446,82 @@ function slot_jir(coalition)
       hm("> Havadarya has been taken by Coalition Forces  ")
       jirmsg = true
       SCHEDULER:New(nil,spawnmainland,{},math.random(5,1200))
+	  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Jiroft_Airport)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,25000,"red")
+	  spawnctld(AIRBASE.PersianGulf.Jiroft_Airport,34,40,500)
 	  spawnctld(AIRBASE.PersianGulf.Jiroft_Airport,2,40,500)
     end
   end
 end
+
+
+function slot_fuj(coalition)
+  if coalition == 1 then    
+    if fujmsg ~= false then
+		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Fujairah_Intl)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,25000,"blue")
+		trigger.action.setUserFlag("Fujairah_Hind",00)
+		trigger.action.setUserFlag("Fujairah_Hind-1",00)
+		trigger.action.setUserFlag("Fujairah_Hind-2",100)
+		trigger.action.setUserFlag("Fujairah_Hind-3",100)
+		trigger.action.setUserFlag("MI8_Fujairah_02-2",00)
+		trigger.action.setUserFlag("MI8_Fujairah_02-1",00)
+		trigger.action.setUserFlag("UH1_Fujairah_02-1",00)
+		trigger.action.setUserFlag("UH1_Fujairah_02-2",00)
+		trigger.action.setUserFlag("KA50_Fujairah_02-1",00)
+		trigger.action.setUserFlag("KA50_Fujairah_02-2",00)
+		trigger.action.setUserFlag("MI8_Fujairah_01-2",100)
+		trigger.action.setUserFlag("MI8_Fujairah_01-1",100)
+		trigger.action.setUserFlag("UH1_Fujairah_01-1",100)
+		trigger.action.setUserFlag("UH1_Fujairah_01-2",100)
+		trigger.action.setUserFlag("KA50_Fujairah_01-1",100)
+		trigger.action.setUserFlag("KA50_Fujairah_01-2",100)
+		trigger.action.setUserFlag("AV8_Fujairah_01-2",100)
+		trigger.action.setUserFlag("AV8_Fujairah_01-1",100)
+		trigger.action.setUserFlag("A10II_Fujairah_01-1",100)
+		trigger.action.setUserFlag("A10II_Fujairah_01-2",100)
+		MESSAGE:New("Fujairah has been retaken from the coalition forces",30):ToAll()
+        hm("> Fujairah has been taken by Iran  ")
+		fujmsg = false
+		fujspawn = false
+		spawnctld(AIRBASE.PersianGulf.Fujairah_Intl,34,180,500)
+    end
+  else
+    if fujmsg ~= true then
+		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Fujairah_Intl)
+		local _coord = ab:GetCoordinate()
+		routegroups(_coord,15000,"red")
+		trigger.action.setUserFlag("Fujairah_Hind",100)
+		trigger.action.setUserFlag("Fujairah_Hind-1",100)
+		trigger.action.setUserFlag("Fujairah_Hind-2",00)
+		trigger.action.setUserFlag("Fujairah_Hind-3",00)
+		trigger.action.setUserFlag("MI8_Fujairah_02-2",100)
+		trigger.action.setUserFlag("MI8_Fujairah_02-1",100)
+		trigger.action.setUserFlag("UH1_Fujairah_02-1",100)
+		trigger.action.setUserFlag("UH1_Fujairah_02-2",100)
+		trigger.action.setUserFlag("KA50_Fujairah_02-1",100)
+		trigger.action.setUserFlag("KA50_Fujairah_02-2",100)
+		trigger.action.setUserFlag("MI8_Fujairah_01-2",000)
+		trigger.action.setUserFlag("MI8_Fujairah_01-1",000)
+		trigger.action.setUserFlag("UH1_Fujairah_01-1",000)
+		trigger.action.setUserFlag("UH1_Fujairah_01-2",000)
+		trigger.action.setUserFlag("KA50_Fujairah_01-1",000)
+		trigger.action.setUserFlag("KA50_Fujairah_01-2",000)
+		trigger.action.setUserFlag("AV8_Fujairah_01-2",000)
+		trigger.action.setUserFlag("AV8_Fujairah_01-1",000)
+		trigger.action.setUserFlag("A10II_Fujairah_01-1",000)
+		trigger.action.setUserFlag("A10II_Fujairah_01-2",000)
+		MESSAGE:New("Fujairah has been taken from the Irani People",30):ToAll()
+        hm("> Fujairah has been taken by Coalition forces")
+		SCHEDULER:New(nil,spawnmainland,{},math.random(5,1200))
+		fujmsg = true
+		spawnctld(AIRBASE.PersianGulf.Fujairah_Intl,2,180,500)
+    end
+  end
+end
+
 
 function locklhab()
   trigger.action.setUserFlag("LHA3-AV8",100)
@@ -1265,6 +1538,7 @@ function locklhab()
 end
 
 function locklha4()
+  trigger.action.setUserFlag("LHA4-Hind",100)
   trigger.action.setUserFlag("LHA4-UH1",100)  
   trigger.action.setUserFlag("LHA4-UH1 #001",100)
   trigger.action.setUserFlag("LHA4-UH1 #002",100)
@@ -1309,7 +1583,8 @@ function checkislands()
     kishactive = true
     MESSAGE:New("Marine Forces are moving up towards Kish Island, Slots now Open",30):ToBlue()
     hm("> LHA4 Slots are now Active")
-    trigger.action.setUserFlag("LHA4-UH1",00)
+    trigger.action.setUserFlag("LHA4-Hind",00)
+	trigger.action.setUserFlag("LHA4-UH1",00)
     trigger.action.setUserFlag("LHA4-UH1 #001",00)
     trigger.action.setUserFlag("LHA4-UH1 #002",00)
     trigger.action.setUserFlag("LHA4-UH1 #003",00)
@@ -1336,6 +1611,7 @@ slot_lars(1)
 slot_abun(2)
 slot_havadarya(1)
 slot_ejask(1)
+slot_fuj(2)
 airbases = {}
 function SEH:OnEventBaseCaptured(EventData)
  local AirbaseName = EventData.PlaceName -- The name of the airbase that was captured.
@@ -1379,6 +1655,8 @@ function SEH:OnEventBaseCaptured(EventData)
     slot_bandarlengeh(coalition)
  elseif AirbaseName == AIRBASE.PersianGulf.Bandar_e_Jask_airfield then
 	slot_ejask(coalition)
+ elseif AirbaseName == AIRBASE.PersianGulf.Fujairah_Intl then
+	slot_fuj(coalition)
  elseif AirbaseName == AIRBASE.PersianGulf.Kerman_Airport then
     if coalition == 1 then
       if kerman == true then
@@ -1413,7 +1691,17 @@ function SEH:OnEventBaseCaptured(EventData)
 		hm("> **Warning Airbase: ".. AirbaseName .." was lost to .. " ..col.. "**")
 		airbases[AirbaseName] = coalition
 		if coalition == 2 then
-			-- SCHEDULER:New(nil,spawnmainland,{},math.random(5,1200))
+			SCHEDULER:New(nil,spawnislands,{},math.random(60,1200))
+			SCHEDULER:New(nil,spawnmainland,{},math.random(60,1200))
+			local ABItem = AIRBASE:FindByName(AirbaseName)
+			local coalition = ABItem:GetCoalition()
+			local _coord = ABItem:GetCoordinate()
+			routegroups(_coord,15000,"red")
+		else
+			local ABItem = AIRBASE:FindByName(AirbaseName)
+			local coalition = ABItem:GetCoalition()
+			local _coord = ABItem:GetCoordinate()
+			routegroups(_coord,15000,"blue")
 		end
   end
  end
@@ -1674,32 +1962,57 @@ blueslots = {},
 redslots = {},
 }
 
-function fob:New(name,redspawn,bluespawn,coalition)
+function fob:New(name,redspawn,bluespawn,coalition,heading)
   local self = BASE:Inherit(self,BASE:New())
   self.fobname = name
+  self.heading = heading
   self.fobunit = STATIC:FindByName(name)
   self.coalition = coalition
   self.lastcoalition = coalition
   self.group = nil
   self.redspawn = redspawn:InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
 		local co = spawngroup:GetCoordinate()
-		co:Translate(100,000,false,true)
+		local plus = math.random(1,2)
+		local movement = math.random(0,10)
+		if plus == 1 then
+			heading = heading + movement
+		else
+			heading = heading - movement
+		end
+		if heading > 360 then heading = heading - 360 end
+		if heading < 0 then heading = heading + 360 end
+		co:Translate(100,heading,false,true)
 		local vec3 = co:GetVec3()
 		local _unitId = ctld.getNextUnitId()
 		local _name = "ctld Deployed FOB #" .. _unitId
 		local _fob = nil
 		_fob = ctld.spawnFOB(34, 211, vec3, _name)
 		table.insert(ctld.logisticUnits, _fob:getName())
+		if ctld.troopPickupAtFOB == true then
+			table.insert(ctld.builtFOBS, _fob:getName())
+		end
   end)
   self.bluespawn = bluespawn:InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
+		local plus = math.random(1,2)
+		local movement = math.random(0,10)
+		if plus == 1 then
+			heading = heading + movement
+		else
+			heading = heading - movement
+		end
+		if heading > 360 then heading = heading - 360 end
+		if heading < 0 then heading = heading + 360 end
 		local co = spawngroup:GetCoordinate()
-		co:Translate(100,000,false,true)
+		co:Translate(100,heading,false,true)
 		local vec3 = co:GetVec3()
 		local _unitId = ctld.getNextUnitId()
 		local _name = "ctld Deployed FOB #" .. _unitId
 		local _fob = nil
 		_fob = ctld.spawnFOB(2, 211, vec3, _name)
 		table.insert(ctld.logisticUnits, _fob:getName())
+		if ctld.troopPickupAtFOB == true then
+			table.insert(ctld.builtFOBS, _fob:getName())
+		end
   end)
   self.marker = nil
   BASE:E({self.fobname,"Created",self.coalition})
@@ -1734,10 +2047,20 @@ function fob:FlipRed()
 		self.group:Destroy()
 	end
   end
-  self.group = self.redspawn:Spawn()
+ SCHEDULER:New(nil,function() 
+	self:spawnred() 
+   end,{},60)
   self.coalition = 1
   self.lastcoalition = 2
 
+end
+
+function fob:spawnred()
+  self.group = self.redspawn:Spawn()
+end
+
+function fob:spawnblue()
+  self.group = self.bluespawn:Spawn()
 end
 
 function fob:FlipBlue()
@@ -1755,7 +2078,9 @@ function fob:FlipBlue()
 		self.group:Destroy()
 	end
   end
-  self.group = self.bluespawn:Spawn()
+  SCHEDULER:New(nil,function() 
+	self:spawnblue() 
+   end,{},60)
   self.coalition = 2
   self.lastcoalition = 1
 end
@@ -1796,6 +2121,7 @@ function fob:OnEventBaseCaptured(EventData)
  local AirbaseName = EventData.PlaceName -- The name of the airbase that was captured.
  local ABItem = AIRBASE:FindByName(AirbaseName)
  local coalition = ABItem:GetCoalition()
+ local _coord = ABItem:GetCoordinate()
  --BASE:E({self.fobname,"Base capture",coalition})
  if AirbaseName == self.fobname then
   if coalition == 2 and self.coalition ~= 2 then
@@ -1803,7 +2129,8 @@ function fob:OnEventBaseCaptured(EventData)
         self:FlipBlue()
         local col = "Coalition"
         --COORDINATE:RemoveMark(self.marker)
-    local co = self.fobunit:GetCoordinate()
+		local co = self.fobunit:GetCoordinate()
+		routegroups(_coord,15000,"red")
         --self.marker = co:MarkToAll("Helicopter Forward Operating Base, Currently Owned by: ".. col .."",true)
       end
   elseif coalition == 1 and self.coalition ~= 1 then
@@ -1811,7 +2138,8 @@ function fob:OnEventBaseCaptured(EventData)
         self:FlipRed()
         local col = "Coalition"
         --COORDINATE:RemoveMark(self.marker)
-    local co = self.fobunit:GetCoordinate()
+		local co = self.fobunit:GetCoordinate()
+		routegroups(_coord,15000,"blue")
         --self.marker = co:MarkToAll("Helicopter Forward Operating Base, Currently Owned by: ".. col .."",true)
       end
   end
@@ -1820,49 +2148,49 @@ end
 
 staticactive = false
 
-EP = fob:New("EP",SPAWN:New("red_ep"),SPAWN:New("blue_ep"),1)
+EP = fob:New("EP",SPAWN:New("red_ep"),SPAWN:New("blue_ep"),1,0)
 EP:AddRedStatics({"EPLOG"})
 EP:AddBlueStatics({"EPBLOG"})
 EP:AddRedSlots({"EPUH2","EPUH2-1","EPKA50-2","EPKA50-3","EPMI8-2","EPMI8-3"})
 EP:AddBlueSlots({"EPUH1","EPUH1-1","EPKA50","EPKA50-1","EPMI8","EPMI8-1"})
 EP:Startup()
 
-EQ = fob:New("EQ",SPAWN:New("red_EQ"),SPAWN:New("blue_EQ"),1)
+EQ = fob:New("EQ",SPAWN:New("red_EQ"),SPAWN:New("blue_EQ"),1,280)
 EQ:AddRedStatics({"EQRLOG"})
 EQ:AddBlueStatics({"EQBLOG"})
 EQ:AddRedSlots({"EQUH2","EQUH2-1"})
 EQ:AddBlueSlots({"EQUH1","EQUH1-1"})
 EQ:Startup()
 
-ER = fob:New("ER",SPAWN:New("red_ER"),SPAWN:New("blue_ER"),1)
+ER = fob:New("ER",SPAWN:New("red_ER"),SPAWN:New("blue_ER"),1,90)
 ER:AddRedStatics({"ERRLOG"})
 ER:AddBlueStatics({"ERBLOG"})
 ER:AddRedSlots({"ERUH2","ERUH2-1"})
 ER:AddBlueSlots({"ERUH1","ERUH1-1"})
 ER:Startup()
 
-FR = fob:New("FR",SPAWN:New("red_FR"),SPAWN:New("blue_FR"),1)
+FR = fob:New("FR",SPAWN:New("red_FR"),SPAWN:New("blue_FR"),1,0)
 FR:AddRedStatics({"FRRLOG"})
 FR:AddBlueStatics({"FRBLOG"})
 FR:AddRedSlots({"FRUH2","FRUH2-1"})
 FR:AddBlueSlots({"FRUH1","FRUH1-1"})
 FR:Startup()
 
-FDR = fob:New("farp fdr35",SPAWN:New("farp_resup"),SPAWN:New("farp_resupb"),1)
+FDR = fob:New("farp fdr35",SPAWN:New("farp_resup"),SPAWN:New("farp_resupb"),1,0)
 FDR:AddRedStatics({"CTLD FDR35"})
 FDR:AddBlueStatics({"CTLD FDR35 B"})
 FDR:AddRedSlots({"BFARP KA50","BFARP KA50 #001","BFARP UH1","BFARP MI8","BFARP UH1-1","BFARP MI8-1"})
 FDR:AddBlueSlots({"BFARP UH1-2","BFARP UH1-3","BFARP KA501-1","BFARP KA501","BFARP MI81","BFARP MI81-1",})
 FDR:Startup()
 
-CR = fob:New("CR",SPAWN:New("red_CR"),SPAWN:New("blue_CR"),1)
+CR = fob:New("CR",SPAWN:New("red_CR"),SPAWN:New("blue_CR"),1,90)
 CR:AddRedStatics({"CRRLOG"})
 CR:AddBlueStatics({"CRBLOG"})
 CR:AddRedSlots({"CRUH2-1","CRUH2","CRKA502","CRKA502-1"})
 CR:AddBlueSlots({"CRUH1","CRUH1-1","CRKA501","CRKA501-1"})
 CR:Startup()
 
-BQ = fob:New("BQ",SPAWN:New("red_BQ"),SPAWN:New("blue_BQ"),1)
+BQ = fob:New("BQ",SPAWN:New("red_BQ"),SPAWN:New("blue_BQ"),1,90)
 BQ:AddRedStatics({"BQRLOG"})
 BQ:AddBlueStatics({"BQBLOG"})
 BQ:AddRedSlots({"BQUH2","BQUH2-1","BQKA502","BQKA502-1"})
@@ -1872,63 +2200,63 @@ BQ:Startup()
 
 
 
-CQ = fob:New("CQ",SPAWN:New("red_CQ"),SPAWN:New("blue_CQ"),1)
+CQ = fob:New("CQ",SPAWN:New("red_CQ"),SPAWN:New("blue_CQ"),1,0)
 CQ:AddRedStatics({"CQRLOG"})
 CQ:AddBlueStatics({"CQBLOG"})
 CQ:AddRedSlots({"CQUH2","CQUH2-1","CQKA50","BQKA502-1"})
 CQ:AddBlueSlots({"CQUH1","CQUH1-1","CQKA502","CQKA502-1"})
 CQ:Startup()
 
-BR = fob:New("BR",SPAWN:New("red_BR"),SPAWN:New("blue_BR"),1)
+BR = fob:New("BR",SPAWN:New("red_BR"),SPAWN:New("blue_BR"),1,0)
 BR:AddRedStatics({"BRRLOG"})
 BR:AddBlueStatics({"BRBLOG"})
 BR:AddRedSlots({"BRUH2","BRUH2-1"})
 BR:AddBlueSlots({"BRUH1","BRUH1-1"})
 BR:Startup()
 
-BS = fob:New("BS",SPAWN:New("red_BS"),SPAWN:New("blue_BS"),1)
+BS = fob:New("BS",SPAWN:New("red_BS"),SPAWN:New("blue_BS"),1,135)
 BS:AddRedStatics({"BSRLOG"})
 BS:AddBlueStatics({"BSBLOG"})
 BS:AddRedSlots({"BSUH2","BSUH2-1","BSKA50-2","BSKA50-3"})
 BS:AddBlueSlots({"BSUH1","BSUH1-1","BSKA50","BSKA50-1"})
 BS:Startup()
 
-YN = fob:New("YN",SPAWN:New("red_YN"),SPAWN:New("blue_YN"),1)
+YN = fob:New("YN",SPAWN:New("red_YN"),SPAWN:New("blue_YN"),1,0)
 YN:AddRedStatics({"YNRLOG"})
 YN:AddBlueStatics({"YNBLOG"})
 YN:AddRedSlots({"YNUH2","YNUH2-1","BSKA502","BSKA502-1"})
 YN:AddBlueSlots({"YNUH1","YNUH1-1","YNKA501","YNKA501-1"})
 YN:Startup()
 
-DS = fob:New("DS",SPAWN:New("red_DS"),SPAWN:New("blue_DS"),1)
+DS = fob:New("DS",SPAWN:New("red_DS"),SPAWN:New("blue_DS"),1,0)
 DS:AddRedStatics({"DSRLOG"})
 DS:AddBlueStatics({"DSBLOG"})
 DS:AddRedSlots({"DSUH2","DSUH2-1","DSKA502","DSKA502-1"})
 DS:AddBlueSlots({"DSUH1","DSUH1-1","DSKA50-1","DSKA50"})
 DS:Startup()
 
-CT = fob:New("CT",SPAWN:New("red_CT"),SPAWN:New("blue_CT"),1)
+CT = fob:New("CT",SPAWN:New("red_CT"),SPAWN:New("blue_CT"),1,0)
 CT:AddRedStatics({"CTRLOG"})
 CT:AddBlueStatics({"CTBLOG"})
 CT:AddRedSlots({"CTUH2","CTUH2-1","CTKA502","CTKA502-1"})
 CT:AddBlueSlots({"CTUH1","CTUH1-1","CTKA501","CTKA501-1"})
 CT:Startup()
 
-DU = fob:New("DU",SPAWN:New("red_DU"),SPAWN:New("blue_DU"),1)
+DU = fob:New("DU",SPAWN:New("red_DU"),SPAWN:New("blue_DU"),1,0)
 DU:AddRedStatics({"DURLOG"})
 DU:AddBlueStatics({"DUBLOG"})
 DU:AddRedSlots({"DUUH2","DUUH2-1","DUKA502","DUKA502-1"})
 DU:AddBlueSlots({"DUUH1","DUUH1-1","DUKA501","DUKA501-1"})
 DU:Startup()
 
-BQ51 = fob:New("BQ51",SPAWN:New("red_BQ51"),SPAWN:New("blue_BQ51"),1)
+BQ51 = fob:New("BQ51",SPAWN:New("red_BQ51"),SPAWN:New("blue_BQ51"),1,0)
 BQ51:AddRedStatics({"BQRLOG51"})
 BQ51:AddBlueStatics({"BQBLOG51"})
 BQ51:AddRedSlots({"BQ51UH2-1","BQ51UH2"})
 BQ51:AddBlueSlots({"BQ51UH1","BQ51UH1-2"})
 BQ51:Startup()
 
-YK = fob:New("YK",SPAWN:New("red_YK"),SPAWN:New("blue_YK"),1)
+YK = fob:New("YK",SPAWN:New("red_YK"),SPAWN:New("blue_YK"),1,0)
 YK:AddRedStatics({"YKRLOG"})
 YK:AddBlueStatics({"YKBLOG"})
 YK:AddBlueSlots({"YKUH1","YKUH1-2"})
@@ -1939,7 +2267,15 @@ BASE:E({"FOB HANDLER DONE"})
 SCHEDULER:New(nil,function()
 BASE:E({"Loading is now false"})
 Loading = false
- end,{},600)
+ end,{},240)
+ 
+SCHEDULER:New(nil,function()
+ spawnislands()
+ end,{},math.random(240,600))
+ 
+SCHEDULER:New(nil,function()
+ spawnmainland()
+ end,{},math.random(600,600))
  
  
  -- hm("Statics for FOB Active is set to : `" ..staticactive .. " ` if false you will ALWAYS require the taking of FOB crates to the FARP bases")

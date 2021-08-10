@@ -193,13 +193,17 @@ _unittable={}
 
 for i = 1, size do
   if grp:GetUnit(i):IsAlive() == true then
-local tmpTable =
+	local skill = "Average"
+	if skillr == 2 or skillr == 5 then
+		skill = "Excellent"
+	end
+	local tmpTable =
     
-  {   
+	{   
     ["type"]=grp:GetUnit(i):GetTypeName(),
     ["transportable"]=true,
     ["unitID"]=grp:GetUnit(i):GetID(),
-    ["skill"]="Average",
+    ["skill"]=skill,
     ["y"]=grp:GetUnit(i):GetVec2().y,
     ["x"]=grp:GetUnit(i):GetVec2().x,
     ["name"]=grp:GetUnit(i):GetName(),
