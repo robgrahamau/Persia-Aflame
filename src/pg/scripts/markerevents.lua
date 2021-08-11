@@ -587,6 +587,7 @@ function routemassgroup(text,coord)
 		end
 		if key:lower():find("c") then
 			col = val
+		end
 	end
 	routegroups(coord,dist,col)
 end
