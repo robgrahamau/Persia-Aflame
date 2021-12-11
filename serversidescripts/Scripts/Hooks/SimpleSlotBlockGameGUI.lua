@@ -87,7 +87,8 @@ ssb.enabledFlagValue = 0  -- what value to look for to enable a slot.
 -- The examples below can be turned on by removing the -- in front
 --
 ssb.prefixes = {
-	"{TGW}",
+	--"{TGW}",
+	--"Sponge",
   -- "-=104th=-",
   -- "-=VSAAF=-",
   -- "ciribob", -- you could also add in an actual player name instead

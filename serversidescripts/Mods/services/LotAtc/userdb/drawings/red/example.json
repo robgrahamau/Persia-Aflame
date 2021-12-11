@@ -1,0 +1,60 @@
+{
+    "__comments":"THIS FILE IS AN EXAMPLE AND WILL NOT BE LOADED BECAUSE enable=false",
+    "enable": false,
+    "drawings": [
+        {
+            "author": "troller",
+            "brushStyle": 9,
+            "center_x": 40.05480957031247,
+            "center_y": 42.83831791946996,
+            "color": "#ffff0000",
+            "colorBg": "#33ffff0c",
+            "id": "{4feac678-4a66-49d6-b7d2-9b31789b187f}",
+            "lineWidth": 1,
+            "name": "",
+            "radius": 201748.99037650102,
+            "shared": true,
+            "timestamp": "30.01.2018-13:06:06",
+            "type": "circle"
+        },
+        {
+            "author": "troller",
+            "brushStyle": 1,
+            "color": "#ffff0000",
+            "colorBg": "#33ff0000",
+            "id": "{646908ac-4457-40a8-83cb-53159bf9e593}",
+            "lineWidth": 1,
+            "name": "",
+            "points": [
+                {
+                    "x": 37.604858398437464,
+                    "y": 42.77383628656178
+                },
+                {
+                    "x": 37.582885742187486,
+                    "y": 43.31179332972904
+                },
+                {
+                    "x": 38.286010742187464,
+                    "y": 42.975118185932665
+                },
+                {
+                    "x": 37.96740722656248,
+                    "y": 42.49093908680792
+                },
+                {
+                    "x": 37.494995117187486,
+                    "y": 42.48283741776425
+                },
+                {
+                    "x": 37.494995117187486,
+                    "y": 42.49093908680792
+                }
+            ],
+            "shared": true,
+            "timestamp": "30.01.2018-13:29:29",
+            "type": "polygon"
+        }
+    ],
+    "version": "1.0.3"
+}

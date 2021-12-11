@@ -1,12 +1,6 @@
 dofile('Scripts/ScriptingSystem.lua')
---[[
-do -- witchcraft
-	witchcraft = {}
-	witchcraft.host = "localhost"
-	witchcraft.port = 3001
-	dofile(lfs.writedir().."Scripts\\witchcraft.lua")
-end
-]]
+dofile(lfs.writedir()..[[Scripts\DCS-gRPC\grpc-mission.lua]])
+
 --Sanitize Mission Scripting environment
 --This makes unavailable some unsecure functions. 
 --Mission downloaded from server to client may contain potentialy harmful lua code that may use these functions.

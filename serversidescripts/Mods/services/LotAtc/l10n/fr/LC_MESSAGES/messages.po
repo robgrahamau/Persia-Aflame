@@ -1,0 +1,120 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-02 18:36+0400\n"
+"PO-Revision-Date: 2019-01-07 12:02+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Display enemies parameters (name, type,...)"
+msgstr "Paramètres d'affichage des ennemis (nom, type, ...)"
+
+msgid "Detection profile"
+msgstr "Profil de détection"
+
+msgid "Automatic type for new item"
+msgstr "Type auto pour nouvel élément"
+
+msgid "Radar modelisation"
+msgstr "Modélisation radar"
+
+msgid "Use relief (terrain masking) filter"
+msgstr "Utiliser le filtre relief (masquage terrain)"
+
+msgid "Custom profile options"
+msgstr "Profil personnalifé"
+
+msgid "Enable LotAtc"
+msgstr "Activer LotAtc"
+
+msgid ""
+"LotAtc 4 DCS is a software that allows you to simulate the role of an air "
+"traffic controller (namely, first, an Air Defense controller). LotAtc shows "
+"the tactical situation (aircraft, SAMs, boats) on a 'radar screen' with a "
+"map background. As a virtual controller, you will be able to guide human "
+"virtual pilots in DCS World multiplayer missions, by radioing them (through "
+"your regular voice software such as Teamspeak, Mumble ... etc), whether to "
+"make them find their way and/or their leader, set up to your fighters to "
+"intercept bandits, or press the muds to hide or take shelter given what "
+"happens in front of them."
+msgstr ""
+"LotAtc 4 DCS est un logiciel qui vous permet de simuler le rôle d'un "
+"contrôleur de la circulation aérienne (à savoir, d'abord, un contrôleur de "
+"la défense aérienne). LotAtc montre la situation tactique (avions, SAMs, "
+"bateaux) sur un «écran radar» avec un fond de carte. En tant que contrôleur "
+"virtuel, vous serez en mesure de guider les pilotes virtuels humains dans "
+"les missions multijoueurs du monde DCS, en les radiant (par le biais de "
+"votre logiciel de voix régulière comme TeamSpeak, Mumble... etc), que ce "
+"soit pour les faire trouver leur chemin et/ou leur chef, mis en place pour "
+"votre combattants pour intercepter des bandits, ou appuyez sur les boues "
+"pour se cacher ou se réfugier compte tenu de ce qui se passe devant eux."
+
+msgid "Approach mode on airport"
+msgstr "Mode d'approche sur l'aéroport"
+
+msgid "Use low speed filter (aircraft too slow are filtered)"
+msgstr ""
+"Utilisez le filtre à basse vitesse (les avions trop lents sont filtrés)"
+
+msgid "LotAtc 4 DCS"
+msgstr "LotAtc 4 DCS"
+
+msgid "Display enemy SAMs & Ships even outside of own radar coverage"
+msgstr ""
+"Afficher les SAMs/navires ennemis en dehors de la couverture radar propre"
+
+msgid "Arcade - see all"
+msgstr "Arcade - voir tout"
+
+msgid "Basic - see enemy SAM mid/long range"
+msgstr "Basique - voir les enemis SAM moyenne/longue distance"
+
+msgid "Realistic - see only what you can really see"
+msgstr "Réaliste - voir seulement ce que vous pouvez vraiment voir"
+
+msgid "Advanced realistic"
+msgstr "Réaliste avancé"
+
+msgid "Custom - (Use below options)"
+msgstr "Personnalisé - (utilisez les options ci-dessous)"
+
+msgid "Use mission settings"
+msgstr "Utiliser les paramètres de mission"
+
+msgid "For all"
+msgstr "Pour tous"
+
+msgid "Only for friends"
+msgstr "Seulement pour les alliés"
+
+msgid "Disable"
+msgstr "Désactiver"
+
+msgid "See all (no radar management)"
+msgstr "Voir tout (pas de gestion de radar)"
+
+msgid "Cylinder (no altitude management)"
+msgstr "Cylindrique (pas de gestion d'altitude)"
+
+msgid "Spherical (altitude is used)"
+msgstr "Sphérique (avec gestion d'altitude)"
+
+msgid "Conical (like spherical but with real constraints)"
+msgstr "Conique (=sphérique avec les vrais contraintes)"
+
+msgid "None - Approach mode Disabled"
+msgstr "Aucun - Mode approche désactivé"
+
+msgid "Own coalition airports only"
+msgstr "Seulement les aéroports alliés"
+
+msgid "All airports"
+msgstr "Tous les aéroports"

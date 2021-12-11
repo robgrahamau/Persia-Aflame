@@ -33,6 +33,7 @@ do
         campStatsDir = campStatsDir .. '\\'
     end
     
+    
     local useBuffer = false
 	-- new, reloadStats method
 	----slmod.info('do reset')
@@ -44,7 +45,7 @@ do
         local fileF
         local fileName
         local lName = ''
-        local lstatsDir = statsDir
+        local lstatsDir = slmod.deepcopy(statsDir)
         local statData
         local envName = 'stats'
         if l == 'mission' then
@@ -1584,7 +1585,7 @@ end]]
 	end
 	
 	local acft = {} -- Aircraft List. Built by attributes DB, writes list of aicraft by name and display name. 
-    
+    acft['SA342'] = true -- because unicorn
     local function buildACFT()
         for uName, unitData in pairs(slmod.unitAttributes) do
             if unitData.attributes and unitData.attributes['Air'] then
@@ -2125,39 +2126,36 @@ end]]
                                     dStat.addValue = {crash = 1}
                                     dStat.default = {crash = 0, eject = 0}
                                     slmod.stats.advChangeStatsValue(dStat)
-                                
-                                
-                                
-                                
                                 --- DO PVP STUFF
                                     --slmod.info('pvp stuff')
                                     if lHit.inAirHit or lHit.inAirHit == nil then
                                         --slmod.info('Do PvP Rules')
-                                        --slmod.info('lastHitEvent.inAirHit: '  .. tostring(lastHitEvent.inAirHit))
+                                        --slmod.info('lastHitEvent.inAirHit: '  .. tostring(lHit.inAirHit))
                                         if slmod.config.pvp_as_own_stat and slmod.config.pvp_as_own_stat > 0 and type(killerObj) == 'table' and deadClient then 
-                                            local countPvP, killerObj, victimObj = PvPRules(lHit.unitName, deadName)
+                                            local countPvP, killerType, victimObj = PvPRules(lHit.unitName, deadName)
+                                            
                                             if countPvP then  -- count in PvP!
-                                                --slmod.info('count PvP')
-                                                saveStat.nest = {'pvp', killerObj, 'kills'}
+                                                --slmod.info('valid PvP')
+                                                saveStat.nest = {'pvp', 'typeName', 'kills'}
                                                 saveStat.addValue = 1
                                                 saveStat.default = 0
                                                 slmod.stats.advChangeStatsValue(saveStat)
                                                 
-                                                dStat.nest = {'pvp', victimObj, 'losses'}
+                                                dStat.nest = {'pvp', 'typeName', 'losses'}
                                                 dStat.addValue = 1
                                                 dStat.default = 0
                                                 
                                                 slmod.stats.advChangeStatsValue(dStat)
                                                 
                                                 if slmod.config.pvp_as_own_stat == 2 then
-                                                    saveStat.nest = {'pvp', killerObj, 'killSpec', weapon, victimObj}
+                                                    saveStat.nest = {'pvp', 'typeName', 'killSpec', weapon, deadObjType}
                                                     slmod.stats.advChangeStatsValue(saveStat)
                                                     
-                                                    dStat.nest = getNest{'pvp', victimObj, 'lossSpec', killerObj, weapon}
+                                                    dStat.nest = getNest{'pvp', 'typeName', 'lossSpec', killerObjType, weapon}
                                                     slmod.stats.advChangeStatsValue(dStat)
                                                 end
                                                 
-                                                slmod.scheduleFunction(onPvPKill, {killerObj, deadClient, weapon, killerObj, victimObj, true}, DCS.getModelTime() + 0.5)
+                                                slmod.scheduleFunction(onPvPKill, {killerObj, deadClient, weapon, killerType, victimObj, true}, DCS.getModelTime() + 0.5)
                                                 --onPvPKill(killerObj, deadClient, weapon, killerObj, victimObj, true)
                                            end
                                         end
@@ -2932,7 +2930,24 @@ end]]
                         end
                     end                
                 end
-				
+                
+                if event.type == 'landing quality mark' and event.initiator and event.comment and saveStat then
+                    saveStat.nest = getNest({'actions', 'LSO'})
+                    saveStat.default = {['1'] = 0, ['2'] = 0, ['3'] = 0, ['4'] = 0, grades = {}}
+                    local findWire = string.find(event.comment, 'WIRE')
+                    local wire = tostring(string.match(event.comment, '%d', findWire))
+                    --slmod.info(wire)
+                    if wire then --- maybe isn't there, aka NO Communication
+                        saveStat.addValue = {[wire] = 1}
+                        slmod.stats.advChangeStatsValue(saveStat) -- Add LSO stat table
+                    end                                           
+                    saveStat.nest = getNest({'actions', 'LSO', 'grades'})
+                    saveStat.default = {}
+                    saveStat.addValue = nil
+                    saveStat.insert = event.comment
+                    slmod.stats.advChangeStatsValue(saveStat)
+                
+                end
 				
 				----------------------------------------------------------------------------------------------------------
 				if event.type == 'takeoff' then  -- check if this is the valid name.

@@ -1,0 +1,101 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0 trunk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-02 18:36+0400\n"
+"PO-Revision-Date: 2019-02-08 12:24-0800\n"
+"Last-Translator: uboats\n"
+"Language-Team: TODO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh_CN\n"
+"X-Generator: Poedit 2.2.1\n"
+
+msgid "Detection profile"
+msgstr "探测配置"
+
+msgid "Custom - (Use below options)"
+msgstr "自定义 - (使用以下选项)"
+
+msgid "LotAtc 4 DCS is a software that allows you to simulate the role of an air traffic controller (namely, first, an Air Defense controller). LotAtc shows the tactical situation (aircraft, SAMs, boats) on a 'radar screen' with a map background. As a virtual controller, you will be able to guide human virtual pilots in DCS World multiplayer missions, by radioing them (through your regular voice software such as Teamspeak, Mumble ... etc), whether to make them find their way and/or their leader, set up to your fighters to intercept bandits, or press the muds to hide or take shelter given what happens in front of them."
+msgstr "LotAtc 4 DCS是一款用于模拟空管的软件。LotAtc通过自身的\"雷达屏幕\"展示了相关地图的战术态势（航空器、地空导弹、舰艇等）。作为一名虚拟管控员，玩家将可以通过语音软件指挥引导DCS World多人联机里的其他玩家（例如导航、截击等任务）。"
+
+msgid "Custom profile options"
+msgstr "自定义配置选项"
+
+msgid "Approach mode on airport"
+msgstr "机场进近模式"
+
+msgid "Radar modelisation"
+msgstr "雷达模式"
+
+msgid "Display enemies parameters (name, type,...)"
+msgstr "显示敌方参数 (名称、类型、...)"
+
+msgid "Basic - see enemy SAM mid/long range"
+msgstr "基本 - 敌方SAM 中/远范围 可见"
+
+msgid "Following options are only used for Custom profile"
+msgstr "以下设置仅用于自定义选项"
+
+msgid "Only for friends"
+msgstr "仅友军"
+
+msgid "Spherical (altitude is used)"
+msgstr "球体 (考虑高度)"
+
+msgid "Automatic type for new item"
+msgstr "对新物体使用自动类型"
+
+msgid "Conical (like spherical but with real constraints)"
+msgstr "圆锥 (类似球体但附带真实限制)"
+
+msgid "LotAtc 4 DCS"
+msgstr ""
+
+msgid "None - Approach mode Disabled"
+msgstr "无 - 进近模式关闭"
+
+msgid "Display enemy SAMs & Ships even outside of own radar coverage"
+msgstr "显示己方雷达覆盖范围外的地方SAM和舰船"
+
+msgid "Own coalition airports only"
+msgstr "仅己方机场"
+
+msgid "Use mission settings"
+msgstr "使用任务设置"
+
+msgid "Advanced realistic"
+msgstr "高级真实度"
+
+msgid "Enable LotAtc"
+msgstr "启用LotAtc"
+
+msgid "Realistic - see only what you can really see"
+msgstr "真实 - 仅自己真实可见"
+
+msgid "Use relief (terrain masking) filter"
+msgstr "启用地形影响"
+
+msgid "Use low speed filter (aircraft too slow are filtered)"
+msgstr "使用低速过滤 (速度过低的航空器将被过滤)"
+
+msgid "All airports"
+msgstr "全部机场"
+
+msgid "Cylinder (no altitude management)"
+msgstr "圆柱体 (无高度限制)"
+
+msgid "See all (no radar management)"
+msgstr "全部可见 (无雷达限制)"
+
+msgid "Arcade - see all"
+msgstr "简易 - 全部可见"
+
+msgid "For all"
+msgstr "全部"
+
+msgid "Disable"
+msgstr "关闭"

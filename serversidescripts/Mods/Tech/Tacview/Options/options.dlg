@@ -1,0 +1,842 @@
+
+-- Tacview
+-- DCS World Exporter Options
+
+-- Layout
+
+local TopMargin = 48
+local LeftMargin = 32
+local CenterMargin = 80
+
+local LeftColumnX = LeftMargin
+local LeftColumnLabelWidth = 232
+local LeftColumnOptionWidth = 272
+local LeftColumnWidth = LeftColumnLabelWidth + LeftColumnOptionWidth
+
+local RightColumnX = LeftColumnX + LeftColumnWidth + CenterMargin
+local RightColumnLabelWidth = 192
+local RightColumnOptionWidth = 128
+local RightColumnWidth = RightColumnLabelWidth + RightColumnOptionWidth
+
+local LineHeight = 24
+local TotalLineHeight = LineHeight + 8
+
+local HelpLineHeight = 16
+
+-- Styles
+
+local TitleSkin = {
+		["params"] = {
+			["name"] = "staticOptionsTitleSkin",
+		},
+		["states"] = {
+			["released"] = {
+				[1] = {
+					["text"] = {
+						["horzAlign"] = {
+							["type"] = "min"
+						}
+					}
+				}
+			}
+		}
+	}
+
+local OptionLabelSkin = {
+		["params"] = {
+			["name"] = "staticOptionsCaptionSkin",
+		}
+	}
+
+local WarningSkin = {
+		["params"] = {
+			["name"] = "staticOptionsCaptionSkin",
+		},
+		["states"] = {
+			["released"] = {
+				[1] = {
+					["text"] = {
+						["horzAlign"] = {
+							["type"] = "min"
+						},
+						["color"] = "0xEFB441ff",
+					}
+				}
+			}
+		}
+	}
+
+local CheckBoxSkin = {
+		["params"] = {
+			["name"] = "checkBoxSkin_options",
+		}
+	}
+
+local ComboListSkin = {
+		["params"] = {
+			["name"] = "comboListSkin_options",
+		}
+	}
+
+local EditBoxSkin = {
+		["params"] = {
+			["name"] = "editBoxSkin_login",
+		}
+	}
+
+-- Content
+
+dialog = {
+	["children"] = {
+		["containerPlugin"] = {
+			["children"] = {
+
+				-----------------------------------------------
+				-- [X] Enable Tacview Module
+				-----------------------------------------------
+
+				-- Tacview Module Enabled
+ 
+				["tacviewModuleEnabledCheckbox"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin,
+							["w"] = 256,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["state"] = false,
+						["text"] = "$TACVIEW_MODULE_ENABLED_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 1,
+					},
+					["skin"] = CheckBoxSkin,
+					["type"] = "CheckBox",
+				},
+
+				-----------------------------------------------
+				-- Data Recording
+				-----------------------------------------------
+
+				["tacviewFlightDataRecordingTitle"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 2 * TotalLineHeight,
+							["w"] = LeftColumnWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_FLIGHT_DATA_RECORDING_TITLE",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = TitleSkin,
+					["type"] = "Static",
+				},
+
+				-- Data Recording Enabled
+ 
+				["tacviewFlightDataRecordingEnabledCheckbox"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 3 * TotalLineHeight,
+							["w"] = 192,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["state"] = false,
+						["text"] = "$TACVIEW_FLIGHT_DATA_RECORDING_ENABLED_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 2,
+					},
+					["skin"] = CheckBoxSkin,
+					["type"] = "CheckBox",
+				},
+
+				-- Single Player Flights
+
+				["tacviewSinglePlayerFlightsLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 4 * TotalLineHeight,
+							["w"] = LeftColumnLabelWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_SINGLE_PLAYER_FLIGHTS_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = OptionLabelSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewSinglePlayerFlightsComboList"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX + LeftColumnLabelWidth,
+							["y"] = TopMargin + 4 * TotalLineHeight,
+							["w"] = LeftColumnOptionWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 3,
+					},
+					["skin"] = ComboListSkin,
+					["type"] = "ComboList",
+				},
+
+				-- Multiplayer Flights - As Client
+
+				["tacviewMultiplayerFlightsAsClientLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 5 * TotalLineHeight,
+							["w"] = LeftColumnLabelWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_MULTIPLAYER_FLIGHTS_AS_CLIENT_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = OptionLabelSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewMultiplayerFlightsAsClientComboList"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX + LeftColumnLabelWidth,
+							["y"] = TopMargin + 5 * TotalLineHeight,
+							["w"] = LeftColumnOptionWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 4,
+					},
+					["skin"] = ComboListSkin,
+					["type"] = "ComboList",
+				},
+
+				-- Multiplayer Flights - As Host
+
+				["tacviewMultiplayerFlightsAsHostLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 6 * TotalLineHeight,
+							["w"] = LeftColumnLabelWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_MULTIPLAYER_FLIGHTS_AS_HOST_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = OptionLabelSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewMultiplayerFlightsAsHostComboList"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX + LeftColumnLabelWidth,
+							["y"] = TopMargin + 6 * TotalLineHeight,
+							["w"] = LeftColumnOptionWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 5,
+					},
+					["skin"] = ComboListSkin,
+					["type"] = "ComboList",
+				},
+
+				-- Bookmark Shortcut [RAlt + B]
+
+				["tacviewBookmarkShortcutLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 8 * TotalLineHeight,
+							["w"] = LeftColumnLabelWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_BOOKMARK_SHORTCUT_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = OptionLabelSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewBookmarkShortcutComboList"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX + LeftColumnLabelWidth,
+							["y"] = TopMargin + 8 * TotalLineHeight,
+							["w"] = LeftColumnOptionWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 6,
+					},
+					["skin"] = ComboListSkin,
+					["type"] = "ComboList",
+				},
+
+				-- Auto Discard Flights
+
+				["tacviewAutoDiscardFlightsLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 9 * TotalLineHeight,
+							["w"] = LeftColumnLabelWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_AUTO_DISCARD_FLIGHTS",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = OptionLabelSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewAutoDiscardFlightsComboList"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX + LeftColumnLabelWidth,
+							["y"] = TopMargin + 9 * TotalLineHeight,
+							["w"] = LeftColumnOptionWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 7,
+					},
+					["skin"] = ComboListSkin,
+					["type"] = "ComboList",
+				},
+
+				-----------------------------------------------
+				-- Advanced Options
+				-----------------------------------------------
+
+				["tacviewAdvancedOptionsTitle"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 11 * TotalLineHeight,
+							["w"] = LeftColumnWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_ADVANCED_OPTIONS_TITLE",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = TitleSkin,
+					["type"] = "Static",
+				},
+
+				-- Debug Mode [xxxxxxx]
+
+				["tacviewDebugModeLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 12 * TotalLineHeight,
+							["w"] = LeftColumnLabelWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_DEBUG_MODE_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = OptionLabelSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewDebugModeComboList"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX + LeftColumnLabelWidth,
+							["y"] = TopMargin + 12 * TotalLineHeight,
+							["w"] = LeftColumnOptionWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["tabOrder"] = 8,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = ComboListSkin,
+					["type"] = "ComboList",
+				},
+
+				-----------------------------------------------
+				-- Tools
+				-----------------------------------------------
+
+				["tacviewToolsTitle"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 14 * TotalLineHeight,
+							["w"] = LeftColumnWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_TOOLS_TITLE",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = TitleSkin,
+					["type"] = "Static",
+				},
+
+				-- Terrain Export [xxxxxxx]
+
+				["tacviewTerrainExportLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 15 * TotalLineHeight,
+							["w"] = LeftColumnLabelWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_TERRAIN_EXPORT_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = OptionLabelSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewTerrainExportComboList"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX + LeftColumnLabelWidth,
+							["y"] = TopMargin + 15 * TotalLineHeight,
+							["w"] = LeftColumnOptionWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["tabOrder"] = 9,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = ComboListSkin,
+					["type"] = "ComboList",
+				},
+
+				["tacviewTerrainExportWarning"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 16 * TotalLineHeight,
+							["w"] = LeftColumnWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_TERRAIN_EXPORT_WARNING",
+						["textWrapping"] = true,
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = WarningSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewTerrainExportWarning2"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = LeftColumnX,
+							["y"] = TopMargin + 16 * TotalLineHeight + HelpLineHeight,
+							["w"] = LeftColumnWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_TERRAIN_EXPORT_WARNING2",
+						["tooltip"] = "",
+						["visible"] = false,
+						["zindex"] = 0,
+					},
+					["skin"] = WarningSkin,
+					["type"] = "Static",
+				},
+
+				-----------------------------------------------
+				-- Real-Time Telemetry
+				-----------------------------------------------
+
+				["tacviewRealTimeTelemetryTitle"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = RightColumnX,
+							["y"] = TopMargin + 2 * TotalLineHeight,
+							["w"] = RightColumnWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_REAL_TIME_TELEMETRY_TITLE",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = TitleSkin,
+					["type"] = "Static",
+				},
+
+				-- Enabled
+ 
+				["tacviewRealTimeTelemetryEnabledCheckbox"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = RightColumnX,
+							["y"] = TopMargin + 3 * TotalLineHeight,
+							["w"] = 192,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["state"] = false,
+						["text"] = "$TACVIEW_REAL_TIME_TELEMETRY_ENABLED_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 10,
+					},
+					["skin"] = CheckBoxSkin,
+					["type"] = "CheckBox",
+				},
+
+				-- Real-Time Telemetry TCP Port [42674]
+
+				["tacviewRealTimeTelemetryPortLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = RightColumnX,
+							["y"] = TopMargin + 4 * TotalLineHeight,
+							["w"] = RightColumnLabelWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_REAL_TIME_TELEMETRY_PORT_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = OptionLabelSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewRealTimeTelemetryPortEditBox"] = {
+					["params"] = {
+						["acceptDecimalPoint"] = false,
+						["bounds"] = {
+							["x"] = RightColumnX + RightColumnLabelWidth,
+							["y"] = TopMargin + 4 * TotalLineHeight,
+							["w"] = RightColumnOptionWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["multiline"] = false,
+						["numeric"] = true,
+						["password"] = false,
+						["readOnly"] = false,
+						["text"] = "",
+						["textWrapping"] = true,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 11,
+					},
+					["skin"] = EditBoxSkin,
+					["type"] = "EditBox",
+				},
+
+				-- Real-Time Telemetry Password [*****]
+
+				["tacviewRealTimeTelemetryPasswordLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = RightColumnX,
+							["y"] = TopMargin + 5 * TotalLineHeight,
+							["w"] = RightColumnLabelWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_REAL_TIME_TELEMETRY_PASSWORD_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = OptionLabelSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewRealTimeTelemetryPasswordEditBox"] = {
+					["params"] = {
+						["acceptDecimalPoint"] = false,
+						["bounds"] = {
+							["x"] = RightColumnX + RightColumnLabelWidth,
+							["y"] = TopMargin + 5 * TotalLineHeight,
+							["w"] = RightColumnOptionWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["multiline"] = false,
+						["numeric"] = false,
+						["password"] = true,
+						["readOnly"] = false,
+						["text"] = "",
+						["textWrapping"] = true,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 12,
+					},
+					["skin"] = EditBoxSkin,
+					["type"] = "EditBox",
+				},
+
+				["tacviewRealTimeTelemetryPasswordHelp"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = RightColumnX,
+							["y"] = TopMargin + 6 * TotalLineHeight,
+							["w"] = LeftColumnWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_REAL_TIME_TELEMETRY_HELP",
+						["textWrapping"] = true,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = WarningSkin,
+					["type"] = "Static",
+				},
+
+				-----------------------------------------------
+				-- Remote Control
+				-----------------------------------------------
+
+				["tacviewRemoteControlTitle"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = RightColumnX,
+							["y"] = TopMargin + 8 * TotalLineHeight,
+							["w"] = RightColumnWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_REMOTE_CONTROL_TITLE",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = TitleSkin,
+					["type"] = "Static",
+				},
+
+				-- Enabled
+ 
+				["tacviewRemoteControlEnabledCheckbox"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = RightColumnX,
+							["y"] = TopMargin + 9 * TotalLineHeight,
+							["w"] = 192,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["state"] = false,
+						["text"] = "$TACVIEW_REMOTE_CONTROL_ENABLED_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 13,
+					},
+					["skin"] = CheckBoxSkin,
+					["type"] = "CheckBox",
+				},
+
+				-- Remote Control TCP Port [42675]
+
+				["tacviewRemoteControlPortLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = RightColumnX,
+							["y"] = TopMargin + 10 * TotalLineHeight,
+							["w"] = RightColumnLabelWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_REMOTE_CONTROL_PORT_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = OptionLabelSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewRemoteControlPortEditBox"] = {
+					["params"] = {
+						["acceptDecimalPoint"] = false,
+						["bounds"] = {
+							["x"] = RightColumnX + RightColumnLabelWidth,
+							["y"] = TopMargin + 10 * TotalLineHeight,
+							["w"] = RightColumnOptionWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["multiline"] = false,
+						["numeric"] = true,
+						["password"] = false,
+						["readOnly"] = false,
+						["text"] = "",
+						["textWrapping"] = true,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 14,
+					},
+					["skin"] = EditBoxSkin,
+					["type"] = "EditBox",
+				},
+
+				-- Remote Control Password
+
+				["tacviewRemoteControlPasswordLabel"] = {
+					["params"] = {
+						["bounds"] = {
+							["x"] = RightColumnX,
+							["y"] = TopMargin + 11 * TotalLineHeight,
+							["w"] = RightColumnLabelWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["text"] = "$TACVIEW_REMOTE_CONTROL_PASSWORD_LABEL",
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+					},
+					["skin"] = OptionLabelSkin,
+					["type"] = "Static",
+				},
+
+				["tacviewRemoteControlPasswordEditBox"] = {
+					["params"] = {
+						["acceptDecimalPoint"] = false,
+						["bounds"] = {
+							["x"] = RightColumnX + RightColumnLabelWidth,
+							["y"] = TopMargin + 11 * TotalLineHeight,
+							["w"] = RightColumnOptionWidth,
+							["h"] = LineHeight,
+						},
+						["enabled"] = true,
+						["multiline"] = false,
+						["numeric"] = false,
+						["password"] = true,
+						["readOnly"] = false,
+						["text"] = "",
+						["textWrapping"] = true,
+						["tooltip"] = "",
+						["visible"] = true,
+						["zindex"] = 0,
+						["tabOrder"] = 15,
+					},
+					["skin"] = EditBoxSkin,
+					["type"] = "EditBox",
+				},
+			},
+			["params"] = {
+				["bounds"] = {
+					["h"] = 600,
+					["w"] = 974,
+					["x"] = 0,
+					["y"] = 0,
+				},
+				["enabled"] = true,
+				["text"] = "",
+				["tooltip"] = "",
+				["visible"] = true,
+				["zindex"] = 0,
+			},
+			["skin"] = {
+				["params"] = {
+					["name"] = "panelSkin",
+				},
+			},
+			["type"] = "Panel",
+		},
+	},
+	["params"] = {
+		["bounds"] = {
+			["h"] = 851,
+			["w"] = 1135,
+			["x"] = 0,
+			["y"] = 0,
+		},
+		["draggable"] = true,
+		["enabled"] = true,
+		["hasCursor"] = true,
+		["lockFlow"] = false,
+		["modal"] = false,
+		["offscreen"] = false,
+		["resizable"] = false,
+		["text"] = "New dialog",
+		["zOrder"] = 0,
+	},
+	["skin"] = {
+		["params"] = {
+			["name"] = "windowSkin",
+		},
+	},
+	["type"] = "Window",
+}
