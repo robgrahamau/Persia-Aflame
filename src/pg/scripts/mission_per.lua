@@ -1,4 +1,4 @@
-reinforhrs = 16
+reinforhrs = math.random(6,12)
 reinformins = 0
 minreinf = 2
 maxreinf = 18

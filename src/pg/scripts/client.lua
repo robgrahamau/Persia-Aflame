@@ -103,16 +103,22 @@ local function permanentPlayerCheck()
       local PlayerID = PlayerClient.ObjectName
       local Coalition = PlayerClient:GetCoalition()
       local col = "Irani Defenders"
+	  local mission = activeareairan
       if Coalition == 2 then
         col = "Coalition Forces"
+		mission = activearea
       end
       local PlayerName = PlayerClient:GetPlayerName()
       if PlayerClient:IsAlive() then
         if PlayerMap[PlayerID] ~= true then
           PlayerMap[PlayerID] = true
-          local MessageText = "Welcome to Persia Aflame by Rob Graham Version: "..version.." Last update:"..lastupdate.." ".. PlayerName .. "\n Powered By Moose, Player Donations, OverlordBot, Lots of Pain Killers, Kosh Purrs, Midgets and lets not forget the space server Hamsters! \n THE EYES BOO GO FOR THE EYES! \n Be aware you will need to check F10 map stores limits as DCS in game Rearm/Refuel counts are broken. \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n, You are on " ..col..", Please be aware this mission is geared towards Coalition Forces attacking Iran is defending by and large. Please check the mission brief for more information ALT+B \n Please Join the DISCORD SEE ALT+B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard \n UNICOM is 122.80 VHF, use for ATC please."
+          local MessageText = "Welcome to Persia Aflame by Rob Graham Version: "..version.." Last update:"..lastupdate.." ".. PlayerName .. "\n Powered By Moose, Player Donations, OverlordBot, Lots of Pain Killers, Kosh Purrs, Midgets and lets not forget the space server Hamsters! \n THE EYES BOO GO FOR THE EYES! \n Current Active Tasking is: " .. mission .. "\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n, You are on " ..col..", Please be aware this mission is geared towards Coalition Forces attacking Iran is defending by and large. Please check the mission brief for more information ALT+B \n Please Join the DISCORD SEE ALT+B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard \n UNICOM is 122.80 VHF, use for ATC please."
           MESSAGE:New(MessageText,15,"Server Info",true):ToClient(PlayerClient)
           hm(">` $SERVERNAME - Ground Crew:` " .. PlayerClient:GetPlayerName() .. " is in the pit, straps are tight, their " ..PlayerClient:GetTypeName() .. " belonging to " .. col .. " is fueled and ready to go \n > Good Luck Out there")
+		  SCHEDULER:New(nil,function() 
+			local msgtext = "Current Active Tasking is: \n" .. mission .. ""
+			MESSAGE:New(msgtext,120,"Mission Tasking Info",true):ToClient(PlayerClient)
+		  end,nil,120)
         end
       else
         if PlayerMap[PlayerID] ~= false then
@@ -190,7 +196,17 @@ C_menu = MENU_COALITION:New(coalition.side.BLUE,"AI CONTROL")
 --C_TDY = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Request Teddy Turn into Wind",C_menu,tdy_wind,{})
 C_tanker = MENU_COALITION:New(coalition.side.BLUE,"Tanker Control",C_menu)
 C_Arco11 = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Change ARCO11 Speed for A10",C_tanker,Arco11A10,nil)
+function irancurrenttask()
+  MESSAGE:New("Updated Tasking from HQ \n " .. activeareairan .. " \n Repel the Infidels",60):ToRed()
+end
 
+function bluecurrenttask()
+  MESSAGE:New("Updated Tasking from HQ \n " .. activearea .. " \n",60):ToBlue()
+
+end
+
+redtask = MENU_COALITION_COMMAND:New(coalition.side.RED,"Current Mission Task",nil,irancurrenttask,nil)
+bluetask = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Current Mission Task",nil,bluecurrenttask,nil)
 
 
 SCHEDULER:New(nil,permanentPlayerCheck,{},1,2)
@@ -204,6 +220,8 @@ function resettime()
   SCHEDULER:New(nil,function() 
   MESSAGE:New("MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
   hm("` $SERVERNAME - Server Info: ` MISSION CYLE WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard")
+  local msgtext = "Current Active Tasking is: " .. activearea .. ""
+	MESSAGE:New(msgtext,60,"Mission Tasking Info",true):ToAll()
   hourstoreset = hourstoreset - 1
   if hourstoreset < resethours then
     nextreset()
@@ -251,6 +269,7 @@ SCHEDULER:New(nil,function()
 end,{},(((60*60) *(resethours)) - (60*3)))
 SCHEDULER:New(nil,function() 
   MESSAGE:New("MISSION CYLE WILL HAPPEN IN Aprox 2 Minute \n Persistance Data is now being saved, Nothing beyond this point will save until restart has happened.",10):ToAll()
+  hm("5 minutes")
   updatevalues()
   save()
   ctldsavedata()

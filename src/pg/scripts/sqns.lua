@@ -24,6 +24,8 @@ endroute = 5,
 offsetroute = 15,
 altitude = 5000,
 takeoff = false,
+cooldown = (5) * 60,
+timer = 0,
 }
 
 --- Create New Squadron
@@ -54,6 +56,7 @@ function sqn:Spawn()
     :InitCleanUp(self.sqncleanup)
     :InitAirbase(self.airbase,SPAWN.Takeoff.Air)
     :InitGrouping(self.flightsize)
+	:InitRepeatOnLanding()
     :OnSpawnGroup(function(spawngroup) 
       self.sqnamount = self.sqnamount - self.flightsize
       self.spawnedunit = spawngroup
@@ -84,7 +87,7 @@ function sqn:Check()
 		end,{},math.random((self.sqntime /2),self.sqntime))
 		-- if we are not nil.
 		if self.spawnedunit ~= nil then
-			BASE:E({"SQN CHECK START:",self.sqnname,self.spawnedunit:IsAirborne(),self.takeoff})
+			BASE:E({"SQN CHECK START:",self.sqnname,self.spawnedunit:IsAirborne(),self.takeoff,self.spawnedunit:IsAlive()})
 			-- if we are not in the air and we have taken off 
 			if (self.spawnedunit:IsAirborne() ~= true) and (self.takeoff == true)  then
 				-- if we are alive
@@ -126,7 +129,23 @@ function sqn:Check()
 	end
 end
 
-
+function sqn:moveroute(_coord,_speed,_heading,_altitude,_distance,_engage,_roe,_task)
+	local endcoord = _coord:Translate(UTILS.NMToMeters(distance),heading)
+	local task = ""
+	local routetask = nil
+    local ertask = BAICAP:EnRouteTaskEngageTargets(UTILS.NMToMeters(engage),{"Air","Missile"},1)
+	if _task == "route" then
+		if _distance == 0 then
+			routetask = self.spawnedunit:TaskOrbit(_coord,_altidue,_speed)
+			task = "CAP, Move and Hold at assigned location"
+		else
+			routetask = self.spawnedunit:TaskOrbit(_coord,_altidue,_speed,endcoord)
+			task = "CAP, Move and Hold in racetrack at assigned location"
+		end
+		
+	end
+	
+end
 
 function sqn:SetRouteStart(route)
   self.startroute = route
@@ -169,7 +188,9 @@ function sqn:Stop()
   end
 end
 
-
+function sqn:GetStarted()
+	return self.srunning
+end
 
 
 intercept = {
@@ -324,10 +345,10 @@ cap2 = sqn:New("Mirage CAP","USCAP2",300,math.random(2,16),2,(60*30),AIRBASE.Per
 cap3 = sqn:New("Viper CAP","USCAP3",300,math.random(2,16),2,(60*15),AIRBASE.PersianGulf.Al_Dhafra_AB)
 cap4 = sqn:New("Hornet CAP","USCAP4",300,math.random(2,16),2,(60*25),AIRBASE.PersianGulf.Al_Dhafra_AB)
 cap5 = sqn:New("CAG 5 CAP","USCAP5",300,math.random(2,14),2,(60*30),"TeddyR")
-cap6 = sqn:New("CAG 6 CAP","USCAP6",300,math.random(2,14),2,(60*30),"Washington")
+cap6 = sqn:New("CAG 6 CAP","USCAP6-1",300,math.random(2,14),2,(60*30),"Washington")
 cv5alert = sqn:New("CAG 5 CAP 2","USCAP5",300,math.random(2,14),2,(60*15),"TeddyR")
 --intercept:New("CAG 5 Alert","USALERT1",300,12,2,(60*1),nil)
-cv6alert = sqn:New("CAG 6 CAP 2","USCAP6",300,math.random(2,14),2,(60*15),"Washington") 
+cv6alert = sqn:New("CAG 6 CAP 2","USCAP6-1",300,math.random(2,14),2,(60*15),"Washington") 
 --intercept:New("CAG 6 Alert","USALERT2",300,12,2,(60*1),nil)
 --cv5alert:SetZone("Carrier Group 5",148160,1)
 --cv6alert:SetZone("Carrier Group 6",111120,1)
@@ -337,18 +358,25 @@ i30th_1 = sqn:New("30th Squadron CAP 2","IRAF30th-1",300,math.random(2,12),2,(60
 i30th_2 = sqn:New("30th Squadron CAP 3","IRAF30th-2",300,math.random(2,12),2,(60*25),AIRBASE.PersianGulf.Shiraz_International_Airport)
 i25th = sqn:New("25th Squadron CAP 1","IRAF25TH",300,math.random(2,12),2,(60*15),AIRBASE.PersianGulf.Shiraz_International_Airport)
 i25th_1 = sqn:New("25th Squadron CAP 2","IRAF25TH-1",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Shiraz_International_Airport)
+i25th_2 = sqn:New("25th Squadron CAP 3","IRAF25TH-1",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Shiraz_International_Airport)
 i26th = sqn:New("26th Squadron CAP 1","IRAF26TH",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Shiraz_International_Airport)
+i26th_1 = sqn:New("26th Squadron CAP 4","IRAF26TH",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Shiraz_International_Airport)
+
 --kerman
 i01st = sqn:New("1st Squadron CAP 1","IRAF01",300,math.random(2,12),2,(60*15),AIRBASE.PersianGulf.Kerman_Airport)
 i02nd = sqn:New("2nd Squadron CAP 1","IRAF02",300,math.random(2,12),2,(60*25),AIRBASE.PersianGulf.Kerman_Airport)
 i03rd = sqn:New("3rd Squadron CAP 1","IRAF03",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Kerman_Airport)
+i03rd_1 = sqn:New("3rd Squadron CAP 2","IRAF03",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Kerman_Airport)
+
 --bandar
 i31st = sqn:New("31st Squadron CAP 1","IRAF31th",300,math.random(2,12),2,(60*15),AIRBASE.PersianGulf.Bandar_Abbas_Intl)
 i32nd = sqn:New("32nd Squadron CAP 1","IRAF32nd",300,math.random(2,12),2,(60*25),AIRBASE.PersianGulf.Bandar_Abbas_Intl)
+i32nd_2 = sqn:New("32nd Squadron CAP 2","IRAF32nd",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Bandar_Abbas_Intl)
 i33rd = sqn:New("33rd Squadron CAP 1","IRAF33rd",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Bandar_Abbas_Intl)
-i33rd_2 = sqn:New("33rd Alert2","IRAF33rd",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Bandar_Abbas_Intl)
---i33rd_2 = intercept:New("33rd Alert2","IRAF33rd",300,6,2,(60*2),ZONE:New("BAI"))
+i33rd_2 = sqn:New("33rd Alert2","IRAF33rd",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Bandar_Abbas_Intl)
+i33rd_2 = intercept:New("33rd Alert2","IRAF33rd",300,6,2,(60*2),ZONE:New("BAI"))
 
+i91st_2 = sqn:New("91st Squadron CAP 2","IRAF91",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Lar_Airbase)
 --hav
 i33rd_1 = sqn:New("33rd Alert Hav","IRAF33rd-1",300,math.random(0,6),2,(60*35),AIRBASE.PersianGulf.Havadarya)
 --intercept:New("33rd Alert","IRAF33rd-1",300,6,2,(60*2),ZONE:New("BAI-1"))
@@ -368,8 +396,8 @@ SCHEDULER:New(nil,function() cap4:Start() end,{},math.random(1,120))
 SCHEDULER:New(nil,function() cap5:Start() end,{},math.random(60,240))
 SCHEDULER:New(nil,function() cap6:Start() end,{},math.random(60,240))
 
-cv5alert:Start()
-cv6alert:Start()
+--cv5alert:Start()
+--cv6alert:Start()
 end
 
 function startred()
@@ -381,23 +409,35 @@ i30th_1:Start()
 i30th_2:Start() 
 i25th:Start() 
 i25th_1:Start()
+i25th_2:Start()
 i26th:Start()
+-- i26th_1:Start()
 -- Kerman Units
 i01st:Start()
 i02nd:Start()
 i03rd:Start()
+-- i03rd_1:Start()
 -- Bandar Units
 i31st:Start()
 i32nd:Start() 
+--i32nd_2:Start()
 i33rd:Start() 
 -- Bandar Intercept.
-i33rd_2:Start()
+--i33rd_2:Start()
 -- Havadaria Intercept
 i33rd_1:Start()
 --kish
+SCHEDULER:New(nil,function()
+local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Kish_International_Airport)
+local c = ab:GetCoalition()
+if c == 1 then
 i91st:Start()
+end
+end,{},300)
+-- lars
+i91st_2:Start()
 --intercept
-i91st_1:Start()
+--i91st_1:Start()
 end
 
 
@@ -406,5 +446,5 @@ SCHEDULER:New(nil,function()
     startblue()
     startred()
   end
-end,{},120)
+end,{},60)
 

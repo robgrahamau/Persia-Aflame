@@ -129,7 +129,7 @@ tempTable =
 
   { 
    ["type"]=SaveUnits[k]["units"][i]["type"],
-   ["transportable"]= {["randomTransportable"] = false,}, 
+   ["transportable"]= {["randomTransportable"] = true,}, 
    --["unitId"]=9000,used to generate ID's here but no longer doing that since DCS seems to handle it
    ["skill"]=SaveUnits[k]["units"][i]["skill"],
    ["y"]=SaveUnits[k]["units"][i]["y"] ,

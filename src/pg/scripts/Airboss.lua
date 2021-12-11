@@ -7,6 +7,7 @@ env.info("--------------USES MOOSE AND CTDL ------------------------")
 abossactive = true
 washingtonactive = true
 teddyairboss = true
+forestairboss = true
 useawacs = false
 
 if abossactive == true then
@@ -26,9 +27,10 @@ if abossactive == true then
   
   awacsTeddy = RECOVERYTANKER:New(UNIT:FindByName("TeddyR"), "USEW Wizard11")
   awacsTeddy:SetAWACS(true,true)
-  awacsTeddy:SetTakeoffCold()
+  awacsTeddy:SetTakeoffAir()
   awacsTeddy:SetRecoveryAirboss(false)
   awacsTeddy:SetCallsign(CALLSIGN.AWACS.Wizard,1)
+  ShellTeddy:SetRespawnInAir()
   awacsTeddy:SetAltitude(20000)
   awacsTeddy:SetRadio(252)
   awacsTeddy:SetSpeed(350)
@@ -54,16 +56,28 @@ if abossactive == true then
   
   
   ShellTeddy = RECOVERYTANKER:New(UNIT:FindByName("TeddyR"), "Shell21")
-  ShellTeddy:SetTakeoffCold()
   ShellTeddy:SetRecoveryAirboss(false)
   ShellTeddy:SetCallsign(CALLSIGN.Tanker.Shell,2)
   ShellTeddy:SetSpeed(310)
   ShellTeddy:SetRadio(257)
   ShellTeddy:SetModex(910)
   ShellTeddy:SetTACAN(47,"SHL")
-  ShellTeddy:SetLowFuelThreshold(0.2)
+  ShellTeddy:SetLowFuelThreshold(0.05)
+  ShellTeddy:SetRespawnInAir()
+  ShellTeddy:SetTakeoffAir()
   ShellTeddy:Start()
-  
+  if useforest == true then
+  ShellForest = RECOVERYTANKER:New(UNIT:FindByName("Forrestal"), "Shell21")
+  ShellForest:SetTakeoffCold()
+  ShellForest:SetRecoveryAirboss(false)
+  ShellForest:SetCallsign(CALLSIGN.Tanker.Shell,3)
+  ShellForest:SetSpeed(310)
+  ShellForest:SetRadio(259)
+  ShellForest:SetModex(910)
+  ShellForest:SetTACAN(62,"SH3")
+  ShellForest:SetLowFuelThreshold(0.2)
+  ShellForest:Start()
+	end
 	AirbossWash = AIRBOSS:New("Washington","Washington")
 	AirbossWash:Load("C:\\Users\\root\\Saved Games\\lsogrades\\")
 	AirbossWash:SetAutoSave("C:\\Users\\root\\Saved Games\\lsogrades\\")
@@ -78,6 +92,8 @@ if abossactive == true then
 	AirbossWash:SetDefaultMessageDuration(1)
 	AirbossWash:SetEmergencyLandings(true)
 	AirbossWash:SetPatrolAdInfinitum(true)
+	AirbossWash:SetMPWireCorrection(12)
+	AirbossWash:setdisplaymessage(false)
 	if washingtonactive == true then
 		AirbossWash:Start()
 		hm("Washington Airboss has been activated. \n > LSO is Now online on 118.45, Marshall 306 \n > TACAN 25x > ICLS 5 > RECOVERY PERIOD: 30 Minutes > Recovery Speed: 25 Knots")
@@ -109,15 +125,15 @@ if abossactive == true then
 	AirbossTeddy:SetPatrolAdInfinitum(true)
 	AirbossTeddy:SetRefuelAI(30)
 	AirbossTeddy:SetSoundfilesFolder("Airboss Soundfiles/")
-	AirbossTeddy:SetRecoveryTurnTime(120)
 	AirbossTeddy:SetDefaultPlayerSkill("TOPGUN Graduate")
 	AirbossTeddy:SetHandleAIOFF()
 	AirbossTeddy:SetWelcomePlayers(false)
 	AirbossTeddy:SetDefaultMessageDuration(1)
-	AirbossTeddy:SetRecoveryTurnTime(5)
+	AirbossTeddy:SetRecoveryTurnTime(60)
 	AirbossTeddy:SetEmergencyLandings(true)
 	AirbossTeddy:SetWelcomePlayers(false)
-
+	AirbossTeddy:SetMPWireCorrection(12)
+	AirbossTeddy:setdisplaymessage(false)
 	function AirbossTeddy:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
 		myGrade.messageType = 2
 		myGrade.name = playerData.name
@@ -136,7 +152,46 @@ if abossactive == true then
 		CV_TDY:SetPatrolAdInfinitum(true) 
 		hm("Airboss is not started for Teddy, running on Navygroup patrol ad infinitum")
 	end
-
+	
+	AirbossForest = AIRBOSS:New("Forrestal","Forrestal")
+	AirbossForest:Load("C:\\Users\\root\\Saved Games\\lsogrades\\")
+	AirbossForest:SetAutoSave("C:\\Users\\root\\Saved Games\\lsogrades\\")
+	AirbossForest:SetTrapSheet("C:\\Users\\root\\Saved Games\\lsogrades\\")
+	AirbossForest:SetLSORadio(118.00)
+	AirbossForest:SetMarshalRadio(306)
+	AirbossForest:SetTACAN(59,"X","FOR")
+	AirbossForest:SetBeaconRefresh(600)
+	AirbossForest:SetICLS(3,"EST")
+	AirbossForest:SetAirbossNiceGuy(true)
+	AirbossForest:SetMenuRecovery(45,25,false,0)
+	AirbossForest:SetHoldingOffsetAngle(0)
+	AirbossForest:SetMaxSectionSize(4)
+	AirbossForest:SetPatrolAdInfinitum(true)
+	AirbossForest:SetRefuelAI(15)
+	--AirbossForest:SetSoundfilesFolder("Airboss Soundfiles/")
+	AirbossForest:SetDefaultPlayerSkill("TOPGUN Graduate")
+	AirbossForest:SetHandleAIOFF()
+	AirbossForest:SetWelcomePlayers(false)
+	AirbossForest:SetDefaultMessageDuration(1)
+	AirbossForest:SetRecoveryTurnTime(60)
+	AirbossForest:SetEmergencyLandings(true)
+	AirbossForest:SetWelcomePlayers(false)
+	AirbossForest:SetMPWireCorrection(12)
+	AirbossForest:setdisplaymessage(false)
+	
+	function AirbossForest:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
+		myGrade.messageType = 2
+		myGrade.name = playerData.name
+		HypeMan.sendBotTable(myGrade)
+	end
+	if forestairboss == true then
+		AirbossForest:Start()
+		hm("Forestalls Airboss has been activated. \n > LSO is Now online on 118.00, Marshall 305 \n > TACAN 59x > ICLS 2 > RECOVERY PERIOD: 45 Minutes > Recovery Speed: 20 Knots")
+		hm("Airboss is started for Teddy, 118.40, 304, 53x, 7ICLS")
+	end
+	
+	
+	
 	AirbossStennis = AIRBOSS:New("Stennis","Stennis")
 	-- Delete auto recovery window.
 	AirbossStennis:Load("C:\\Users\\root\\Saved Games\\lsogrades\\")
@@ -155,7 +210,7 @@ if abossactive == true then
 	AirbossStennis:SetRecoveryTurnTime(300)
 	AirbossStennis:SetPatrolAdInfinitum(true)
 	AirbossStennis:SetHandleAIOFF()
-
+	AirbossStennis:SetMPWireCorrection(12)
 	function AirbossStennis:OnAfterStart(From,Event,To)
 		self:DeleteAllRecoveryWindows()
 	end

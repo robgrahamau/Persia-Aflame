@@ -54,9 +54,11 @@ am = AIRBASE:FindByName(AIRBASE.PersianGulf.Abu_Musa_Island_Airport)
 si = AIRBASE:FindByName(AIRBASE.PersianGulf.Sirri_Island)
 tk = AIRBASE:FindByName(AIRBASE.PersianGulf.Tunb_Kochak)
 ta = AIRBASE:FindByName(AIRBASE.PersianGulf.Tunb_Island_AFB)
-
+dbcas = SPAWN:New("DB_CAS")
 
 trigger.action.setUserFlag(100,0)
+
+--[[
 TunbRed = STATIC:FindByName("CTLD Tnub")
 TunbBlue = STATIC:FindByName("CTLD Tnub B")
 
@@ -78,6 +80,7 @@ abunred = STATIC:FindByName("CTLD Abu Nuayr B")
 abunblue = STATIC:FindByName("CTLD Abu Nuayr")
 havred = STATIC:FindByName("CTLD BandarFarp D")
 havblue = STATIC:FindByName("CTLD BandarFarp C")
+]]
 havmsg = nil
 abunmsg = nil
 qemsg = nil
@@ -90,6 +93,7 @@ banmsg = nil
 tmsg = nil
 fujmsg = nil
 jirmsg = nil
+minmsg = nil
 ejaskmsg = nil
 shiraz = nil
 kerman = nil
@@ -356,13 +360,13 @@ function slot_tunb(coalition)
 --      STTS.TextToSpeech("We have lost Tunb to Irani Forces",253.00,"AM",0.75,"TGW Command", 2 )
 		hm("> Tunb has been taken by Iran ")
 		tmsg = false
-		spawnctld(AIRBASE.PersianGulf.Tunb_Island_AFB,34,270,100)
+		spawnctld(AIRBASE.PersianGulf.Tunb_Island_AFB,34,285,1200)
 		end
     else
-      TunbRed:Destroy()
-      if TunbBlue:IsAlive() ~= true then
-        TunbBlue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Tnub B"):Spawn()
-      end
+      --TunbRed:Destroy()
+      --if TunbBlue:IsAlive() ~= true then
+      --  TunbBlue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Tnub B"):Spawn()
+      --end
         if tmsg ~= true then
 		  routegroups(_coord,15000,"red")
           trigger.action.setUserFlag("Tunb UH1 #001",100)
@@ -388,7 +392,7 @@ function slot_tunb(coalition)
           hm("> Tunb has been taken by the Coalition ")
           tmsg = true
           SCHEDULER:New(nil,spawnislands,{},math.random(5,1200))
-		  spawnctld(AIRBASE.PersianGulf.Tunb_Island_AFB,2,280,100)
+		  spawnctld(AIRBASE.PersianGulf.Tunb_Island_AFB,2,280,1400)
         end 
     end
 end
@@ -397,11 +401,12 @@ function slot_sirri(coalition)
 	BASE:E({"Slots Sirri"})
   ctld.changeRemainingGroupsForPickupZone("CTLD Sirri Island",3)
   if coalition == 1 then
-    SirriBlue:Destroy()
+    --[[SirriBlue:Destroy()
     if SirriRed:IsAlive() ~= true then
       SirriRed:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Sirri Island"):Spawn()
     BASE:E({"LETS GET Sirri Red's name",SirriRed:GetName()})
     end
+	]]
 	if smsg ~= false then
 	    local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Sirri_Island)
 		local _coord = ab:GetCoordinate()
@@ -420,14 +425,15 @@ function slot_sirri(coalition)
 		hm("> Siri Island has been taken by Iran ")
 		smsg = false
 		sirrispawn = false
-		spawnctld(AIRBASE.PersianGulf.Sirri_Island,34,0,250)
+		spawnctld(AIRBASE.PersianGulf.Sirri_Island,34,290,2000)
     end
   else
-    SirriRed:Destroy()
+    --[[SirriRed:Destroy()
     if SirriBlue:IsAlive() ~= true then
 		SirriBlue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Sirri Island B"):Spawn()
 		BASE:E({"LETS GET Sirri Blue's name",SirriBlue:GetName()})
     end
+	]]
 	if smsg ~= true then
 		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Sirri_Island)
 		local _coord = ab:GetCoordinate()
@@ -452,7 +458,7 @@ function slot_sirri(coalition)
 		end,{},math.random(60,300))
 		end
 		smsg = true
-		spawnctld(AIRBASE.PersianGulf.Sirri_Island,2,30,250)
+		spawnctld(AIRBASE.PersianGulf.Sirri_Island,2,290,2300)
   end
   end
 end
@@ -461,10 +467,11 @@ function slot_lavan(coalition)
 	BASE:E({"Slots Lavan"})
   ctld.changeRemainingGroupsForPickupZone("CTLD Lavin Island",3)
   if coalition == 1 then
-	LavanBlue:Destroy()
+	--[[LavanBlue:Destroy()
     if LavanRed:IsAlive() ~= true then
       LavanRed:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Lavin"):Spawn()
     end
+	]]
   if lmsg ~= false then
     local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Lavan_Island_Airport)
 	local _coord = ab:GetCoordinate()
@@ -489,14 +496,15 @@ function slot_lavan(coalition)
     hm("> Lavan Island has been taken by Iran")
     lmsg = false
 	lavanspawn = false
-	spawnctld(AIRBASE.PersianGulf.Lavan_Island_Airport,34,20,70)
+	spawnctld(AIRBASE.PersianGulf.Lavan_Island_Airport,34,240,550)
   end
   else
 	if allowfobs == true then
-		LavanRed:Destroy()
+	--[[	LavanRed:Destroy()
 		if LavanBlue:IsAlive() ~= true then
 			LavanBlue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Lavin B"):Spawn()
 		end
+	]]
 	end
   if lmsg ~= true then
 	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Lavan_Island_Airport)
@@ -527,16 +535,16 @@ function slot_lavan(coalition)
 		end,{},math.random(60,300))
 	end
     lmsg = true
-	spawnctld(AIRBASE.PersianGulf.Lavan_Island_Airport,2,20,70)
+	spawnctld(AIRBASE.PersianGulf.Lavan_Island_Airport,2,240,700)
   end
   end
 end
 
 function slot_kish(coalition)
-	BASE:E({"Slots Kish"})
+	BASE:E({"Slots Kish",coalition})
   ctld.changeRemainingGroupsForPickupZone("CTLD Kish Island",3)
   if coalition == 1 then
-	if KishBlue ~= nil then
+	--[[if KishBlue ~= nil then
 		KishBlue:Destroy()
 	end
 	if KishRed ~= nil then
@@ -546,6 +554,7 @@ function slot_kish(coalition)
 	else
 		KishRed = SPAWNSTATIC:NewFromStatic("CTLD Kish"):Spawn()		
 	end
+	]]
   if kimsg ~= false then
 	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Kish_International_Airport)
 	local _coord = ab:GetCoordinate()
@@ -572,10 +581,17 @@ function slot_kish(coalition)
     trigger.action.setUserFlag("KishBoar -2",100)
     trigger.action.setUserFlag("KishBoar -3",100)
     trigger.action.setUserFlag("KishBoar -4",100)
+	trigger.action.setUserFlag("KishBoar -2-1",100)
+    trigger.action.setUserFlag("KishBoar -3-1",100)
+    trigger.action.setUserFlag("KishBoar -4-1",100)
     trigger.action.setUserFlag("Kish US UH1", 100)
     trigger.action.setUserFlag("Kish US UH1 #001", 100)
     trigger.action.setUserFlag("Kish US KA50", 100)
     trigger.action.setUserFlag("Kish US KA50 #001", 100)
+	trigger.action.setUserFlag("Kish_Viper_1",100)
+	trigger.action.setUserFlag("Kish_Viper_2",100)
+	trigger.action.setUserFlag("Kish_Viper_3",100)
+	trigger.action.setUserFlag("Kish_Viper_4",100)
     if usenew == false then
       ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},2)
       ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},2)  
@@ -588,11 +604,13 @@ function slot_kish(coalition)
   
       
        end,{},math.random(120,600))
-      --intercept
+      --[[SCHEDULER:New(nil,function() --intercept
         if i91st_1:GetSqnCount() == 0 then
           i91st_1:SetSqnCount(4)
         end
         i91st_1:Start()    
+		end,{},240)
+		]]
     end
     MESSAGE:New("Kish Island is once more under Irani Control",30):ToAll()
     --STTS.TextToSpeech("Kish Island has been retaken",253.00,"AM",0.75,"TGW Command", 1 )
@@ -600,19 +618,20 @@ function slot_kish(coalition)
     hm("> Kish Island has been taken by Iran")
     kimsg = false
 	kishspawn = false
-	spawnctld(AIRBASE.PersianGulf.Kish_International_Airport,34,20,200)
+	spawnctld(AIRBASE.PersianGulf.Kish_International_Airport,34,220,1400)
   end
   else
-	if allowfobs == true then
+	--[[if allowfobs == true then
 		KishRed:Destroy()
 		if KishBlue ~= nil then
 			if KishBlue:IsAlive() ~= true then
-				KishBlue = SPAWNSTATIC:NewFromStatic("CTLD Kish B"):Spawn()
+			KishBlue = SPAWNSTATIC:NewFromStatic("CTLD Kish B"):Spawn()
 			end 
 		else
 			KishBlue = SPAWNSTATIC:NewFromStatic("CTLD Kish B"):Spawn()
 		end
 	end
+	]]
   if kimsg ~= true then
 	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Kish_International_Airport)
 	local _coord = ab:GetCoordinate()
@@ -638,21 +657,30 @@ function slot_kish(coalition)
     trigger.action.setUserFlag("KishBoar -1",00)
     trigger.action.setUserFlag("KishBoar -2",00)
     trigger.action.setUserFlag("KishBoar -3",00)
-    trigger.action.setUserFlag("KishBoar -4",00)	
+    trigger.action.setUserFlag("KishBoar -4",00)
+	trigger.action.setUserFlag("KishBoar -2-1",00)
+    trigger.action.setUserFlag("KishBoar -3-1",00)
+    trigger.action.setUserFlag("KishBoar -4-1",00)	
 	trigger.action.setUserFlag("Kish_Hind", 100)
 	trigger.action.setUserFlag("Kish_Hind-1", 100)
 	trigger.action.setUserFlag("Kish_Hind-2", 00)
 	trigger.action.setUserFlag("Kish_Hind-3", 00)
+	trigger.action.setUserFlag("Kish_Viper_1",00)
+	trigger.action.setUserFlag("Kish_Viper_2",00)
+	trigger.action.setUserFlag("Kish_Viper_3",00)
+	trigger.action.setUserFlag("Kish_Viper_4",00)
     if usenew == false then
       ra2disp:SetSquadron("Kish",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_1"},-99)
       ra2disp:SetSquadron("Kish INT",AIRBASE.PersianGulf.Kish_International_Airport,{"M2000_2"},-99)    
     else
 	 BASE:E({"Kish Should be 0"})
-      i91st:SetSqnCount(0)
+      SCHEDULER:New(nil,function()
+	  i91st:SetSqnCount(0)
       i91st:Stop()
       --intercept
       i91st_1:SetSqnCount(0)
 	  i91st_1:Stop()
+	  end,{},120)
     end
     MESSAGE:New("Kish Island has been taken by the coalition forces",30):ToAll()
     --STTS.TextToSpeech("Kish Island has fallen",253.00,"AM",0.75,"TGW Command", 1 )
@@ -665,7 +693,7 @@ function slot_kish(coalition)
 			spawndefenders("kishspawn")
 		end,{},math.random(60,300))
 	end
-	spawnctld(AIRBASE.PersianGulf.Kish_International_Airport,2,10,200)
+	spawnctld(AIRBASE.PersianGulf.Kish_International_Airport,2,240,1500)
   end
   end
 end
@@ -673,10 +701,11 @@ end
 function slot_qeshm(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Qeshm Island",4)
   if coalition == 1 then
-	QeshmBlue:Destroy()
+	--[[QeshmBlue:Destroy()
     if QeshmRed:IsAlive() ~= true then
       QeshmRed:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Qeshm Island"):Spawn()
     end
+	]]
   if qemsg ~= false then
 	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Qeshm_Island)
 	local _coord = ab:GetCoordinate()
@@ -702,21 +731,28 @@ function slot_qeshm(coalition)
     trigger.action.setUserFlag("Qeshm Island IRAN KA50-2",00)
     trigger.action.setUserFlag("Qeshm Island IRAN UH-1-2",00)
     trigger.action.setUserFlag("Qeshm Island IRAN UH-1",00)
+	trigger.action.setUserFlag("Qeshm_Viper_1",100)
+	trigger.action.setUserFlag("Qeshm_Viper_2",100)
+	trigger.action.setUserFlag("Qeshm_Hornet_1",100)
+	trigger.action.setUserFlag("Qeshm_Hornet_2",100)
+	trigger.action.setUserFlag("Qeshm_Hog_1",100)
+	trigger.action.setUserFlag("Qeshm_Hog_2",100)
     MESSAGE:New("Qeshm Island has been Liberated from the Coalition invaders and Infidels",30):ToAll()
     --STTS.TextToSpeech("Qeshm Island is once more ours, we must continue to push back the infidels",253.00,"AM",0.75,"TGW Command", 1 )
     --STTS.TextToSpeech("We have lost Qeshm Island, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
     hm("> Qeshm Island has been taken by Iran")
     qeshmspawn = false
 	qemsg = false
-	spawnctld(AIRBASE.PersianGulf.Qeshm_Island,34,320,100)
+	spawnctld(AIRBASE.PersianGulf.Qeshm_Island,34,320,600)
   end
   else
-    if allowfobs == true then
+    --[[if allowfobs == true then
 		QeshmRed:Destroy()
 	    if QeshmBlue:IsAlive() ~= true then
 			QeshmBlue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Qeshm Island B"):Spawn()
         end
 	end
+	]]
   if qemsg ~= true then
 	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Qeshm_Island)
 	local _coord = ab:GetCoordinate()
@@ -742,6 +778,12 @@ function slot_qeshm(coalition)
     trigger.action.setUserFlag("Qeshm Island IRAN KA50-2",100)
     trigger.action.setUserFlag("Qeshm Island IRAN UH-1-2",100)
     trigger.action.setUserFlag("Qeshm Island IRAN UH-1",100)
+	trigger.action.setUserFlag("Qeshm_Viper_1",00)
+	trigger.action.setUserFlag("Qeshm_Viper_2",00)
+	trigger.action.setUserFlag("Qeshm_Hornet_1",00)
+	trigger.action.setUserFlag("Qeshm_Hornet_2",00)
+	trigger.action.setUserFlag("Qeshm_Hog_1",00)
+	trigger.action.setUserFlag("Qeshm_Hog_2",00)
     MESSAGE:New("Qesh Island has been occuiped, Coalition forces are one step closer to taking Iran!",30):ToAll()
     --STTS.TextToSpeech("Qeshm Island has falledn to the infidels! We must retake it before they gain a foothold",253.00,"AM",0.75,"TGW Command", 1 )
     --STTS.TextToSpeech("Qeshm Island is now ours, we have a base on Bandar's doorstep.",253.00,"AM",0.75,"TGW Command", 2 )
@@ -753,7 +795,7 @@ function slot_qeshm(coalition)
       spawndefenders("qeshmspawn")
     end,{},math.random(60,300))
 	end
-	spawnctld(AIRBASE.PersianGulf.Qeshm_Island,2,330,150)
+	spawnctld(AIRBASE.PersianGulf.Qeshm_Island,2,330,1050)
   end
   end
 end
@@ -761,11 +803,11 @@ end
 function slot_khasab(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Khasab",4)
   if coalition == 1 then
-	KhasabBlue:Destroy()
+	--[[KhasabBlue:Destroy()
 	if KhasabRed:IsAlive() ~= true then
 			KhasabRed:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD AbuFarp B"):Spawn()
 	end
-	
+	]]
   if khmsg ~= false then
 	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Khasab)
 	local _coord = ab:GetCoordinate()
@@ -828,14 +870,14 @@ function slot_khasab(coalition)
     end
     khmsg = false
 	khasabspawn = false
-	spawnctld(AIRBASE.PersianGulf.Khasab,34,345,500)
+	spawnctld(AIRBASE.PersianGulf.Khasab,34,345,700)
   end
   else
-	KhasabRed:Destroy()
+	--[[KhasabRed:Destroy()
     if KhasabBlue:IsAlive() ~= true then
       KhasabBlue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD AbuFarp"):Spawn()
     end
-  
+    ]]
   if khmsg ~= true then
 	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Khasab)
 	local _coord = ab:GetCoordinate()
@@ -885,7 +927,7 @@ function slot_khasab(coalition)
     --STTS.TextToSpeech("Khasab is once more in the rightful hands of the Omani people.",253.00,"AM",0.75,"TGW Command", 2 )
     hm("> Khasab Island has been taken by Coalition Forces")
     khmsg = true
-	spawnctld(AIRBASE.PersianGulf.Khasab,2,345,500)
+	spawnctld(AIRBASE.PersianGulf.Khasab,2,180,800)
   end
   end
 
@@ -896,10 +938,11 @@ function slot_bandar(coalition)
   ctld.changeRemainingGroupsForPickupZone("CTLD Bandar Abbas",4)
   if coalition == 1 then
     if banmsg ~= true then
-      BandarBlue:Destroy()
+      --[[BandarBlue:Destroy()
       if BandarRed:IsAlive() ~= true then
         BandarRed:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD BandarFarp"):Spawn()
       end
+	  ]]
 	  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Bandar_Abbas_Intl)
 	local _coord = ab:GetCoordinate()
 	routegroups(_coord,11000,"blue")
@@ -971,11 +1014,12 @@ function slot_bandar(coalition)
         if i33rd:GetSqnCount() == 0 then
           i33rd:SetSqnCount(6)
         end
-        if i33rd_2:GetSqnCount() == 0 then
+        --[[
+		if i33rd_2:GetSqnCount() == 0 then
           i33rd_2:SetSqnCount(4)
         end
         i33rd_2:Start()
-        
+        ]]
       end
       MESSAGE:New("Iran has liberated Bandar Abbas from the oppressors and it is once more in our hands!",30):ToAll()
      -- STTS.TextToSpeech("Bandar is once more ours, we must continue to push back the infidels",253.00,"AM",0.75,"TGW Command", 1 )
@@ -983,17 +1027,18 @@ function slot_bandar(coalition)
       hm("> Bandar Abbas has been taken by Iran this is a Glorious Day!")
       banmsg = true
 	  bandarspawn = false
-	  spawnctld(AIRBASE.PersianGulf.Bandar_Abbas_Intl,34,0,1000)
+	  spawnctld(AIRBASE.PersianGulf.Bandar_Abbas_Intl,34,090,1500)
     end
   else
     
   if banmsg ~= false then
-    BandarRed:Destroy()
+    --[[BandarRed:Destroy()
 	if allowfobs == true then
 		if BandarBlue:IsAlive() ~= true then
 			BandarBlue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD BandarFarp B"):Spawn()
 		end
 	end
+	]]
 	local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Bandar_Abbas_Intl)
 	local _coord = ab:GetCoordinate()
 	routegroups(_coord,20000,"red")
@@ -1054,7 +1099,7 @@ function slot_bandar(coalition)
       i31st:Stop()
       i32nd:Stop()
       i33rd:Stop()
-      i33rd_2:Stop()
+      --i33rd_2:Stop()
     end
     MESSAGE:New("Coalition forces have occupied Bandar! We have crossed the Strait!",30):ToAll()
     --STTS.TextToSpeech("We have lost Bandar Abbas! This can not stand we must retake that airfield at all costs.",253.00,"AM",0.75,"TGW Command", 1 )
@@ -1067,7 +1112,7 @@ function slot_bandar(coalition)
     end,{},math.random(60,300))
 	end
     banmsg = false
-	spawnctld(AIRBASE.PersianGulf.Bandar_Abbas_Intl,2,0,1000)
+	spawnctld(AIRBASE.PersianGulf.Bandar_Abbas_Intl,2,090,2000)
   end
   end
 
@@ -1079,10 +1124,11 @@ function slot_lars(coalition)
   if coalition == 1 then
 	BASE:E({"LARS SLOT Coalition 1 running",coalition,larmsg})
     if larmsg ~= false then
-        LarsBlue:Destroy()
+        --[[LarsBlue:Destroy()
 		if LarsRed:IsAlive() ~= true then
 			LarsRed:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD FLar B"):Spawn()
 		end
+		]]
 		 local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Lar_Airbase)
 		local _coord = ab:GetCoordinate()
 		routegroups(_coord,25000,"blue")
@@ -1109,12 +1155,21 @@ function slot_lars(coalition)
 		trigger.action.setUserFlag("LarsU -8", 00)
 		trigger.action.setUserFlag("LARS_JF-17_Springfield7", 00)
 		trigger.action.setUserFlag("LARS_JF-17_Springfield7 #001", 00)
-		trigger.action.setUserFlag("Pak-F16-Lar",00)
-		trigger.action.setUserFlag("Pak-F16-Lar #001",00)
-		trigger.action.setUserFlag("Pak-F16-Lar #002",00)
+		trigger.action.setUserFlag("LARS_F-16_1",00)
+		trigger.action.setUserFlag("LARS_F-16_2",00)
+		trigger.action.setUserFlag("LARS_M2000",00)
+		trigger.action.setUserFlag("LARS_M2000-1",00)
+		trigger.action.setUserFlag("LARS_F14A",00)
 		if usenew == false then
 			ra2disp:SetSquadron("Lar",AIRBASE.PersianGulf.Lar_Airbase,{"F4_2"},2)
 			ra2disp:SetSquadron("Lar Int",AIRBASE.PersianGulf.Lar_Airbase,{"F4_2"},2)
+		else
+			if i91st_2 ~= nil then
+				if i91st_2:GetStarted() == false then
+					i91st_2:Start()
+				end
+			end
+
 		end
 		MESSAGE:New("Lar is once more back in Irani Control",30):ToAll()
 		larmsg = false
@@ -1122,18 +1177,19 @@ function slot_lars(coalition)
 		-- STTS.TextToSpeech("Lars Airbase is once more ours.",253.00,"AM",0.75,"TGW Command", 1 )
 		-- STTS.TextToSpeech("We have Lars Airbase, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
 		hm("> Lar Airbase has been taken by Iran  ")
-		spawnctld(AIRBASE.PersianGulf.Lar_Airbase,34,10,500)
+		spawnctld(AIRBASE.PersianGulf.Lar_Airbase,34,10,1000)
 		BASE:E({"LARS SLOT Coalition 1 running done",coalition,larmsg})
 	end
   else
 	BASE:E({"LARS SLOT Coalition 2 running",coalition,larmsg})
 	if larmsg ~= true then
-		LarsRed:Destroy()
+		--[[LarsRed:Destroy()
 		if allowfobs == true then
 			if LarsBlue:IsAlive() ~= true then
 				LarsBlue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD FLar"):Spawn()
 			end   
 		end
+		]]
 		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Lar_Airbase)
 		local _coord = ab:GetCoordinate()
 		routegroups(_coord,25000,"red")
@@ -1152,9 +1208,11 @@ function slot_lars(coalition)
 		trigger.action.setUserFlag("Lar_hind-3", 00)
 		trigger.action.setUserFlag("LARS_JF-17_Springfield7", 100)
 		trigger.action.setUserFlag("LARS_JF-17_Springfield7 #001", 100)
-		trigger.action.setUserFlag("Pak-F16-Lar",100)
-		trigger.action.setUserFlag("Pak-F16-Lar #001",100)
-		trigger.action.setUserFlag("Pak-F16-Lar #002",100)
+		trigger.action.setUserFlag("LARS_F-16_1",100)
+		trigger.action.setUserFlag("LARS_F-16_2",100)
+		trigger.action.setUserFlag("LARS_M2000",100)
+		trigger.action.setUserFlag("LARS_M2000-1",100)
+		trigger.action.setUserFlag("LARS_F14A",100)
 		trigger.action.setUserFlag("LarsK -5", 100)
 		trigger.action.setUserFlag("LarsK -6", 100)
 		trigger.action.setUserFlag("LarsK -7", 100)
@@ -1175,10 +1233,15 @@ function slot_lars(coalition)
 		if init == true then
 			SCHEDULER:New(nil,function() 
 				spawndefenders("larspawn")
+				if i91st_2 ~= nil then
+					if i91st_2:GetStarted() == true then
+						i91st_2:Stop()
+					end
+				end
 			end,{},math.random(60,300))
 		end
 		larmsg = true
-		spawnctld(AIRBASE.PersianGulf.Lar_Airbase,2,10,500)
+		spawnctld(AIRBASE.PersianGulf.Lar_Airbase,2,170,1000)
 		BASE:E({"LARS SLOT Coalition 2 running",coalition,larmsg})
 		end
 	end
@@ -1189,10 +1252,11 @@ end
 function slot_abun(coalition)
   if coalition == 1 then
     if abunmsg ~= false then
-      abunblue:Destroy()
+      --[[abunblue:Destroy()
       if abunred:IsAlive() ~= true then
         abunred:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Abu Nuayr B"):Spawn()
       end
+	  ]]
       MESSAGE:New("Iran has taken Abu Nuayr!",30):ToAll()
      -- STTS.TextToSpeech("We have liberated Abu Nuayr from the Coalition.",253.00,"AM",0.75,"TGW Command", 1 )
      -- STTS.TextToSpeech("We have lost Abu Nuayr, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 2 )
@@ -1202,10 +1266,11 @@ function slot_abun(coalition)
     end
   else
   if abunmsg ~= true then
-    abunred:Destroy()
+    --[[abunred:Destroy()
     if abunblue:IsAlive() ~= true then
       abunblue:ReSpawn() -- = SPAWNSTATIC:NewFromStatic("CTLD Abu Nuayr"):Spawn()
     end
+	]]
     MESSAGE:New("Coalition Forces have retaken Abu Nuayr",30):ToAll()
    -- STTS.TextToSpeech("We have liberated Abu Nuayr from the Irani forces.",253.00,"AM",0.75,"TGW Command", 2 )
    -- STTS.TextToSpeech("We have lost Abu Nuayr, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 1 )
@@ -1222,7 +1287,7 @@ function slot_ejask(coalition)
 			MESSAGE:New("Bandar E-Jask Has been reataken by Iran",30):ToAll()
 			hm("> Bandar-E-Jask Taken by Iran, Slots open")
 			ejaskmsg = true
-			spawnctld(AIRBASE.PersianGulf.Bandar_e_Jask_airfield,34,50,500)
+			spawnctld(AIRBASE.PersianGulf.Bandar_e_Jask_airfield,34,40,3704)
 		end
 		trigger.action.setUserFlag("JF17 - Bandar-e-jask 1-1",00)
 		trigger.action.setUserFlag("JF17 - Bandar-e-jask 1-2",00)
@@ -1242,7 +1307,7 @@ function slot_ejask(coalition)
 			MESSAGE:New("Bandar E-Jask Has been taken by the Coalition",30):ToAll()
 			ejaskmsg = false
 			hm("> Bandar-E-Jask Taken by Iran, Slots closed")
-			spawnctld(AIRBASE.PersianGulf.Bandar_e_Jask_airfield,2,50,500)
+			spawnctld(AIRBASE.PersianGulf.Bandar_e_Jask_airfield,2,40,3704)
 		end
 		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Bandar_e_Jask_airfield)
 		local _coord = ab:GetCoordinate()
@@ -1262,10 +1327,11 @@ end
 function slot_havadarya(coalition)
   if coalition == 1 then
     if havmsg ~= false then
-       havblue:Destroy()
+      --[[ havblue:Destroy()
       if havred:IsAlive() ~= true then
         havred:ReSpawn() 
       end
+	  ]]
 	  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Havadarya)
 	  local _coord = ab:GetCoordinate()
 	  routegroups(_coord,11000,"blue")
@@ -1313,12 +1379,13 @@ function slot_havadarya(coalition)
     end
   else
     if havmsg ~= true then
-      havred:Destroy()
+    --[[  havred:Destroy()
     if allowfobs == true then
 		if havblue:IsAlive() ~= true then
 			havblue:ReSpawn() 
 		end
 	end
+	]]
 	  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Havadarya)
 	  local _coord = ab:GetCoordinate()
 	  routegroups(_coord,8000,"red")
@@ -1372,10 +1439,23 @@ function slot_bandarlengeh(coalition)
       local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Bandar_Lengeh)
 		local _coord = ab:GetCoordinate()
 		routegroups(_coord,25000,"blue")
-	  trigger.action.setUserFlag("Lengeh_JF11",00)
+	  trigger.action.setUserFlag("Lengeh_J11",00)
+	  trigger.action.setUserFlag("Lengeh_J11-1",00)
+	  trigger.action.setUserFlag("Lengeh_JF17",00)
+	  trigger.action.setUserFlag("Lengeh_JF17-1",00)
       trigger.action.setUserFlag("Lengeh_F14",00)
+	  trigger.action.setUserFlag("Lengeh_F14-1",00)
+	  trigger.action.setUserFlag("Lengeh_F5",00)
+	  trigger.action.setUserFlag("Lengeh_F5-1",00)
       trigger.action.setUserFlag("Lengeh_MiG29",00)
-    
+	  trigger.action.setUserFlag("Lengh-Mi8",00)
+	  trigger.action.setUserFlag("Lengh-KA50",00)
+	  trigger.action.setUserFlag("Lengh-Uh1",00)
+      trigger.action.setUserFlag("Lengeh_Mi24",00)
+	  trigger.action.setUserFlag("Lengh-SA342L",100)
+	  trigger.action.setUserFlag("Lengh-Uh1-1",100)
+      trigger.action.setUserFlag("Lengeh_Mi24-1",100)
+	
       local AN = AIRBASE:FindByName(AIRBASE.PersianGulf.Khasab)
       if AN:GetCoalition() == 1 then
         trigger.action.setUserFlag("F15_Bandar_Lengeh_Khasab",00)
@@ -1389,7 +1469,7 @@ function slot_bandarlengeh(coalition)
       hm("> Bandar Lengeh has been taken by Iran  ")
       blenmsg = false
 	  bandarlspawn = false
-	  spawnctld(AIRBASE.PersianGulf.Bandar_Lengeh,34,0,500)
+	  spawnctld(AIRBASE.PersianGulf.Bandar_Lengeh,34,05,1000)
     end
   else
     if blenmsg ~= true then
@@ -1399,8 +1479,23 @@ function slot_bandarlengeh(coalition)
       trigger.action.setUserFlag("Lengeh_JF11",100)
       trigger.action.setUserFlag("Lengeh_F14",100)
       trigger.action.setUserFlag("Lengeh_MiG29",100)
+	   trigger.action.setUserFlag("Lengeh_J11",100)
+	  trigger.action.setUserFlag("Lengeh_J11-1",100)
+	  trigger.action.setUserFlag("Lengeh_JF17",100)
+	  trigger.action.setUserFlag("Lengeh_JF17-1",100)
+      trigger.action.setUserFlag("Lengeh_F14",100)
+	  trigger.action.setUserFlag("Lengeh_F14-1",100)
+	  trigger.action.setUserFlag("Lengeh_F5",100)
+	  trigger.action.setUserFlag("Lengeh_F5-1",100)
       trigger.action.setUserFlag("F15_Bandar_Lengeh_Khasab",100)
       trigger.action.setUserFlag("F18_Bandar_Lengeh_Khasab",100)
+	  trigger.action.setUserFlag("Lengh-Mi8",100)
+	  trigger.action.setUserFlag("Lengh-KA50",100)
+	  trigger.action.setUserFlag("Lengh-Uh1",100)
+      trigger.action.setUserFlag("Lengeh_Mi24",100)
+	  trigger.action.setUserFlag("Lengh-SA342L",00)
+	  trigger.action.setUserFlag("Lengh-Uh1-1",00)
+	  trigger.action.setUserFlag("Lengeh_Mi24-1",00)
       MESSAGE:New("Bandar Lengeh has been taken from the Irani People",30):ToAll()
   --    STTS.TextToSpeech("Bandar Lengeh has been lost",253.00,"AM",0.75,"TGW Command", 1 )
   --    STTS.TextToSpeech("We have taken Bandar Lengeh",253.00,"AM",0.75,"TGW Command", 2 )
@@ -1412,7 +1507,7 @@ function slot_bandarlengeh(coalition)
       end,{},math.random(60,300))
 	  end
       blenmsg = true
-	  spawnctld(AIRBASE.PersianGulf.Bandar_Lengeh,2,0,500)
+	  spawnctld(AIRBASE.PersianGulf.Bandar_Lengeh,2,05,1000)
     end
   end
 
@@ -1435,7 +1530,7 @@ function slot_jir(coalition)
 	  spawnctld(AIRBASE.PersianGulf.Jiroft_Airport,34,40,500)
     end
   else
-    if jirmsg ~= false then
+    if jirmsg ~= true then
       trigger.action.setUserFlag("Pak-F16-Jiroft", 100)
       trigger.action.setUserFlag("Pak-F16-Jiroft #001", 100)
       trigger.action.setUserFlag("Pak-F16-Jiroft #002", 100)
@@ -1443,7 +1538,7 @@ function slot_jir(coalition)
       MESSAGE:New("Jiroft has fallen to coalition forces",30):ToAll()
  --    STTS.TextToSpeech("Jiroft is now under our control.",253.00,"AM",0.75,"TGW Command", 2 )
  --     STTS.TextToSpeech("We have lost Jiroft, this ia a terrible blow",253.00,"AM",0.75,"TGW Command", 1 )
-      hm("> Havadarya has been taken by Coalition Forces  ")
+      hm("> Jiroft has been taken by Coalition Forces  ")
       jirmsg = true
       SCHEDULER:New(nil,spawnmainland,{},math.random(5,1200))
 	  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Jiroft_Airport)
@@ -1534,6 +1629,8 @@ function locklhab()
   trigger.action.setUserFlag("LHA3-UH1 #001",100)
   trigger.action.setUserFlag("LHA3-UH1 #002",100)
   trigger.action.setUserFlag("LHA3-UH1 #003",100) 
+  trigger.action.setUserFlag("LHA3 Hind1",100)
+  trigger.action.setUserFlag("LHA3 Hind2",100) 
   hm("> LHA3 Slots are now De-Active")
 end
 
@@ -1549,6 +1646,7 @@ function locklha4()
   trigger.action.setUserFlag("LHA4-AV8 #001",100)
   trigger.action.setUserFlag("LHA4-AV8 #002",100)
   trigger.action.setUserFlag("LHA4-AV8 #003",100)
+  
   hm("> LHA4 Slots are now De-Active")
 end
 
@@ -1571,6 +1669,8 @@ function checkislands()
     trigger.action.setUserFlag("LHA3-UH1 #002",00)
     trigger.action.setUserFlag("LHA3-UH1 #003",00)  
 	trigger.action.setUserFlag("IRAF91-1",00)  
+	trigger.action.setUserFlag("LHA3 Hind1",0)
+	trigger.action.setUserFlag("LHA3 Hind2",0) 
   end
  end
  if am == nil then
@@ -1594,8 +1694,146 @@ function checkislands()
     trigger.action.setUserFlag("LHA4-AV8 #001",00)
     trigger.action.setUserFlag("LHA4-AV8 #002",00)
     trigger.action.setUserFlag("LHA4-AV8 #003",00)
+	trigger.action.setUserFlag("LHA4 Hind1",00)
+	trigger.action.setUserFlag("LHA4 Hind2",00)
+	
   end
  end
+end
+
+
+function slot_minhad(coalition)
+	if coalition == 1 then
+		if minmsg ~= false then
+			trigger.action.setUserFlag("Min Hind", 100)
+			trigger.action.setUserFlag("Min Hind-1", 100)
+			trigger.action.setUserFlag("Min Hind-2", 100)
+			trigger.action.setUserFlag("Min Hind-3", 100)
+			trigger.action.setUserFlag("Min UH1", 100)
+			trigger.action.setUserFlag("Min UH1 #001", 100)
+			trigger.action.setUserFlag("Min UH1 #002", 100)
+			trigger.action.setUserFlag("Min UH1 #003", 100)
+			trigger.action.setUserFlag("Min KA50 #001", 100)
+			trigger.action.setUserFlag("Min KA50", 100)
+			trigger.action.setUserFlag("Min Mi8", 100)
+			trigger.action.setUserFlag("Min Mi8 #001", 100)
+			trigger.action.setUserFlag("Min F15_Springfield4_212", 100)
+			trigger.action.setUserFlag("Min F15_Springfield4_215", 100)
+			trigger.action.setUserFlag("Min F15_Springfield4_216", 100)
+			trigger.action.setUserFlag("Min F15_Springfield4_211", 100)
+			trigger.action.setUserFlag("Min Springfield5_102", 100)
+			trigger.action.setUserFlag("Min Springfield5_103", 100)
+			trigger.action.setUserFlag("Min Springfield5_104", 100)
+			trigger.action.setUserFlag("Min Springfield5_106", 100)
+			trigger.action.setUserFlag("Min - JF17 - UZI1", 100)
+			trigger.action.setUserFlag("Min - JF17 - UZI2", 100)
+			trigger.action.setUserFlag("Min - JF17 - UZI3", 100)
+			trigger.action.setUserFlag("Min - JF17 - UZI4", 100)
+			trigger.action.setUserFlag("Min F18 COLT1_144", 100)
+			trigger.action.setUserFlag("Min F18 COLT1_122", 100)
+			trigger.action.setUserFlag("Min F18 COLT1_123", 100)
+			trigger.action.setUserFlag("Min F18 COLT1_145", 100)
+			trigger.action.setUserFlag("Min F18 COLT1_121", 100)
+			trigger.action.setUserFlag("Min F18 COLT1_124", 100)
+			trigger.action.setUserFlag("Min F16 Dodge_101", 100)
+			trigger.action.setUserFlag("Min F16 Dodge_102", 100)
+			trigger.action.setUserFlag("Min A10C_HAWG1_88", 100)
+			trigger.action.setUserFlag("Min A10C_HAWG1_89", 100)
+			trigger.action.setUserFlag("Min A10C_HAWG1_90", 100)
+			trigger.action.setUserFlag("Min A10C_HAWG1_91", 100)
+			trigger.action.setUserFlag("Min A10C_HAWG2_44", 100)
+			trigger.action.setUserFlag("Min A10C_HAWG2_49", 100)
+			trigger.action.setUserFlag("Min A10C_HAWG2_34", 100)
+			trigger.action.setUserFlag("Min A10C_HAWG2_55", 100)
+			trigger.action.setUserFlag("AJS37_ENFIELD7_65", 100)
+			trigger.action.setUserFlag("AJS37_ENFIELD7_69", 100)
+			trigger.action.setUserFlag("AJS37_ENFIELD7_37", 100)
+			trigger.action.setUserFlag("AJS37_ENFIELD7_34", 100)
+			trigger.action.setUserFlag("Dodge_103", 100)
+			trigger.action.setUserFlag("Dodge_104", 100)
+			trigger.action.setUserFlag("VF103_DODGE_21", 100)  
+			trigger.action.setUserFlag("VF103_DODGE_22", 100)
+			trigger.action.setUserFlag("VF103_DODGE_23", 100)
+			trigger.action.setUserFlag("COLT4-41", 100)
+			trigger.action.setUserFlag("COLT4-42", 100)
+			trigger.action.setUserFlag("COLT4-43", 100)
+			trigger.action.setUserFlag("Dodge_99", 100)
+			trigger.action.setUserFlag("Dodge_98", 100)
+			trigger.action.setUserFlag("Dodge_97", 100)
+			MESSAGE:New("Al-Minhad has been Liberated from the Heathans of the Coalition!",30):ToAll()
+			hm("> Al-Minhad Airforce Base has been taken by Iran")
+			minmsg = false
+			local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Al_Minhad_AB)
+			local _coord = ab:GetCoordinate()
+			routegroups(_coord,25000,"blue")
+			--spawnctld(AIRBASE.PersianGulf.Al_Minhad_AB,34,40,500)
+		end
+	else
+		if minmsg ~= true then
+			trigger.action.setUserFlag("Min Hind", 000)
+			trigger.action.setUserFlag("Min Hind-1", 000)
+			trigger.action.setUserFlag("Min Hind-2", 000)
+			trigger.action.setUserFlag("Min Hind-3", 000)
+			trigger.action.setUserFlag("Min UH1", 000)
+			trigger.action.setUserFlag("Min UH1 #001", 000)
+			trigger.action.setUserFlag("Min UH1 #002", 000)
+			trigger.action.setUserFlag("Min UH1 #003", 000)
+			trigger.action.setUserFlag("Min KA50 #001", 000)
+			trigger.action.setUserFlag("Min KA50", 000)
+			trigger.action.setUserFlag("Min Mi8", 000)
+			trigger.action.setUserFlag("Min Mi8 #001", 000)
+			trigger.action.setUserFlag("Min F15_Springfield4_212", 000)
+			trigger.action.setUserFlag("Min F15_Springfield4_215", 000)
+			trigger.action.setUserFlag("Min F15_Springfield4_216", 000)
+			trigger.action.setUserFlag("Min F15_Springfield4_211", 000)
+			trigger.action.setUserFlag("Min Springfield5_102", 000)
+			trigger.action.setUserFlag("Min Springfield5_103", 000)
+			trigger.action.setUserFlag("Min Springfield5_104", 000)
+			trigger.action.setUserFlag("Min Springfield5_106", 000)
+			trigger.action.setUserFlag("Min - JF17 - UZI1", 000)
+			trigger.action.setUserFlag("Min - JF17 - UZI2", 000)
+			trigger.action.setUserFlag("Min - JF17 - UZI3", 000)
+			trigger.action.setUserFlag("Min - JF17 - UZI4", 000)
+			trigger.action.setUserFlag("Min F18 COLT1_144", 000)
+			trigger.action.setUserFlag("Min F18 COLT1_122", 000)
+			trigger.action.setUserFlag("Min F18 COLT1_123", 000)
+			trigger.action.setUserFlag("Min F18 COLT1_145", 000)
+			trigger.action.setUserFlag("Min F18 COLT1_121", 000)
+			trigger.action.setUserFlag("Min F18 COLT1_124", 000)
+			trigger.action.setUserFlag("Min F16 Dodge_101", 000)
+			trigger.action.setUserFlag("Min F16 Dodge_102", 000)
+			trigger.action.setUserFlag("Min A10C_HAWG1_88", 000)
+			trigger.action.setUserFlag("Min A10C_HAWG1_89", 000)
+			trigger.action.setUserFlag("Min A10C_HAWG1_90", 000)
+			trigger.action.setUserFlag("Min A10C_HAWG1_91", 000)
+			trigger.action.setUserFlag("Min A10C_HAWG2_44", 000)
+			trigger.action.setUserFlag("Min A10C_HAWG2_49", 000)
+			trigger.action.setUserFlag("Min A10C_HAWG2_34", 000)
+			trigger.action.setUserFlag("Min A10C_HAWG2_55", 000)
+			trigger.action.setUserFlag("AJS37_ENFIELD7_65", 000)
+			trigger.action.setUserFlag("AJS37_ENFIELD7_69", 000)
+			trigger.action.setUserFlag("AJS37_ENFIELD7_37", 000)
+			trigger.action.setUserFlag("AJS37_ENFIELD7_34", 000)
+			trigger.action.setUserFlag("Dodge_103", 000)
+			trigger.action.setUserFlag("Dodge_104", 000)
+			trigger.action.setUserFlag("VF103_DODGE_21", 000)  
+			trigger.action.setUserFlag("VF103_DODGE_22", 000)
+			trigger.action.setUserFlag("VF103_DODGE_23", 000)
+			trigger.action.setUserFlag("COLT4-41", 000)
+			trigger.action.setUserFlag("COLT4-42", 000)
+			trigger.action.setUserFlag("COLT4-43", 000)
+			trigger.action.setUserFlag("Dodge_99", 000)
+			trigger.action.setUserFlag("Dodge_98", 000)
+			trigger.action.setUserFlag("Dodge_97", 000)
+			MESSAGE:New("Al-Minhad is once more in the hands of the UAE and the Coalition",30):ToAll()
+			hm("> Al-Minhad Airforece Base has been taken by Coalition Forces  ")
+			minmsg = true
+			local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Al_Minhad_AB)
+			local _coord = ab:GetCoordinate()
+			routegroups(_coord,25000,"red")
+			--spawnctld(AIRBASE.PersianGulf.Al_MinHad_AB,2,0,500)
+		end
+	end
 end
 
 locklhab()
@@ -1612,6 +1850,7 @@ slot_abun(2)
 slot_havadarya(1)
 slot_ejask(1)
 slot_fuj(2)
+slot_minhad(2)
 airbases = {}
 function SEH:OnEventBaseCaptured(EventData)
  local AirbaseName = EventData.PlaceName -- The name of the airbase that was captured.
@@ -1677,7 +1916,8 @@ function SEH:OnEventBaseCaptured(EventData)
         shiraz = true
       end
     end
- 
+ elseif Airbasename == AIRBASE.PersianGulf.Al_Minhad_AB then
+	slot_minhad(coalition)
  else
   local col = "Coalition"
   if coalition == 1 then
@@ -1743,20 +1983,35 @@ function lh4:OnEventDead(EventData)
 end
 function slot_wash()
 	if GW:IsAlive() ~= true then
+		trigger.action.setUserFlag("GW_419",100)
+		trigger.action.setUserFlag("GW_420",100)
+		trigger.action.setUserFlag("GW_421",100)
+		trigger.action.setUserFlag("GW_422",100)
 		trigger.action.setUserFlag("GW_450",100)
 		trigger.action.setUserFlag("GW_451",100)
 		trigger.action.setUserFlag("GW_452",100)
 		trigger.action.setUserFlag("GW_454",100)
+		trigger.action.setUserFlag("GW_455",100)
+		trigger.action.setUserFlag("GW_456",100)
+		trigger.action.setUserFlag("GW_457",100)
+		trigger.action.setUserFlag("GW_458",100)
 		trigger.action.setUserFlag("GW_221",100)
 		trigger.action.setUserFlag("GW_222",100)
 		trigger.action.setUserFlag("GW_223",100)
 		trigger.action.setUserFlag("GW_224",100)
 		hm("> **USS George Washington DESTROYED!** Slots are now locked")
 	else
+		trigger.action.setUserFlag("GW_419",00)
+		trigger.action.setUserFlag("GW_420",00)
+		trigger.action.setUserFlag("GW_421",00)
+		trigger.action.setUserFlag("GW_422",00)
 		trigger.action.setUserFlag("GW_450",00)
 		trigger.action.setUserFlag("GW_451",00)
 		trigger.action.setUserFlag("GW_452",00)
 		trigger.action.setUserFlag("GW_454",00)
+		trigger.action.setUserFlag("GW_455",00)
+		trigger.action.setUserFlag("GW_456",00)
+		trigger.action.setUserFlag("GW_457",00)
 		trigger.action.setUserFlag("GW_221",00)
 		trigger.action.setUserFlag("GW_222",00)
 		trigger.action.setUserFlag("GW_223",00)
@@ -1840,18 +2095,26 @@ function tdyslot()
 		trigger.action.setUserFlag("TDY_106",100)
 		trigger.action.setUserFlag("TDY_107",100)
 		trigger.action.setUserFlag("TDY_108",100)
-		trigger.action.setUserFlag("TDY_401",100)
-		trigger.action.setUserFlag("TDY_402",100)
-		trigger.action.setUserFlag("TDY_403",100)
-		trigger.action.setUserFlag("TDY_404",100)
-		trigger.action.setUserFlag("TDY_405",100)
-		trigger.action.setUserFlag("TDY_406",100)
-		trigger.action.setUserFlag("TDY_407",100)
-		trigger.action.setUserFlag("TDY_408",100)
-		trigger.action.setUserFlag("TDY_409",100)
-		trigger.action.setUserFlag("TDY_410",100)
-		trigger.action.setUserFlag("TDY_411",100)
-		trigger.action.setUserFlag("TDY_412",100)
+		trigger.action.setUserFlag("TDY_501",100)
+		trigger.action.setUserFlag("TDY_502",100)
+		trigger.action.setUserFlag("TDY_503",100)
+		trigger.action.setUserFlag("TDY_504",100)
+		trigger.action.setUserFlag("TDY_505",100)
+		trigger.action.setUserFlag("TDY_506",100)
+		trigger.action.setUserFlag("TDY_507",100)
+		trigger.action.setUserFlag("TDY_508",100)
+		trigger.action.setUserFlag("TDY_509",100)
+		trigger.action.setUserFlag("TDY_510",100)
+		trigger.action.setUserFlag("TDY_511",100)
+		trigger.action.setUserFlag("TDY_512",100)
+		trigger.action.setUserFlag("TDY_513",100)
+		trigger.action.setUserFlag("TDY_514",100)
+		trigger.action.setUserFlag("TDY_515",100)
+		trigger.action.setUserFlag("TDY_516",100)
+		trigger.action.setUserFlag("TDY_517",100)
+		trigger.action.setUserFlag("TDY_518",100)
+		trigger.action.setUserFlag("TDY_519",100)
+		trigger.action.setUserFlag("TDY_520",100)
 		hm("> **USS Theodore Rosevolt DESTROYED!** Slots are now locked")
 	else
 		trigger.action.setUserFlag("TDY_101",00)
@@ -1862,18 +2125,26 @@ function tdyslot()
 		trigger.action.setUserFlag("TDY_106",00)
 		trigger.action.setUserFlag("TDY_107",00)
 		trigger.action.setUserFlag("TDY_108",00)
-		trigger.action.setUserFlag("TDY_401",00)
-		trigger.action.setUserFlag("TDY_402",00)
-		trigger.action.setUserFlag("TDY_403",00)
-		trigger.action.setUserFlag("TDY_404",00)
-		trigger.action.setUserFlag("TDY_405",00)
-		trigger.action.setUserFlag("TDY_406",00)
-		trigger.action.setUserFlag("TDY_407",00)
-		trigger.action.setUserFlag("TDY_408",00)
-		trigger.action.setUserFlag("TDY_409",00)
-		trigger.action.setUserFlag("TDY_410",00)
-		trigger.action.setUserFlag("TDY_411",00)
-		trigger.action.setUserFlag("TDY_412",00)
+		trigger.action.setUserFlag("TDY_501",00)
+		trigger.action.setUserFlag("TDY_502",00)
+		trigger.action.setUserFlag("TDY_503",00)
+		trigger.action.setUserFlag("TDY_504",00)
+		trigger.action.setUserFlag("TDY_505",00)
+		trigger.action.setUserFlag("TDY_506",00)
+		trigger.action.setUserFlag("TDY_507",00)
+		trigger.action.setUserFlag("TDY_508",00)
+		trigger.action.setUserFlag("TDY_509",00)
+		trigger.action.setUserFlag("TDY_510",00)
+		trigger.action.setUserFlag("TDY_511",00)
+		trigger.action.setUserFlag("TDY_512",00)
+		trigger.action.setUserFlag("TDY_513",00)
+		trigger.action.setUserFlag("TDY_514",00)
+		trigger.action.setUserFlag("TDY_515",00)
+		trigger.action.setUserFlag("TDY_516",00)
+		trigger.action.setUserFlag("TDY_517",00)
+		trigger.action.setUserFlag("TDY_518",00)
+		trigger.action.setUserFlag("TDY_519",00)
+		trigger.action.setUserFlag("TDY_520",00)
 		hm("> **USS Theodore Rosevolt BACK** Slots are now unlocked")
 	end
 end
@@ -1905,6 +2176,8 @@ function tar_slot()
     trigger.action.setUserFlag("TED-TAR-SA342Mini-112",100)
     trigger.action.setUserFlag("TED-TAR-SA342m-66",100)
     trigger.action.setUserFlag("TED-TAR-SA342m-67",100)
+	trigger.action.setUserFlag("TED-TAR Hind1",100)
+    trigger.action.setUserFlag("TED-TAR Hind2",100)	
 	hm("> **USS TARAWA Destroyed!** Slots are now locked")
 	else
 		
@@ -1930,6 +2203,8 @@ function tar_slot()
     trigger.action.setUserFlag("TED-TAR-SA342Mini-112",00)
     trigger.action.setUserFlag("TED-TAR-SA342m-66",00)
     trigger.action.setUserFlag("TED-TAR-SA342m-67",00)
+    trigger.action.setUserFlag("TED-TAR Hind1",00)
+    trigger.action.setUserFlag("TED-TAR Hind2",00)	
 	hm("> **USS TARAWA BACK!** Slots are now unlocked")
 	
   end
@@ -2165,8 +2440,8 @@ EQ:Startup()
 ER = fob:New("ER",SPAWN:New("red_ER"),SPAWN:New("blue_ER"),1,90)
 ER:AddRedStatics({"ERRLOG"})
 ER:AddBlueStatics({"ERBLOG"})
-ER:AddRedSlots({"ERUH2","ERUH2-1"})
-ER:AddBlueSlots({"ERUH1","ERUH1-1"})
+ER:AddRedSlots({"ERUH2","ERUH2-1","ERMi24-3","ERMi24-4"})
+ER:AddBlueSlots({"ERUH1","ERUH1-1","ERMi24-1","ERMi24-2"})
 ER:Startup()
 
 FR = fob:New("FR",SPAWN:New("red_FR"),SPAWN:New("blue_FR"),1,0)
@@ -2268,14 +2543,177 @@ SCHEDULER:New(nil,function()
 BASE:E({"Loading is now false"})
 Loading = false
  end,{},240)
+ local dumpthis = math.random(1,100000)
+ dumpthis = math.random(1,100000)
+ dumpthis = math.random(1,100000)
+ dumpthis = math.random(1,100000)
  
 SCHEDULER:New(nil,function()
+ BASE:E({"Spawning Islands"})
  spawnislands()
- end,{},math.random(240,600))
+ 
+ end,{},math.random((60*15),(60*60)),math.random(3600,4200))
  
 SCHEDULER:New(nil,function()
  spawnmainland()
- end,{},math.random(600,600))
+ BASE:E({"Spawning mainland"})
+ end,{},math.random((60*15),(60*60)),math.random(3600,4800))
  
  
  -- hm("Statics for FOB Active is set to : `" ..staticactive .. " ` if false you will ALWAYS require the taking of FOB crates to the FARP bases")
+ 
+ 
+ 
+ BASE:E({"Initalising Sweeps"})
+_DBCAS = nil
+dbcascount = 0
+dbcastotal = math.random(1,2)
+_DBCAP1 = nil
+dbcap1count = 0
+dbcap1total = math.random(1,3)
+_DBCAP2 = nil
+dbcap2count = 0
+dbcap2total = math.random(1,3)
+_DBCAP3 = nil
+dbcap3count = 0
+dbcap3total = math.random(1,3)
+
+
+dbcas = SPAWN:NewWithAlias("DB_CAS","DBCAS"):InitCleanUp(600):InitRepeatOnEngineShutDown():OnSpawnGroup(function(spawngroup) 
+  _DBCAS = spawngroup
+  dbcascount = dbcascount + 1
+end):InitRandomizeRoute(1,5,UTILS.NMToMeters(10),UTILS.FeetToMeters(2000))
+
+
+dbcap1 = SPAWN:NewWithAlias("DB_CAP1","DBC1"):InitCleanUp(600):InitRepeatOnEngineShutDown():OnSpawnGroup(function(spawngroup) 
+  _DBCAP1 = spawngroup
+  dbcap1count = dbcap1count + 1
+end):InitRandomizeRoute(1,5,UTILS.NMToMeters(5),UTILS.FeetToMeters(2000))
+
+
+dbcap2 = SPAWN:NewWithAlias("DB_CAP2","DBC2"):InitCleanUp(600):InitRepeatOnEngineShutDown():OnSpawnGroup(function(spawngroup) 
+  _DBCAP2 = spawngroup
+  dbcap2count = dbcap2count + 1
+end):InitRandomizeRoute(1,5,UTILS.NMToMeters(5),UTILS.FeetToMeters(2000))
+
+
+dbcap3 = SPAWN:NewWithAlias("DB_CAP3","DBC3"):InitCleanUp(600):InitRepeatOnEngineShutDown():OnSpawnGroup(function(spawngroup) 
+  _DBCAP3 = spawngroup
+  dbcap3count = dbcap3count + 1
+end):InitRandomizeRoute(1,5,UTILS.NMToMeters(5),UTILS.FeetToMeters(2000))
+
+BASE:E({"Initalising Scheduler"})
+
+
+SCHEDULER:New(nil,function() 
+  BASE:E({"DB RED UNIT CHECKS"})
+  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Sirri_Island)
+  if ab:GetCoalition() == 1 then
+    if _DBCAS == nil then
+      BASE:E({"_DBCAS was nil spawning"})
+      dbcas:Spawn()
+    else
+      if ( _DBCAS:IsAlive() ~= true or _DBCAS:AllOnGround() == true) and dbcascount < dbcastotal then
+        BASE:E({"DBCAS was not nil or all on ground",_DBCAS:IsAlive(),_DBCAS:AllOnGround(),dbcascount})
+        _DBCAS:Destroy()
+        dbcas:Spawn()
+      end  
+    end
+  end
+
+  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Qeshm_Island)
+  if ab:GetCoalition() == 1 then
+    if _DBCAP1 == nil then
+      BASE:E({"_DBCAp1 was nil spawning"})
+      dbcap1:Spawn()
+    else
+      if ( _DBCAP1:IsAlive() ~= true or _DBCAP1:AllOnGround() == true) and dbcap1count < dbcap1total then
+        BASE:E({"DBCap1 was not nil or all on ground",_DBCAP1:IsAlive(),_DBCAP1:AllOnGround(),dbcap1count})
+        _DBCAP1:Destroy()
+        dbcap1:Spawn()
+      end  
+    end
+  end
+
+  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Al_Ain_International_Airport)
+  if ab:GetCoalition() == 1 then
+    if _DBCAP2 == nil then
+      BASE:E({"_DBCAP2 was nil spawning"})
+      dbcap2:Spawn()
+    else
+      if ( _DBCAP2:IsAlive() ~= true or _DBCAP2:AllOnGround() == true) and dbcap2count < dbcap2total then
+        BASE:E({"DBCAP2 was not nil or all on ground",_DBCAP2:IsAlive(),_DBCAP2:AllOnGround(),dbcap2count})
+        _DBCAP2:Destroy()
+        dbcap2:Spawn()
+      end  
+    end
+    
+    if _DBCAP3 == nil then
+      BASE:E({"_DBCAP2 was nil spawning"})
+      dbcap3:Spawn()
+    else
+      if ( _DBCAP3:IsAlive() ~= true or _DBCAP3:AllOnGround() == true) and dbcap3count < dbcap3total then
+        BASE:E({"DBCAP3 was not nil or all on ground",_DBCAP3:IsAlive(),_DBCAP3:AllOnGround(),dbcap3count})
+        _DBCAP3:Destroy()
+        dbcap3:Spawn()
+      end  
+    end
+    
+  end
+  
+  end,{},(60*5),(60*60),0.75)
+  
+  
+  BASE:E({"US stuff"})
+  _USKISH = nil
+uskishcount = 0
+uskishtotal = math.random(1,3)
+_USQESHM = nil
+usqeshmcount = 0
+usqeshmtotal = math.random(1,3)
+
+
+uskish = SPAWN:NewWithAlias("USKISHCAP","94thFS"):InitCleanUp(600):InitRepeatOnEngineShutDown():OnSpawnGroup(function(spawngroup) 
+  _USKISH = spawngroup
+  uskishcount = uskishcount + 1
+end):InitRandomizeRoute(1,5,UTILS.NMToMeters(10),UTILS.FeetToMeters(4000))
+
+usqeshm = SPAWN:NewWithAlias("USQESHMCAP","96thFS"):InitCleanUp(600):InitRepeatOnEngineShutDown():OnSpawnGroup(function(spawngroup) 
+  _USQESHM = spawngroup
+  usqeshmcount = usqeshmcount + 1
+end):InitRandomizeRoute(1,5,UTILS.NMToMeters(10),UTILS.FeetToMeters(4000))
+
+
+BASE:E({"Initalising Scheduler"})
+
+SCHEDULER:New(nil,function() 
+  BASE:E({"KISH AND QESHM BLUE UNIT CHECKS"})
+  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Qeshm_Island)
+  if ab:GetCoalition() == 2 then
+    if _USQESHM == nil then
+      BASE:E({"_DBCAS was nil spawning"})
+      usqeshm:Spawn()
+    else
+      if ( _USQESHM:IsAlive() ~= true or _USQESHM:AllOnGround() == true) and usqeshmcount < usqeshmtotal then
+        BASE:E({"USQESHM was not nil or all on ground",_USQESHM:IsAlive(),_USQESHM:AllOnGround(),usqeshmcount})
+        _USQESHM:Destroy()
+        usqeshm:Spawn()
+      end  
+    end
+  end
+
+  local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Kish_International_Airport)
+  if ab:GetCoalition() == 2 then
+    if _USKISH == nil then
+      BASE:E({"_DBCAp1 was nil spawning"})
+      uskish:Spawn()
+    else
+      if ( _USKISH:IsAlive() ~= true or _USKISH:AllOnGround() == true) and uskishcount < uskishtotal then
+        BASE:E({"_USKISH was not nil or all on ground",_USKISH:IsAlive(),_USKISH:AllOnGround(),uskishcount})
+        _USKISH:Destroy()
+        uskish:Spawn()
+      end  
+    end
+  end
+  
+  end,{},(60*7),(60*60),0.75)

@@ -250,6 +250,8 @@ else
   env.info("Empty target list, writing new file")
   table.save(scenery, scenerysavefile)
 end
+
+
 zp1 = ZONE_POLYGON:New("ap1",GROUP:FindByName("ap1"))
 zp2 = ZONE_POLYGON:New("ap2",GROUP:FindByName("ap2"))
 zp3 = ZONE_POLYGON:New("ap3",GROUP:FindByName("ap3"))
@@ -265,27 +267,28 @@ exclusionzones = {zp1,zp2,zp3,zp4,zp5,zp6,zp7,zp8,zp9,zp10,zp11}
 useexclusions = true
 uselandtype = false
 
-EH = EVENTHANDLER:New()
-EH:HandleEvent( EVENTS.Dead ) --this is a popular handler. Ensure you do not duplicate.
+StaticHandler = EVENTHANDLER:New()
+StaticHandler:HandleEvent( EVENTS.Dead ) --this is a popular handler. Ensure you do not duplicate.
 
-function EH:OnEventDead( EventData )
+function StaticHandler:OnEventDead( EventData )
          if EventData.IniUnit and EventData.IniObjectCategory==Object.Category.SCENERY then
           BASE:E({"We are inside InitUnit and IniObject Scenery",EventData.IniUnit})
           local coord=EventData.IniUnit:GetVec3()
           local mccord = EventData.IniUnit:GetCoordinate()
           local mctype = mccord:GetSurfaceType()
           if useexclusions == true then
-          for i, v in pairs(exclusionzones) do
-            if v:IsCoordinateInZone(mccord) == true then
-              return
-            end
-          end
-          elseif uselandtype == true then
-            if mctype == 5 then
+			for i, v in pairs(exclusionzones) do
+				if v:IsCoordinateInZone(mccord) == true then
+					return
+				end
+			end
+		  elseif uselandtype == true then
+			if mctype == 5 then
               return
             end
           else
             table.insert(scenery,coord)
+			BASE:E({"Scenery Destroyed"})
             --we check the event scenery that died against the file of items we built
               if table_has_key(savedSceneryTbl, EventData.IniUnitName) == true then --items below this line will execute when finding the item on the list
                 savedSceneryTbl[EventData.IniUnitName]=nil --add date?

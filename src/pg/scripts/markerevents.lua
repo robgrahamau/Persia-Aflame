@@ -9,8 +9,8 @@ function _split(str, sep)
 end
 
 admin = false
-password = "everyonehatesjf (really you think 'm this dumb to not change it for github?'"
-ADMINPASSWORD2 = "keepondreaming"
+password = "morns"
+ADMINPASSWORD2 = "yeahreally"
 adminspawned = {} 
 newlandingmark = true
 -- SupportHandler = EVENTHANDLER:New()
@@ -59,6 +59,84 @@ function hevent:handlehelp(coalition)
 		MESSAGE:New(msgtext,15):ToBlue()
 	end
 end
+function groupchecker()
+	local tempset = SET_UNIT:New():FilterActive():FilterOnce()
+		local ucounter = 0
+		local ub = 0
+		local ur = 0 
+		tempset:ForEach(function(g) 
+			ucounter = ucounter + 1
+			local uc = g:GetCoalition()
+			if uc == 1 then
+				ur = ur + 1
+			else
+				ub = ub + 1
+			end
+		end)
+		
+		tempset = SET_GROUP:New():FilterActive():FilterOnce()
+		local gcounter = 0
+		local gb = 0
+		local gr = 0 
+		tempset:ForEach(function(g) 
+			gcounter = gcounter + 1
+			local gc = g:GetCoalition()
+			if gc == 1 then
+				gr = gr + 1
+			else
+				gb = gb + 1
+			end
+		end)
+		MESSAGE:New("Current Group Count is: ".. gcounter .." Active Groups, \n Blue Groups: " .. gb .. " \n Red Groups: " .. gr .. " \n Unit Count is:" .. ucounter .. "Units \n Blue Units:" .. ub .. "\n Red Units:" .. ur .. "",30):ToAll()
+	
+end
+
+function ctldremove(text,_coord,co,dist)
+	if co == true then
+		coalition = "Red"
+	else
+		coalition = "Blue"
+	end
+    ctlddelcount = 0
+	MESSAGE:New("ctld delete requested at coord, all units within " .. dist .. " meters of " .. coalition .. " will be deleted",30,"Info"):ToAll()
+	gunits = nil
+	if coalition == "blue" or coalition == "Blue" or coalition == "BLUE" then
+        gunits = SET_GROUP:New():FilterCategoryGround():FilterCoalitions("blue"):FilterActive(true):FilterOnce()
+	elseif coalition == "red" or coalition == "Red" or coalition == "RED" then
+		gunits = SET_GROUP:New():FilterCategoryGround():FilterCoalitions("red"):FilterActive(true):FilterOnce()
+    end
+	if gunits == nil then
+		if coalition == "Blue" then
+			 MESSAGE:New("Unable to run ctldremove command as setgroup was nil please lodge a bug report in discord #bugreports and requests tagged, CTLDBUG SETGROUP NIL, thanks",30):ToBlue()
+		else
+			 MESSAGE:New("Unable to run ctldremove command as setgroup was nil please lodge a bug report in discord #bugreports and requests tagged, CTLDBUG SETGROUP NIL, thanks",30):ToRed()
+		end
+	else
+		gunits:ForEach(function(g)  
+            if g:IsAlive() == true then
+				local groupname = g:GetName()
+				if groupname:lower():find("ctld") then
+					local _group = GROUP:FindByName(groupname)
+					gc = _group:GetCoordinate()
+					if gc == nil then
+						BASE:E({"Could not get Coord for group:",g:GetName(),g:GetCoordinate(),gc})
+					else
+						local d = gc:Get2DDistance(_coord)
+						if d < dist then
+							g:Destroy()
+							ctlddelcount = ctlddelcount + 1
+						end
+					end
+				end
+			end
+		end)
+    end
+	if coalition == "Blue" then
+		MESSAGE:New("CTLD requested Completed, we deleted ".. delcount .." Groups",30,"Info"):ToBlue()
+	else
+		MESSAGE:New("CTLD requested Completed, we deleted ".. delcount .." Groups",30,"Info"):ToRed()
+	end
+end
 
 function hevent:OnEventMarkRemoved(EventData)
     if EventData.text~=nil and EventData.text:lower():find("-") then 
@@ -80,6 +158,12 @@ function hevent:OnEventMarkRemoved(EventData)
            else
             handleRedTankerRequest(text,coord)
            end
+		elseif EventData.text:lower():find("-ctldremove") then
+			if red == false then
+				ctldremove(text,coord,false,100)
+			else
+				ctldremove(text,coord,true,100)
+			end
 		elseif EventData.text:lower():find("-help") then
 			self:handlehelp(red)
         elseif EventData.text:lower():find("-smokered") then
@@ -101,43 +185,51 @@ function hevent:OnEventMarkRemoved(EventData)
 		  nc:SmokeOrange()
         elseif EventData.text:lower():find("-smoke") then
           self:handleSmoke(text,coord,coalition)
+		elseif EventData.text:lower():find("-groupcheck") then
+          groupchecker()
         elseif EventData.text:lower():find("-flare") then
           coord:FlareRed(math.random(0,360))
           SCHEDULER:New(nil,function() 
             coord:FlareRed(math.random(0,20))
           end,{},30)
         elseif EventData.text:lower():find("-light") then
-      coord.y = coord.y + 1500
-          coord:IlluminationBomb(1000)
-      elseif EventData.text:lower():find("-lightbright") then
-      coord.y = coord.y + 2000
-          coord:IlluminationBomb(10000)
-    elseif EventData.text:lower():find("-ctldfob") then
+			coord.y = coord.y + 1000
+			coord:IlluminationBomb(1000)
+		elseif EventData.text:lower():find("-lightbright") then
+			coord.y = coord.y + 1500
+			coord:IlluminationBomb(10000)
+		elseif EventData.text:lower():find("-ctldfob") then
           -- ctld drop.
-      if admin == true then
-      BASE:E({"attempting to spawn a fob"})
-      MESSAGE:New("Attempting to spawn a fob lets see if it breaks",30):ToAll()
-      local _unitId = ctld.getNextUnitId()
-      local _name = "ctld Deployed FOB #" .. _unitId
-      local _fob = nil
-      BASE:E({"ctld",text})
-      local keywords=_split(text,"|")
-      local s = keywords[2]
-      if (s == "blue") then
-        _fob = ctld.spawnFOB(2, 211, vec3, _name)
-      elseif (s == "red") then
-        _fob = ctld.spawnFOB(34, 211, vec3, _name)
-      else
-        _fob = ctld.spawnFOB(2, 211, vec3, _name)
-      end
-      table.insert(ctld.logisticUnits, _fob:getName())
-		if ctld.troopPickupAtFOB == true then
-			table.insert(ctld.builtFOBS, _fob:getName())
-		end
-      end
-	 elseif EventData.text:lower():find("-routeside") or EventData.text:lower():find("-rs")then
+			if admin == true then
+				BASE:E({"attempting to spawn a fob"})
+				MESSAGE:New("Attempting to spawn a fob lets see if it breaks",30):ToAll()
+				local _unitId = ctld.getNextUnitId()
+				local _name = "ctld Deployed FOB #" .. _unitId
+				local _fob = nil
+				BASE:E({"ctld",text})
+				local keywords=_split(text,"|")
+				local s = keywords[2]
+				if (s == "blue") then
+					_fob = ctld.spawnFOB(2, 211, vec3, _name)
+				elseif (s == "red") then
+					_fob = ctld.spawnFOB(34, 211, vec3, _name)
+				else
+					_fob = ctld.spawnFOB(2, 211, vec3, _name)
+				end
+				table.insert(ctld.logisticUnits, _fob:getName())
+				if ctld.troopPickupAtFOB == true then
+					table.insert(ctld.builtFOBS, _fob:getName())
+				end
+			end
+		elseif EventData.text:lower():find("-routeside") then
 			if admin == true then
 				routemassgroup(text,coord)
+			else
+				MESSAGE:New("Unable, Admin Commands need to be active to use that command",15):ToAll()
+			end
+		elseif EventData.text:lower():find("-massdel") then
+			if admin == true then
+				deletemassgroup(text,coord)
 			else
 				MESSAGE:New("Unable, Admin Commands need to be active to use that command",15):ToAll()
 			end
@@ -426,6 +518,48 @@ end
 
 
 
+function massdel(_coord,dist,coalition)
+    local delcount = 0
+	MESSAGE:New("Mass Delete requested by admin at coord, all units within " .. dist .. " meters of " .. coalition .. " will be deleted",30,"Info"):ToAll()
+	if coalition == "blue" or coalition == "Blue" or coalition == "BLUE" then
+        local gunits = SET_GROUP:New():FilterCategoryGround():FilterCoalitions("blue"):FilterActive(true):FilterOnce()
+        gunits:ForEach(function(g)  
+            if g:IsAlive() == true then
+                local _group = GROUP:FindByName(g:GetName())
+                gc = _group:GetCoordinate()
+                if gc == nil then
+                    BASE:E({"Could not get Coord for group:",g:GetName(),g:GetCoordinate(),gc})
+                else
+                    local d = gc:Get2DDistance(_coord)
+                    if d < dist then
+                        g:Destroy()
+						delcount = delcount + 1
+                    end
+                end
+            end
+        end)
+    else
+        local gunits = SET_GROUP:New():FilterCategoryGround():FilterCoalitions("red"):FilterActive(true):FilterOnce()
+        gunits:ForEach(function(g)
+            if g:IsAlive() == true then
+                local _group = GROUP:FindByName(g:GetName())
+                gc = _group:GetCoordinate()
+                if gc == nil then
+                    BASE:E({"Could not get Coord for group:",g:GetName(),g:GetCoordinate(),gc})
+                else
+                    local d = gc:Get2DDistance(_coord)
+                    if d < dist then
+                      g:Destroy()
+					  delcount = delcount + 1
+                    end
+                end
+            else
+                BASE:E({"Group is dead",g:GetName()})
+            end
+        end)
+    end
+	MESSAGE:New("Mass Delete requested Completed, we deleted ".. delcount .." Groups",30,"Info"):ToAll()
+end
 
 
 
@@ -574,8 +708,10 @@ function newhandlespawn(text,coord)
     MESSAGE:New("unable to spawn requested group as you left out information",15):ToAll()
   end
 end
+
+
 function routemassgroup(text,coord)
-	local keywords=split(text,",")
+	local keywords=_split(text,",")
 	local dist = 25000
 	local col = "Red"
 	for _,keyphrase in pairs(keywords) do
@@ -591,6 +727,28 @@ function routemassgroup(text,coord)
 	end
 	routegroups(coord,dist,col)
 end
+
+
+
+function deletemassgroup(text,coord)
+	local keywords=_split(text,",")
+	local dist = 25000
+	local col = "Red"
+	for _,keyphrase in pairs(keywords) do
+		local str=_split(keyphrase, " ")
+		local key=str[1]
+		local val=str[2]
+		if key:lower():find("d") then
+			dist = tonumber(val)
+		end
+		if key:lower():find("c") then
+			col = val
+		end
+	end
+	massdel(coord,dist,col)
+end
+
+
 function handlespawn(text,coord)
   BASE:E({"Spawn Request",text,coord})
   local keywords=_split(text, ",")
@@ -1083,7 +1241,7 @@ elseif unit == "barmour2" then
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "rsu25t" then
-    local su = SPAWN:NewWithAlias("GM_SU25T","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_SU25T","IAA " .. name):InitRandomizeRoute(1,2,UTILS.NMToMeters(60),UTILS.FeetToMeters(5000))
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1093,7 +1251,7 @@ elseif unit == "barmour2" then
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "rsu24m2" then
-    local su = SPAWN:NewWithAlias("GM_SU24M2","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_SU24M2","IAA " .. name):InitRandomizeRoute(1,2,UTILS.NMToMeters(60),UTILS.FeetToMeters(5000))
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1103,7 +1261,7 @@ elseif unit == "barmour2" then
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "rsu24m1" then
-    local su = SPAWN:NewWithAlias("GM_SU24M1","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_SU24M1","IAA " .. name):InitRandomizeRoute(1,2,UTILS.NMToMeters(60),UTILS.FeetToMeters(5000))
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1113,7 +1271,7 @@ elseif unit == "barmour2" then
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "rsu24m" then
-    local su = SPAWN:NewWithAlias("GM_SU24M","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_SU24M","IAA " .. name):InitRandomizeRoute(1,2,UTILS.NMToMeters(60),UTILS.FeetToMeters(5000))
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1123,7 +1281,7 @@ elseif unit == "barmour2" then
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "rmig29" then
-    local su = SPAWN:NewWithAlias("GM_MIG29","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_MIG29","IAA " .. name):InitRandomizeRoute(1,2,UTILS.NMToMeters(60),UTILS.FeetToMeters(5000))
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1133,7 +1291,7 @@ elseif unit == "barmour2" then
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
    elseif unit == "rjf17" then
-    local su = SPAWN:NewWithAlias("GM_JF17","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_JF17","IAA " .. name):InitRandomizeRoute(1,2,UTILS.NMToMeters(60),UTILS.FeetToMeters(5000))
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1143,7 +1301,7 @@ elseif unit == "barmour2" then
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "rf14" then
-    local su = SPAWN:NewWithAlias("GM_F14","IAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_F14","IAA " .. name):InitRandomizeRoute(1,2,UTILS.NMToMeters(60),UTILS.FeetToMeters(5000))
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1153,7 +1311,7 @@ elseif unit == "barmour2" then
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su) 
   elseif unit == "ba10" then
-    local su = SPAWN:NewWithAlias("GM_A10","GM_USAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_A10","GM_USAA " .. name):InitRandomizeRoute(1,2,UTILS.NMToMeters(60),UTILS.FeetToMeters(5000))
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1163,7 +1321,7 @@ elseif unit == "barmour2" then
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "bf15" then
-    local su = SPAWN:NewWithAlias("GM_F15C","GM_USAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_F15C","GM_USAA " .. name):InitRandomizeRoute(1,2,UTILS.NMToMeters(60),UTILS.FeetToMeters(5000))
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1173,7 +1331,7 @@ elseif unit == "barmour2" then
     su = su:SpawnFromCoordinate(coord)
     table.insert(adminspawned,su)
   elseif unit == "bf15e" then
-    local su = SPAWN:NewWithAlias("GM_F15E","GM_USAA " .. name)
+    local su = SPAWN:NewWithAlias("GM_F15E","GM_USAA " .. name):InitRandomizeRoute(1,2,UTILS.NMToMeters(60),UTILS.FeetToMeters(5000))
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1184,6 +1342,7 @@ elseif unit == "barmour2" then
     table.insert(adminspawned,su)
   elseif unit == "afac" then
     local su = SPAWN:NewWithAlias("GM_AFAC","GM_USAA " .. name)
+	MESSAGE:New("DCS AI AFAC should be on 265UHF",30):ToBlue()
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1215,7 +1374,8 @@ elseif unit == "barmour2" then
 	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
-    ctld.JTACAutoLase("GM_USAA " .. name, _code) 
+    ctld.JTACAutoLase(su:GetName(), _code) 
+	MESSAGE:New("DCS AI AFAC should be on 265UHF",30):ToBlue()
   elseif unit == "rafac2" then
     local su = SPAWN:NewWithAlias("GM_AFAC","GM_IAA " .. name)
     if random == true then
@@ -1229,9 +1389,10 @@ elseif unit == "barmour2" then
 	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
-    ctld.JTACAutoLase("GM_IAA " .. name, _code) 
+    ctld.JTACAutoLase(su:GetName(), _code) 
 	elseif unit == "bjtac1" then
     local su = SPAWN:NewWithAlias("GM_BJTAC","GM_USAA " .. name)
+	MESSAGE:New("DCS AI JTAC should be on 133VHF",30):ToBlue()
     if random == true then
       su:InitRandomizeUnits(true,100,500)
     end
@@ -1243,7 +1404,7 @@ elseif unit == "barmour2" then
 	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
-    ctld.JTACAutoLase("GM_USAA " .. name, _code) 
+    ctld.JTACAutoLase(su:GetName(), _code) 
   elseif unit == "rjtac" then
     local su = SPAWN:NewWithAlias("GM_RJTAC","GM_IAA " .. name)
     if random == true then
@@ -1257,7 +1418,7 @@ elseif unit == "barmour2" then
   local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
     --put to the end
     table.insert(ctld.jtacGeneratedLaserCodes, _code)
-    ctld.JTACAutoLase("GM_IAA " .. name, _code) 
+    ctld.JTACAutoLase(su:GetName(), _code) 
   elseif unit == "hvt" then
     local su = SPAWN:NewWithAlias("GM_HVT","IAA " .. name)
     if random == true then

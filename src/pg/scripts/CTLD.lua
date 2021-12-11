@@ -56,12 +56,13 @@ ctld.vehiclesForTransportRED = { "BRDM-2", "BTR_D","Strela-1 9P31","BMP-1" } -- 
 ctld.vehiclesForTransportBLUE = { "M1045 HMMWV TOW", "M1043 HMMWV Armament","M1128 Stryker MGS","M1097 Avenger","M6 Linebacker" } -- vehicles to load onto c130 - Alternatives {"M1128 Stryker MGS","M1097 Avenger"}
 
 ctld.aaLaunchers = 2 -- controls how many launchers to add to the kub/buk when its spawned.
-ctld.hawkLaunchers = 5 -- controls how many launchers to add to the hawk when its spawned.
+ctld.hawkLaunchers = 4 -- controls how many launchers to add to the hawk when its spawned.
 ctld.sa10Launchers = 4
 ctld.patlaunchers = 4
-ctld.buklaunchers = 3
-ctld.rolandlaunchers = 3
-ctld.hq7 = 3
+ctld.buklaunchers = 2
+ctld.rolandlaunchers = 2
+ctld.hq7 = 2
+ctld.nasamlaunchers = 2
 
 ctld.spawnRPGWithCoalition = true --spawns a friendly RPG unit with Coalition forces
 ctld.spawnStinger = false -- spawns a stinger / igla soldier with a group of 6 or more soldiers!
@@ -108,16 +109,16 @@ ctld.hoverTime = 4 -- Time to hold hover above a crate for loading in seconds
 -- When this limit is hit, a player will still be able to get crates for an AA system, just unable
 -- to unpack them
 
-ctld.AASystemLimitRED = 10 -- Red side limit
+ctld.AASystemLimitRED = 30 -- Red side limit
 
-ctld.AASystemLimitBLUE = 10 -- Blue side limit
+ctld.AASystemLimitBLUE = 25 -- Blue side limit
 
 --END AA SYSTEM CONFIG --
 
 -- ***************** JTAC CONFIGURATION *****************
 
-ctld.JTAC_LIMIT_RED = 10 -- max number of JTAC Crates for the RED Side
-ctld.JTAC_LIMIT_BLUE = 10 -- max number of JTAC Crates for the BLUE Side
+ctld.JTAC_LIMIT_RED = 20 -- max number of JTAC Crates for the RED Side
+ctld.JTAC_LIMIT_BLUE = 20 -- max number of JTAC Crates for the BLUE Side
 
 ctld.JTAC_dropEnabled = true -- allow JTAC Crate spawn from F10 menu
 
@@ -237,6 +238,8 @@ ctld.logisticUnits = {
 	"CTLD Sirri Island B",
 	"CTLD BandarFarp C",
 	"CTLD BandarFarp D",
+	"LHA-3",
+	"LHA_BANDAR",
 }
 -- ******************** Transports names **********************
 
@@ -514,6 +517,13 @@ ctld.transportPilotNames = {
 	"UH1_e_jask-2",
 	"UH1_e_jask-3",
 	"UH1_e_jask-4",
+	"Lengh-Mi8",
+	"Lengh-KA50",
+	"Lengh-Uh1",
+	"Lengeh_Mi24",
+	"Lengh-SA342L",
+	"Lengh-Uh1-1",
+	"Lengeh_Mi24-1",
     -- *** AI transports names (different names only to ease identification in mission) ***
     -- Use any of the predefined names or set your own ones
     "transport1",
@@ -629,24 +639,28 @@ ctld.spawnableCrates = {
         { weight = 615, desc = "BRDM-2", unit = "BRDM-2", side = 1 },
         { weight = 520, desc = "HMMWV - JTAC", unit = "Hummer", side = 2, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
         { weight = 525, desc = "SKP-11 - JTAC", unit = "SKP-11", side = 1, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
-        { weight = 750, desc = "SPH 2S19 Msta", unit = "SAU Msta", side = 1, cratesRequired = 3 },
-        { weight = 755, desc = "M-109 Paladin", unit = "M-109", side = 2, cratesRequired = 3 },
+        { weight = 750, desc = "SPH 2S19 Msta", unit = "SAU Msta", side = 1, cratesRequired = 2 },
+        { weight = 755, desc = "M-109 Paladin", unit = "M-109", side = 2, cratesRequired = 2 },
 		{ weight = 666, desc = "M1126 Stryker ICV", unit = "M1126 Stryker ICV", side = 2 , cratesRequired = 2},
-		{ weight = 667, desc = "M-1 Abrams", unit = "M-1 Abrams", side = 2 , cratesRequired = 3},
-		{ weight = 668, desc = "T72B", unit = "T-72B", side = 1 , cratesRequired = 3},
+		{ weight = 667, desc = "M-1 Abrams", unit = "M-1 Abrams", side = 2 , cratesRequired = 2},
+		{ weight = 668, desc = "T72B", unit = "T-72B", side = 1 , cratesRequired = 2},
 		
     },
     ["SHRT AA Crates"] = {
-        { weight = 405, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 3 },
-        { weight = 656, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 3 },
-        { weight = 633, desc = "M1097 Avenger", unit = "M1097 Avenger", side = 2, cratesRequired = 3 },
-        { weight = 642, desc = "M6 Linebacker", unit = "M6 Linebacker", side = 2, cratesRequired = 3 },
-        { weight = 730, desc = "SA-15 Tor", unit = "Tor 9A331", side = 1, cratesRequired = 3 },
-		{ weight = 770, desc = "SA-19 Tunguska", unit = "2S6 Tunguska", side = 1, cratesRequired = 3 },
+        { weight = 405, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 1 },
+        { weight = 656, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 1 },
+        { weight = 633, desc = "M1097 Avenger", unit = "M1097 Avenger", side = 2, cratesRequired = 1 },
+        { weight = 642, desc = "M6 Linebacker", unit = "M6 Linebacker", side = 2, cratesRequired = 2 },
+        { weight = 730, desc = "SA-15 Tor", unit = "Tor 9A331", side = 1, cratesRequired = 2 },
+		{ weight = 770, desc = "SA-19 Tunguska", unit = "2S6 Tunguska", side = 1, cratesRequired = 2 },
 		{ weight = 742, desc = "Roland Radar", unit = "Roland Radar", side = 2},
         { weight = 745, desc = "Roland ADS", unit = "Roland ADS", side = 2},
 		{ weight = 746, desc = "HQ7 LN", unit = "HQ-7_LN_SP", side = 1},
         { weight = 747, desc = "HQ7 STR", unit = "HQ-7_STR_SP", side = 1},
+		{ weight = 490, desc = "NASAM SR", unit = "NASAMS_Radar_MPQ64F1", side = 2},
+        { weight = 491, desc = "NASAM CP", unit = "NASAMS_Command_Post", side = 2},
+		{ weight = 492, desc = "NASAM LN-B", unit = "NASAMS_LN_B", side = 2},
+		{ weight = 493, desc = "NASAM LN-C", unit = "NASAMS_LN_C", side = 2},
 		--{ weight = 431, decs = "HQ7 Launcher", unit = "HQ-7_LN_SP", side = 1},
 		--{ weight = 432, decs = "HQ7 STR", unit = "HQ-7_STR_SP", side = 1},
         --{ weight = 50, desc = "Stinger", unit = "Stinger manpad", side = 2 },
@@ -681,12 +695,12 @@ ctld.spawnableCrates = {
         { weight = 613, desc = "Patriot cp", unit = "Patriot cp", side = 2},
 		{ weight = 614, desc = "Patriot ln", unit = "Patriot ln",side = 2},
 		{ weight = 609, desc = "Patriot str", unit = "Patriot str", side =2},
-		{ weight = 621, desc = "S-300PS 40B6M tr", unit = "S-300PS 40B6M tr", side = 1},
-        { weight = 616, desc = "S-300PS 64H6E sr", unit = "S-300PS 64H6E sr", side = 1},
-		{ weight = 617, desc = "S-300PS 40B6MD sr", unit = "S-300PS 40B6MD sr", side = 1},
-        { weight = 618, desc = "S-300PS 54K6 cp", unit = "S-300PS 54K6 cp", side = 1},
-		{ weight = 619, desc = "S-300PS 5P85D ln", unit = "S-300PS 5P85D ln",side = 1},
-		{ weight = 620, desc = "S-300PS 5P85C ln", unit = "S-300PS 5P85C ln", side =1},
+		{ weight = 621, desc = "SA-10 40B6M tr", unit = "S-300PS 40B6M tr", side = 1},
+        { weight = 616, desc = "SA-10 64H6E sr", unit = "S-300PS 64H6E sr", side = 1},
+		{ weight = 617, desc = "SA-10 40B6MD sr", unit = "S-300PS 40B6MD sr", side = 1},
+        { weight = 618, desc = "SA-10 54K6 cp", unit = "S-300PS 54K6 cp", side = 1},
+		{ weight = 619, desc = "SA-10 5P85D ln", unit = "S-300PS 5P85D ln",side = 1},
+		{ weight = 620, desc = "SA-10 5P85C ln", unit = "S-300PS 5P85C ln", side =1},
 		
     },
        ["FOP & Repair"] = {
@@ -696,10 +710,12 @@ ctld.spawnableCrates = {
         { weight = 952, desc = "HAWK Repair", unit = "HAWK Repair" , side = 2 },
         { weight = 990, desc = "BUK Repair", unit = "BUK Repair"},
         { weight = 970, desc = "KUB Repair", unit = "KUB Repair", side = 1},
-		{ weight = 433, desc = "HQ7 Repair", unit = "HQ7 Repair", side = 2},
+		{ weight = 433, desc = "HQ7 Repair", unit = "HQ7 Repair", side = 1},
 		{ weight = 971, desc = "SA-10 Repair", unit = "SA-10 Repair", side = 1},
         { weight = 953, desc = "Roland Repair", unit = "Roland Repair", side = 2},    
 		{ weight = 957, desc = "Patriot Repair", unit = "Patriot Repair", side = 2},    
+		{ weight = 494, desc = "NASAM Repair", unit = "NASAM Repair", side = 2},    
+		
      },
 }
 
@@ -1492,7 +1508,7 @@ ctld.AASystemTemplate = {
       },
       repair = "Roland Repair",
     },
-	 {
+	{
       name = "HQ7 AA System",
       count = 2,
       parts = {
@@ -1500,6 +1516,26 @@ ctld.AASystemTemplate = {
         {name = "HQ-7_STR_SP", desc = "HQ-7 STR"},
       },
       repair = "HQ7 Repair",
+    },
+	{
+      name = "NASAM-C SAM System",
+      count = 3,
+      parts = {
+        {name = "NASAMS_LN_C", desc = "NASAM LN-C", launcher = true},
+        {name = "NASAMS_Radar_MPQ64F1", desc = "NASAM SR"},
+		{name = "NASAMS_Command_Post", desc = "NASAM CP"},
+      },
+      repair = "NASAM Repair",
+    },
+	{
+      name = "NASAM-B SAM System",
+      count = 3,
+      parts = {
+        {name = "NASAMS_LN_B", desc = "NASAM LN-B", launcher = true},
+        {name = "NASAMS_Radar_MPQ64F1", desc = "NASAM SR"},
+		{name = "NASAMS_Command_Post", desc = "NASAM CP"},
+      },
+      repair = "NASAM Repair",
     },
     {
         name = "BUK AA System",
@@ -3908,6 +3944,10 @@ function ctld.unpackAASystem(_heli, _nearestCrate, _nearbyCrates,_aaSystemTempla
 					_launchers = ctld.rolandlaunchers
 				elseif _name == "HQ-7_LN_SP" then
 					_launchers = ctld.hq7
+				elseif _name == "NASAMS_LN_C" then
+					_launchers = ctld.nasamlaunchers
+				elseif _name == "NASAMS_LN_B" then
+					_launchers = ctld.nasamlaunchers
                 end
 
                 for _i = 1, _launchers do
@@ -4149,7 +4189,7 @@ function ctld.spawnCrateGroup(_heli, _positions, _types)
 
     local _id = ctld.getNextGroupId()
 
-    local _groupName = "ctld " .. _types[1] .. "  #" .. _id
+    local _groupName = "ctld " .. _types[1] .. "#" .. _id
 
     local _side = _heli:getCoalition()
 

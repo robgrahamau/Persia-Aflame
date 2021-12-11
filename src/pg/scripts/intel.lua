@@ -226,27 +226,7 @@ function ctldintelupdate(zone)
   data.markerid = m
   ctldintelmarkers[zone] = data
 end
---[[
-ctldintelupdate("CTLD Al Drafra")
-ctldintelupdate("CTLD Al Minhad")
-ctldintelupdate("CTLD FBN85")
-ctldintelupdate("CTLD FDP05")
-ctldintelupdate("CTLD Khasab")    
-ctldintelupdate("CTLD Abu Nuayr")
-ctldintelupdate("CTLD Sirri Island")
-ctldintelupdate("CTLD Abu Musa")
-ctldintelupdate("CTLD Tunb Kochak")
-ctldintelupdate("CTLD Tunb Island")
-ctldintelupdate("CTLD Lavin Island")
-ctldintelupdate("CTLD Kish Island")
-ctldintelupdate("CTLD Bandar Abbas")
-ctldintelupdate("CTLD Lar AFB")
-ctldintelupdate("CTLD FDR35")
-ctldintelupdate("CTLD Jiroft")
-ctldintelupdate("CTLD Shiraz")
-ctldintelupdate("CTLD Kerman")
-]]
---checkctldlogistics()
+
 
 function markerremove()
   for i,k in pairs(EW_INTEL) do 
@@ -517,10 +497,14 @@ intelmarkers = {}
 blueintelmsgs = {}
 
 function blueintel:OnAfterNewCluster(From, Event, To, Contact, Cluster)
+  BASE:E({"Intel: Blue Intel, New Cluster"})
   local _group = GROUP:FindByName(Contact.groupname)
   local coord = blueintel:GetClusterCoordinate(Cluster)
+  local lat,long = coord:GetLLDDM()
   local text = string.format("NEW CONTACTS Detected Map ID %d \n Main Type %s : %s , Detected Units: %d,  Threat Level: %d, \n Location (MGRS): %s", Cluster.index, _group:GetCategoryName(),_group:GetTypeName(),Cluster.size,_group:CalculateThreatLevelA2G(),coord:ToStringMGRS())
   local mtext = string.format("Map ID %d \n Main Type %s : %s , Detected Units: %d, Threat Level: %d, \n Location (MGRS): %s", Cluster.index,  _group:GetCategoryName(),_group:GetTypeName(),Cluster.size,_group:CalculateThreatLevelA2G(),coord:ToStringMGRS())
+  local ms = {["cluster"] = Cluster,["groupname"] =  Contact.groupname, ["msg"] = text, ["lat"] = lat,["long"] = long }
+  table.insert(blueintelmsgs,ms)
   local m = MESSAGE:New(text,60,"CIA"):ToBlue()  
    for k,v in pairs(intelmarkers) do
 	if intelmarkers[k]["groupname"] == Contact.groupname then
@@ -532,14 +516,15 @@ function blueintel:OnAfterNewCluster(From, Event, To, Contact, Cluster)
   
   local marker = coord:MarkToCoalitionBlue(mtext,false)
   local im = {["cluster"] = Cluster,Cluster,	["groupname"] =  Contact.groupname, ["markid"] = marker}
-  local ms = {["cluster"] = Cluster,["groupname"] =  Contact.groupname, ["msg"] = text}
+  
   table.insert(intelmarkers,im)
-  table.insert(blueintelmsgs,ms)
-  hm(text)
+  
+  hm("New Intel was dropped for blue see F10 Map")
+  BASE:E({"Intel: blueintelmsgs",blueintelmsgs})
 end
 
 function blueintel:OnAfterLostCluster(From,Event,To,Cluster,Mission)
-	BASE:E({"BLUE INTEL CLUSTER LOST",Cluster})
+	BASE:E({"Intel: BLUE INTEL CLUSTER LOST",Cluster})
 	for k,v in pairs(intelmarkers) do
 		if intelmarkers[k]["cluster"] == Cluster then
 			COORDINATE:RemoveMark(intelmarkers[k]["markid"])
@@ -582,7 +567,7 @@ function redintel:OnAfterNewCluster(From, Event, To, Contact, Cluster)
   local ms = {["cluster"] = Cluster,["groupname"] =  Contact.groupname, ["msg"] = text}
   table.insert(redintelmarkers,im)
   table.insert(redintelmsgs,ms)
-  hm(text)
+  hm("New Intel was dropped for Red see F10 Map")
 end
 
 function redintel:OnAfterLostCluster(From,Event,To,Cluster,Mission)

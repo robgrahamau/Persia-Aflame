@@ -4,6 +4,8 @@ carrier6dead = false
 carrier6adead = false
 kuzremoved = false
 
+activearea = "• Island,Western,Qeshm,Bandar,Eastern \n • Protect Captured Areas and take hostile. \n • High Priority Targets - SCUD, TANKS, AAA, SAMS \n ROE Notice:\n • Reduce Civilian Damage \n • CBU Class weapons are to be limited to open field employment or restricted use in Towns/cities only if unable to find/kill with other weapons \n • CBU use prohibited on large cities."
+activeareairan = "• Harasment of Coalition Forces \n • Defence of Irani Mainland and Islands. \n • Retaking of Lost Territory"
 env.info("Persia Aflame Loader")
 env.info("Mission by Robert Graham")
 env.info("Mission Script Loader Active")
@@ -24,8 +26,14 @@ function hmlso(msg)
 	HypeMan.sendLSOBotMessage(msg)
 end
 HypeMan.sendBotMessage("> Hazel Link Starting.....Ground control to Ceiling Cat, do you read us?")
-dofile(lfs.writedir() .."pg\\scripts\\cinc_loader.lua") 
-CinCServer.start("139.99.144.189", 3050)
+GRPC.debug = true
+GRPC.host = '0.0.0.0'
+GRPC.load()
+seasonofgiving = false
+iranichristmas = false
+hm("> GRPC is a go, Ceiling Cat is real!")
+--dofile(lfs.writedir() .."pg\\scripts\\cinc_loader.lua") 
+--CinCServer.start("139.99.144.189", 3050)
 HypeMan.sendBotMessage("> Persia Aflame Yes give me a VOICE!  SRS.lua")
 dofile(lfs.writedir() .. [[pg\scripts\srs.lua]])
 env.info("Loading Peristence")
@@ -81,7 +89,9 @@ dofile(lfs.writedir() .. [[pg\scripts\client.lua]])
 hm("> ATIS loading in.")
 dofile(lfs.writedir() .. [[pg\scripts\atis.lua]])
 
+hm("> Anti Jackass Script Loading in... No Nukes ever allowed again")
 
+dofile(lfs.writedir() .. [[pg\scripts\jackasstest.lua]])
 hm("> Persia Falme: ALL SCRIPTS LOADED, INTERNATIONAL WAR CRIMES ... I MEAN PERSIAN GULF AFLAME SERVER IS NOW ONLINE AND RUNNING \n PLEASE HAVE A PLEASENT AND PRODUCTIVE 8 HRS.")
 hm("=============================================")
 --[[
@@ -127,3 +137,44 @@ if carrier6adead == true then
 	hm("** WARNING CARRIER GROUP 6a USS Washington WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
 end
 ]]
+
+-- Ok start GRPC and do the config in mission.
+
+
+function season()
+ if seasonofgiving  == false then
+	local dowerun = math.random(1,100)
+	if dowerun > 80 then
+		hm("Season of Giving is a go")
+		BASE:E({"season of giving is a go"})
+		seasonofgiving = true
+	end
+ else
+	BASE:E({"season of giving is not a go"})
+	SCHEDULER:New(nil,season,{},(60*15))
+ end 
+end
+
+function iransanta()
+ if iranichristmas  == false then
+	local dowerun = math.random(1,100)
+	if dowerun > 80 then
+		hm("Iran Crhistmas is a go")
+		BASE:E({"Iran Crhistmas  is a go"})
+		iranichristmas = true
+	end
+ else
+    BASE:E({"Iran Crhistmas  is not a go"})
+	SCHEDULER:New(nil,function() 
+		iransanta()
+	end,{},(60*10))
+ end 
+end
+
+SCHEDULER:New(nil,function() 
+ season()
+end,{},(60*15))
+
+SCHEDULER:New(nil,function() 
+ iransanta()
+end,{},(60*10))

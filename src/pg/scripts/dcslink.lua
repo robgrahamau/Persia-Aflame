@@ -4,6 +4,7 @@
 -- for use on Red Iberia.
 ---------------------------------------
 linkactive = true
+sendalldata = false
 do
     -- lets start commenting some of this shit.
     local PORT = 3009 -- our port
@@ -104,7 +105,9 @@ do
     table.insert(payload.markers,latlonmarker)
     end
     end
-    updatemarkers()
+	if sendalldata == true then
+		updatemarkers()
+	end
       local function updateintel(g,type)
         local co = g:GetCoordinate()
         local lat, lon, alt = coord.LOtoLL(co:GetVec3())
