@@ -9,8 +9,7 @@ function _split(str, sep)
 end
 
 admin = false
-password = "morns"
-ADMINPASSWORD2 = "yeahreally"
+
 adminspawned = {} 
 newlandingmark = true
 -- SupportHandler = EVENTHANDLER:New()
@@ -91,33 +90,78 @@ function groupchecker()
 	
 end
 
-function ctldremove(text,_coord,co,dist)
+
+function runiranichristmas()
+	inchr = GROUP:FindByName("IraniChristmas")
+	inchr1 = GROUP:FindByName("IraniSeason-1")
+	inchr2 = GROUP:FindByName("IraniChristmas-1")
+	inche1 = GROUP:FindByName("IraniChirstmas-Escort1-3")
+	inche2 = GROUP:FindByName("IraniChirstmas-Escort1-2")
+	inche3 = GROUP:FindByName("IraniChirstmas-Escort1-1")
+	inche4 = GROUP:FindByName("IraniChirstmas-Escort1")
+	inche5 = GROUP:FindByName("IraniTanker")
+	inchr:Respawn()
+	inchr1:Respawn()
+	inchr2:Respawn()
+	inche1:Respawn()
+	inche2:Respawn()
+	inche3:Respawn()
+	inche4:Respawn()
+	inche5:Respawn()
+	trigger.action.pushAITask(inchr:GetDCSObject(),1)
+	trigger.action.pushAITask(inchr1:GetDCSObject(),1)
+	trigger.action.pushAITask(inchr2:GetDCSObject(),1)
+	trigger.action.pushAITask(inche1:GetDCSObject(),1)
+	trigger.action.pushAITask(inche2:GetDCSObject(),1)
+	trigger.action.pushAITask(inche3:GetDCSObject(),1)
+	trigger.action.pushAITask(inche4:GetDCSObject(),1)
+	trigger.action.pushAITask(inche5:GetDCSObject(),1)
+	MESSAGE:New("A Gift from Allah is being prepared for launch from Shiraz! `Operation Irani Christmas` It will need an Escort, its targets are Al-Dhafra, Minhad and their Fleet.",60,"Command"):ToRed()
+	hm("Irani Christmas is a Go")
+
+end
+
+function runseason()
+	tempting = GROUP:FindByName("Seasonofgiving")
+	tempting1 = GROUP:FindByName("Seasonofgiving-1")
+	tempting2 = GROUP:FindByName("Seasonofgiving-2")
+	tempting:Respawn()
+	tempting1:Respawn()
+	tempting2:Respawn()
+	trigger.action.pushAITask(tempting:GetDCSObject(),1)
+	trigger.action.pushAITask(tempting1:GetDCSObject(),1)
+	trigger.action.pushAITask(tempting2:GetDCSObject(),1)
+	MESSAGE:New("Strike Package `Operation Seasons Greetings` is being prepared for launch from Liwa,Al-Dhafra for Shiraz! It will need an Escort.",60,"Command"):ToBlue()
+	hm("Operation Seasons Greetings is a Go")
+end
+
+function rctldremove(text,_coord,co,dist)
 	if co == true then
 		coalition = "Red"
 	else
 		coalition = "Blue"
 	end
-    ctlddelcount = 0
+    local ctlddelcount = 0
 	MESSAGE:New("ctld delete requested at coord, all units within " .. dist .. " meters of " .. coalition .. " will be deleted",30,"Info"):ToAll()
-	gunits = nil
+	local cdunits = nil
 	if coalition == "blue" or coalition == "Blue" or coalition == "BLUE" then
-        gunits = SET_GROUP:New():FilterCategoryGround():FilterCoalitions("blue"):FilterActive(true):FilterOnce()
+        cdunits = SET_GROUP:New():FilterCategoryGround():FilterCoalitions("blue"):FilterActive(true):FilterOnce()
 	elseif coalition == "red" or coalition == "Red" or coalition == "RED" then
-		gunits = SET_GROUP:New():FilterCategoryGround():FilterCoalitions("red"):FilterActive(true):FilterOnce()
+		cdunits = SET_GROUP:New():FilterCategoryGround():FilterCoalitions("red"):FilterActive(true):FilterOnce()
     end
-	if gunits == nil then
+	if cdunits == nil then
 		if coalition == "Blue" then
 			 MESSAGE:New("Unable to run ctldremove command as setgroup was nil please lodge a bug report in discord #bugreports and requests tagged, CTLDBUG SETGROUP NIL, thanks",30):ToBlue()
 		else
 			 MESSAGE:New("Unable to run ctldremove command as setgroup was nil please lodge a bug report in discord #bugreports and requests tagged, CTLDBUG SETGROUP NIL, thanks",30):ToRed()
 		end
 	else
-		gunits:ForEach(function(g)  
+		cdunits:ForEach(function(g)  
             if g:IsAlive() == true then
 				local groupname = g:GetName()
 				if groupname:lower():find("ctld") then
 					local _group = GROUP:FindByName(groupname)
-					gc = _group:GetCoordinate()
+					local gc = _group:GetCoordinate()
 					if gc == nil then
 						BASE:E({"Could not get Coord for group:",g:GetName(),g:GetCoordinate(),gc})
 					else
@@ -132,9 +176,9 @@ function ctldremove(text,_coord,co,dist)
 		end)
     end
 	if coalition == "Blue" then
-		MESSAGE:New("CTLD requested Completed, we deleted ".. delcount .." Groups",30,"Info"):ToBlue()
+		MESSAGE:New("CTLD requested Completed, we deleted ".. ctlddelcount .." Groups",30,"Info"):ToBlue()
 	else
-		MESSAGE:New("CTLD requested Completed, we deleted ".. delcount .." Groups",30,"Info"):ToRed()
+		MESSAGE:New("CTLD requested Completed, we deleted ".. ctlddelcount .." Groups",30,"Info"):ToRed()
 	end
 end
 
@@ -160,9 +204,9 @@ function hevent:OnEventMarkRemoved(EventData)
            end
 		elseif EventData.text:lower():find("-ctldremove") then
 			if red == false then
-				ctldremove(text,coord,false,100)
+				rctldremove(text,coord,false,100)
 			else
-				ctldremove(text,coord,true,100)
+				rctldremove(text,coord,true,100)
 			end
 		elseif EventData.text:lower():find("-help") then
 			self:handlehelp(red)
@@ -198,6 +242,26 @@ function hevent:OnEventMarkRemoved(EventData)
 		elseif EventData.text:lower():find("-lightbright") then
 			coord.y = coord.y + 1500
 			coord:IlluminationBomb(10000)
+		elseif EventData.text:lower():find("-shirazattack") then
+          -- ctld drop.
+			if admin == true then
+				runseason()
+			end
+		elseif EventData.text:lower():find("-runseason") then
+          -- ctld drop.
+			if admin == true then
+				runseason()
+			end
+		elseif EventData.text:lower():find("-runic") then
+          -- ctld drop.
+			if admin == true then
+				runiranichristmas()
+			end
+		elseif EventData.text:lower():find("-iranattack") then
+          -- ctld drop.
+			if admin == true then
+				runiranichristmas()
+			end
 		elseif EventData.text:lower():find("-ctldfob") then
           -- ctld drop.
 			if admin == true then
@@ -372,7 +436,7 @@ function hevent:handleExplosion(text,coord)
 end
 
 function tankerCooldownHelp(tankername)
-  MESSAGE:New(string.format("Tanker routing is now available again for %s. Use the following marker commands:\n-tanker route %s \n-tanker route %s ,h <0-360>,d <5-100>,a <10-30,000>,s <250-400> \nFor more control",tankername,tankername,tankername), MESSAGE.Type.Information):ToBlue()
+  MESSAGE:New(string.format("Tanker routing is now available again for %s. Use the following marker commands:\n-tanker route %s \n-tanker route %s ,h <0-360>,d <5-100>,a <10-30,000>,s <250-400> \nFor more control",tankername,tankername,tankername), 15, MESSAGE.Type.Information):ToBlue()
 end
 
 function handleBlueTankerRequest(text,coord)
@@ -646,6 +710,8 @@ function newhandlespawn(text,coord)
   local uheading = nil
   local side = 1
   local ran = false
+  local rl = 150
+  local ru = 450
   for _,keyphrase in pairs(keywords) do
    local str=_split(keyphrase, " ")
 	local key=str[1]
@@ -664,6 +730,10 @@ function newhandlespawn(text,coord)
     else
       ran = false
     end
+  elseif key:lower():find("l") then
+	rl = tonumber(val)
+  elseif key:lower():find("m") then
+	ru = tonumber(val)
   elseif key:lower():find("s") then
     if val:lower()  == "blue" then
       side = 2
@@ -682,7 +752,7 @@ function newhandlespawn(text,coord)
         sp = SPAWN:NewWithAlias(unit,"GM_USAA " .. name):InitCountry(2)
       end
       if ran == true then
-        sp:InitRandomizeUnits(true,150,400)
+        sp:InitRandomizeUnits(true,rl,ru)
       end
       if heading ~= nil then
         BASE:E({"HEADING ACTUALLY WAS NOT NIL WAS",heading})
@@ -1527,3 +1597,4 @@ function msgtoall(text)
 end
 
 myevents = hevent:New()
+

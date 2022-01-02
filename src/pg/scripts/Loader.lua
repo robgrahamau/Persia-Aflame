@@ -1,4 +1,5 @@
-
+password = "JF17s are Propoganda and do things physics dont allow"
+ADMINPASSWORD2 = "Like missiles with no drag"
 carrier5dead = false
 carrier6dead = false
 carrier6adead = false
@@ -20,6 +21,7 @@ HypeMan.sendBotMessage("**Persia Aflame is Starting.....** \n > MOOSE,MIST  Alre
 
 function hm(msg)
 	HypeMan.sendBotMessage(msg)
+	env.info("hm - " .. msg )
 end
 hm("> Randomising Maths because Maths needs SEEDS so things can grow")
 function hmlso(msg)
@@ -53,16 +55,19 @@ hm("> Persia Aflame Damned Chopper Pilots.. you to? simple_ctldgroupsaving.lua")
 dofile(lfs.writedir() .. [[pg\scripts\simple_ctldgroupsaving.lua]])
 hm("> Persia Aflame Christ even the admin wants to save stuff, anyone would think i've nothing better to do? simple_admingroupsaving.lua")
 dofile(lfs.writedir() .. [[pg\scripts\simple_admingroupsaving.lua]])
-hm("> Persia Aflame Well this ones actually not working right now so HA I ignore you! simplestaticsaving.lua")
+
+
+--hm("> Persia Aflame Well this ones actually not working right now so HA I ignore you! simplestaticsaving.lua")
 --dofile(lfs.writedir() .. [[pg\scripts\simplestaticsaving.lua]])
-hm("> Persia Aflame Ohh did I dooo that? It's not a war crime if no one saw it. simple_scenery_persistence.lua")
-dofile(lfs.writedir() .. [[pg\scripts\simple_scenery_persistence.lua]])
+--hm("> Persia Aflame Ohh did I dooo that? It's not a war crime if no one saw it. simple_scenery_persistence.lua")
+--dofile(lfs.writedir() .. [[pg\scripts\simple_scenery_persistence.lua]])
 --hm("> Persia Aflame This isn't really working either we moved to a different system because of it.. I ignore you ctld_static_save.lua")
 --dofile(lfs.writedir() .. [[pg\scripts\ctld_static_save.lua]])
-hm("> Persia Aflame Man Pads.. I see Dead people, when ever they come down low enough: simple_mpadgroupsaving.lua")
-dofile(lfs.writedir() .. [[pg\scripts\simple_mpadgroupsaving.lua]])
-hm("> Persia Aflame We aren't using this right now so nope... bye bye. simple_hercgroupsaving.lua")
-dofile(lfs.writedir() .. [[pg\scripts\simple_hercgroupsaving.lua]])
+--hm("> Persia Aflame Man Pads.. I see Dead people, when ever they come down low enough: simple_mpadgroupsaving.lua")
+--dofile(lfs.writedir() .. [[pg\scripts\simple_mpadgroupsaving.lua]])
+--hm("> Persia Aflame We aren't using this right now so nope... bye bye. simple_hercgroupsaving.lua")
+--dofile(lfs.writedir() .. [[pg\scripts\simple_hercgroupsaving.lua]])
+
 hm("> Persia Aflame Sigh you want awacs? Because this is how you get AWACS PAM! bluesupportac.lua")
 dofile(lfs.writedir() .. [[pg\scripts\bluesupportac.lua]])
 hm("> Persia Aflame Robs favorate toys! markerevents.lua")
@@ -92,53 +97,10 @@ dofile(lfs.writedir() .. [[pg\scripts\atis.lua]])
 hm("> Anti Jackass Script Loading in... No Nukes ever allowed again")
 
 dofile(lfs.writedir() .. [[pg\scripts\jackasstest.lua]])
+dofile(lfs.writedir() .. [[pg\scripts\stts.lua]])
 hm("> Persia Falme: ALL SCRIPTS LOADED, INTERNATIONAL WAR CRIMES ... I MEAN PERSIAN GULF AFLAME SERVER IS NOW ONLINE AND RUNNING \n PLEASE HAVE A PLEASENT AND PRODUCTIVE 8 HRS.")
 hm("=============================================")
---[[
-if kuzremoved == true then
-	local kuz = GROUP:FindByName("Kuznetsov Group")
-	kuz:Destroy()
-	hm("** WARNING KUZNETSOV GROUP WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
-end
-if carrier5dead == true then
-	local cg5 = GROUP:FindByName("Carrier Group 5")
-	cg5:Destroy()
-	hm("** WARNING CARRIER GROUP 5 USS Theodore Rosevelte WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
-	ShellTeddy:Stop()
-	if useawacs == true then
-		awacsTeddy:Stop()
-	end
-	if abossactive == true then
-		AirbossTeddy:Stop()
-	end
-end
 
-if carrier6dead == true then
-	local cg6 = GROUP:FindByName("Carrier Group 6")
-	cg6:Destroy()
-	hm("** WARNING CARRIER GROUP 6 USS Stennis WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
-	if abossactive  == true then
-		AirbossStennis:Stop()
-	end
-	ShellStennis:Stop()
-	if useawacs == true then
-		awacsStennis:Stop()
-	end
-end
-
-if carrier6adead == true then
-	local cg6 = GROUP:FindByName("Carrier Group 6a")
-	cg6:Destroy()
-	if abossactive  == true then
-		if washingtonactive == true then
-			AirbossWash:Stop()
-		end
-	end
-	hm("** WARNING CARRIER GROUP 6a USS Washington WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
-end
-]]
-
--- Ok start GRPC and do the config in mission.
 
 
 function season()
@@ -171,10 +133,64 @@ function iransanta()
  end 
 end
 
+
+
+chinaflight1 = GROUP:FindByName("ChinaSweep1")
+chinaflight2 = GROUP:FindByName("ChinaSweep1-1")
+chinaflight3 = GROUP:FindByName("ChinaSweep1-2")
+chinaflight4 = GROUP:FindByName("ChinaSweep1-3")
+chinaflight5 = GROUP:FindByName("ChinaSweep1-4")
+chinaflight6 = GROUP:FindByName("ChinaSweep1-5")
+chinaflight7 = GROUP:FindByName("ChinaSweep1-6")
+chinaflight8 = GROUP:FindByName("ChinaSweep1-7")
+chinaflight9 = GROUP:FindByName("ChinaSweep1-9")
+chinaflight10 = GROUP:FindByName("ChinaSweep1-10")
+chinaflight11 = GROUP:FindByName("ChinaSweep1-11")
+chinaflight12 = GROUP:FindByName("ChinaSweep1-12")
+chinaflight13 = GROUP:FindByName("ChinaSweep1-13")
+chinaflight14 = GROUP:FindByName("ChinaSweep1-14")
+chinaflight15 = GROUP:FindByName("ChinaSweep1-15")
+chinaflight16 = GROUP:FindByName("ChinaSweep1-8")
+chinaflightactive = false
+
+function Chinaflight()
+	if chinaflightactive == false then
+		chinaflight1:Activate()
+		chinaflight2:Activate()
+		chinaflight3:Activate()
+		chinaflight4:Activate()
+		
+		chinaflight13:Activate()
+		chinaflight14:Activate()
+		chinaflight15:Activate()
+		chinaflight16:Activate()
+		chinaflightactive = true
+	else
+		chinaflight1:Respawn()
+		chinaflight2:Respawn()
+		chinaflight3:Respawn()
+		chinaflight4:Respawn()
+		
+		chinaflight13:Respawn()
+		chinaflight14:Respawn()
+		chinaflight15:Respawn()
+		chinaflight16:Respawn()
+		chinaflightactive = false
+	end
+end
+
+
 SCHEDULER:New(nil,function() 
  season()
-end,{},(60*15))
+end,{},(60*15),(60*(math.random(30,180))))
 
 SCHEDULER:New(nil,function() 
  iransanta()
-end,{},(60*10))
+end,{},(60*10),(60*(math.random(30,180))))
+
+
+
+function rlog(msg)
+	BASE:E(msg)
+	hm(string.format( "%1s:(%s)" , "RLOG",routines.utils.oneLineSerialize( msg ) ) )
+end

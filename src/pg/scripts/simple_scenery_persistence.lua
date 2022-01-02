@@ -304,18 +304,6 @@ table.save(scenery, scenerysavefile)--this is scenery persistence, nothing to do
 --env.info(#savedSceneryTbl .." targets left")
 
 
---The section below creates a CSV file from the table. This is optional and I've commented it out. It might be useful to you if
---you use CSV's for something to do with databases/web
-
-
---[[
-local data="ID,DESCRIPTION,MGRS,DDM,DMS,ALT,LINK\n"
-os.remove(csvFilePath) --delete entire thing because finding file lines is more complex for me and all we do is delete an entry at a time
- writeCSV(data,csvFilePath) 
- for k,v in pairs (savedSceneryTbl) do
-  writeCSV(v,csvFilePath)
- end
---]]
 
 end, {},2, SaveScheduleScenery)
 ------------------------------------------

@@ -1,5 +1,5 @@
-version = "1.41.0"
-lastupdate = "10/08/2021"
+version = "1.70.0"
+lastupdate = "27/12/2021"
 PlayerMap = {}
 PlayerRMap = {}
 PlayerBMap = {}
@@ -8,6 +8,8 @@ SetPlayer = SET_CLIENT:New():FilterStart()
 resethours = 8
 hourstoreset = 8
 trigger.action.setUserFlag("SSB",100)
+newyears = false
+fireworksdone = false
 
 if os ~= nil then
         nowTable = os.date('*t')
@@ -35,7 +37,17 @@ serverrestart = 19
   end
 
   restarttime = "" .. restarthour ..":".. nowminute ..""
-
+function fireworks(coord)
+	coord:FlareGreen(20)
+	coord:FlareGreen(60)
+	coord:FlareGreen(80)
+	coord:FlareRed(10)
+	coord:FlareRed(30)
+	coord:FlareRed(70)
+	coord:FlareYellow(40)
+	coord:FlareYellow(45)
+	coord:FlareYellow(90)
+end
 local function permanentPlayerCheck()
     -- BASE:E("PPCHECK")
     if os ~= nil then
@@ -56,6 +68,13 @@ local function permanentPlayerCheck()
         nowminute = "test"
     end
     currenttime = "H" .. nowHour .. ":" .. nowminute
+
+	if nowDay == 1 and nowMonth == 1 and nowHour == 0 and nowminute == 0 then
+		if newyears == false then
+			MESSAGE:New("Happy New Year from the TGW Crew to all of you!",120):ToAll()
+			newyears = true
+		end
+	end
 	if nowHour == (serverrestart - 1) then
 		if nowminute == 0 then
 			if hrleft ~= true then
@@ -110,6 +129,14 @@ local function permanentPlayerCheck()
       end
       local PlayerName = PlayerClient:GetPlayerName()
       if PlayerClient:IsAlive() then
+		if newyears == true then
+			if fireworksdone == false then
+				local coord = PlayerClient:GetCoordinate()
+				fireworks(coord)
+				SCHEDULER:New(nil,fireworks,coord,5)
+				SCHEDULER:New(nil,fireworks,coord,25)
+			end
+		end
         if PlayerMap[PlayerID] ~= true then
           PlayerMap[PlayerID] = true
           local MessageText = "Welcome to Persia Aflame by Rob Graham Version: "..version.." Last update:"..lastupdate.." ".. PlayerName .. "\n Powered By Moose, Player Donations, OverlordBot, Lots of Pain Killers, Kosh Purrs, Midgets and lets not forget the space server Hamsters! \n THE EYES BOO GO FOR THE EYES! \n Current Active Tasking is: " .. mission .. "\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n, You are on " ..col..", Please be aware this mission is geared towards Coalition Forces attacking Iran is defending by and large. Please check the mission brief for more information ALT+B \n Please Join the DISCORD SEE ALT+B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard \n UNICOM is 122.80 VHF, use for ATC please."
@@ -126,6 +153,11 @@ local function permanentPlayerCheck()
         end      
       end      
      end) 
+	if newyears == true and fireworksdone == false then
+		fireworksdone = true
+		BASE:E({"Fireworks should be over"})
+	end
+	 
 end
 C_Arco12 = nil
 
@@ -166,34 +198,8 @@ function Arco11FTR()
   C_Arco12:Remove()
   C_Arco11 = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Change ARCO11 Speed for A10",C_tanker,Arco11A10,nil)
 end
---[[
-function tdy_wind()
-  BASE:E({"tdy_wind request"})
-    if CV_TDY:IsTurning() or CV_TDY:IsSteamingIntoWind() then
-      MESSAGE:New("Teddy Rose: Unable, We are already in Recovery/Launch Ops",15):ToBlue()
-    else
-      MESSAGE:New("Alert, Launch/Recovery Ops starting in 1 minute for the Teddy Rose for 60 minutes.",15):ToBlue()
-      local timenow=timer.getAbsTime( )
-      local timestart=timenow+60
-      local timeend=timenow+60*60
-      local timerecovery_start = UTILS.SecondsToClock(timestart,true)
-      timerecovery_end = UTILS.SecondsToClock(timeend,true)
-      CV_TDY:AddTurnIntoWind(timerecovery_start,timerecovery_end,25,false,0)
-    end
-end
 
-function CV_TDY:OnAfterTurnIntoWind(From,Event,To,Into,Duration,Speed,Uturn,IntoWind)
-  MESSAGE:New("Teddy has turned into the wind for 60",15):ToBlue()
-end
-
-function CV_TDY:OnAfterTurnIntoWindOver(From,Event,To,Duration,Speed,Uturn)
-  MESSAGE:New("Teddy completed Recovery Ops",15):ToBlue()
-end
-]]
---M_menu = MENU_MISSION:New("Debug Commands - Admin Use Only")
---M_menu1 = MENU_MISSION_COMMAND:New("IADS DEBUG TOGGLE",M_menu,IADSDB)
 C_menu = MENU_COALITION:New(coalition.side.BLUE,"AI CONTROL")
---C_TDY = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Request Teddy Turn into Wind",C_menu,tdy_wind,{})
 C_tanker = MENU_COALITION:New(coalition.side.BLUE,"Tanker Control",C_menu)
 C_Arco11 = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Change ARCO11 Speed for A10",C_tanker,Arco11A10,nil)
 function irancurrenttask()

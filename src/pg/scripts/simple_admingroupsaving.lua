@@ -139,7 +139,7 @@ tempTable =
    ["heading"]=SaveUnits[k]["units"][i]["heading"],
    ["playerCanDrive"]=true,  --hardcoded but easily changed.  
   }
-
+	
       table.insert(units,tempTable)
     end --end unit for loop
 
@@ -201,6 +201,7 @@ for i = 1, size do
   if skillr == 2 or skillr == 5 then
 	skill = "Excellent"
   end
+local _h = UTILS.ToRadian(grp:GetUnit(i):GetHeading())
 local tmpTable =
     
   {   
@@ -212,7 +213,7 @@ local tmpTable =
     ["x"]=grp:GetUnit(i):GetVec2().x,
     ["name"]=grp:GetUnit(i):GetName(),
     ["playerCanDrive"]=true,
-    ["heading"]=grp:GetUnit(i):GetHeading(),
+    ["heading"]=_h,
   }
 
 table.insert(_unittable,tmpTable) --add units to a temporary table

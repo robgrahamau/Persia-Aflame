@@ -198,9 +198,11 @@ _unittable={}
 for i = 1, size do
   if grp:GetUnit(i):IsAlive() == true then
   local skill = "Average"
+  skillr = math.random(1,5)
 	if skillr == 2 or skillr == 5 then
 		skill = "Excellent"
 	end
+	local _h = UTILS.ToRadian(grp:GetUnit(i):GetHeading())
 	local tmpTable =
 	{   
 		["type"]=grp:GetUnit(i):GetTypeName(),
@@ -211,7 +213,7 @@ for i = 1, size do
 		["x"]=grp:GetUnit(i):GetVec2().x,
 		["name"]=grp:GetUnit(i):GetName(),
 		["playerCanDrive"]=true,
-		["heading"]=grp:GetUnit(i):GetHeading(),
+		["heading"]=_h,
 	}
 	table.insert(_unittable,tmpTable) --add units to a temporary table
 	end
