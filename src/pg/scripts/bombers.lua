@@ -1,4 +1,4 @@
-BASE:E({"Bomber Scripting start"})
+--- This script currently not used.. need to really fuck it off and redo it.
 
 bgroup = {
 ClassName= "Bomber Group",}
@@ -98,14 +98,6 @@ function bgroup:start()
    self.starthandlers(self)
    self.setactive(self,true)
 end
-
-
-strikers = bgroup:create("Shiraz Strikers",false)
-strikers:spawn()
-cvstrikers = bgroup:create("SSCV-1",false)
-cvstrikers:spawn()
-seadstrikers = bgroup:create("SU-24M_2",false)
-seadstrikers:spawn()
 
 SCHEDULER:New(nil,function()
   BASE:E({"BGROUP Scheudler run"})

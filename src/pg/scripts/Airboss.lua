@@ -66,7 +66,7 @@ if abossactive == true then
   ShellTeddy:SetRespawnInAir()
   ShellTeddy:SetTakeoffAir()
   ShellTeddy:Start()
-  if useforest == true then
+  if useforrest == true then
   ShellForest = RECOVERYTANKER:New(UNIT:FindByName("Forrestal"), "Shell21")
   ShellForest:SetTakeoffCold()
   ShellForest:SetRecoveryAirboss(false)

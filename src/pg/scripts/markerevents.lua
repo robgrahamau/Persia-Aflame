@@ -9,8 +9,6 @@ function _split(str, sep)
 end
 
 admin = false
-password = "hhahahahhahaha"
-ADMINPASSWORD2 = "fffs"
 adminspawned = {} 
 newlandingmark = true
 -- SupportHandler = EVENTHANDLER:New()
@@ -92,59 +90,6 @@ function groupchecker()
 end
 
 
-function runiranichristmas()
-	inchr = GROUP:FindByName("IraniChristmas")
-	inchr1 = GROUP:FindByName("IraniSeason-1")
-	inchr2 = GROUP:FindByName("IraniChristmas-1")
-	inche1 = GROUP:FindByName("IraniChirstmas-Escort1-3")
-	inche2 = GROUP:FindByName("IraniChirstmas-Escort1-2")
-	inche3 = GROUP:FindByName("IraniChirstmas-Escort1-1")
-	inche4 = GROUP:FindByName("IraniChirstmas-Escort1")
-	inche5 = GROUP:FindByName("IraniTanker")
-	inche6 = GROUP:FindByName("season2")
-	inchr:Respawn()
-	inchr1:Respawn()
-	inchr2:Respawn()
-	inche1:Respawn()
-	inche2:Respawn()
-	inche3:Respawn()
-	inche4:Respawn()
-	inche5:Respawn()
-	inche6:Respawn()
-	trigger.action.pushAITask(inche6:GetDCSObject(),1)
-	SCHEDULER:New(nil,function()
-	trigger.action.pushAITask(inchr:GetDCSObject(),1)
-	trigger.action.pushAITask(inchr1:GetDCSObject(),1)
-	trigger.action.pushAITask(inchr2:GetDCSObject(),1)
-	trigger.action.pushAITask(inche1:GetDCSObject(),1)
-	trigger.action.pushAITask(inche2:GetDCSObject(),1)
-	trigger.action.pushAITask(inche3:GetDCSObject(),1)
-	trigger.action.pushAITask(inche4:GetDCSObject(),1)
-	trigger.action.pushAITask(inche5:GetDCSObject(),1)
-	end,{},60)
-	MESSAGE:New("A Gift from Allah is being prepared for launch from Shiraz! `Operation Irani Christmas` It will need an Escort, its targets are Al-Dhafra, Minhad and their Fleet.",60,"Command"):ToRed()
-	hm("Irani Christmas is a Go")
-
-end
-
-function runseason()
-	tempting = GROUP:FindByName("Seasonofgiving")
-	tempting1 = GROUP:FindByName("Seasonofgiving-1")
-	tempting2 = GROUP:FindByName("Seasonofgiving-2")
-	tempting3 = GROUP:FindByName("ARCO5")
-	tempting:Respawn()
-	tempting1:Respawn()
-	tempting2:Respawn()
-	tempting3:Respawn()
-	trigger.action.pushAITask(tempting3:GetDCSObject(),1)
-	SCHEDULER:New(nil,function() 
-		trigger.action.pushAITask(tempting:GetDCSObject(),1)
-		trigger.action.pushAITask(tempting1:GetDCSObject(),1)
-		trigger.action.pushAITask(tempting2:GetDCSObject(),1)
-	end,{},60)
-	MESSAGE:New("Strike Package `Operation Seasons Greetings` is being prepared for launch from Liwa,Al-Dhafra for Shiraz! It will need an Escort.",60,"Command"):ToBlue()
-	hm("Operation Seasons Greetings is a Go")
-end
 
 function rctldremove(text,_coord,co,dist)
 	if co == true then
@@ -253,26 +198,6 @@ function hevent:OnEventMarkRemoved(EventData)
 		elseif EventData.text:lower():find("-lightbright") then
 			coord.y = coord.y + 1500
 			coord:IlluminationBomb(10000)
-		elseif EventData.text:lower():find("-shirazattack") then
-          -- ctld drop.
-			if admin == true then
-				runseason()
-			end
-		elseif EventData.text:lower():find("-runseason") then
-          -- ctld drop.
-			if admin == true then
-				runseason()
-			end
-		elseif EventData.text:lower():find("-runic") then
-          -- ctld drop.
-			if admin == true then
-				runiranichristmas()
-			end
-		elseif EventData.text:lower():find("-iranattack") then
-          -- ctld drop.
-			if admin == true then
-				runiranichristmas()
-			end
 		elseif EventData.text:lower():find("-ctldfob") then
           -- ctld drop.
 			if admin == true then

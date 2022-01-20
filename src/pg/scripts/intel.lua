@@ -342,7 +342,7 @@ if inteltype == 2 or inteltype == 4 or inteltype == 6 then
           k.text = text
           intel_reports[k.group:GetName()] = text
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
-      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. '```')
+		  hm('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. '```')
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
           updated = true
@@ -369,7 +369,7 @@ if inteltype == 3 or inteltype == 5 or inteltype == 6 then
           k.text = text
           intel_reports[k.static:GetName()] = text
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
-      HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. '```')
+		  hm('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. '```')
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
           updated = true
