@@ -51,7 +51,7 @@ ctld.maxExtractDistance = 125 -- max distance from vehicle to troops to allow a 
 ctld.maximumDistanceLogistic = 200 -- max distance from vehicle to logistics to allow a loading or spawning operation
 ctld.maximumSearchDistance = 4000 -- max distance for troops to search for enemy
 ctld.maximumMoveDistance = 2000 -- max distance for troops to move from drop point if no enemy is nearby
-
+ctld.unpackcratedistance = 300
 ctld.minimumDeployDistance = 200 -- minimum distance from a friendly pickup zone where you can deploy a crate
 
 ctld.numberOfTroops = 8 -- default number of troops to load on a transport heli or C-130 
@@ -71,10 +71,10 @@ ctld.vehiclesWeight = {
 
 ctld.aaLaunchers = 2 -- controls how many launchers to add to the kub/buk when its spawned.
 ctld.hawkLaunchers = 4 -- controls how many launchers to add to the hawk when its spawned.
-ctld.sa10Launchers = 4
-ctld.patlaunchers = 4
+ctld.sa10Launchers = 2
+ctld.patlaunchers = 2
 ctld.buklaunchers = 2
-ctld.rolandlaunchers = 2
+ctld.rolandlaunchers = 3
 ctld.hq7 = 2
 ctld.nasamlaunchers = 2
 
@@ -124,7 +124,7 @@ ctld.hoverTime = 5 -- Time to hold hover above a crate for loading in seconds
 -- When this limit is hit, a player will still be able to get crates for an AA system, just unable
 -- to unpack them
 
-ctld.AASystemLimitRED = 30 -- Red side limit
+ctld.AASystemLimitRED = 20 -- Red side limit
 
 ctld.AASystemLimitBLUE = 20 -- Blue side limit
 
@@ -696,6 +696,97 @@ ctld.spawnableCrates = {
         -- cratesRequired - if set requires that many crates of the same type within 100m of each other in order build the unit
         -- side is optional but 2 is BLUE and 1 is RED
         -- dont use that option with the HAWK Crates
+        { weight = 820, desc = "HMMWV - TOW", unit = "M1045 HMMWV TOW", side = 2 },
+        { weight = 805, desc = "HMMWV - MG", unit = "M1043 HMMWV Armament", side = 2 },
+        { weight = 819, desc = "BTR-D", unit = "BTR_D", side = 1 },
+        { weight = 817, desc = "BRDM-2", unit = "BRDM-2", side = 1 },
+        { weight = 804, desc = "HMMWV - JTAC", unit = "Hummer", side = 2, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
+        { weight = 803, desc = "SKP-11 - JTAC", unit = "SKP-11", side = 1, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
+        { weight = 850, desc = "SPH 2S19 Msta", unit = "SAU Msta", side = 1, cratesRequired = 2 },
+        { weight = 855, desc = "M-109 Paladin", unit = "M-109", side = 2, cratesRequired = 2 },
+		{ weight = 830, desc = "M1126 Stryker ICV", unit = "M1126 Stryker ICV", side = 2 , cratesRequired = 2},
+		{ weight = 1200, desc = "M-1 Abrams", unit = "M-1 Abrams", side = 2 , cratesRequired = 2},
+		{ weight = 1199, desc = "T72B", unit = "T-72B", side = 1 , cratesRequired = 2},
+		
+    },
+    ["SHRT AA Crates"] = {
+        { weight = 860, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 1 },
+        { weight = 861, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 1 },
+        { weight = 862, desc = "M1097 Avenger", unit = "M1097 Avenger", side = 2, cratesRequired = 1 },
+		{ weight = 863, desc = "Gepard SPAAA", unit = "Gepard", side = 2, cratesRequired = 1 },
+        { weight = 856, desc = "M6 Linebacker", unit = "M6 Linebacker", side = 2, cratesRequired = 2 },
+        { weight = 910, desc = "SA-15 Tor", unit = "Tor 9A331", side = 1, cratesRequired = 2 },
+		{ weight = 911, desc = "SA-19 Tunguska", unit = "2S6 Tunguska", side = 1, cratesRequired = 2 },
+		{ weight = 840, desc = "Roland Radar", unit = "Roland Radar", side = 2},
+        { weight = 920, desc = "Roland ADS", unit = "Roland ADS", side = 2},
+		{ weight = 922, desc = "HQ7 LN", unit = "HQ-7_LN_SP", side = 1},
+        { weight = 841, desc = "HQ7 STR", unit = "HQ-7_STR_SP", side = 1},
+		{ weight = 842, desc = "NASAM SR", unit = "NASAMS_Radar_MPQ64F1", side = 2},
+        { weight = 843, desc = "NASAM CP", unit = "NASAMS_Command_Post", side = 2},
+		{ weight = 914, desc = "NASAM LN-C", unit = "NASAMS_LN_C", side = 2},
+     },
+    ["MRNG AA Crates"] = {
+        -- HAWK System
+        { weight = 1000, desc = "HAWK Launcher", unit = "Hawk ln"},
+        { weight = 925, desc = "HAWK Search Radar", unit = "Hawk sr"},
+        { weight = 926, desc = "HAWK Track Radar", unit = "Hawk tr"},
+        { weight = 845, desc = "HAWK PCP", unit = "Hawk pcp"}, -- Remove this if on 1.2
+        -- End of HAWK
+        -- KUB SYSTEM
+        { weight = 1001, desc = "KUB Launcher", unit = "Kub 2P25 ln", side = 1},
+        { weight = 929, desc = "KUB Radar", unit = "Kub 1S91 str", side = 1 },
+		-- End of KUB
+            -- BUK System
+        { weight = 1002, desc = "BUK Launcher", unit = "SA-11 Buk LN 9A310M1"},
+        { weight = 927, desc = "BUK Search Radar", unit = "SA-11 Buk SR 9S18M1"},
+        { weight = 928, desc = "BUK CC Radar", unit = "SA-11 Buk CC 9S470M1"},
+        -- END of BUK
+        { weight = 700, desc = "Early Warning Radar", unit = "1L13 EWR", side = 1 }, -- cant be used by BLUE coalition
+        -- roland
+        { weight = 890, desc = "Roland Radar", unit = "Roland Radar", side = 2},
+        { weight = 902, desc = "Roland ADS", unit = "Roland ADS", side = 2},
+        -- end roland
+    },
+	["LRNG AA Crates"] = {
+		{ weight = 774, desc = "Patriot AMG", unit = "Patriot AMG", side = 2},
+        { weight = 711, desc = "Patriot ECS", unit = "Patriot ECS", side = 2},
+		{ weight = 712, desc = "Patriot EPP", unit = "Patriot EPP", side = 2},
+        { weight = 713, desc = "Patriot cp", unit = "Patriot cp", side = 2},
+		{ weight = 1010, desc = "Patriot ln", unit = "Patriot ln",side = 2},
+		{ weight = 1009, desc = "Patriot str", unit = "Patriot str", side =2},
+		{ weight = 915, desc = "SA-10 40B6M tr", unit = "S-300PS 40B6M tr", side = 1},
+        { weight = 916, desc = "SA-10 64H6E sr", unit = "S-300PS 64H6E sr", side = 1},
+		{ weight = 917, desc = "SA-10 40B6MD sr", unit = "S-300PS 40B6MD sr", side = 1},
+        { weight = 714, desc = "SA-10 54K6 cp", unit = "S-300PS 54K6 cp", side = 1},
+		{ weight = 1015, desc = "SA-10 5P85D ln", unit = "S-300PS 5P85D ln",side = 1},
+		{ weight = 1014, desc = "SA-10 5P85C ln", unit = "S-300PS 5P85C ln", side =1},
+		
+    },
+       ["FOP & Repair"] = {
+        { weight = 1050, desc = "FOB Crate - Small", unit = "FOB-SMALL" }, -- Builds a FOB! - requires 3 * ctld.cratesRequiredForFOB
+        { weight = 770, desc = "Ural-375 Ammo Truck", unit = "Ural-375", side = 1, cratesRequired = 1 },
+        { weight = 761, desc = "M-818 Ammo Truck", unit = "M 818", side = 2, cratesRequired = 1 },       
+        { weight = 740, desc = "HAWK Repair", unit = "HAWK Repair" , side = 2 },
+        { weight = 741, desc = "BUK Repair", unit = "BUK Repair"},
+        { weight = 742, desc = "KUB Repair", unit = "KUB Repair", side = 1},
+		{ weight = 702, desc = "HQ7 Repair", unit = "HQ7 Repair", side = 1},
+		{ weight = 743, desc = "SA-10 Repair", unit = "SA-10 Repair", side = 1},
+        { weight = 703, desc = "Roland Repair", unit = "Roland Repair", side = 2},    
+		{ weight = 744, desc = "Patriot Repair", unit = "Patriot Repair", side = 2},    
+		{ weight = 745, desc = "NASAM Repair", unit = "NASAM Repair", side = 2},    
+     },
+}
+--[[
+ctld.spawnableCrates = {
+    -- name of the sub menu on F10 for spawning crates
+    ["Ground Forces"] = {
+        --crates you can spawn
+        -- weight in KG
+        -- Desc is the description on the F10 MENU
+        -- unit is the model name of the unit to spawn
+        -- cratesRequired - if set requires that many crates of the same type within 100m of each other in order build the unit
+        -- side is optional but 2 is BLUE and 1 is RED
+        -- dont use that option with the HAWK Crates
         { weight = 500, desc = "HMMWV - TOW", unit = "M1045 HMMWV TOW", side = 2 },
         { weight = 505, desc = "HMMWV - MG", unit = "M1043 HMMWV Armament", side = 2 },
         { weight = 610, desc = "BTR-D", unit = "BTR_D", side = 1 },
@@ -780,7 +871,7 @@ ctld.spawnableCrates = {
 		
      },
 }
-
+]]
 --- 3D model that will be used to represent a loadable crate ; by default, a generator
 ctld.spawnableCratesModel_load = {
     ["category"] = "Fortifications",
@@ -4381,7 +4472,7 @@ function ctld.unpackMultiCrate(_heli, _nearestCrate, _nearbyCrates)
 
     for _, _nearbyCrate in pairs(_nearbyCrates) do
 
-        if _nearbyCrate.dist < 300 then
+        if _nearbyCrate.dist < ctld.unpackcratedistance then
 
             if _nearbyCrate.details.unit == _nearestCrate.details.unit then
 
@@ -5734,7 +5825,7 @@ function ctld.createSmokeMarker(_enemyUnit, _colour)
     local _enemyPoint = _enemyUnit:getPoint()
 	local xadjust = math.random(-130,130)
 	local zadjust = math.random(-130,130)
-    trigger.action.smoke({ x = _enemyPoint.x, y = _enemyPoint.y + 2.0, z = _enemyPoint.z }, _colour)
+    trigger.action.smoke({ x = (_enemyPoint.x + xadjust), y = _enemyPoint.y + 2.0, z = (_enemyPoint.z + zadjust) }, _colour)
 end
 
 function ctld.cancelLase(_jtacGroupName)

@@ -1,11 +1,11 @@
-password = "JF17s are Propoganda and do things physics dont allow"
-ADMINPASSWORD2 = "Like missiles with no drag"
+version = "1.74.0"
+lastupdate = "07/01/2022"
 carrier5dead = false
 carrier6dead = false
 carrier6adead = false
 kuzremoved = false
 
-activearea = "• Island,Western,Qeshm,Bandar,Eastern \n • Protect Captured Areas and take hostile. \n • High Priority Targets - SCUD, TANKS, AAA, SAMS \n ROE Notice:\n • Reduce Civilian Damage \n • CBU Class weapons are to be limited to open field employment or restricted use in Towns/cities only if unable to find/kill with other weapons \n • CBU use prohibited on large cities."
+activearea = "• UAE Mainland, No Push beyond the UAE is allowed at this time. \n ROE Notice:\n • Reduce Civilian Damage \n • CBU Class weapons are to be limited to open field employment or restricted use in Towns/cities only if unable to find/kill with other weapons \n • CBU use prohibited on large cities."
 activeareairan = "• Harasment of Coalition Forces \n • Defence of Irani Mainland and Islands. \n • Retaking of Lost Territory"
 env.info("Persia Aflame Loader")
 env.info("Mission by Robert Graham")
@@ -34,8 +34,7 @@ GRPC.load()
 seasonofgiving = false
 iranichristmas = false
 hm("> GRPC is a go, Ceiling Cat is real!")
---dofile(lfs.writedir() .."pg\\scripts\\cinc_loader.lua") 
---CinCServer.start("139.99.144.189", 3050)
+
 HypeMan.sendBotMessage("> Persia Aflame Yes give me a VOICE!  SRS.lua")
 dofile(lfs.writedir() .. [[pg\scripts\srs.lua]])
 env.info("Loading Peristence")
@@ -63,10 +62,7 @@ dofile(lfs.writedir() .. [[pg\scripts\simple_admingroupsaving.lua]])
 --dofile(lfs.writedir() .. [[pg\scripts\simple_scenery_persistence.lua]])
 --hm("> Persia Aflame This isn't really working either we moved to a different system because of it.. I ignore you ctld_static_save.lua")
 --dofile(lfs.writedir() .. [[pg\scripts\ctld_static_save.lua]])
---hm("> Persia Aflame Man Pads.. I see Dead people, when ever they come down low enough: simple_mpadgroupsaving.lua")
---dofile(lfs.writedir() .. [[pg\scripts\simple_mpadgroupsaving.lua]])
---hm("> Persia Aflame We aren't using this right now so nope... bye bye. simple_hercgroupsaving.lua")
---dofile(lfs.writedir() .. [[pg\scripts\simple_hercgroupsaving.lua]])
+
 
 hm("> Persia Aflame Sigh you want awacs? Because this is how you get AWACS PAM! bluesupportac.lua")
 dofile(lfs.writedir() .. [[pg\scripts\bluesupportac.lua]])
@@ -98,6 +94,9 @@ hm("> Anti Jackass Script Loading in... No Nukes ever allowed again")
 
 dofile(lfs.writedir() .. [[pg\scripts\jackasstest.lua]])
 dofile(lfs.writedir() .. [[pg\scripts\stts.lua]])
+dofile(lfs.writedir() .. [[pg\robcommands.lua]])
+
+lasthash = inputhash
 hm("> Persia Falme: ALL SCRIPTS LOADED, INTERNATIONAL WAR CRIMES ... I MEAN PERSIAN GULF AFLAME SERVER IS NOW ONLINE AND RUNNING \n PLEASE HAVE A PLEASENT AND PRODUCTIVE 8 HRS.")
 hm("=============================================")
 
@@ -192,5 +191,51 @@ end,{},(60*10),(60*(math.random(30,180))))
 
 function rlog(msg)
 	BASE:E(msg)
-	hm(string.format( "%1s:(%s)" , "RLOG",routines.utils.oneLineSerialize( msg ) ) )
+	hm(string.format( "%1s:(%s)" , "Persia RLOG",routines.utils.oneLineSerialize( msg ) ) )
 end
+
+function loggroups()
+	local tempset = SET_UNIT:New():FilterActive():FilterOnce()
+	local ucounter = 0
+	local ub = 0
+	local ur = 0 
+	tempset:ForEach(function(g) 
+		ucounter = ucounter + 1
+		local uc = g:GetCoalition()
+		if uc == 1 then
+			ur = ur + 1
+		else
+			ub = ub + 1
+		end
+	end)
+	tempset = SET_GROUP:New():FilterActive():FilterOnce()
+	local gcounter = 0
+	local gb = 0
+	local gr = 0 
+	tempset:ForEach(function(g) 
+		gcounter = gcounter + 1
+		local gc = g:GetCoalition()
+		if gc == 1 then
+			gr = gr + 1
+		else
+			gb = gb + 1
+		end
+	end)
+	rlog("Mission Start Current Group Count is: ".. gcounter .." Active Groups, \n Blue Groups: " .. gb .. " \n Red Groups: " .. gr .. " \n Unit Count is:" .. ucounter .. "Units \n Blue Units:" .. ub .. "\n Red Units:" .. ur .. "")
+end
+
+
+SCHEDULER:New(nil,loggroup
+,{},0,(60*60))
+
+SCHEDULER:New(nil,function() 
+	dofile(lfs.writedir() .. [[pg\robcommands.lua]])
+	if inputhash ~= lasthash then
+		BASE:E("Hash has changed")
+		local ran, errorMSG = pcall(robinput)
+		if not ran then
+			BASE:E({"robinput errored ",errorMSG})
+		end
+		lasthash = inputhash
+	end
+end,{},0,5)

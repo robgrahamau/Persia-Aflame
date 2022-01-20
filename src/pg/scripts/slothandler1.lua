@@ -1,33 +1,9 @@
 
 env.info("Loading SRS stuff")
 
-STTS = {}
--- FULL Path to the FOLDER containing DCS-SR-ExternalAudio.exe - EDIT TO CORRECT FOLDER
-STTS.DIRECTORY = "E:\\DCS-SimpleRadio-Standalone"
-STTS.SRS_PORT = 5002 -- LOCAL SRS PORT - DEFAULT IS 5002
--- DONT CHANGE THIS UNLESS YOU KNOW WHAT YOU'RE DOING
-STTS.EXECUTABLE = "DCS-SR-ExternalAudio.exe"
+
 spawned = {}
 
-function STTS.TextToSpeech(message,freqs,modulations, volume,name, coalition )
-
-    message = message:gsub("\"","\\\"")
-
-    local cmd = string.format("start \"%s\" \"%s\\%s\" \"%s\" %s %s %s %s \"%s\" %s", STTS.DIRECTORY, STTS.DIRECTORY, STTS.EXECUTABLE, message, freqs, modulations, coalition,STTS.SRS_PORT, name, volume )
-
-    os.execute(cmd)
-
-end
-
-function STTS.PlayMP3(pathToMP3,freqs,modulations, volume,name, coalition )
-
-    local cmd = string.format("start \"%s\" \"%s\\%s\" \"%s\" %s %s %s %s \"%s\" %s", STTS.DIRECTORY, STTS.DIRECTORY, STTS.EXECUTABLE, pathToMP3, freqs, modulations, coalition,STTS.SRS_PORT, name, volume )
-
-    os.execute(cmd)
-
-end
-
-env.info("Loadinged SRS stuff")
 
 BASE:E({"SLOT HANDLER FOR PERSIA AFLAME LOADING"})
 trigger.action.setUserFlag("SSB",100)
@@ -43,6 +19,7 @@ lh4 = UNIT:FindByName("LHA-4")
 bandaractive = false
 kishactive = false
 allowfobs = true
+
 stn:HandleEvent(EVENTS.Dead)
 lh2:HandleEvent(EVENTS.Dead)
 tdy:HandleEvent(EVENTS.Dead)
@@ -98,11 +75,13 @@ spawner5 = nil
 spawner6 = nil
 allowislands = true
 allowmain = true
+shirazmsg = false
 
 function spawnislands()
+	spawnnumber = spawnnumber + 1
   if shiraz == false then
   if allowislands == true then
-    spawnnumber = spawnnumber + 1
+    
     if spawner == nil then
       spawner = SPAWN:NewWithAlias("IslandSead","SEADFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
 	  hm("> DB1 SEDFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
@@ -137,9 +116,10 @@ function spawnislands()
 end
 
 function spawnmainland()
+	spawnnumber = spawnnumber + 1
   if shiraz == false then
   if allowmain == true then
-    spawnnumber = spawnnumber + 1
+    
     if spawner4 == nil then
     spawner4 = SPAWN:NewWithAlias("QeshmSead","SEADFLIGHT" .. spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
 	hm("> DB2 SEADFLIGHT" .. spawnnumber .. " is prepping to take back from the invaders")
@@ -333,8 +313,7 @@ function slot_tunb(coalition)
 		trigger.action.setUserFlag("Tunb Georgia MI8 #001",100)
 		ctld.changeRemainingGroupsForPickupZone("CTLD Tunb Island", 4)
 		MESSAGE:New("Iran has Retaken Tunb from the Coalition Invaders!",30):ToAll()
-      --STTS.TextToSpeech("Tunb has been retaken by Irani Forces",253.00,"AM",0.75,"TGW Command", 1 )
---      STTS.TextToSpeech("We have lost Tunb to Irani Forces",253.00,"AM",0.75,"TGW Command", 2 )
+      
 		hm("> Tunb has been taken by Iran ")
 		tmsg = false
 		spawnctld(AIRBASE.PersianGulf.Tunb_Island_AFB,34,285,1200)
@@ -411,8 +390,7 @@ function slot_sirri(coalition)
 		trigger.action.setUserFlag("Sirri_Hind", 100)
 		trigger.action.setUserFlag("Sirri_Hind-1", 00)
 		MESSAGE:New("Coalition Forces have liberated Sirri Island from Iran",30):ToAll()
-		--STTS.TextToSpeech("Sirri Island has been lost to the western invaders",253.00,"AM",0.75,"TGW Command", 1 )
-		--STTS.TextToSpeech("We liberated Sirri Island from Iran!",253.00,"AM",0.75,"TGW Command", 2 )
+		
 		hm("> Siri Island has been taken by Coalition Forces  ")
 		SCHEDULER:New(nil,spawnislands,{},math.random(60,1200))
 		if init ~= true then
@@ -613,6 +591,26 @@ function slot_kish(coalition)
   end
 end
 
+
+function slot_abudb(coalition)
+  BASE:E({"Slots ab",coalition})
+  if coalition == 1 then
+    if abudbmsg ~= false then
+          local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Abu_Dhabi_International_Airport)
+          local _coord = ab:GetCoordinate()
+          spawnctld(AIRBASE.PersianGulf.Abu_Dhabi_International_Airport,34,180,1400)
+          adbudmsg = false
+    end
+   else
+    if abudbmsg ~= true then
+        local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Abu_Dhabi_International_Airport)
+        local _coord = ab:GetCoordinate()
+        adbudmsg = true
+        spawnctld(AIRBASE.PersianGulf.Abu_Dhabi_International_Airport,country.id.USA,180,1700)
+    end
+   end
+end
+
 function slot_qeshm(coalition)
 
   if coalition == 1 then
@@ -769,7 +767,7 @@ function slot_khasab(coalition)
     end
     khmsg = false
 	khasabspawn = false
-	spawnctld(AIRBASE.PersianGulf.Khasab,34,345,700)
+	spawnctld(AIRBASE.PersianGulf.Khasab,34,345,800)
   end
   else
 	
@@ -821,7 +819,7 @@ function slot_khasab(coalition)
     
     hm("> Khasab Island has been taken by Coalition Forces")
     khmsg = true
-	spawnctld(AIRBASE.PersianGulf.Khasab,2,180,800)
+	spawnctld(AIRBASE.PersianGulf.Khasab,2,150,1500)
   end
   end
 
@@ -1538,7 +1536,26 @@ function checkislands()
   end
  end
 end
-
+function slot_shiraz(coalition)
+	if coalition == 1 then
+		if shirazmsg ~= false then
+			shirazmsg = false
+				MESSAGE:New("Shiraz has been Liberated from the Coalition heathens",30):ToAll()
+			hm("> Shiraz has been Liberated from the coaltion heathens")
+		end
+	else
+		if shirazmsg ~= true then
+			sdef = SPAWN:New("ShirazDefence"):Spawn()
+			
+			shirazmsg = true
+			
+			MESSAGE:New("Shiraz has been Liberated from the Irani Defence Forces",30):ToAll()
+			hm("> Shiraz has been Liberated from the Irani Defence Forces")
+		end
+	end
+end
+	
+	
 
 function slot_minhad(coalition)
 	if coalition == 1 then
@@ -1587,6 +1604,16 @@ function slot_minhad(coalition)
 			trigger.action.setUserFlag("AJS37_ENFIELD7_69", 100)
 			trigger.action.setUserFlag("AJS37_ENFIELD7_37", 100)
 			trigger.action.setUserFlag("AJS37_ENFIELD7_34", 100)
+			trigger.action.setUserFlag("Min F16 Dodge_102", 100)
+			trigger.action.setUserFlag("Min F16 Dodge_101", 100)
+			trigger.action.setUserFlag("Omani ADF #003",100)
+			trigger.action.setUserFlag("Omani ADF #002",100)
+			trigger.action.setUserFlag("Omani ADF #001",100)
+			trigger.action.setUserFlag("Omani ADF",100)
+			trigger.action.setUserFlag("Pilot #011",100)
+			trigger.action.setUserFlag("Pilot #007",100)
+			trigger.action.setUserFlag("Pilot #013",100)
+			trigger.action.setUserFlag("Pilot #003",100)
 			trigger.action.setUserFlag("Dodge_103", 100)
 			trigger.action.setUserFlag("Dodge_104", 100)
 			trigger.action.setUserFlag("VF103_DODGE_21", 100)  
@@ -1597,7 +1624,15 @@ function slot_minhad(coalition)
 			trigger.action.setUserFlag("COLT4-43", 100)
 			trigger.action.setUserFlag("Dodge_99", 100)
 			trigger.action.setUserFlag("Dodge_98", 100)
+			trigger.action.setUserFlag("Dodge_101 #001", 100)
+			trigger.action.setUserFlag("Dodge_101 #002", 100)
+			trigger.action.setUserFlag("Dodge_101 #003", 100)
 			trigger.action.setUserFlag("Dodge_97", 100)
+			trigger.action.setUserFlag("Dodge_96", 100)
+			trigger.action.setUserFlag("Dodge_16", 100)
+			trigger.action.setUserFlag("COLT5_222", 100)
+			trigger.action.setUserFlag("COLT5_221", 100)
+			trigger.action.setUserFlag("COLT5_223", 100)
 			MESSAGE:New("Al-Minhad has been Liberated from the Heathans of the Coalition!",30):ToAll()
 			hm("> Al-Minhad Airforce Base has been taken by Iran")
 			minmsg = false
@@ -1652,6 +1687,16 @@ function slot_minhad(coalition)
 			trigger.action.setUserFlag("AJS37_ENFIELD7_69", 000)
 			trigger.action.setUserFlag("AJS37_ENFIELD7_37", 000)
 			trigger.action.setUserFlag("AJS37_ENFIELD7_34", 000)
+			trigger.action.setUserFlag("Min F16 Dodge_102", 000)
+			trigger.action.setUserFlag("Min F16 Dodge_101", 000)
+			trigger.action.setUserFlag("Omani ADF #003",000)
+			trigger.action.setUserFlag("Omani ADF #002",000)
+			trigger.action.setUserFlag("Omani ADF #001",000)
+			trigger.action.setUserFlag("Omani ADF",000)
+			trigger.action.setUserFlag("Pilot #011",000)
+			trigger.action.setUserFlag("Pilot #007",000)
+			trigger.action.setUserFlag("Pilot #013",000)
+			trigger.action.setUserFlag("Pilot #003",000)
 			trigger.action.setUserFlag("Dodge_103", 000)
 			trigger.action.setUserFlag("Dodge_104", 000)
 			trigger.action.setUserFlag("VF103_DODGE_21", 000)  
@@ -1662,7 +1707,15 @@ function slot_minhad(coalition)
 			trigger.action.setUserFlag("COLT4-43", 000)
 			trigger.action.setUserFlag("Dodge_99", 000)
 			trigger.action.setUserFlag("Dodge_98", 000)
+			trigger.action.setUserFlag("Dodge_101 #001", 000)
+			trigger.action.setUserFlag("Dodge_101 #002", 000)
+			trigger.action.setUserFlag("Dodge_101 #003", 000)
 			trigger.action.setUserFlag("Dodge_97", 000)
+			trigger.action.setUserFlag("Dodge_96", 000)
+			trigger.action.setUserFlag("Dodge_16", 000)
+			trigger.action.setUserFlag("COLT5_222", 000)
+			trigger.action.setUserFlag("COLT5_221", 000)
+			trigger.action.setUserFlag("COLT5_223", 000)
 			MESSAGE:New("Al-Minhad is once more in the hands of the UAE and the Coalition",30):ToAll()
 			hm("> Al-Minhad Airforece Base has been taken by Coalition Forces  ")
 			minmsg = true
@@ -1689,6 +1742,7 @@ slot_havadarya(1)
 slot_ejask(1)
 slot_fuj(2)
 slot_minhad(2)
+slot_abudb(2)
 airbases = {}
 function SEH:OnEventBaseCaptured(EventData)
  local AirbaseName = EventData.PlaceName -- The name of the airbase that was captured.
@@ -1703,7 +1757,9 @@ function SEH:OnEventBaseCaptured(EventData)
     ctld.changeRemainingGroupsForPickupZone("CTLD Abu Nuayr", 3)
     slot_abun(coalition)    
  elseif AirbaseName == AIRBASE.PersianGulf.Sirri_Island then
-    slot_sirri(coalition)
+     slot_sirri(coalition)
+ elseif AirbaseName == AIRBASE.PersianGulf.Abu_Dhabi_International_Airport then	 
+	 slot_abudb(coalition)
  elseif AirbaseName == AIRBASE.PersianGulf.Abu_Musa_Island_Airport then
     ctld.changeRemainingGroupsForPickupZone("CTLD Abu Musa",3)
  elseif AirbaseName == AIRBASE.PersianGulf.Tunb_Kochak then
@@ -1723,7 +1779,7 @@ function SEH:OnEventBaseCaptured(EventData)
  elseif AirbaseName == AIRBASE.PersianGulf.Jiroft_Airport then
     ctld.changeRemainingGroupsForPickupZone("CTLD Jiroft", 4)
  elseif AirbaseName == AIRBASE.PersianGulf.Shiraz_International_Airport then
-    ctld.changeRemainingGroupsForPickupZone("CTLD Shiraz", 4)
+    slot_shiraz(coalition)
  elseif AirbaseName == AIRBASE.PersianGulf.Kerman_Airport then
     ctld.changeRemainingGroupsForPickupZone("CTLD Kerman", 4)
  elseif AirbaseName == AIRBASE.PersianGulf.Havadarya then

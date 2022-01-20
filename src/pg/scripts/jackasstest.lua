@@ -8,6 +8,8 @@ badAmmoStrings = {
  ['weapons.bombs.RN-28'] = true,
 
 }
+
+if jackass == true then
  function checkForJackass()
     for ind, data in pairs(mist.DBs.humansById) do
         if Unit.getByName(data.unitName) then
@@ -39,3 +41,4 @@ badAmmoStrings = {
 
 end
 mist.scheduleFunction(checkForJackass, {}, timer.getTime() + 30, 30)
+end
