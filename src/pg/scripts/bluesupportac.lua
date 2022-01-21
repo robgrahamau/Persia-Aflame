@@ -130,7 +130,7 @@ do
 			if Overlord:IsAlive() ~= true and Overlordcount < Overlordlimit then
 				OverlordSpawn:Spawn()
 			end
-			if USMagic:IsAlive() ~= true and Magiccount < Mmagiclimit then
+			if USMagic:IsAlive() ~= true and Magiccount < Magiclimit then
 				USMagicSpawn:Spawn()
 			end
 		else
