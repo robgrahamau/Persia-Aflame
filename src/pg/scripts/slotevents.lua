@@ -25,62 +25,63 @@ usqeshm = SPAWN:NewWithAlias("USQESHMCAP","96th FS CAP"):InitCleanUp(600):InitRe
 end):InitRandomizeRoute(1,5,UTILS.NMToMeters(10),UTILS.FeetToMeters(4000))
 
 function blueqeshmcap()
-	local ab  = AIRBASE:FindByName(AIRBASE.PersianGulf.Qeshm_Island)
-	if ab:GetCoalition() == 2 then
-		if _USQESHM == nil then
-			usqeshm:Spawn()
-		else
-			if (_USQESHM:IsAlive() ~= true or _USQESHM:AllOnGround() == true) and (usqeshmcount < usqeshmtotal) then
-				_USQESHM:Destroy()
-				usqeshm:Spawn()
-			end
-		end
-	end
+  local ab  = AIRBASE:FindByName(AIRBASE.PersianGulf.Qeshm_Island)
+  if ab:GetCoalition() == 2 then
+    if _USQESHM == nil then
+      usqeshm:Spawn()
+    else
+      if (_USQESHM:IsAlive() ~= true or _USQESHM:AllOnGround() == true) and (usqeshmcount < usqeshmtotal) then
+        _USQESHM:Destroy()
+        usqeshm:Spawn()
+      end
+    end
+  end
 end
 
 function bluekishcap()
-	local ab  = AIRBASE:FindByName(AIRBASE.PersianGulf.Kish_International_Airport)
-	if ab:GetCoalition() == 2 then
-		if _USKISH == nil then
-			usqkish:Spawn()
-		else
-			if (_USKISH:IsAlive() ~= true or _USKISH:AllOnGround() == true) and (uskishcount < uskishtotal) then
-				_USKISH:Destroy()
-				uskish:Spawn()
-			end
-		end
-	end
+  local ab  = AIRBASE:FindByName(AIRBASE.PersianGulf.Kish_International_Airport)
+  if ab:GetCoalition() == 2 then
+    if _USKISH == nil then
+      usqkish:Spawn()
+    else
+      if (_USKISH:IsAlive() ~= true or _USKISH:AllOnGround() == true) and (uskishcount < uskishtotal) then
+        _USKISH:Destroy()
+        uskish:Spawn()
+      end
+    end
+  end
 end
 
-SCHEDULER:New(nil,function() 
-	blueqeshmcap()
-	bluekishcap()
-
-end,{},(60 * (math.random(15,30)),(60*60),0.75)
-
 function checkislands()
-	local am = AIRBASE:FindByName(AIRBASE.PersianGulf.Abu_Musa_Island_Airport)
-	local si = AIRBASE:FindByName(AIRBASE.PersianGulf.Sirri_Island)
-	local tk = AIRBASE:FindByName(AIRBASE.PersianGulf.Tunb_Kochak)
-	local ta = AIRBASE:FindByName(AIRBASE.PersianGulf.Tunb_Island_AFB)
-	
-	if tk:GetCoalition() == 2 and ta:GetCoalition() == 2 and si:GetCoalition() == 2 and am:GetCoalition() == 2 then
-		if PeleliuSpawned == false then
-			local _Peleliu = GROUP:FindByName("Peleliu"):Activate()
-			PeleliuSpawned = true
-			MESSAGE:New("USS Peleliu has been activated and is sailing north to Kish",30):ToBlue()
-			hm("USS Peleliu is in the AO and activated")
-		end
-		if NassauSpawned == false then
-			local _Nassau = GROUP:FindByName("Nassau"):Activate()
-			NassauSpawned = true
-			MESSAGE:New("USS Nassau has been activated and is sailing north to Qeshm",30):ToBlue()
-			hm("USS Nassau is in the AO and activated")
-		end
-	end
+  local am = AIRBASE:FindByName(AIRBASE.PersianGulf.Abu_Musa_Island_Airport)
+  local si = AIRBASE:FindByName(AIRBASE.PersianGulf.Sirri_Island)
+  local tk = AIRBASE:FindByName(AIRBASE.PersianGulf.Tunb_Kochak)
+  local ta = AIRBASE:FindByName(AIRBASE.PersianGulf.Tunb_Island_AFB)
+  
+  if tk:GetCoalition() == 2 and ta:GetCoalition() == 2 and si:GetCoalition() == 2 and am:GetCoalition() == 2 then
+    if PeleliuSpawned == false then
+      local _Peleliu = GROUP:FindByName("Peleliu"):Activate()
+      PeleliuSpawned = true
+      MESSAGE:New("USS Peleliu has been activated and is sailing north to Kish",30):ToBlue()
+      hm("USS Peleliu is in the AO and activated")
+    end
+    if NassauSpawned == false then
+      local _Nassau = GROUP:FindByName("Nassau"):Activate()
+      NassauSpawned = true
+      MESSAGE:New("USS Nassau has been activated and is sailing north to Qeshm",30):ToBlue()
+      hm("USS Nassau is in the AO and activated")
+    end
+  end
 end
 
 SCHEDULER:New(nil,checkislands,{},60,60)
+
+
+
+SCHEDULER:New(nil,function() 
+  blueqeshmcap()
+  bluekishcap()
+end,{},(60 * (math.random(15,30) )),(60*60))
 
 end
 
@@ -133,70 +134,70 @@ end):InitRandomizeRoute(1,5,UTILS.NMToMeters(5),UTILS.FeetToMeters(2000))
 BASE:E({"Initalising Scheduler"})
 
 function spawnmainland()
-	if _spawnnumber ~= _maxislandmainlandspawns then
-	_spawnnumber = _spawnnumber + 1
-	local _shiraz = AIRBASE:FindByName(AIRBASE.PersianGulf.Shiraz_International_Airport)
-	local _kerman = AIRBASE:FindByName(AIRBASE.PersianGulf.Kerman_Airport)
-	if _shiraz:GetCoalition == 1 then
-		if mainlandsead == nil then
-			mainlandsead = SPAWN:NewWithAlias("MainlandSead","MSF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-		else
-			if mainlandsead:IsAlive() ~= true or mainlandsead:AllOnGround() == true then
-				mainlandsead:Destroy()
-				mainlandsead = SPAWN:NewWithAlias("MainlandSead","MSF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-			end
-		end
-		if mainlandcas == nil then
-			mainlandcas = SPAWN:NewWithAlias("MainlandCas","MCG_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-		else
-		if mainlandcas:IsAlive() ~= true or mainlandcas:AllOnGround() == true then
-			mainlandcas:Destroy()
-			mainlandcas = SPAWN:NewWithAlias("MainlandCas","MCG_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-		end
-	end
-	if _kerman:GetCoalition == 1 then
-		if mainlandescort == nil then
-			mainlandescort = SPAWN:NewWithAlias("MainLandCap","MCF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-		else
-			if mainlandescort:IsAlive() ~= true or mainlandescort:AllOnGround() == true then
-				mainlandescort:Destroy()
-				mainlandescort = SPAWN:NewWithAlias("MainLandCap","MCF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-			end
-		end
-	end
-	end
+  if _spawnnumber ~= _maxislandmainlandspawns then
+  _spawnnumber = _spawnnumber + 1
+  local _shiraz = AIRBASE:FindByName(AIRBASE.PersianGulf.Shiraz_International_Airport)
+  local _kerman = AIRBASE:FindByName(AIRBASE.PersianGulf.Kerman_Airport)
+  if _shiraz:GetCoalition() == 1 then
+    if mainlandsead == nil then
+      mainlandsead = SPAWN:NewWithAlias("MainlandSead","MSF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
+    else
+      if mainlandsead:IsAlive() ~= true or mainlandsead:AllOnGround() == true then
+        mainlandsead:Destroy()
+        mainlandsead = SPAWN:NewWithAlias("MainlandSead","MSF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
+      end
+    end
+    if mainlandcas == nil then
+      mainlandcas = SPAWN:NewWithAlias("MainlandCas","MCG_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
+    else
+    if mainlandcas:IsAlive() ~= true or mainlandcas:AllOnGround() == true then
+      mainlandcas:Destroy()
+      mainlandcas = SPAWN:NewWithAlias("MainlandCas","MCG_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
+    end
+  end
+  if _kerman:GetCoalition() == 1 then
+    if mainlandescort == nil then
+      mainlandescort = SPAWN:NewWithAlias("MainLandCap","MCF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
+    else
+      if mainlandescort:IsAlive() ~= true or mainlandescort:AllOnGround() == true then
+        mainlandescort:Destroy()
+        mainlandescort = SPAWN:NewWithAlias("MainLandCap","MCF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
+      end
+    end
+  end
+  end
 end
 
 function spawnislands()
-	if _spawnnumber ~= _maxislandmainlandspawns then
-	local _shiraz = AIRBASE:FindByName(AIRBASE.PersianGulf.Shiraz_International_Airport)
-	local _kerman = AIRBASE:FindByName(AIRBASE.PersianGulf.Kerman_Airport)
-	_spawnnumber = _spawnnumber + 1
-	if _shiraz:GetCoalition == 1 then
-		if islandsead == nil then
-			islandsead = SPAWN:NewWithAlias("IslandSead","ISF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-		else
-			if islandsead:IsAlive() ~= true or islandsead:AllOnGround() == true then
-				islandsead:Destroy()
-				islandsead = SPAWN:NewWithAlias("IslandSead","ISF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-			end
-		end
-		if islandcas == nil then
-			islandcas = SPAWN:NewWithAlias("IslandCAS","ISC_" .. spawnnumber .. ""):InitRandomizeRoute(1,3,10000,1000):InitCleanUp(300):Spawn()
-		else
-			if islandcas:IsAlive() ~= true or islandcas:AllOnGround() == true then
-				islandcas = SPAWN:NewWithAlias("IslandCAS","ISF" .. _spawnnumber .. ""):InitRandomizeRoute(1,3,10000,1000):InitCleanUp(300):Spawn()
-			end
-		end
-		if islandescort == nil then
-			islandescort = SPAWN:NewWithAlias("IslandCAP","ISE_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-		else
-			if islandescort:IsAlive() ~= true or islandescort:AllOnGround() == true then
-				islandescort = SPAWN:NewWithAlias("IslandCAP","CAPFLIGHT" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
-			end
-		end
-	end
-	end
+  if _spawnnumber ~= _maxislandmainlandspawns then
+  local _shiraz = AIRBASE:FindByName(AIRBASE.PersianGulf.Shiraz_International_Airport)
+  local _kerman = AIRBASE:FindByName(AIRBASE.PersianGulf.Kerman_Airport)
+  _spawnnumber = _spawnnumber + 1
+  if _shiraz:GetCoalition() == 1 then
+    if islandsead == nil then
+      islandsead = SPAWN:NewWithAlias("IslandSead","ISF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
+    else
+      if islandsead:IsAlive() ~= true or islandsead:AllOnGround() == true then
+        islandsead:Destroy()
+        islandsead = SPAWN:NewWithAlias("IslandSead","ISF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
+      end
+    end
+    if islandcas == nil then
+      islandcas = SPAWN:NewWithAlias("IslandCAS","ISC_" .. spawnnumber .. ""):InitRandomizeRoute(1,3,10000,1000):InitCleanUp(300):Spawn()
+    else
+      if islandcas:IsAlive() ~= true or islandcas:AllOnGround() == true then
+        islandcas = SPAWN:NewWithAlias("IslandCAS","ISF" .. _spawnnumber .. ""):InitRandomizeRoute(1,3,10000,1000):InitCleanUp(300):Spawn()
+      end
+    end
+    if islandescort == nil then
+      islandescort = SPAWN:NewWithAlias("IslandCAP","ISE_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
+    else
+      if islandescort:IsAlive() ~= true or islandescort:AllOnGround() == true then
+        islandescort = SPAWN:NewWithAlias("IslandCAP","CAPFLIGHT" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
+      end
+    end
+  end
+  end
 end
 
 SCHEDULER:New(nil,function() 
@@ -255,17 +256,14 @@ SCHEDULER:New(nil,function()
   end
   local iss = math.random(1,100)
   if iss < 50 then
-	spawnislands()
+  spawnislands()
   end
   iss = math.random(1,100)
   iss = math.random(1,100)
   if iss < 50 then
-	spawnmainland()
+  spawnmainland()
   end
- end,{},(60*(math.random(15,60)),(60*60),0.75)
-  
-
-
+ end,{},(60*(math.random(15,60))),(60*60),0.75)
 
 end
 

@@ -685,8 +685,8 @@ end
 
 function updatevalues()
 	hm("Should be saving Main Mission Now")
-	
-	hm("Saving BLUE SQN #'s"})
+
+	hm({"Saving BLUE SQN #'s"})
     mainmission.cap1 = cap1:GetSqnCount()
     mainmission.cap2 = cap2:GetSqnCount()
     mainmission.cap3 = cap3:GetSqnCount()

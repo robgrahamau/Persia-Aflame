@@ -56,7 +56,7 @@ end
 
 function sqn:Spawn()
 	BASE:E({"Attempting to spawn for Sqn:",self.sqnname,self.sqnunit,self.sqnamount})
-	local ab = AIRBASE:FindByName self.airbase
+	local ab = AIRBASE:FindByName(self.airbase)
 	local col = ab:GetCoalition()
 	if self.sqncol == col then
 		self.sqnspawner = SPAWN:NewWithAlias(self.sqnunit,self.sqnname)
@@ -280,7 +280,7 @@ end
 
 function intercept:Spawn()
 	BASE:E({"Attempting to spawn for Sqn:",self.sqnname,self.sqnunit})
-	local ab = AIRBASE:FindByName self.airbase
+	local ab = AIRBASE:FindByName(self.airbase)
 	local col = ab:GetCoalition()
 	if self.sqncol == col then
 		self.sqnspawner = SPAWN:NewWithAlias(self.sqnunit,self.sqnname)
