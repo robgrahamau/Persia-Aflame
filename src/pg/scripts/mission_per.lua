@@ -22,6 +22,9 @@ cg6life = 0
 cg5alife = 0
 kovgroup = GROUP:FindByName("Kuznetsov Group")
 chinagroup = GROUP:FindByName("China_fleet1")
+cg5 = GROUP:FindByName("Carrier Group 5")
+cg6 = GROUP:FindByName("Carrier Group 6")
+cg6a= GROUP:FindByName("Carrier Group 7")
 local SaveSchedulePersistence=300 
 
 

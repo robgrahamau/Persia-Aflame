@@ -2,7 +2,7 @@
 version = "1.80.0"
 Servername = "Persia Testing"
 lastupdate = "21/01/2022"
-password = "setmeupplease"
+password = "testing123"
 ADMINPASSWORD2 = "tgw"
 carrier5dead = false
 carrier6dead = false
@@ -42,8 +42,8 @@ dofile(lfs.writedir() .."pg\\scripts\\mist_4_5_98.lua")
 env.info("HypeMan")
 assert(loadfile("C:/HypeMan/HypeMan.lua"))() 
 function hm(msg)
-	HypeMan.sendBotMessage("**" .. Servername .. "** \n ".. msg)
-	env.info("hm - " .. msg )
+	HypeMan.sendBotMessage(string.format( "%1s:(%s)" , Servername,routines.utils.oneLineSerialize( msg ) ) )
+	env.info(string.format( "%1s:(%s)" , Servername,routines.utils.oneLineSerialize( msg ) ) )
 end
 
 hm("> Persia Aflame is Starting..... \n > MOOSE,MIST  Already Loaded, Initialising Load.. ")
@@ -143,7 +143,7 @@ hm("=============================================")
 
 function rlog(msg)
 	BASE:E(msg)
-	hm(string.format( "%1s:(%s)" , "Persia RLOG",routines.utils.oneLineSerialize( msg ) ) )
+	hm(msg)
 end
 
 function loggroups()

@@ -149,7 +149,7 @@ tunbslots:Start()
 
 -- Carriers
 
-Teddyslot = carrierslothandler:New("Teddy","Teddy"):Start()
+Teddyslot = carrierslothandler:New("TeddyR","Teddy"):Start()
 Washingtonslot = carrierslothandler:New("Washington","Washington"):Start()
 Forrestalslot = carrierslothandler:New("Forrestal","Forrestal"):Start()
 Kuznetsov = carrierslothandler:New("Kuznetsov","Kuznetsov"):Start()
