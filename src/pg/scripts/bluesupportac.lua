@@ -156,6 +156,7 @@ do
 SCHEDULER:New(nil,function()
 	checktankers()
 	checkawacs()
+	checkskyeye()
   end,{},60,1800)
 
 end
