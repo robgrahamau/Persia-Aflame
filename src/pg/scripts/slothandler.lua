@@ -53,9 +53,9 @@ function slothandler:New(airfield,_coalition,prefix)
   self.prefix = prefix
   self.currentcoalition = self.airfield:GetCoalition()
   self.redslots = SET_CLIENT:New():FilterCoalitions("red"):FilterPrefixes(prefix):FilterOnce()
-  self.redslots:ForEachClient(function(_client) BASE:E({self.name,"we have a R client",_client:GetName()}) end)
+  -- self.redslots:ForEachClient(function(_client) BASE:E({self.name,"we have a R client",_client:GetName()}) end)
   self.blueslots = SET_CLIENT:New():FilterCoalitions("blue"):FilterPrefixes(prefix):FilterOnce()
-  self.blueslots:ForEachClient(function(_client) BASE:E({self.name,"we have a B client",_client:GetName()}) end)
+  -- self.blueslots:ForEachClient(function(_client) BASE:E({self.name,"we have a B client",_client:GetName()}) end)
   BASE:E({"Slot Handler Initalised",airfield,prefix})
   return self
 end
@@ -247,17 +247,17 @@ function slothandler:SlotChange(_coalition)
     self.redslots:ForEachClient(function(_client)
 		local clientname = _client:GetName()
 		local groupname = _client:GetClientGroupName()
-		BASE:E({self.name,"cn",clientname,rflag,"gn",groupname})
+		BASE:T({self.name,"cn",clientname,rflag,"gn",groupname})
 		trigger.action.setUserFlag(clientname,rflag)
-		BASE:E({self.name,"cn",clientname,rflag,trigger.misc.getUserFlag(clientname)})
+		BASE:T({self.name,"cn",clientname,rflag,trigger.misc.getUserFlag(clientname)})
     end)
     
     -- blue slots
     self.blueslots:ForEachClient(function(_client)
     local clientname = _client:GetName()
-    BASE:E({self.name,"cn",clientname,bflag})
+    BASE:T({self.name,"cn",clientname,bflag})
     trigger.action.setUserFlag(clientname,bflag)
-    BASE:E({self.name,trigger.misc.getUserFlag(clientname)})
+    BASE:T({self.name,trigger.misc.getUserFlag(clientname)})
     end)
     -- ctld if active
     if self.ctld == true then
