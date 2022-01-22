@@ -30,11 +30,13 @@ ctldredheading = 180,
 ctldreddistance = 2000,
 ctldredcountry = 32,
 coord = nil,
-sanity = 60,
+sanity = 300,
 _routegroups = false,
 routedist = 5000,
 scheduler = nil,
 db = false,
+self.bluectld = nil,
+self.redctld=nil,
 }
 
 
@@ -118,9 +120,9 @@ end
 --- which can happen if say red units were destroyed at a base and no blue units were in it and that base was 
 --- traditionally blue.
 function slothandler:SanityChecker()
-  BASE:E({self.name,"Sanity Checker"})
+  BASE:T({self.name,"Sanity Checker"})
   local _coalition = self.airfield:GetCoalition()
-  BASE:E({_coalition,self.currentcoalition})
+  BASE:T({_coalition,self.currentcoalition})
   if self.currentcoalition ~= _coalition then
     -- run our slot stuff.
     self:SlotChange(_coalition)
@@ -210,11 +212,34 @@ function slothandler:SpawnCTLD(_coalition)
     local _unitID = ctld.getNextUnitId()
     local _name = "ctld Deployed FOB #" .. _unitID
     local _fob = nil
+	if _coalition == 1 then
+		if self.redctld:IsAlive() == true then
+			MESSAGE:New("CTLD Logistics building should still be alive, not respawning if it is not report on discord",30):ToRed()
+			hm("CTLD Logistics building should still be alive, not respawning if it is not report on discord")
+			return false
+		end
+	elseif _coalition == 2 
+		if self.bluectld:IsAlive() == true then
+			MESSAGE:New("CTLD Logistics building should still be alive, not respawning if it is not report on discord",30):ToBlue()
+			hm("CTLD Logistics building should still be alive, not respawning if it is not report on discord")
+			return false
+		end
+	elseif _coalition == 3 or _coalition == 0 then
+		hm("CTLD Logistics building not built coalition was 3 or 0")
+	end
+	
     _fob = ctld.spawnFOB(_ccount,211,vec3,_name)
     table.insert(ctld.logisticUnits, _fob:getName())
     if ctld.troopPickupAtFOB == true then
       table.insert(ctld.builtFOBS, _fob:getName())
     end
+	local _mstatic = STATIC:FindByName(_fob:getName())
+	if _coalition == 1 then
+		self.redctld = _mstatic
+	else
+		self.bluectld = _mstatic
+	end
+	hm("CTLD Logistics building built")
     return true
   end
   return false
@@ -299,7 +324,7 @@ function slothandler:BaseCaptured(EventData)
     --local _coalition = abitem:GetCoalition()
     
     local _coalition = self.airfield:GetCoalition()
-    BASE:T({_coalition,self.currentcoalition})
+    BASE:E({_coalition,self.currentcoalition})
     if self.currentcoalition ~= _coalition then
       -- run our slot stuff.
       self:SlotChange(_coalition)

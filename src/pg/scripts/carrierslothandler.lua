@@ -78,8 +78,8 @@ end
 --- which can happen if say red units were destroyed at a base and no blue units were in it and that base was 
 --- traditionally blue.
 function carrierslothandler:SanityChecker()
-  BASE:E({self.name,"Sanity Checker"})
-  BASE:E({self.carrier:IsAlive(),self.currentstate})
+  BASE:T({self.name,"Sanity Checker"})
+  BASE:T({self.carrier:IsAlive(),self.currentstate})
   if self.carrier:IsAlive() ~= self.currentstate then
     self:SlotChange()
   end
@@ -100,9 +100,9 @@ function carrierslothandler:SlotChange()
         flag = 100
         self.slots:ForEachClient(function(_client)
           local clientname = _client:GetName()
-          BASE:E({"cn",clientname,flag})
+          BASE:T({"cn",clientname,flag})
           trigger.action.setUserFlag(clientname,flag)
-          BASE:E({trigger.misc.getUserFlag(clientname)})
+          BASE:T({trigger.misc.getUserFlag(clientname)})
         end)
         if self.coalition == 1 then
           MESSAGE:New(_msg,30):ToRed()
@@ -112,9 +112,9 @@ function carrierslothandler:SlotChange()
       else
         self.slots:ForEachClient(function(_client)
           local clientname = _client:GetName()
-          BASE:E({"cn",clientname,flag})
+          BASE:T({"cn",clientname,flag})
           trigger.action.setUserFlag(clientname,flag)
-          BASE:E({trigger.misc.getUserFlag(clientname)})
+          BASE:T({trigger.misc.getUserFlag(clientname)})
         end)
          _msg = "Carrier " .. self.name .. " is on station, slots unlocked"
          if self.coalition == 1 then
