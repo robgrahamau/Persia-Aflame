@@ -50,7 +50,7 @@ function hevent:OnEventLandingQualityMark(EventData)
 end
 
 function hevent:handlehelp(coalition)
-	local msgtext = "Map Command Help Requested. The Following are valid commands for markers any with a - at the start require you to delete the marker. \n -help (this command) \n -smokered,-smokegreen,-smokeblue (Spawn a random smoke near the location) \n -flare (fire flares from the location) \n -weather (request a GRIBS weather report from the location of the marker) \n -tanker (more information soon) \n arty (arty command valid methods include: arty engage,battery \"<name>\",shots #,type gun/missile or arty request, battery <name>,ammo \n valid Battery Names are: Carrier Group 5, Carrier Group 6, Carrier Group 6a & Red Alias \"Kuz\" (replace battery with Alias). \n%d"
+	local msgtext = "Map Command Help Requested. The Following are valid commands for markers any with a - at the start require you to delete the marker. \n -help (this command) \n -smoke,red or -smoke,green or -smoke,blue or -smoke,white (Spawn a random smoke near the location) \n -flare (fire flares from the location) \n -weather (request a GRIBS weather report from the location of the marker) \n -tanker (more information soon) \n arty (arty command valid methods include: arty engage,battery \"<name>\",shots #,type gun/missile or arty request, battery <name>,ammo \n valid Battery Names are: Carrier Group 5, Carrier Group 6, Carrier Group 6a & Red Alias \"Kuz\" (replace battery with Alias). \n%d"
 	if coalition == 1 then
 		MESSAGE:New(msgtext,15):ToRed()
 	else
@@ -171,18 +171,37 @@ function hevent:OnEventMarkRemoved(EventData)
 				local nc = coord:GetRandomCoordinateInRadius(100,50)
 				nc:SmokeRed()
 			else
-				local nc = coord:GetRandomCoordinateInRadius(200,100)
-				nc:SmokeRed()
+				-- nc:SmokeRed()
+				MESSAGE:New("Please use -smoke,red",15):ToAll()
 			end
         elseif EventData.text:lower():find("-smokeblue") then
-          local nc = coord:GetRandomCoordinateInRadius(500,100)
-		  nc:SmokeBlue()
+          if admin == true then
+			local nc = coord:GetRandomCoordinateInRadius(500,100)
+			nc:SmokeBlue()
+		  else
+			MESSAGE:New("Please use -smoke,blue",15):ToAll()
+		  end
         elseif EventData.text:lower():find("-smokegreen") then
-          local nc = coord:GetRandomCoordinateInRadius(500,100)
-		  nc:SmokeGreen()
+			if admin == true then
+				local nc = coord:GetRandomCoordinateInRadius(500,100)
+				nc:SmokeGreen()
+			else
+				MESSAGE:New("Please use -smoke,green",15):ToAll()
+			end
         elseif EventData.text:lower():find("-smokeorange") then
-          local nc = coord:GetRandomCoordinateInRadius(500,100)
-		  nc:SmokeOrange()
+          if admin == true then
+			local nc = coord:GetRandomCoordinateInRadius(500,100)
+			nc:SmokeOrange()
+		  else
+			MESSAGE:New("please use -smoke,orange",15):ToAll()
+		  end
+		elseif EventData.text:lower():find("-smokewhite") then
+          if admin == true then
+			local nc = coord:GetRandomCoordinateInRadius(500,100)
+			nc:SmokeWhite()
+		  else
+			MESSAGE:New("please use -smoke,white",15):ToAll()
+		  end
         elseif EventData.text:lower():find("-smoke") then
           self:handleSmoke(text,coord,coalition)
 		elseif EventData.text:lower():find("-groupcheck") then
@@ -292,38 +311,60 @@ function hevent:OnEventMarkRemoved(EventData)
     end
 end
 
-function hevent:handleSmoke(text,coord,col)
+function hevent:handleSmoke(text,_coord,col)
   local keywords=UTILS.Split(text, ",")
   BASE:E({keywords})
-  local keyphrase = keywords[2]
-  if col == nil then
-	col = 2
-	hm("***WARNING ERROR HAPPENED IN SMOKE COL WAS NIL**")
-  elseif col ~= 1 then
-	col = 2
+  local	keyphase= "white"
+  if keywords[2] ~= nil then
+	keyphrase = keywords[2]
   end
+  local _col = 2 
+  local _side = "blue"
+  if col == 1 then
+    _col = 1
+    _side = "red"
+  end
+  local _dist = 10000
+  local _inrange = false
+  local gunits = SET_GROUP:New():FilterCategoryGround():FilterCoalitions(_side):FilterActive(true):FilterOnce()
+  gunits:ForEach(function(g)  
+    if g:IsAlive() == true then
+      local groupname = g:GetName()
+      local _group = GROUP:FindByName(groupname)
+      local gc = _group:GetCoordinate()
+      if gc == nil then
+        BASE:E({"Could not get Coord for group:",g:GetName(),g:GetCoordinate(),gc})
+      else
+        local d = gc:Get2DDistance(_coord)
+        if d < _dist then
+          _inrange = true
+        end
+      end
+    end
+  end)
+    
+    
   hm("Firehawk, this is breaker Nine nine requesting smoke at the following coordinates.")
-  local tz = ZONE_RADIUS:New("tz",COORDINATE.GetVec2(coord),20000)
-  if tz:IsSomeInZoneOfCoalition(col) then
+  if _inrange then
     if keyphrase:lower():find("red") then
-      local nc = coord:GetRandomCoordinateInRadius(500,100)
-		nc:SmokeRed() 
+      local nc = _coord:GetRandomCoordinateInRadius(500,100)
+    nc:SmokeRed() 
       return           
     elseif keyphrase:lower():find("blue") then
-      local nc = coord:GetRandomCoordinateInRadius(500,100)
-		  nc:SmokeBlue()
+      local nc = _coord:GetRandomCoordinateInRadius(500,100)
+      nc:SmokeBlue()
       return
     elseif keyphrase:lower():find("green") then
-      local nc = coord:GetRandomCoordinateInRadius(500,100)
-		  nc:SmokeGreen()
+      local nc = _coord:GetRandomCoordinateInRadius(500,100)
+      nc:SmokeGreen()
       return
     elseif keyphrase:lower():find("orange") then
-      local nc = coord:GetRandomCoordinateInRadius(500,100)
-		  nc:SmokeOrange()
+      local nc = _coord:GetRandomCoordinateInRadius(500,100)
+      nc:SmokeOrange()
       return
     else
-      local nc = coord:GetRandomCoordinateInRadius(500,100)
-		  nc:SmokeWhite()
+      local nc = _coord:GetRandomCoordinateInRadius(500,100)
+      nc:SmokeWhite()
       return
     end
   else

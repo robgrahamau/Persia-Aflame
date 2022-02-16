@@ -18,7 +18,7 @@ name = nil,
 carrier = nil,
 prefix = nil,
 currentcoalition = 2,
-sanity = 60,
+sanity = 600,
 scheduler = nil,
 currentstate = nil,
 }
@@ -100,9 +100,9 @@ function carrierslothandler:SlotChange()
         flag = 100
         self.slots:ForEachClient(function(_client)
           local clientname = _client:GetName()
-          BASE:T({"cn",clientname,flag})
+          BASE:E({"cn",clientname,flag})
           trigger.action.setUserFlag(clientname,flag)
-          BASE:T({trigger.misc.getUserFlag(clientname)})
+          BASE:E({trigger.misc.getUserFlag(clientname)})
         end)
         if self.coalition == 1 then
           MESSAGE:New(_msg,30):ToRed()
@@ -112,9 +112,9 @@ function carrierslothandler:SlotChange()
       else
         self.slots:ForEachClient(function(_client)
           local clientname = _client:GetName()
-          BASE:T({"cn",clientname,flag})
+          BASE:E({"cn",clientname,flag})
           trigger.action.setUserFlag(clientname,flag)
-          BASE:T({trigger.misc.getUserFlag(clientname)})
+          BASE:E({trigger.misc.getUserFlag(clientname)})
         end)
          _msg = "Carrier " .. self.name .. " is on station, slots unlocked"
          if self.coalition == 1 then

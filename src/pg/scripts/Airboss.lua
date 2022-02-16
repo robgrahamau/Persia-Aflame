@@ -93,7 +93,7 @@ if abossactive == true then
 	AirbossWash:SetEmergencyLandings(true)
 	AirbossWash:SetPatrolAdInfinitum(true)
 	AirbossWash:SetMPWireCorrection(12)
-	AirbossWash:setdisplaymessage(false)
+	--AirbossWash:setdisplaymessage(false)
 	if washingtonactive == true then
 		AirbossWash:Start()
 		hm("Washington Airboss has been activated. \n > LSO is Now online on 118.45, Marshall 306 \n > TACAN 25x > ICLS 5 > RECOVERY PERIOD: 30 Minutes > Recovery Speed: 25 Knots")
@@ -133,7 +133,7 @@ if abossactive == true then
 	AirbossTeddy:SetEmergencyLandings(true)
 	AirbossTeddy:SetWelcomePlayers(false)
 	AirbossTeddy:SetMPWireCorrection(12)
-	AirbossTeddy:setdisplaymessage(false)
+	--AirbossTeddy:setdisplaymessage(false)
 	function AirbossTeddy:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
 		myGrade.messageType = 2
 		myGrade.name = playerData.name
@@ -177,7 +177,7 @@ if abossactive == true then
 	AirbossForest:SetEmergencyLandings(true)
 	AirbossForest:SetWelcomePlayers(false)
 	AirbossForest:SetMPWireCorrection(12)
-	AirbossForest:setdisplaymessage(false)
+	--AirbossForest:setdisplaymessage(false)
 	
 	function AirbossForest:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
 		myGrade.messageType = 2

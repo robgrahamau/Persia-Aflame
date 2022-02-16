@@ -35,8 +35,8 @@ _routegroups = false,
 routedist = 5000,
 scheduler = nil,
 db = false,
-self.bluectld = nil,
-self.redctld=nil,
+bluectld = nil,
+redctld = nil,
 }
 
 
@@ -53,7 +53,7 @@ function slothandler:New(airfield,_coalition,prefix)
   self.coord = self.airfield:GetCoordinate()
   self.defaultcoalition = _coalition
   self.prefix = prefix
-  self.currentcoalition = self.airfield:GetCoalition()
+  self.currentcoalition = 0
   self.redslots = SET_CLIENT:New():FilterCoalitions("red"):FilterPrefixes(prefix):FilterOnce()
   -- self.redslots:ForEachClient(function(_client) BASE:E({self.name,"we have a R client",_client:GetName()}) end)
   self.blueslots = SET_CLIENT:New():FilterCoalitions("blue"):FilterPrefixes(prefix):FilterOnce()
@@ -122,9 +122,10 @@ end
 function slothandler:SanityChecker()
   BASE:T({self.name,"Sanity Checker"})
   local _coalition = self.airfield:GetCoalition()
-  BASE:T({_coalition,self.currentcoalition})
+  
   if self.currentcoalition ~= _coalition then
     -- run our slot stuff.
+	BASE:E({"Sanity checker",self.name,_coalition,self.currentcoalition})
     self:SlotChange(_coalition)
   end
 end
@@ -212,22 +213,27 @@ function slothandler:SpawnCTLD(_coalition)
     local _unitID = ctld.getNextUnitId()
     local _name = "ctld Deployed FOB #" .. _unitID
     local _fob = nil
+	--[[
 	if _coalition == 1 then
-		if self.redctld:IsAlive() == true then
-			MESSAGE:New("CTLD Logistics building should still be alive, not respawning if it is not report on discord",30):ToRed()
-			hm("CTLD Logistics building should still be alive, not respawning if it is not report on discord")
+		if self.redctld ~= nil then
+			if self.redctld:IsAlive() == true then
+				--MESSAGE:New("CTLD Logistics building should still be alive, not respawning if it is not report on discord",30):ToRed()
+				hm("CTLD Logistics building should still be alive, not respawning")
 			return false
+			end
 		end
-	elseif _coalition == 2 
-		if self.bluectld:IsAlive() == true then
-			MESSAGE:New("CTLD Logistics building should still be alive, not respawning if it is not report on discord",30):ToBlue()
-			hm("CTLD Logistics building should still be alive, not respawning if it is not report on discord")
-			return false
+	elseif _coalition == 2 then 
+		if self.bluectld ~= nil then
+			if self.bluectld:IsAlive() == true then
+				--MESSAGE:New("CTLD Logistics building should still be alive, not respawning if it is not report on discord",30):ToBlue()
+				hm("CTLD Logistics building should still be alive, not respawning")
+				return false
+			end
 		end
 	elseif _coalition == 3 or _coalition == 0 then
 		hm("CTLD Logistics building not built coalition was 3 or 0")
 	end
-	
+	]]
     _fob = ctld.spawnFOB(_ccount,211,vec3,_name)
     table.insert(ctld.logisticUnits, _fob:getName())
     if ctld.troopPickupAtFOB == true then
@@ -251,6 +257,8 @@ end
 function slothandler:SlotChange(_coalition)
     -- we need to run through the client slots and set them to be active for red and deactive for blue
     BASE:E({"self.name","Slothandler","Slot Change",_coalition})
+	-- lets do another sanity check just incase
+	if self.currentcoalition ~= _coalition then
     local bflag = 0
     local rflag = 0
      bmsg = "Airfield " .. self.name .. " was captured, slots open"
@@ -300,6 +308,9 @@ function slothandler:SlotChange(_coalition)
     MESSAGE:New(bmsg,30):ToBlue()
     MESSAGE:New(rmsg,30):ToRed()
     self.currentcoalition = _coalition
+	else
+		BASE:E({self.name,"Slot change, self.currentcoalition and _coalition matched!",self.currentcoalition,_coalition})
+	end
     return self
 end
 --- Allows for user event handling.

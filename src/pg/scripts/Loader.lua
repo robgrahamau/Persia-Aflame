@@ -1,9 +1,9 @@
 -- Globals are important.
-version = "1.80.0"
-Servername = "Persia Testing"
+version = "1.83.0"
+Servername = "Persia Aflame"
 lastupdate = "21/01/2022"
-password = "testing123"
-ADMINPASSWORD2 = "tgw"
+password = "testing"
+ADMINPASSWORD2 = "testing"
 carrier5dead = false
 carrier6dead = false
 carrier6adead = false
@@ -17,8 +17,9 @@ _maxislandmainlandspawns = 24
 trigger.action.setUserFlag(100,0) -- don't know why this is set.. but being safe.
 _spawnnumber = 0
 trigger.action.setUserFlag("SSB",100) -- Set SSB active.
-activearea = "• UAE Mainland, No Push beyond the UAE is allowed at this time. \n ROE Notice:\n • Reduce Civilian Damage \n • CBU Class weapons are to be limited to open field employment or restricted use in Towns/cities only if unable to find/kill with other weapons \n • CBU use prohibited on large cities."
-activeareairan = "• Harasment of Coalition Forces \n • Defence of Irani Mainland and Islands. \n • Retaking of Lost Territory"
+activearea = "• UAE Mainland & Island AO & Qeshm, No Push beyond these Areas is allowed at this time. \n ROE Notice:\n • Reduce Civilian Damage \n • CBU Class weapons are to be limited to open field employment or restricted use in Towns/cities only if unable to find/kill with other weapons \n • CBU use prohibited on large cities."
+activeareairan = "• Harasment of Coalition Forces \n • Defence of held territory \n • Defence of Irani Mainland and Islands. \n • Retaking of Lost Territory"
+_loaded = false
 
 TANKER_COOLDOWN = (1)*60
 TEX_Timer = 0
@@ -38,7 +39,13 @@ env.info("Loading MOOSE")
 dofile(lfs.writedir() .."pg\\scripts\\Moose.lua")
 env.info("Loading MIST")
 dofile(lfs.writedir() .."pg\\scripts\\mist_4_5_98.lua")
-
+_lsch = SCHEDULER:New(nil,function() 
+	BASE:E({"_lsch"})
+	if _loaded == false then
+		env.info("Mission Failed to load")
+		MESSAGE:New("Mission Has not loaded correctly!!! Please Contact an ADMIN / Rob on DISCORD",30):ToAll()
+	end
+end,{},60,60)
 env.info("HypeMan")
 assert(loadfile("C:/HypeMan/HypeMan.lua"))() 
 function hm(msg)
@@ -140,6 +147,12 @@ dofile(lfs.writedir() .. [[pg\robcommands.lua]])
 lasthash = inputhash
 hm("> Persia Falme: ALL SCRIPTS LOADED, INTERNATIONAL WAR CRIMES ... I MEAN PERSIAN GULF AFLAME SERVER IS NOW ONLINE AND RUNNING \n PLEASE HAVE A PLEASENT AND PRODUCTIVE 8 HRS.")
 hm("=============================================")
+_loaded = true
+
+if _loaded == true then
+	_lsch:Stop()
+end
+
 
 function rlog(msg)
 	BASE:E(msg)
@@ -180,8 +193,9 @@ end
 SCHEDULER:New(nil,loggroups
 ,{},0,(60*60))
 
-SCHEDULER:New(nil,function() 
-	dofile(lfs.writedir() .. [[pg\robcommands.lua]])
+function runrob()
+dofile(lfs.writedir() .. [[pg\robcommands.lua]])
+
 	if inputhash ~= lasthash then
 		BASE:E("Hash has changed")
 		local ran, errorMSG = pcall(robinput)
@@ -190,4 +204,14 @@ SCHEDULER:New(nil,function()
 		end
 		lasthash = inputhash
 	end
+
+end
+
+
+SCHEDULER:New(nil,function() 
+	local ran, errorMSG = pcall(runrob)
+	if not ran then
+		BASE:E({"error in runrobo ",errorMSG})
+	end
+	
 end,{},0,5)

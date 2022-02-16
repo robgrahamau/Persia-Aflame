@@ -4,6 +4,8 @@ defaultlogisticUnits = {
 	"Peleliu",
     "Nassau",
 	"Saipan",
+	"Tawaractld",
+	"Saipanctld",
 }
 
 
@@ -131,15 +133,15 @@ if resetall == 0 then
 		ctld.jtacUnits = {}
 	end
     if ctldsave[7] ~= nil then
-		ctld.builtFOBS = ctldsave[7]
+		--ctld.builtFOBS = ctldsave[7]
 	else
-		ctld.builtFOBS = {}
+		--ctld.builtFOBS = {}
 	end
 	if ctldsave[8] ~= nil then
-		ctld.logisticUnits = ctldsave[8]
+		--ctld.logisticUnits = ctldsave[8]
 	else
-		BASE:E({"WARNING CTLD SAVE TABLE 8 WAS EMPTY!!!! GENERATING FROM DEFAULT VALUES"})
-		ctld.logisticUnits = defaultlogisticUnits
+		--BASE:E({"WARNING CTLD SAVE TABLE 8 WAS EMPTY!!!! GENERATING FROM DEFAULT VALUES"})
+		--ctld.logisticUnits = defaultlogisticUnits
     end
 	if ctldsave[9] ~= nil then
 		ctld.extractableGroups = ctldsave[9]
