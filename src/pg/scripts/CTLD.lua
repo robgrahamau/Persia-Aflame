@@ -299,8 +299,8 @@ ctld.unitActions = {
 	 ["SA342Mistral"] = {crates=true, troops=true},
      ["SA342L"] = {crates=false, troops=true},
      ["SA342M"] = {crates=false, troops=true},
-     ["Ka-50"] = {crates = true, troops=false}
-
+     ["Ka-50"] = {crates = true, troops=false},
+	 ["AH-64D_BLK_II"] = {creates=false, troops=false}
 }
 
 -- ************** WEIGHT CALCULATIONS FOR INFANTRY GROUPS ******************
