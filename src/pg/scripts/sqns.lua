@@ -36,7 +36,7 @@ timer = 0,
 -- @param sqnamount total sqn size
 -- @param flightsize how many units in a flight
 -- @param sqntime how often to check.
-function sqn:New(sqnname,sqnunit,sqncleanup,sqnamount,flightsize,sqntime,airbase)
+function sqn:New(sqnname,sqnunit,sqncleanup,sqnamount,flightsize,sqntime,airbase,_spawntype)
   local self = BASE:Inherit(self,BASE:New())
   self.sqnname = sqnname
   self.sqnunit = sqnunit
@@ -50,6 +50,7 @@ function sqn:New(sqnname,sqnunit,sqncleanup,sqnamount,flightsize,sqntime,airbase
   self.sqncleanup = sqncleanup
   self.sqntime = sqntime
   self.flightsize = flightsize
+  self.spawntype = _spawntype
   self.srunning = false
   return self
 end
@@ -61,7 +62,7 @@ function sqn:Spawn()
 	if self.sqncol == col then
 		self.sqnspawner = SPAWN:NewWithAlias(self.sqnunit,self.sqnname)
 			:InitCleanUp(self.sqncleanup)
-			:InitAirbase(self.airbase,SPAWN.Takeoff.Air)
+			:InitAirbase(self.airbase,self.spawntype)
 			:InitGrouping(self.flightsize)
 			:InitRepeatOnLanding()
 			:OnSpawnGroup(function(spawngroup) 

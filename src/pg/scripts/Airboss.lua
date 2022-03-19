@@ -132,7 +132,7 @@ if abossactive == true then
 	AirbossTeddy:SetRecoveryTurnTime(60)
 	AirbossTeddy:SetEmergencyLandings(true)
 	AirbossTeddy:SetWelcomePlayers(false)
-	AirbossTeddy:SetMPWireCorrection(12)
+	AirbossTeddy:SetMPWireCorrection(6)
 	--AirbossTeddy:setdisplaymessage(false)
 	function AirbossTeddy:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
 		myGrade.messageType = 2

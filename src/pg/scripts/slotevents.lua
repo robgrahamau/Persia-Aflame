@@ -42,7 +42,7 @@ function bluekishcap()
   local ab  = AIRBASE:FindByName(AIRBASE.PersianGulf.Kish_International_Airport)
   if ab:GetCoalition() == 2 then
     if _USKISH == nil then
-      usqkish:Spawn()
+      uskish:Spawn()
     else
       if (_USKISH:IsAlive() ~= true or _USKISH:AllOnGround() == true) and (uskishcount < uskishtotal) then
         _USKISH:Destroy()

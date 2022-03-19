@@ -212,14 +212,14 @@ function fob:OnEventBaseCaptured(EventData)
       self:FlipBlue()
       local col = "Coalition" 
       local co = self.fobunit:GetCoordinate()
-      self:routegroups(_coord,15000,"red")
+      self:routegroups(_coord,30000,"red")
     end
   elseif coalition == 1 and self.coalition ~= 1 then
     if self:IsBlue() == true then
       self:FlipRed()
       local col = "Coalition"
       local co = self.fobunit:GetCoordinate()
-      self:routegroups(_coord,15000,"blue")
+      self:routegroups(_coord,30000,"blue")
     end
   end
  end

@@ -1,9 +1,9 @@
 -- Globals are important.
-version = "1.83.0"
+version = "1.82.0"
 Servername = "Persia Aflame"
 lastupdate = "21/01/2022"
-password = "testing"
-ADMINPASSWORD2 = "testing"
+password = "lalalalallalala"
+ADMINPASSWORD2 = "lalalalla"
 carrier5dead = false
 carrier6dead = false
 carrier6adead = false
@@ -17,7 +17,7 @@ _maxislandmainlandspawns = 24
 trigger.action.setUserFlag(100,0) -- don't know why this is set.. but being safe.
 _spawnnumber = 0
 trigger.action.setUserFlag("SSB",100) -- Set SSB active.
-activearea = "• UAE Mainland & Island AO & Qeshm, No Push beyond these Areas is allowed at this time. \n ROE Notice:\n • Reduce Civilian Damage \n • CBU Class weapons are to be limited to open field employment or restricted use in Towns/cities only if unable to find/kill with other weapons \n • CBU use prohibited on large cities."
+activearea = "•Qeshm \n • Kish \n • Grid Squares: BQ,YK, \n No Push beyond these Areas is allowed at this time. \n ROE Notice:\n • Reduce Civilian Damage \n • CBU Class weapons are to be limited to open field employment."
 activeareairan = "• Harasment of Coalition Forces \n • Defence of held territory \n • Defence of Irani Mainland and Islands. \n • Retaking of Lost Territory"
 _loaded = false
 

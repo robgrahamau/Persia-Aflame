@@ -122,7 +122,7 @@ musaslots:Start()
 qeshmslots = slothandler:New(AIRBASE.PersianGulf.Qeshm_Island,1,"Qeshm")
 qeshmslots:SetRedCTLD(320,900,true,country.id.CJTF_RED)
 qeshmslots:SetBlueCTLD(330,1100,true,country.id.CJTF_BLUE)
-qeshmslots:setroutegroups(true,15000)
+qeshmslots:setroutegroups(true,35000)
 qeshmslots:ActivateCTLD()
 qeshmslots:Start()
 
