@@ -20,8 +20,8 @@ i30th_2 = sqn:New("30th Squadron CAP 3","IRAF30th-2",300,math.random(2,12),2,(60
 i25th = sqn:New("25th Squadron CAP 1","IRAF25TH",300,math.random(2,12),2,(60*15),AIRBASE.PersianGulf.Shiraz_International_Airport,SPAWN.Takeoff.Air)
 i25th_1 = sqn:New("25th Squadron CAP 2","IRAF25TH-1",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Shiraz_International_Airport,SPAWN.Takeoff.Air)
 i25th_2 = sqn:New("25th Squadron CAP 3","IRAF25TH-1",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Shiraz_International_Airport,SPAWN.Takeoff.Air)
-i26th = sqn:New("26th Squadron CAP 1","IRAF26TH",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Shiraz_International_Airport,SPAWN.Takeoff.Air)
-i26th_1 = sqn:New("26th Squadron CAP 4","IRAF26TH",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Shiraz_International_Airport,SPAWN.Takeoff.Air)
+i26th = sqn:New("26th Squadron CAP 1","IRAF25TH-1",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Shiraz_International_Airport,SPAWN.Takeoff.Air)
+i26th_1 = sqn:New("26th Squadron CAP 4","IRAF30th-1",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Shiraz_International_Airport,SPAWN.Takeoff.Air)
 
 --kerman
 i01st = sqn:New("1st Squadron CAP 1","IRAF01",300,math.random(2,12),2,(60*15),AIRBASE.PersianGulf.Kerman_Airport,SPAWN.Takeoff.Air)
@@ -30,16 +30,16 @@ i03rd = sqn:New("3rd Squadron CAP 1","IRAF03",300,math.random(2,12),2,(60*35),AI
 i03rd_1 = sqn:New("3rd Squadron CAP 2","IRAF03",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Kerman_Airport,SPAWN.Takeoff.Air)
 
 --bandar
-i31st = sqn:New("31st Squadron CAP 1","IRAF31th",300,math.random(2,12),2,(60*15),AIRBASE.PersianGulf.Bandar_Abbas_Intl,SPAWN.Takeoff.Air)
-i32nd = sqn:New("32nd Squadron CAP 1","IRAF32nd",300,math.random(2,12),2,(60*25),AIRBASE.PersianGulf.Bandar_Abbas_Intl,SPAWN.Takeoff.Air)
-i32nd_2 = sqn:New("32nd Squadron CAP 2","IRAF32nd",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Bandar_Abbas_Intl,SPAWN.Takeoff.Air)
-i33rd = sqn:New("33rd Squadron CAP 1","IRAF33rd",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Bandar_Abbas_Intl,SPAWN.Takeoff.Air)
-i33rd_2 = sqn:New("33rd Alert2","IRAF33rd",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Bandar_Abbas_Intl,SPAWN.Takeoff.Air)
+i31st = sqn:New("31st Squadron CAP 1","IRAF31th",300,math.random(2,12),2,(60*15),AIRBASE.PersianGulf.Bandar_Abbas_Intl,SPAWN.Takeoff.Hot)
+i32nd = sqn:New("32nd Squadron CAP 1","IRAF32nd",300,math.random(2,12),2,(60*25),AIRBASE.PersianGulf.Bandar_Abbas_Intl,SPAWN.Takeoff.Hot)
+i32nd_2 = sqn:New("32nd Squadron CAP 2","IRAF32nd",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Bandar_Abbas_Intl,SPAWN.Takeoff.Hot)
+i33rd = sqn:New("33rd Squadron CAP 1","IRAF33rd",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Bandar_Abbas_Intl,SPAWN.Takeoff.Hot)
+i33rd_2 = sqn:New("33rd Alert2","IRAF33rd",300,math.random(2,12),2,(60*45),AIRBASE.PersianGulf.Bandar_Abbas_Intl,SPAWN.Takeoff.Hot)
 i33rd_2 = intercept:New("33rd Alert2","IRAF33rd",300,6,2,(60*2),ZONE:New("BAI"))
 
 i91st_2 = sqn:New("91st Squadron CAP 2","IRAF91",300,math.random(2,12),2,(60*35),AIRBASE.PersianGulf.Lar_Airbase,SPAWN.Takeoff.Air)
 --hav
-i33rd_1 = sqn:New("33rd Alert Hav","IRAF33rd-1",300,math.random(0,6),2,(60*35),AIRBASE.PersianGulf.Havadarya,SPAWN.Takeoff.Air)
+i33rd_1 = sqn:New("33rd Alert Hav","IRAF33rd-1",300,math.random(0,6),2,(60*35),AIRBASE.PersianGulf.Havadarya,SPAWN.Takeoff.Hot)
 --intercept:New("33rd Alert","IRAF33rd-1",300,6,2,(60*2),ZONE:New("BAI-1"))
 
 --kish

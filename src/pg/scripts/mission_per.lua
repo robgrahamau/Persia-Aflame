@@ -23,6 +23,7 @@ cg5alife = 0
 kovgroup = GROUP:FindByName("Kuznetsov Group")
 chinagroup = GROUP:FindByName("China_fleet1")
 cg5 = GROUP:FindByName("Carrier Group 5")
+cg5a = GROUP:FindByName("Carrier Group 5a")
 cg6 = GROUP:FindByName("Carrier Group 6")
 cg6a= GROUP:FindByName("Carrier Group 7")
 local SaveSchedulePersistence=300 
@@ -98,6 +99,7 @@ mainmission = {
   ['shipgroup2'] = true,
   ['shipgroup3'] = true,
   ['carrier5dead'] = false,
+  ['carrier5adead'] = false,
   ['carrier6dead'] = false,
   ['carrier6adead'] = false,
   ['chinafleetdead'] = true,
@@ -278,7 +280,9 @@ function loadvalues()
 	else
 		chinagroup = GROUP:FindByName("China_fleet1")
 	end
-	
+	if mainmission.carrier5adead == nil then
+		mainmission.carrier5adead = true
+	end
 	if mainmission.carrier5dead == nil then
 		mainmission.carrier5dead = false
 		mainmission.carrier6dead = false
@@ -313,6 +317,31 @@ function loadvalues()
 		carrier5arty:Start()
 	end
 	
+	if mainmission.carrier5adead == true then
+		BASE:E({"CG5a dead is true"})
+		cg5a = GROUP:FindByName("Carrier Group 5a")
+		cg5a:Destroy()
+		hm("** WARNING CARRIER GROUP 5a USS FORESTALL WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
+		ShellForest:Stop()
+		if abossactive == true then
+			AirbossForest:Stop()
+		end
+	else
+		cg5a = GROUP:FindByName("Carrier Group 5a")
+		cg5alife = cg5a:GetLife()
+		carrier5aarty=ARTY:New(GROUP:FindByName("Carrier Group 5a","CG5a"))
+		carrier5aarty:SetShellTypes({"MK45_127"})
+		carrier5aarty:SetMissileTypes({"BGM"})
+		carrier5aarty:SetAlias("CG5")
+		carrier5aarty:SetMarkAssignmentsOn()
+		carrier5aarty:SetSmokeShells(20,SMOKECOLOR.Blue)
+		carrier5aarty:SetSmokeShells(20,SMOKECOLOR.Red)
+		carrier5aarty:SetSmokeShells(20,SMOKECOLOR.Orange)
+		carrier5aarty:SetSmokeShells(20,SMOKECOLOR.White)
+		carrier5aarty:SetIlluminationShells(20,1)
+		carrier5aarty:Start()
+	end
+
 	if mainmission.carrier6dead == true then
 		cg6 = GROUP:FindByName("Carrier Group 6")
 		cg6:Destroy()
@@ -514,6 +543,34 @@ function CheckCarriers()
 				carrier5arty:SetIlluminationShells(20,1)
 				carrier5arty:Start()
 				BASE:E({"Teddy Should be respawned"})
+			end
+		end
+		if mainmission.carrier5adead == true then
+			local r = math.random(1,100)
+			if r > 75 then
+				BASE:E({"r was higher then 75 for Teddy"})
+				mainmission.carrier5adead = false
+				MESSAGE:New("Command reports a repaired the Forestall has returned to the AO",15):ToBlue()
+				hm("** US COALITION COMMAND REPORTS A REPAIRED Forestall HAS RETURNED TO THE AO**")
+				cg5a:OnReSpawn(function(group) 
+					ShellForest:Start()
+					cg5alife = cg5a:GetLife()
+				end)
+				cg5a:Respawn()
+				if carrier5aarty ~= nil then
+					carrier5aarty:Stop()
+				end
+				carrier5aarty=ARTY:New(GROUP:FindByName("Carrier Group 5a","CG5a"))
+				carrier5aarty:SetShellTypes({"MK45_127"})
+				carrier5aarty:SetMissileTypes({"BGM"})
+				carrier5aarty:SetMarkAssignmentsOn()
+				carrier5aarty:SetSmokeShells(20,SMOKECOLOR.Blue)
+				carrier5aarty:SetSmokeShells(20,SMOKECOLOR.Red)
+				carrier5aarty:SetSmokeShells(20,SMOKECOLOR.Orange)
+				carrier5aarty:SetSmokeShells(20,SMOKECOLOR.White)
+				carrier5aarty:SetIlluminationShells(20,1)
+				carrier5aarty:Start()
+				BASE:E({"Forestall Should be respawned"})
 			end
 		end
 		if mainmission.chinafleetdead == true then
@@ -752,6 +809,12 @@ function updatevalues()
 			mainmission.carrier5dead = true
 		end
 	end
+	if mainmission.carrier5adead == false then
+		cg5a = GROUP:FindByName("Carrier Group 5a")
+		if cg5a:IsAlive() ~= true then
+			mainmission.carrier5adead = true
+		end
+	end
 	if mainmission.chinafleetdead == false then
 		if chinagroup:IsAlive() ~= true then
 			mainmission.chinafleetdead = true
@@ -794,6 +857,13 @@ SCHEDULER:New(nil,function()
 			MESSAGE:New("Warning Carrier Group 5 (TEDDY) has been damaged in the last 5 minutes",15):ToBlue()
 			hm("**US: Warning Teddy Group has been damaged in the last 5 minutes")
 			cg5life = cg5:GetLife()
+		end
+	end
+	if cg5a:IsAlive() == true then
+		if cg5alife ~= cg5a:GetLife() then
+			MESSAGE:New("Warning Carrier Group 5a (Forestall) has been damaged in the last 5 minutes",15):ToBlue()
+			hm("**US: Warning Forestall Group has been damaged in the last 5 minutes")
+			cg5alife = cg5a:GetLife()
 		end
 	end
 	if cg6:IsAlive() == true then

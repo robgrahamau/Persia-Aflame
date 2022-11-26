@@ -199,7 +199,7 @@ for i = 1, size do
   if grp:GetUnit(i):IsAlive() == true then
   local skill = "Average"
   skillr = math.random(1,5)
-	if skillr == 2 or skillr == 5 then
+	if skillr == 4 then
 		skill = "Excellent"
 	end
 	local _h = UTILS.ToRadian(grp:GetUnit(i):GetHeading())

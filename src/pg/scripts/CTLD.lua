@@ -71,10 +71,10 @@ ctld.vehiclesWeight = {
 
 ctld.aaLaunchers = 2 -- controls how many launchers to add to the kub/buk when its spawned.
 ctld.hawkLaunchers = 4 -- controls how many launchers to add to the hawk when its spawned.
-ctld.sa10Launchers = 2
-ctld.patlaunchers = 2
+ctld.sa10Launchers = 3
+ctld.patlaunchers = 3
 ctld.buklaunchers = 2
-ctld.rolandlaunchers = 3
+ctld.rolandlaunchers = 2
 ctld.hq7 = 2
 ctld.nasamlaunchers = 2
 
@@ -249,6 +249,8 @@ ctld.logisticUnits = {
 	"Saipan",
 	"Tawaractld",
 	"Saipanctld",
+	"Peleliu_ctld",
+	"Nassau_ctld",
 }
 
 -- ************** UNITS ABLE TO TRANSPORT VEHICLES ******************
@@ -278,6 +280,7 @@ ctld.unitLoadLimits = {
      ["SA342M"] = 4,
 	 ["Mi-8MT"] = 16,
 	 ["Mi-24P"] = 8,
+	 ["UH-60L"] = 14,
 }
 
 
@@ -367,18 +370,24 @@ ctld.spawnableCrates = {
         { weight = 817, desc = "BRDM-2", unit = "BRDM-2", side = 1 },
         { weight = 804, desc = "HMMWV - JTAC", unit = "Hummer", side = 2, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
         { weight = 803, desc = "SKP-11 - JTAC", unit = "SKP-11", side = 1, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
+		{ weight = 790, desc = "HL - DHSK", unit = "HL_DSHK", side = 1 },
+		{ weight = 791, desc = "HL - KORD", unit = "HL_KORD", side = 1 },
+		{ weight = 792, desc = "LC - DHSK", unit = "tt_DSHK", },
+		{ weight = 793, desc = "LC - KORD", unit = "tt_KORD", },
+		{ weight = 794, desc = "HL - B8M1", unit = "HL_B8M1", side = 1 },
         { weight = 850, desc = "SPH 2S19 Msta", unit = "SAU Msta", side = 1, cratesRequired = 2 },
         { weight = 855, desc = "M-109 Paladin", unit = "M-109", side = 2, cratesRequired = 2 },
 		{ weight = 830, desc = "M1126 Stryker ICV", unit = "M1126 Stryker ICV", side = 2 , cratesRequired = 2},
 		{ weight = 1200, desc = "M-1 Abrams", unit = "M-1 Abrams", side = 2 , cratesRequired = 2},
-		{ weight = 1199, desc = "T72B", unit = "T-72B", side = 1 , cratesRequired = 2},
+		{ weight = 1219, desc = "ZTZ96B", unit = "ZTZ96B", side = 1 , cratesRequired = 2},
 		
     },
-    ["SHRT AA Crates"] = {
-        { weight = 860, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 1 },
-        { weight = 861, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 1 },
+    ["AA/SHRT SAM Crates"] = {
+		{ weight = 859,  desc = "ZSU-57-2", unit = "ZSU_57_2", side = 1, cratesRequired = 1 },
+		{ weight = 861, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 2 },
+		{ weight = 863, desc = "Gepard SPAAA", unit = "Gepard", side = 2, cratesRequired = 2 },
+        { weight = 860, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 1 },       
         { weight = 862, desc = "M1097 Avenger", unit = "M1097 Avenger", side = 2, cratesRequired = 1 },
-		{ weight = 863, desc = "Gepard SPAAA", unit = "Gepard", side = 2, cratesRequired = 1 },
         { weight = 856, desc = "M6 Linebacker", unit = "M6 Linebacker", side = 2, cratesRequired = 2 },
         { weight = 910, desc = "SA-15 Tor", unit = "Tor 9A331", side = 1, cratesRequired = 2 },
 		{ weight = 911, desc = "SA-19 Tunguska", unit = "2S6 Tunguska", side = 1, cratesRequired = 2 },
@@ -389,6 +398,8 @@ ctld.spawnableCrates = {
 		{ weight = 842, desc = "NASAM SR", unit = "NASAMS_Radar_MPQ64F1", side = 2},
         { weight = 843, desc = "NASAM CP", unit = "NASAMS_Command_Post", side = 2},
 		{ weight = 914, desc = "NASAM LN-C", unit = "NASAMS_LN_C", side = 2},
+		{ weight = 795, desc = "HL - ZU23", unit = "HL_ZU-23", side = 1 },
+		{ weight = 796, desc = "LC - ZU23", unit = "tt_ZU-23", },
      },
     ["MRNG AA Crates"] = {
         -- HAWK System
@@ -401,7 +412,6 @@ ctld.spawnableCrates = {
         { weight = 1001, desc = "KUB Launcher", unit = "Kub 2P25 ln", side = 1},
         { weight = 929, desc = "KUB Radar", unit = "Kub 1S91 str", side = 1 },
 		-- End of KUB
-            -- BUK System
         { weight = 1002, desc = "BUK Launcher", unit = "SA-11 Buk LN 9A310M1"},
         { weight = 927, desc = "BUK Search Radar", unit = "SA-11 Buk SR 9S18M1"},
         { weight = 928, desc = "BUK CC Radar", unit = "SA-11 Buk CC 9S470M1"},
@@ -425,20 +435,23 @@ ctld.spawnableCrates = {
         { weight = 714, desc = "SA-10 54K6 cp", unit = "S-300PS 54K6 cp", side = 1},
 		{ weight = 1015, desc = "SA-10 5P85D ln", unit = "S-300PS 5P85D ln",side = 1},
 		{ weight = 1014, desc = "SA-10 5P85C ln", unit = "S-300PS 5P85C ln", side =1},
+		{ weight = 704, desc = "EWR 117 Radar", unit = "FPS-117", side = 2},
+		{ weight = 703, desc = "EWR ECS", unit = "FPS-117 ECS", side = 2},
 		
     },
-       ["FOP & Repair"] = {
+       ["FOB & Repair"] = {
         { weight = 1050, desc = "FOB Crate - Small", unit = "FOB-SMALL" }, -- Builds a FOB! - requires 3 * ctld.cratesRequiredForFOB
         { weight = 770, desc = "Ural-375 Ammo Truck", unit = "Ural-375", side = 1, cratesRequired = 1 },
         { weight = 761, desc = "M-818 Ammo Truck", unit = "M 818", side = 2, cratesRequired = 1 },       
         { weight = 740, desc = "HAWK Repair", unit = "HAWK Repair" , side = 2 },
-        { weight = 741, desc = "BUK Repair", unit = "BUK Repair"},
-        { weight = 742, desc = "KUB Repair", unit = "KUB Repair", side = 1},
+        { weight = 723, desc = "Roland Repair", unit = "Roland Repair", side = 2}, 
 		{ weight = 702, desc = "HQ7 Repair", unit = "HQ7 Repair", side = 1},
-		{ weight = 743, desc = "SA-10 Repair", unit = "SA-10 Repair", side = 1},
-        { weight = 703, desc = "Roland Repair", unit = "Roland Repair", side = 2},    
+		{ weight = 739, desc = "NASAM Repair", unit = "NASAM Repair", side = 2},    
+		{ weight = 741, desc = "BUK Repair", unit = "BUK Repair"},
+		{ weight = 742, desc = "KUB Repair", unit = "KUB Repair", side = 1},
+		{ weight = 743, desc = "EWR Repair", unit = "EWR Repair", side = 2},
 		{ weight = 744, desc = "Patriot Repair", unit = "Patriot Repair", side = 2},    
-		{ weight = 745, desc = "NASAM Repair", unit = "NASAM Repair", side = 2},    
+		{ weight = 745, desc = "SA-10 Repair", unit = "SA-10 Repair", side = 1},		
      },
 }
 --[[
@@ -1395,6 +1408,15 @@ ctld.AASystemTemplate = {
         },
         repair = "KUB Repair",
     },
+	{ 
+		name = "EWR 117",
+		count = 2,
+		parts = {
+			{name = "FPS-117 ECS", desc = "FPS-117 ECS"},
+			{name = "FPS-117", desc = "FPS-117"},
+			},
+		repair = "EWR Repair",
+		},
 	{
 		name = "Patriot AA System",
 		count = 6,
@@ -1421,7 +1443,6 @@ ctld.AASystemTemplate = {
 		{ name = "S-300PS 5P85C ln", desc = "S-300PS 5P85C ln"},
 		},
 		repair = "SA-10 Repair",
-	
 	}
 }
 
@@ -5461,9 +5482,9 @@ function ctld.notifyCoalition(_message, _displayFor, _side, _radio, _shortMessag
         local _modulation = _radio.mod or "FM"
         local _volume = _radio.volume or "1.0"
         local _name = _radio.name or "JTAC"
-        local _gender = _radio.gender or "male"
+        local _gender = _radio.gender or "female"
         local _culture = _radio.culture or "en-US"
-        local _voice = _radio.voice
+        local _voice = _radio.voice or "Microsoft Zira Desktop"
         local _googleTTS = _radio.googleTTS or false
         ctld.logTrace(string.format("calling STTS.TextToSpeech(%s)", ctld.p(_shortMessage)))
         ctld.logTrace(string.format("_freq=%s", ctld.p(_freq)))

@@ -31,8 +31,9 @@ csvFilePath = lfs.writedir() .."pg\\" .. "scenery.csv"
 local savefilename = "sceneryper.lua"
 local scenerysavefile = lfs.writedir() .."pg\\" .. savefilename
 local tgtsave = lfs.writedir() .."pg\\" .. "sceneryTgtList.lua"
-local SaveScheduleScenery=(60*5) -- how many seconds between saves. 5 minutes in th is case.
-explosionsize = 500
+local SaveScheduleScenery=(60*15) -- how many seconds between saves. 15 minutes in th is case.
+explosionsize = 750
+tgtlist = false
 --http://lua-users.org/wiki/SaveTableToFile
 
    local function exportstring( s )
@@ -233,7 +234,7 @@ maxSceneryCount = 500
       for i = 2,#scenery do
         local vec3 = COORDINATE:New(scenery[i].x, scenery[i].y, scenery[i].z)
         vec3:Explosion(explosionsize) --This is not always enough to blow up something and is also sometimes too much.
-        rngsmoke(vec3)
+        --rngsmoke(vec3)
       end
   else
     scenery = {}
@@ -271,41 +272,40 @@ StaticHandler = EVENTHANDLER:New()
 StaticHandler:HandleEvent( EVENTS.Dead ) --this is a popular handler. Ensure you do not duplicate.
 
 function StaticHandler:OnEventDead( EventData )
-         if EventData.IniUnit and EventData.IniObjectCategory==Object.Category.SCENERY then
-          BASE:E({"We are inside InitUnit and IniObject Scenery",EventData.IniUnit})
-          local coord=EventData.IniUnit:GetVec3()
-          local mccord = EventData.IniUnit:GetCoordinate()
-          local mctype = mccord:GetSurfaceType()
-          if useexclusions == true then
+    if EventData.IniUnit and EventData.IniObjectCategory==Object.Category.SCENERY then
+		BASE:E({"We are inside InitUnit and IniObject Scenery",EventData.IniUnit})
+        local coord=	EventData.IniUnit:GetVec3()
+        local mccord = EventData.IniUnit:GetCoordinate()
+        local mctype = mccord:GetSurfaceType()
+		if useexclusions == true then
 			for i, v in pairs(exclusionzones) do
 				if v:IsCoordinateInZone(mccord) == true then
 					return
 				end
 			end
-		  elseif uselandtype == true then
+		elseif uselandtype == true then
 			if mctype == 5 then
-              return
+				return
             end
-          else
-            table.insert(scenery,coord)
+        else
+			table.insert(scenery,coord)
 			BASE:E({"Scenery Destroyed"})
             --we check the event scenery that died against the file of items we built
-              if table_has_key(savedSceneryTbl, EventData.IniUnitName) == true then --items below this line will execute when finding the item on the list
-                savedSceneryTbl[EventData.IniUnitName]=nil --add date?
-               --MESSAGE:New("You destroyed the target!", 20):ToAll()
-               --uncomment above if you want a custom message
-              end
+            if tgtlist == true then
+				if table_has_key(savedSceneryTbl, EventData.IniUnitName) == true then --items below this line will execute when finding the item on the list
+					savedSceneryTbl[EventData.IniUnitName]=nil --add date?
+				--MESSAGE:New("You destroyed the target!", 20):ToAll()
+				--uncomment above if you want a custom message
+				end
             end
-          end
+        end
+	end
 end
 
 SCHEDULER:New( nil, function()
 table.save(scenery, scenerysavefile)--this is scenery persistence, nothing to do with targets
 --env.info(#savedSceneryTbl .." targets left")
-
-
-
-end, {},2, SaveScheduleScenery)
+end, {},7, SaveScheduleScenery)
 ------------------------------------------
 --END OF PRODUCTION SCRIPT
 ------------------------------------------

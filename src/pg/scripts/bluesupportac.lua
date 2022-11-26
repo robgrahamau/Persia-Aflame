@@ -104,20 +104,16 @@ do
 
 	function checktankers()
 		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Al_Minhad_AB)
-		if ab:GetCoalition() == 2 then
-			if (Texaco11:IsAlive() ~= true) and (texacocount < texacol1imit) then
-					Texaco11Spawn:Spawn()
-			end
-			if Arco11:IsAlive() ~= true and arcocount < arcolimit then
-					Arco11Spawn:Spawn()
-			end
-		else
-			BASE:E({"Minhad not friendly"})
-		end
 		ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Al_Dhafra_AB)
 		if ab:GetCoalition() == 2 then
 			if Texaco21:IsAlive() ~= true and texaco2count < texaco2limit then
 				Texaco21Spawn:Spawn()
+			end
+			if (Texaco11:IsAlive() ~= true) and (texacocount < texacol1imit) then
+				Texaco11Spawn:Spawn()
+			end
+			if Arco11:IsAlive() ~= true and arcocount < arcolimit then
+				Arco11Spawn:Spawn()
 			end
 		else
 			BASE:E({"Al Dhafra not friendly"})

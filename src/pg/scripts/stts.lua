@@ -45,12 +45,12 @@ STTS.PlayMP3("C:\\Users\\Ciaran\\Downloads\\PR-Music.mp3","255,31","AM,FM","0.5"
 
 STTS = {}
 -- FULL Path to the FOLDER containing DCS-SR-ExternalAudio.exe - EDIT TO CORRECT FOLDER
-STTS.DIRECTORY = "E:\\DCS-SimpleRadio-Standalone"
+STTS.DIRECTORY = "E:\\"
 STTS.SRS_PORT = 5002 -- LOCAL SRS PORT - DEFAULT IS 5002
 STTS.GOOGLE_CREDENTIALS = ""
 
 -- DONT CHANGE THIS UNLESS YOU KNOW WHAT YOU'RE DOING
-STTS.EXECUTABLE = "DCS-SR-ExternalAudio.exe"
+STTS.EXECUTABLE = "stts.exe"
 
 local random = math.random
 function STTS.uuid()

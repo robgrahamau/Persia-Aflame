@@ -2,7 +2,7 @@ Loading = true
 usenew = true
 BASE:E({"USE NEW CODE?",usenew})
 BASE:E("Rob's Squadron Class Start")
---- Sqadron Functoin
+--- Squadron Function
 -- Creates a squadron and automates its respawning etc.
 -- @type sqns
 -- @field string sqnname
@@ -58,8 +58,10 @@ end
 function sqn:Spawn()
 	BASE:E({"Attempting to spawn for Sqn:",self.sqnname,self.sqnunit,self.sqnamount})
 	local ab = AIRBASE:FindByName(self.airbase)
-	local col = ab:GetCoalition()
-	if self.sqncol == col then
+	local _col = ab:GetCoalition()
+	BASE:E({string.format("Current Airbase is %s",self.airbase),ab:GetCoalition(),_col})
+	if self.sqncol == _col then
+		BASE:E({string.format("Current Airbase is %s Squadron Col is %d and _Col is %d",self.airbase,self.sqncol,_col),ab:GetCoalition(),_col})
 		self.sqnspawner = SPAWN:NewWithAlias(self.sqnunit,self.sqnname)
 			:InitCleanUp(self.sqncleanup)
 			:InitAirbase(self.airbase,self.spawntype)
@@ -68,6 +70,12 @@ function sqn:Spawn()
 			:OnSpawnGroup(function(spawngroup) 
 				self.sqnamount = self.sqnamount - self.flightsize
 				self.spawnedunit = spawngroup
+				if col == 1 then
+					MESSAGE:New(string.format("%s, to all players, %s to all players, Comm activity detected at %s possible launch in progress",agency,ab:AirbaseName()),10):ToBlue()
+					if STTS ~= nil then
+						STTS.TextToSpeech(string.format("%s, to all players, %s to all players, Comm activity detected at %s possible launch in progress",agency,ab:AirbaseName()), sttsfreq, "AM", "1", agency, "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+					end
+				end
 			end)
 			:InitRandomizeRoute(self.startroute,self.endroute,UTILS.NMToMeters(self.offsetroute),UTILS.FeetToMeters(self.altitude))
 			
@@ -287,6 +295,12 @@ function intercept:Spawn()
 		self.sqnspawner = SPAWN:NewWithAlias(self.sqnunit,self.sqnname)
 		:InitCleanUp(self.sqncleanup)
 		:OnSpawnGroup(function(spawngroup) 
+			if col == 1 then
+				MESSAGE:New(string.format("%s, to all players, %s to all players, Comm activity detected at %s possible launch in progress",agency,ab:AirbaseName()),10):ToBlue()
+				if STTS ~= nil then
+					STTS.TextToSpeech(string.format("%s, to all Cats, %s to all Cats, Comm activity detected at %s possible launch in progress",agency,ab:AirbaseName()), sttsfreq, "AM", "1", agency, "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+				end
+			end
 			self.sqnamount = self.sqnamount - self.flightsize
 			self.spawnedunit = spawngroup
 			self.spawnedunit:HandleEvent(EVENTS.EngineShutdown)

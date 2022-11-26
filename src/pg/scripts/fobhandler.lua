@@ -26,11 +26,19 @@ function fob:New(name,redspawn,bluespawn,coalition,heading)
   self.group = nil
   self.redspawn = SPAWN:New(redspawn):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
     local redgroup = GROUP:FindByName(redspawn)
-    self:spawnctld(self.fobcoordinate,redgroup:GetCountry(),heading,distance)
+    local _country = redgroup:GetCountry()
+    if _country == nil then
+      _country = 34
+    end
+    self:spawnctld(self.fobcoordinate,_country,heading,distance)
   end)
   self.bluespawn = SPAWN:New(bluespawn):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
     local bluegroup = GROUP:FindByName(bluespawn)
-    self:spawnctld(self.fobcoordinate,bluegroup:GetCountry(),heading,distance)
+    local _country = bluegroup:GetCountry()
+    if _country == nil then
+      _country = 2
+    end
+    self:spawnctld(self.fobcoordinate,_country,heading,distance)
   end)
   self.marker = nil
   self:AddBlueSlots(name)
@@ -111,11 +119,15 @@ function fob:FlipRed()
 end
 
 function fob:spawnred()
-  self.group = self.redspawn:Spawn()
+  if self:IsBlue() == false then
+    self.group = self.redspawn:Spawn()
+  end
 end
 
 function fob:spawnblue()
-  self.group = self.bluespawn:Spawn()
+  if self:IsBlue() == true then
+    self.group = self.bluespawn:Spawn()
+  end
 end
 
 function fob:FlipBlue()
@@ -152,7 +164,9 @@ function fob:Start()
   BASE:E({self.fobname,"Starting up"})
   local col = "Iran"
   if self.coalition == 1 then
-    self:FlipRed()
+    if self.fobunit:GetCoalition() == 1 then
+      self:FlipRed()
+    end
   else
     self:FlipBlue()
     col = "Coalition"
@@ -164,7 +178,7 @@ end
 
 
 function fob:IsBlue()
-  if self.fobunit.coalition == 2 then
+  if self.fobunit:GetCoalition() == 2 then
     return true
   else
     return false
@@ -208,18 +222,18 @@ function fob:OnEventBaseCaptured(EventData)
  local _coord = ABItem:GetCoordinate()
  if AirbaseName == self.fobname then
   if coalition == 2 and self.coalition ~= 2 then
-    if self:IsBlue() ~= true then
+    if self:IsBlue() == true then
       self:FlipBlue()
       local col = "Coalition" 
       local co = self.fobunit:GetCoordinate()
-      self:routegroups(_coord,30000,"red")
+      self:routegroups(_coord,15000,"red")
     end
   elseif coalition == 1 and self.coalition ~= 1 then
-    if self:IsBlue() == true then
+    if self:IsBlue() ~= true then
       self:FlipRed()
       local col = "Coalition"
       local co = self.fobunit:GetCoordinate()
-      self:routegroups(_coord,30000,"blue")
+      self:routegroups(_coord,15000,"blue")
     end
   end
  end

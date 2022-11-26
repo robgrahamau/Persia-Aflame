@@ -202,6 +202,10 @@ function slothandler:SpawnCTLD(_coalition)
     elseif self.ctldblue == false and _coalition == 2 then
       return false
     end
+    if self.currentcoalition ~= _coalition then
+      BASE:E({string.format("%s was unable to spawn ctld items because current coalition %d and requested coalition %d do not match",self.name,self.currentcoalition,_coalition),self.name,self.currentcoalition,_coalition})
+      return false
+    end
     -- are we blue? Then update values
     if self.ctldblue == true and _coalition == 2 then
       _cdist = self.ctldbluedistance
@@ -294,13 +298,11 @@ function slothandler:SlotChange(_coalition)
     end)
     -- ctld if active
     if self.ctld == true then
-      self:SpawnCTLD(_coalition)
+      SCHEDULER:New(nil,function()
+        self:SpawnCTLD(_coalition)
+      end,{},60)
     end
-  
-    -- ctld if active
-    if self.ctld == true then
-      self:SpawnCTLD(_coalition)
-    end  
+
     if self.routegroups == true then
       self:routegroups(self.coord,self.routedist,_coalition)
     

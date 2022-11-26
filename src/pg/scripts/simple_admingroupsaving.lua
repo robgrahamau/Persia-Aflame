@@ -188,57 +188,56 @@ HypeMan.sendBotMessage("Admin Group Saving: spawned in a total of ".. spawncount
 --THE SAVING SCHEDULE
 
 function saveadmingroups()
-  AdminGroups:ForEachGroupAlive(function (grp)
-  local DCSgroup = Group.getByName(grp:GetName() )
-  local size = DCSgroup:getSize()
-
-_unittable={}
-
-for i = 1, size do
-  if grp:GetUnit(i):IsAlive() == true then
-  local skillr = math.random(1,5)
-  local skill = "Average"
-  if skillr == 2 or skillr == 5 then
-	skill = "Excellent"
-  end
-local _h = UTILS.ToRadian(grp:GetUnit(i):GetHeading())
-local tmpTable =
-    
-  {   
-    ["type"]=grp:GetUnit(i):GetTypeName(),
-    ["transportable"]=true,
-    ["unitID"]=grp:GetUnit(i):GetID(),
-    ["skill"]=skill,
-    ["y"]=grp:GetUnit(i):GetVec2().y,
-    ["x"]=grp:GetUnit(i):GetVec2().x,
-    ["name"]=grp:GetUnit(i):GetName(),
-    ["playerCanDrive"]=true,
-    ["heading"]=_h,
-  }
-
-table.insert(_unittable,tmpTable) --add units to a temporary table
-end
-end
-
-SaveUnits[grp:GetName()] =
-{
-   ["CountryID"]=grp:GetCountry(),
-   ["SpawnCoalitionID"]=grp:GetCountry(),
-   ["tasks"]={}, --grp:GetTaskMission(), --wrong gives the whole thing
-   ["CategoryID"]=grp:GetCategory(),
-   ["task"]="Ground Nothing",
-   ["route"]={}, -- grp:GetTaskRoute(),
-   ["groupId"]=grp:GetID(),
-   --["SpawnCategoryID"]=grp:GetCategory(),
-   ["units"]= _unittable,
-   ["y"]=grp:GetVec2().y, 
-   ["x"]=grp:GetVec2().x,
-   ["name"]=grp:GetName(),
-   ["start_time"]=0,
-   ["CoalitionID"]=grp:GetCoalition(),
-   ["SpawnCountryID"]=grp:GetCoalition(),
-}
-
+	AdminGroups:ForEachGroupAlive(function (grp)
+		local DCSgroup = Group.getByName(grp:GetName() )
+		local size = DCSgroup:getSize()
+		_unittable={}
+		for i = 1, size do
+		local _unit = grp:GetUnit(i)
+		if _unit ~= nil then
+			if _unit:IsAlive() == true then
+				local skillr = math.random(1,5)
+				local skill = "Average"
+				if skillr == 2 or skillr == 5 then
+					skill = "Excellent"
+				end
+				local _h = UTILS.ToRadian(grp:GetUnit(i):GetHeading())
+				local tmpTable =
+				{   
+					["type"]=_unit:GetTypeName(),
+					["transportable"]=true,
+					["unitID"]=_unit:GetID(),
+					["skill"]=skill,
+					["y"]=_unit:GetVec2().y,
+					["x"]=_unit:GetVec2().x,
+					["name"]=_unit:GetName(),
+					["playerCanDrive"]=true,
+					["heading"]=_h,
+				}
+				table.insert(_unittable,tmpTable) --add units to a temporary table
+			end
+		else
+			BASE:E(string.format("Warning grp %s unit %d was nil",grp:GetName(),i))	
+		end
+	end
+	SaveUnits[grp:GetName()] =
+	{
+		["CountryID"]=grp:GetCountry(),
+		["SpawnCoalitionID"]=grp:GetCountry(),
+		["tasks"]={}, --grp:GetTaskMission(), --wrong gives the whole thing
+		["CategoryID"]=grp:GetCategory(),
+		["task"]="Ground Nothing",
+		["route"]={}, -- grp:GetTaskRoute(),
+		["groupId"]=grp:GetID(),
+		--["SpawnCategoryID"]=grp:GetCategory(),
+		["units"]= _unittable,
+		["y"]=grp:GetVec2().y, 
+		["x"]=grp:GetVec2().x,
+		["name"]=grp:GetName(),
+		["start_time"]=0,
+		["CoalitionID"]=grp:GetCoalition(),
+		["SpawnCountryID"]=grp:GetCoalition(),
+	}
 end)
 
 newMissionStr = IntegratedserializeWithCycles("SaveUnits",SaveUnits) --save the Table as a serialised type with key SaveUnits
