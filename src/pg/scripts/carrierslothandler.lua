@@ -21,6 +21,15 @@ currentcoalition = 2,
 sanity = 600,
 scheduler = nil,
 currentstate = nil,
+airbosson = false,
+airboss = nil,
+airbossdata = {},
+awacson = false,
+awacs = nil,
+awacsdata = {},
+recoverytankeron = false,
+recoverytanker = nil,
+recoverytankerdata = {},
 }
 
 
@@ -57,7 +66,8 @@ end
 function carrierslothandler:Start()
   self.carrier:HandleEvent(EVENTS.Dead,self.SlotChange)
   self.carrier:HandleEvent(EVENTS.RemoveUnit,self.SlotChange)
-  self:SlotChange(true) -- this should set it to whatever coalition holds it when we start.
+  self:CheckState()
+  self:SlotChange() -- this should set it to whatever coalition holds it when we start.
   self.scheduler = SCHEDULER:New(nil,function() self:SanityChecker() end,{},60,self.sanity)
   BASE:E({"Slot Handler Started",self.name})
   return self
@@ -73,6 +83,13 @@ function carrierslothandler:Stop()
   return self
 end
 
+
+function carrierslothandler:CheckState()
+  local _isalive = self.carrier:IsAlive()
+  if self.currentstate ~= _isalive then
+    self.currentstate = _isalive
+  end
+end
 --- This goes through every x seconds (default is 120) and just checks what the coalition is for the airbase and
 --- cross checks that against the current one.. incase for some reason the base flipped with no event firing
 --- which can happen if say red units were destroyed at a base and no blue units were in it and that base was 
@@ -85,17 +102,68 @@ function carrierslothandler:SanityChecker()
   end
 end
 
+function carrierslothandler:SetAirboss(_name,_unit,_lsoradio,_marshall,_tacanfreq,_tacanchan,_tacanvalue,_iclsfreq,_iclsval,_abnice,_handleai,_welcome,_msgdur,_emerg,_patrol,_wirecorrect)
+  _name = _name or self.name
+  _unit = _unit or self.carrier:GetName()
+  _lsoradio = _lsoradio or 118.40
+  _marshall = _marshall or 304
+  _tacanfreq = _tacanfreq or nil
+  _tacanchan = _tacanchan or "X"
+  _tacanvalue = _tacanvalue or "CAR"
+  _iclsfreq = _iclsfreq or nil
+  _iclsval = _iclsval or "ICLS"
+  _abnice = _abnice or true
+  _handleai = _handleai or false
+  _welcome = _welcome or false
+  _msgdur = _msgdur or 1
+  _emerg = _emerg or true
+  _patrol = _patrol or true
+  _wirecorrect = _wirecorrect or 12
 
+  self.airboss = AIRBOSS:New(_name,_unit)
+  if LSOLOAD == true then
+    self.airboss:Load(LSOSAVE)
+    self.airboss:SetAutoSave(LSOSAVE)
+    self.airboss:SetTrapSheet(LSOSAVE)
+  end
+    self.airboss:SetLSORadio(_lsoradio)
+    self.airboss:SetMarshalRadio(_marshall)
+  
+  if _tacanfreq ~= nil then
+    self.airboss:SetTACAN(_tacanfreq,_tacanchan,_tacanval)
+  end
+  if _iclsfreq ~= nil then
+    self.airboss:SetICLS(_iclsfreq,_iclsval)
+  end
+  self.airboss:SetAirbossNiceGuy(_abnice)
+  if _handleai == true then
+    self.airboss:SetHandleAION()
+  else
+    self.airboss:SetHandleAIOFF()
+  end
+  self.airboss:SetWelcomePlayers(_welcome)
+  self.airboss:SetDefaultMessageDuration(_msgdur)
+  self.airboss:SetEmergencyLandings(_emerg)
+  self.airboss:SetPatrolAdInfinitum(_patrol)
+  self.airboss:SetMPWireCorrection(_wirecorrect)
+  
+  function self.airboss:OnAfterLSOGrade(From,Event,To,playerData, myGrade)
+    myGrade.messageType = 2
+		myGrade.name = playerData.name
+		HypeMan.sendBotTable(myGrade)
+  end
+end
 --- handles the actual slot change, takes the coalition and then runs through a client set for each and sets the userflag as required.
 -- @param self
--- @param number Coalition
-function carrierslothandler:SlotChange()
+-- @param EventData #dcs.event
+function carrierslothandler:SlotChange(EventData)
     -- we need to run through the client slots and set them to be active for red and deactive for blue
     local flag = 0
     local _msg = "Carrier " .. self.name .. " was destroyed, slots locked"
-    local _isalive = self.carrier:IsAlive()
+    local _isalive = self.carrier:IsAlive() 
     if self.currentstate ~= _isalive then
-      self:Userfunction()
+      -- we are dead
+      self:Userfunction(EventData)
       if _isalive ~= true then
         flag = 100
         self.slots:ForEachClient(function(_client)

@@ -58,6 +58,9 @@ end
 function sqn:Spawn()
 	BASE:E({"Attempting to spawn for Sqn:",self.sqnname,self.sqnunit,self.sqnamount})
 	local ab = AIRBASE:FindByName(self.airbase)
+	if ab == nil then
+		return false
+	end
 	local _col = ab:GetCoalition()
 	BASE:E({string.format("Current Airbase is %s",self.airbase),ab:GetCoalition(),_col})
 	if self.sqncol == _col then
@@ -290,6 +293,9 @@ end
 function intercept:Spawn()
 	BASE:E({"Attempting to spawn for Sqn:",self.sqnname,self.sqnunit})
 	local ab = AIRBASE:FindByName(self.airbase)
+	if ab == nil then
+		return false
+	end
 	local col = ab:GetCoalition()
 	if self.sqncol == col then
 		self.sqnspawner = SPAWN:NewWithAlias(self.sqnunit,self.sqnname)

@@ -1,6 +1,6 @@
 -- Globals are important.
 Servername = "Persia Aflame"
-lastupdate = "21/10/2022"
+lastupdate = "27/11/2022"
 carrier5dead = false
 carrier6dead = false
 carrier6adead = false
@@ -25,35 +25,59 @@ TEX2_Timer = 0
 ARC_Timer = 0
 ARC2_Timer = 0
 usenew = true
+LSOSAVE = "C:\\Users\\root\\Saved Games\\lsogrades\\"
+LSOLOAD = true
+USEHM = true
+_LIBPATH = PGPATH .. "pg\\lib\\"
+_SRCPATH = PGPATH .. "pg\\scripts\\"
+_MCPATH = PGPATH .. "pg\\"
+
+dofile( _LIBPATH .. "robutils.lua")
+
 
 env.info("Persia Aflame Loader")
 env.info("Mission by Robert Graham")
 env.info("Mission Script Loader Active")
 env.info("Loading MOOSE")
-dofile(PGPATH .."pg\\scripts\\Moose.lua")
+
+_LOADFILE("PGMoose.lua",_LIBPATH,true,-1,15)
+
+-- dofile(PGPATH .."pg\\scripts\\Moose.lua")
 env.info("Loading MIST")
-dofile(PGPATH .."pg\\scripts\\mist_4_5_98.lua")
+-- dofile(PGPATH .."pg\\scripts\\mist_4_5_98.lua")
+_LOADFILE("mist.lua",_LIBPATH,true,-1,15)
 _lsch = SCHEDULER:New(nil,function() 
 	BASE:E({"_lsch"})
 	if _loaded == false then
 		env.info("Mission Failed to load")
-		MESSAGE:New("Mission Has not loaded correctly!!! Please Contact an ADMIN / Rob on DISCORD",30):ToAll()
+		MESSAGE:New("Mission Has not loaded correctly!, Please Contact an ADMIN / Rob on DISCORD",30):ToAll()
 	end
 end,{},60,60)
-env.info("HypeMan")
-assert(loadfile("C:/HypeMan/HypeMan.lua"))() 
+
+if USEHM == true then
+	env.info("HypeMan")
+	_LOADFILE("Hypeman.lua","C:\\HypeMan\\",true,-1,15)
+	--assert(loadfile("C:/HypeMan/HypeMan.lua"))() 
+end
+
 function hm(msg)
-	HypeMan.sendBotMessage(string.format( "%1s:(%s)" , Servername,routines.utils.oneLineSerialize( msg ) ) )
+	if USEHM == true then
+		HypeMan.sendBotMessage(string.format( "%1s:(%s)" , Servername,routines.utils.oneLineSerialize( msg ) ) )
+	end
 	env.info(string.format( "%1s:(%s)" , Servername,routines.utils.oneLineSerialize( msg ) ) )
 end
 
-hm("> Persia Aflame is Starting..... \n > MOOSE,MIST  Already Loaded, Initialising Load.. ")
-
-hm("Math Randomisation Underway")
-for i=10,1 do local m = math.random(1,100) end
 function hmlso(msg)
-	HypeMan.sendLSOBotMessage(msg)
+	if USEHM == true then
+		HypeMan.sendLSOBotMessage(msg)
+	end
+	env.info(msg)
 end
+
+hm("> Persia Aflame is Starting..... \n > MOOSE,MIST  Already Loaded, Initialising Load.. ")
+hm("Math Randomisation Underway")
+
+for i=10,1 do local m = math.random(1,100) end
 
 hm("Hazel Link Starting.....")
 GRPC.debug = true
@@ -61,86 +85,99 @@ GRPC.host = '0.0.0.0'
 GRPC.load()
 hm("> GRPC is a go, Ceiling Cat is real!")
 
-hm("> SRS.lua")
---dofile(PGPATH .. [[pg\scripts\srs.lua]])
-dofile(PGPATH .. [[pg\scripts\stts.lua]])
-HypeMan.sendBotMessage("> zones and functions.lua")
-dofile(PGPATH .. [[pg\scripts\zones.lua]])
-
+hm("> stts.lua")
+--dofile(PGPATH .. [[pg\scripts\stts.lua]])
+_LOADFILE("stts.lua",_SRCPATH,true,-1,15)
+hm("> zones and functions.lua")
+_LOADFILE("zones.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\zones.lua]])
 hm("> CTLD.lua")
-
-dofile(PGPATH .. [[pg\scripts\CTLD.lua]])
-
+_LOADFILE("CTLD.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\CTLD.lua]])
 hm("> ctldslotcheck.lua")
-dofile(PGPATH .. [[pg\scripts\ctldslotcheck.lua]])
-
+_LOADFILE("ctldslotcheck.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\ctldslotcheck.lua]])
 hm("> Loading in sqns.lua")
-dofile(PGPATH .. [[pg\scripts\sqns.lua]])
-
+_LOADFILE("sqns.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\sqns.lua]])
 hm("> pesiasqns.lua")
-dofile(PGPATH .. [[pg\scripts\persiasqns.lua]])
-
+_LOADFILE("persiasqns.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\persiasqns.lua]])
 hm("> Airboss.lua")
-dofile(PGPATH .. [[pg\scripts\Airboss.lua]])
-
+_LOADFILE("Airboss.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\Airboss.lua]])
 hm("> ADS.lua")
-dofile(PGPATH .. [[pg\scripts\ADS.lua]])
-
--- This is all new code 1.80
-hm("> Ok This could be where shit breaks, the new slot Handlers - Function/Class loading")
+_LOADFILE("ADS.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\ADS.lua]])
 hm("> slothandler.lua")
-dofile(PGPATH .. [[pg\scripts\slothandler.lua]])
+_LOADFILE("slothandler.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\slothandler.lua]])
 hm("> carrierslothandler.lua")
-dofile(PGPATH .. [[pg\scripts\carrierslothandler.lua]])
+_LOADFILE("carrierslothandler.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\carrierslothandler.lua]])
 hm("> fobhandler.lua")
-dofile(PGPATH .. [[pg\scripts\fobhandler.lua]])
+_LOADFILE("fobhandler.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\fobhandler.lua]])
 hm("> Now we do all the actual slots")
 hm("> slots.lua")
-dofile(PGPATH .. [[pg\scripts\slot.lua]])
+_LOADFILE("slot.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\slot.lua]])
 -- Check for dynamic events/spawning
 hm("> Slotbased Events - slotevents.lua")
-dofile(PGPATH .. [[pg\scripts\slotevents.lua]])
-
+_LOADFILE("slotevents.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\slotevents.lua]])
 hm("> simple_groupsaving.lua")
-dofile(PGPATH .. [[pg\scripts\simple_groupsaving.lua]])
+_LOADFILE("simple_groupsaving.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\simple_groupsaving.lua]])
 hm("> simple_ctldgroupsaving.lua")
-dofile(PGPATH .. [[pg\scripts\simple_ctldgroupsaving.lua]])
+_LOADFILE("simple_ctldgroupsaving.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\simple_ctldgroupsaving.lua]])
 hm("> simple_admingroupsaving.lua")
-dofile(PGPATH .. [[pg\scripts\simple_admingroupsaving.lua]])
-hm("> Scenery will stay destroyed")
-dofile(PGPATH .. [[pg\scripts\simple_scenery_persistence.lua]])
+_LOADFILE("simple_admingroupsaving.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\simple_admingroupsaving.lua]])
+hm("> simple_scenery_persistence.ua")
+_LOADFILE("simple_scenery_persistence.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\simple_scenery_persistence.lua]])
 hm("> bluesupportac.lua")
-dofile(PGPATH .. [[pg\scripts\bluesupportac.lua]])
-
+_LOADFILE("bluesupportac.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\bluesupportac.lua]])
 hm("> markerevents.lua")
-dofile(PGPATH .. [[pg\scripts\markerevents.lua]])
+_LOADFILE("markerevents.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\markerevents.lua]])
 hm("> mission_per.lua")
-dofile(PGPATH .. [[pg\scripts\mission_per.lua]])
-
+_LOADFILE("mission_per.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\mission_per.lua]])
 hm("> ctldsave.lua")
-dofile(PGPATH .. [[pg\scripts\ctldsave.lua]])
-
+_LOADFILE("ctldsave.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\ctldsave.lua]])
 hm("> manpads.lua")
-dofile(PGPATH .. [[pg\scripts\ManPads.lua]])
+_LOADFILE("manpads.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\ManPads.lua]])
+hm("> intel.lua")
+_LOADFILE("intel.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\intel.lua]])
+hm("> dcslink.lua")
+_LOADFILE("dcslink.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\dcslink.lua]])
+hm("> client.lua")
+_LOADFILE("client.lua",_SRCPATH,true,-1,15)
+-- dofile(PGPATH .. [[pg\scripts\client.lua]])
 
-hm(">  intel.lua")
-dofile(PGPATH .. [[pg\scripts\intel.lua]])
-hm("> Persia Aflame Ohhh I get to talk to another application? DCS to MAP SERVER CAN YOU HEAR ME? dcslink.lua")
-dofile(PGPATH .. [[pg\scripts\dcslink.lua]])
-
-hm("> Persia Aflame Almost done now I have to actually talk to the people who connect to me, damned it... I really don't want to, but If you say so.... client.lua")
-dofile(PGPATH .. [[pg\scripts\client.lua]])
-
-hm("> Anti Jackass Script Loading in... No Nukes ever allowed again")
-
-dofile(PGPATH .. [[pg\scripts\jackasstest.lua]])
-dofile(PGPATH .. [[pg\robcommands.lua]])
-
-dofile(PGPATH .. [[pg\scripts\CSAR.lua]])
+hm("> Anti Jackass Script Loading in...jackasstest.lua")
+_LOADFILE("jackasstest.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\jackasstest.lua]])
+hm("> robcommands.lua")
+_LOADFILE("robcommands.lua",_MCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\robcommands.lua]])
+hm("> CSAR.lua")
+_LOADFILE("CSAR.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\CSAR.lua]])
 hm("> Persia Aflame, Starting 'Sleep Cycle' for RED Anti Air")
-dofile(PGPATH .. [[pg\scripts\sleepcycle.lua]])
+_LOADFILE("sleepcycle.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\sleepcycle.lua]])
 hm("> templateload.lua")
-dofile(PGPATH .. [[pg\scripts\templateloadnew.lua]])
+_LOADFILE("templateloadnew.lua",_SRCPATH,true,-1,15)
+--dofile(PGPATH .. [[pg\scripts\templateloadnew.lua]])
 lasthash = inputhash
 missionpath = "C:\\Users\\root\\Dropbox\\ServerShared\\Persia_Templates\\"
 hm("> Persia Falme: ALL SCRIPTS LOADED, INTERNATIONAL WAR CRIMES ... I MEAN PERSIAN GULF AFLAME SERVER IS NOW ONLINE AND RUNNING \n PLEASE HAVE A PLEASENT AND PRODUCTIVE 8 HRS.")
@@ -149,13 +186,13 @@ _loaded = true
 
 
 
-function rlog(msg)
-	BASE:E(msg)
-	hm(msg)
+function rlog(_msg)
+	RGUTILS.log(_msg)
+	hm(_msg)
 end
 
-function DEBUGMESSAGE(msg)
-	rlog(msg)
+function DEBUGMESSAGE(_msg)
+	rlog(_msg)
 end
 
 
