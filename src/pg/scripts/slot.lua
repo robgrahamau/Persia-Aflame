@@ -125,8 +125,8 @@ table.insert(ALLSLOTS,lengehslots)
 
 -- Al-Minhad
 minhadslots = slothandler:New(AIRBASE.PersianGulf.Al_Minhad_AB,2,"Minhad")
-minhadslots:SetBlueCTLD(180,2000,true,country.id.CJTF_BLUE
-lengehslots:SetRedCTLD(180,3000,true,country.id.CJTF_RED))
+minhadslots:SetBlueCTLD(180,2000,true,country.id.CJTF_BLUE)
+minhadslots:SetRedCTLD(180,3000,true,country.id.CJTF_RED)
 minhadslots:ActivateCTLD()
 minhadslots:setroutegroups(true,5000)
 minhadslots:Start()
