@@ -44,8 +44,8 @@ function carrierslothandler:New(carrier,prefix)
   self.name = carrier
   self.carrier = UNIT:FindByName(carrier)
   if self.carrier == nil then
-    BASE:E({"ERROR unable to find unit " .. carrier ..  " Unable to continue"})
-    return false
+    BASE:E(string.format("Carrier Slot Handler, Error: Unable to find Carrier by name %s",carrier))
+    -- return false
   end
   self.prefix = prefix
   self.currentcoalition = self.carrier:GetCoalition()
@@ -159,7 +159,7 @@ end
 function carrierslothandler:SlotChange(EventData)
     -- we need to run through the client slots and set them to be active for red and deactive for blue
     local flag = 0
-    local _msg = "Carrier " .. self.name .. " was destroyed, slots locked"
+    local _msg = string.format("Carrier %s was destroyed, slots locked",self.name)
     local _isalive = self.carrier:IsAlive() 
     if self.currentstate ~= _isalive then
       -- we are dead
@@ -184,7 +184,7 @@ function carrierslothandler:SlotChange(EventData)
           trigger.action.setUserFlag(clientname,flag)
           BASE:E({trigger.misc.getUserFlag(clientname)})
         end)
-         _msg = "Carrier " .. self.name .. " is on station, slots unlocked"
+         _msg = string.format("Carrier %s is on station, slots unlocked",self.name)
          if self.coalition == 1 then
           MESSAGE:New(_msg,30):ToRed()
         else

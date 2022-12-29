@@ -1,4 +1,13 @@
+--[[
+This is class fob with several methods for handling the capture and changes of fobs and farps in a simulation. 
+The fob:New() method creates a new instance of the fob class with the specified name, coalition, and other parameters. The fob:spawnctld() method is used to spawn a new ctld object at a specified location. The fob:AddRedSlots() and fob:AddBlueSlots() methods are used to add clients with specific prefixes to the redslots and blueslots tables, respectively. The fob:SetCTLD() method is used to set the ctld value for the fob. Other methods are defined for handling events such as the capture of a fob by a new coalition and the spawning of units at a fob.
 
+
+
+
+
+
+]]
 BASE:E({"Rob's Fob dynamic script, Handles the capturing and changes of Fobs and Farps."})
 
 fob = {
@@ -170,7 +179,7 @@ function fob:Start()
   else
     self:FlipBlue()
     col = "Coalition"
-	self.coalition = 2
+	  self.coalition = 2
   end  
   self:HandleEvent(EVENTS.BaseCaptured) 
   local co = self.fobunit:GetCoordinate()

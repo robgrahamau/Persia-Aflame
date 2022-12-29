@@ -1,6 +1,8 @@
 -- Globals are important.
 Servername = "Persia Aflame"
 lastupdate = "27/11/2022"
+
+--- Boolean Variables
 carrier5dead = false
 carrier6dead = false
 carrier6adead = false
@@ -10,27 +12,50 @@ iranichristmas = false
 NassauSpawned = false
 PeleliuSpawned = false
 useforrest = true
-_maxislandmainlandspawns = 24
-trigger.action.setUserFlag(100,0) -- don't know why this is set.. but being safe.
-_spawnnumber = 0
-trigger.action.setUserFlag("SSB",100) -- Set SSB active.
-activearea = "Activate AO: UAE\n \n ROE Notice:\n • Reduce Civilian Damage."
-activeareairan = "• Harasment of Coalition Forces \n • Defence of held territory"
+ADMIN = false
+__HMLOADED = false
+_DEBUG = false
 _loaded = false
-agency = "Apollo"
-sttsfreq = "122.80"
+LSOLOAD = true
+USEHM = true
+usenew = true
+--
+adminspawned = {} 
+_maxislandmainlandspawns = 24
+
+trigger.action.setUserFlag(100,0) -- don't know why this is set.. but being safe.
+
+trigger.action.setUserFlag("SSB",100) -- Set SSB active.
+activearea = "Activate AO: UAE & Island A.O \n ROE Notice:\n • Reduce Collateral Damage."
+activeareairan = "• Harasment of Coalition Forces \n • Defence of held territory"
+
+farpcounter = 0
+_spawnnumber = 0
+
 TANKER_COOLDOWN = (1)*60
+
 TEX_Timer = 0
 TEX2_Timer = 0
 ARC_Timer = 0
 ARC2_Timer = 0
-usenew = true
-LSOSAVE = "C:\\Users\\root\\Saved Games\\lsogrades\\"
-LSOLOAD = true
-USEHM = true
+AFAC_Timer = 0
+FAC1_Timer = 0
+FAC1_COOLDOWN = (0.5)*60
+
+-- Paths.
 _LIBPATH = PGPATH .. "pg\\lib\\"
 _SRCPATH = PGPATH .. "pg\\scripts\\"
 _MCPATH = PGPATH .. "pg\\"
+LSOSAVE = "C:\\Users\\root\\Saved Games\\lsogrades\\"
+_PGPERPATH = lfs.writedir() .. "pg\\"
+
+
+-- items go in here.
+BLUEFIRESUPPORTNAME = "Watcher"
+REDFIRESUPPORTNAME = "Vladamire"
+agency = "Apollo"
+sttsfreq = "122.80"
+
 
 dofile( _LIBPATH .. "robutils.lua")
 
@@ -58,6 +83,7 @@ if USEHM == true then
 	env.info("HypeMan")
 	_LOADFILE("Hypeman.lua","C:\\HypeMan\\",true,-1,15)
 	--assert(loadfile("C:/HypeMan/HypeMan.lua"))() 
+	__HMLOADED = true
 end
 
 function hm(msg)
@@ -126,58 +152,73 @@ _LOADFILE("slot.lua",_SRCPATH,true,-1,15)
 hm("> Slotbased Events - slotevents.lua")
 _LOADFILE("slotevents.lua",_SRCPATH,true,-1,15)
 --dofile(PGPATH .. [[pg\scripts\slotevents.lua]])
-hm("> simple_groupsaving.lua")
-_LOADFILE("simple_groupsaving.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\simple_groupsaving.lua]])
-hm("> simple_ctldgroupsaving.lua")
-_LOADFILE("simple_ctldgroupsaving.lua",_SRCPATH,true,-1,15)
+--hm("> simple_groupsaving.lua")
+--_LOADFILE("simple_groupsaving.lua",_SRCPATH,true,-1,15)
+
+--hm("> simple_ctldgroupsaving.lua")
+--_LOADFILE("simple_ctldgroupsaving.lua",_SRCPATH,true,-1,15)
 --dofile(PGPATH .. [[pg\scripts\simple_ctldgroupsaving.lua]])
-hm("> simple_admingroupsaving.lua")
-_LOADFILE("simple_admingroupsaving.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\simple_admingroupsaving.lua]])
-hm("> simple_scenery_persistence.ua")
-_LOADFILE("simple_scenery_persistence.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\simple_scenery_persistence.lua]])
+--hm("> simple_admingroupsaving.lua")
+--_LOADFILE("simple_admingroupsaving.lua",_SRCPATH,true,-1,15)
+
+_LOADFILE("save_groups.lua",_SRCPATH,true,-1,15)
+SAVE_SET = SET_GROUP:New():FilterCategories("ground"):FilterPrefixes({"IAA","GM_USAA","cjtf_blue","cjtf_red","CTLD","ctld","RSAM","REW","SCUD","BSAM","USEW","AAA","RDEF","Iran Ammo"}):FilterActive(true):FilterStart()
+MainSave = GroundUnitSave:New(SAVE_SET,"testsave_Units.lua",_PGPERPATH)
+MainSave:Start(300)
+--hm("> simple_scenery_persistence.ua")
+--_LOADFILE("simple_scenery_persistence.lua",_SRCPATH,true,-1,15)
+
 hm("> bluesupportac.lua")
 _LOADFILE("bluesupportac.lua",_SRCPATH,true,-1,15)
 --dofile(PGPATH .. [[pg\scripts\bluesupportac.lua]])
+
+--[[
 hm("> markerevents.lua")
 _LOADFILE("markerevents.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\markerevents.lua]])
+]]
+hm(">EventHandler")
+_LOADFILE("EventHandler.lua",_SRCPATH,true,-1,15)
+
+_MAINEVENT = HEVENT:New(true,true,false,1,1)
+_MAINEVENT:setblueprefix("GM_USAA")
+_MAINEVENT:setredprefix("IAA")
+_MAINEVENT:SetDebug(true)
+_MAINEVENT:Start()
+
 hm("> mission_per.lua")
 _LOADFILE("mission_per.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\mission_per.lua]])
+
 hm("> ctldsave.lua")
 _LOADFILE("ctldsave.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\ctldsave.lua]])
+
 hm("> manpads.lua")
 _LOADFILE("manpads.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\ManPads.lua]])
+
 hm("> intel.lua")
 _LOADFILE("intel.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\intel.lua]])
+
 hm("> dcslink.lua")
 _LOADFILE("dcslink.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\dcslink.lua]])
+
 hm("> client.lua")
 _LOADFILE("client.lua",_SRCPATH,true,-1,15)
--- dofile(PGPATH .. [[pg\scripts\client.lua]])
+
 
 hm("> Anti Jackass Script Loading in...jackasstest.lua")
 _LOADFILE("jackasstest.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\jackasstest.lua]])
+
 hm("> robcommands.lua")
 _LOADFILE("robcommands.lua",_MCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\robcommands.lua]])
+
 hm("> CSAR.lua")
 _LOADFILE("CSAR.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\CSAR.lua]])
+
 hm("> Persia Aflame, Starting 'Sleep Cycle' for RED Anti Air")
 _LOADFILE("sleepcycle.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\sleepcycle.lua]])
+
 hm("> templateload.lua")
 _LOADFILE("templateloadnew.lua",_SRCPATH,true,-1,15)
---dofile(PGPATH .. [[pg\scripts\templateloadnew.lua]])
+
 lasthash = inputhash
 missionpath = "C:\\Users\\root\\Dropbox\\ServerShared\\Persia_Templates\\"
 hm("> Persia Falme: ALL SCRIPTS LOADED, INTERNATIONAL WAR CRIMES ... I MEAN PERSIAN GULF AFLAME SERVER IS NOW ONLINE AND RUNNING \n PLEASE HAVE A PLEASENT AND PRODUCTIVE 8 HRS.")

@@ -492,7 +492,7 @@ abg = SET_GROUP:New():FilterCoalitions("blue"):FilterActive(true):FilterStart()
 blueintel = INTEL:New(abg,"blue","CIA")
 blueintel:SetClusterAnalysis(true,false)
 blueintel:FilterCategoryGroup({Group.Category.SHIP,Group.Category.GROUND})
-blueintel:Start()
+-- blueintel:Start()
 intelmarkers = {}
 blueintelmsgs = {}
 function blueintel:OnAfterNewCluster(From, Event, To, Cluster)

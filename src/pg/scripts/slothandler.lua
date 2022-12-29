@@ -260,7 +260,7 @@ end
 -- @param number Coalition
 function slothandler:SlotChange(_coalition)
     -- we need to run through the client slots and set them to be active for red and deactive for blue
-    BASE:E({"self.name","Slothandler","Slot Change",_coalition})
+    BASE:E(string.format("%s,slot handler,slot change coalition %d",self.name,_coalition))
 	-- lets do another sanity check just incase
 	if self.currentcoalition ~= _coalition then
     local bflag = 0

@@ -65,6 +65,39 @@ local CCelsiusTOFahrenheitProportional =      1.8;
 
 
 RGUTILS = {}
+
+
+--- Deep copy a table. See http://lua-users.org/wiki/CopyTable
+-- @param #table object The input table.
+-- @return #table Copy of the input table.
+RGUTILS.DeepCopy = function(object)
+
+  local lookup_table = {}
+
+  -- Copy function.
+  local function _copy(object)
+    if type(object) ~= "table" then
+      return object
+    elseif lookup_table[object] then
+      return lookup_table[object]
+    end
+
+    local new_table = {}
+
+    lookup_table[object] = new_table
+
+    for index, value in pairs(object) do
+      new_table[_copy(index)] = _copy(value)
+    end
+
+    return setmetatable(new_table, getmetatable(object))
+  end
+
+  local objectreturn = _copy(object)
+
+  return objectreturn
+end
+
 ---Stand Alone version of BASE to use as my own logged.
 ---@param Arguments any
 function RGUTILS.log( Arguments )
@@ -88,7 +121,9 @@ function RGUTILS.log( Arguments )
       hm(string.format( "%1s:%30s%05s(%s)" , "Info", "Rob Debug", ":", RGUTILS.oneLineSerialize( Arguments ) ) )
     end
 end
-
+function rlog(_msg)
+  RGUTILS.log(_msg)
+end
 function RGUTILS.updatetime()
   if os ~= nil then
       NOWTABLE = os.date('*t')
@@ -468,4 +503,78 @@ function _LOADFILE(filename,path,dmsg,_repeat,_time)
         RGUTILS.scheduledmsgtoall(_msg,_time,_repeat)
       end
 		end
+end
+
+
+
+function RGUTILS.IntegratedbasicSerialize(s)
+  if s == nil then
+    return "\"\""
+  else
+    if ((type(s) == 'number') or (type(s) == 'boolean') or (type(s) == 'function') or (type(s) == 'table') or (type(s) == 'userdata') ) then
+      return tostring(s)
+    elseif type(s) == 'string' then
+      return string.format('%q', s)
+    end
+  end
+end
+
+-- imported slmod.serializeWithCycles (Speed)
+function RGUTILS.IntegratedserializeWithCycles(name, value, saved)
+  local basicSerialize = function (o)
+    if type(o) == "number" then
+      return tostring(o)
+    elseif type(o) == "boolean" then
+      return tostring(o)
+    else -- assume it is a string
+      return IntegratedbasicSerialize(o)
+    end
+  end
+
+  local t_str = {}
+  saved = saved or {}       -- initial value
+  if ((type(value) == 'string') or (type(value) == 'number') or (type(value) == 'table') or (type(value) == 'boolean')) then
+    table.insert(t_str, name .. " = ")
+    if type(value) == "number" or type(value) == "string" or type(value) == "boolean" then
+      table.insert(t_str, basicSerialize(value) ..  "\n")
+    else
+
+      if saved[value] then    -- value already saved?
+        table.insert(t_str, saved[value] .. "\n")
+      else
+        saved[value] = name   -- save name for next time
+        table.insert(t_str, "{}\n")
+        for k,v in pairs(value) do      -- save its fields
+          local fieldname = string.format("%s[%s]", name, basicSerialize(k))
+          table.insert(t_str, IntegratedserializeWithCycles(fieldname, v, saved))
+        end
+      end
+    end
+    return table.concat(t_str)
+  else
+    return ""
+  end
+end
+
+
+function RGUTILS.file_exists(_savefile,_savepath) --check if the file already exists for writing
+  local _file = _savepath .. "" .. _savefile
+  if lfs.attributes(_file) then
+    return true
+  else
+    return false 
+  end 
+end
+
+function RGUTILS.writefile(_data, _savefile,_savepath)--Function for saving to file (commonly found)
+  if io == nil then
+    rlog("ERROR Unable to save IO is nil")
+  end
+  local _fullpath = _savepath .. "" .. _savefile
+  local _msg = string.format("Writing file to %s",_fullpath)
+  rlog(_msg)
+  local File = io.open(_fullpath, "w")
+  File:write(_data)
+  File:close()
+  _msg = string.format("Writing of file %s complete",_fullpath)
 end

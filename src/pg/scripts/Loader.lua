@@ -1,10 +1,10 @@
 -- Globals are important.
-version = "1.112.0"
+version = "1.110.0"
 Servername = "Persia Aflame"
-lastupdate = "24/11/2022"
-password = "lalalala"
-ADMINPASSWORD2 = "lala"
-PATHTODROPBOX = "C:\\Users\\root\\Dropbox\\ServerShared\\Persia_Aflame_Core_Code\\dcs\\" -- path to were the files are this needs to go in the right folder
+lastupdate = "21/10/2022"
+password = "hogsarebest"
+ADMINPASSWORD2 = "tgw"
+PATHTODROPBOX = "C:\\Users\\root\\Dropbox\\ServerShared\\Persia_Aflame_Core_Code\\dcs\\"
 usedropbox = true
 PGPATH = lfs.writedir()
 if usedropbox == true then
