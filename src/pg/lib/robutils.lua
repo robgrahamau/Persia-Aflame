@@ -578,3 +578,25 @@ function RGUTILS.writefile(_data, _savefile,_savepath)--Function for saving to f
   File:close()
   _msg = string.format("Writing of file %s complete",_fullpath)
 end
+
+function RGUTILS.GetExperience()
+  local skill = "Average"
+  local skillr = math.random(1,10)
+  if skillr == 5 or skillr == 6 then
+    skill = "Good"
+  elseif skillr == 7 or skillr == 8 then
+    skill = "High"
+  elseif skillr == 9 or skillr == 10 then
+    skill = "Excellent"
+  end
+  return skill
+end
+
+
+
+function RGUTILS.SaveTable:New(_savefile,_savepath,_savetable,_tablename)
+  local newMissionStr = RGUTILS.IntegratedserializeWithCycles(_tablename,_savetable) --save the Table as a serialised type with key SaveUnits
+  RGUTILS.writefile(newMissionStr,_savefile,_savepath)--write the file
+
+end
+

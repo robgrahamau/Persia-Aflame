@@ -191,9 +191,6 @@ _LOADFILE("mission_per.lua",_SRCPATH,true,-1,15)
 hm("> ctldsave.lua")
 _LOADFILE("ctldsave.lua",_SRCPATH,true,-1,15)
 
-hm("> manpads.lua")
-_LOADFILE("manpads.lua",_SRCPATH,true,-1,15)
-
 hm("> intel.lua")
 _LOADFILE("intel.lua",_SRCPATH,true,-1,15)
 

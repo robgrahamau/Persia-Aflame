@@ -219,6 +219,12 @@ function HEVENT:OnEventMarkRemoved(EventData)
       else
         self:Msg("Unable, Admin commands need to be active to use the massdel command",_group,nil,10)
       end
+    elseif mainkey == ("-massgroup") then
+      if ADMIN == true then
+        self:massgroup(text2,coord,_playername,_coalition) -- done
+      else
+        self:Msg("Unable, Admin commands need to be active to use the massgroup command",_group,nil,10)
+      end
     elseif mainkey == ("-explode") then
       if ADMIN == true then
         self:handleExplosion(text2,coord,_playername,_group) -- done.
@@ -382,7 +388,7 @@ function HEVENT:ctldfobspawn(text,_coord,_coalition,_group,_playernamee)
         else
           _fob = ctld.spawnFOB(self.bluecountry, 211, _coord:GetVec3(), _name)
         end
-        table.insert(ctld.LogisticUnits, _fob:getName())
+        table.insert(ctld.logisticUnits, _fob:getName())
         if ctld.troopPickupAtFOB == true then
           table.insert(ctld.builtFOBS, _fob:getName())
         end
@@ -410,26 +416,19 @@ function HEVENT:handleeadmin(text,_playername)
     if ADMIN then
       ADMIN = false
       wrongpassword = false
+      MESSAGE:New(string.format("Admin Commands are now disabled by %s",_playername),30):ToAll()
+      hm(string.format("Admin Commands have been disabled by %s",_playername))
     else
       ADMIN = true
       wrongpassword = false
+      MESSAGE:New(string.format("Admin Commands have been enabled by %s",_playername),30):ToAll()
+      hm(string.format("Admin Commands have been enabled by %s",_playername))
     end
   else
       ADMIN = false
       wrongpassword = true
-  end
-  if ADMIN == true then
-    MESSAGE:New(string.format("Admin Commands have been enabled by %s",_playername),30):ToAll()
-    hm(string.format("Admin Commands have been enabled by %s",_playername))
-  else
-    if wrongpassword == false then
-      MESSAGE:New(string.format("Admin Commands are now disabled by %s",_playername),30):ToAll()
-      hm(string.format("Admin Commands have been disabled by %s",_playername))
-    else
       MESSAGE:New(string.format("Wrong Password was entered by by %s",_playername),30):ToAll()
-      hm(string.format("@Admin Group Wrong Password was entered by by %s",_playername))
-    end
-
+      hm(string.format("@Admin Group Wrong Password was entered by %s",_playername))
   end
 end
 
@@ -593,7 +592,7 @@ function HEVENT:handleflare(_text,coord,col,_group,_playername)
     end
     self:Msg(_msgpart1,nil,_col,10)
     hm(_msgpart1)
-    if _inrange then
+    if _inrange or ADMIN then
         _time = 30
         local _bearing = gc:GetAngleDegrees(_coord:GetVec3())
         _msg = string.format("%s, %s flare request recieved in the air in %d seconds",_playername,_agent,15)
@@ -615,7 +614,7 @@ function HEVENT:handleflare(_text,coord,col,_group,_playername)
             self:Msg(_msg,nil,_col,10)
         end,{},15)
     else
-        _msg = string.format("%s, %s unable to comply no friendly units are within %d meters range of your request",_dist)
+        _msg = string.format("%s, %s unable to comply no friendly units are within %d meters range of your request",_playername,_agent,_dist)
         self:Msg(_msg,nil,_col,10)
     end
 end
@@ -1330,6 +1329,139 @@ function HEVENT:handledespawn(text,_playername,_group,_col)
     self:Log({"Despawning Unit",unit})
     self:Msg(string.format("Admin Command group with name %s has been removed.",unit),_group,_col,12)
   end
+end
+
+
+--- works out the massgroup command
+-- command entry is '-massgroup,d=1000,s=red,n=groupname'
+-- if s is blank then it defaults to removing both.
+---@param text string marker text
+---@param coord COORDINATE moose coordinate
+---@param _playername string event init playername.
+function HEVENT:massgroup(text,coord,_playername)
+  local _playername = _playername or "Admin"
+  local keywords=UTILS.Split(text,",")
+  local dist = 1000
+  local col = "red"
+  local name = nil
+  for _,keyphrase in pairs(keywords) do
+    local str=UTILS.Split(keyphrase, "=")
+    local key=str[1]
+    local val=str[2]
+    if key:lower():find("d") then
+      dist = tonumber(val)
+    end
+    if key:lower():find("s") then
+      col = val 
+    end
+    if key:lower():find("n") then
+      name = val
+    end
+    if name == nil then
+      local _msg = string.format("Sorry %s unable to group, you did not enter a group name",_playername)
+      self:Msg(_msg,nil,nil,15,"Admin",false)
+    end
+  end
+  self:massgroup(coord,dist,col,_name,_playername)
+end
+
+--- Executes the Massgroup Command, combining groups based on distance and coalition.
+--- @param _coord COORDINATE moose coordinate
+--- @param _dist INT distance in meters
+--- @param _coalition string Coalition "red" or "blue"
+--- @param _name string Combined Group name.
+--- @param _playername string player who executed the marker event if known.
+function HEVENT:massgroup(_coord,_dist,_coalition,_name,_playername)
+  local delcount = 0
+  local _mgrs = _coord:ToStringMGRS()
+  local _msg = string.format("Mass group requested by admin %s at coord %s, all ground units within %d meters of %s coalition will be grouped",_playername,_mgrs,dist,_coalition)
+  self:Msg(_msg,nil,nil,30,"admin")
+  local tempunits = {}
+  local tempgroup = {}
+  local _gx = nil
+  local _gy = nil
+  local _unitcount = 0
+  local _country = nil
+  local _CategoryID = nil
+  local gunits = SET_GROUP:New():FilterCategoryGround():FilterActive(true):FilterOnce()
+  if _coalition == "blue" or _coalition == "Blue" or _coalition == "BLUE" then
+    gunits:FilterCoalitions("blue"):FilterCategoryGround():FilterActive(true):FilterOnce()
+  elseif _coalition == "red" then
+    gunits:FilterCoalitions("red"):FilterCategoryGround():FilterActive(true):FilterOnce()
+  else
+    gunits:FilterCategoryGround():FilterActive(true):FilterOnce()
+  end
+  
+  gunits:ForEach(function(_grp)  
+    if g:IsAlive() == true then
+      local _group = GROUP:FindByName(grp:GetName())
+      gc = _group:GetCoordinate()
+      _country = _grp:GetCountry()
+      _CategoryID = _grp:GetCategory()
+      if gc == nil then
+        self:Log({"Could not get Coord for group:",grp:GetName(),grp:GetCoordinate(),gc})
+      else
+        local d = gc:Get2DDistance(_coord)
+        if d < _dist then
+          local DCSgroup = Group.getByName(_grp:GetName())
+          local size = DCSgroup:getSize()
+          local _units = _grp:GetUnits()
+          for _key,_un in pairs(_units) do
+            local _unit = UNIT:FindByName(_un.UnitName)
+            if _unit:IsAlive() == true then
+              -- store our group x,y from the first unit
+              if _gx == nil then
+                _gx = _unit:GetVec2().x
+              end
+              if _gy == nil then
+                _gy = _unit:GetVec2().y
+              end                
+
+              local skill = RGUTILS.GetExperience()
+
+              local _h = UTILS.ToRadian(_unit:GetHeading())
+              local tmpTable =
+              {   
+                ["type"]=_unit:GetTypeName(),
+                ["transportable"]=true,
+                ["unitID"]=_unit:GetID(),
+                ["skill"]=skill,
+                ["y"]=_unit:GetVec2().y,
+                ["x"]=_unit:GetVec2().x,
+                ["name"]=_unit:GetName(),
+                ["playerCanDrive"]=true,
+                ["heading"]=_h,
+              }
+              _unitcount = _unitcount + 1
+              table.insert(tempunits,tmpTable) --add units to a temporary table
+            end
+          end-- This section here needs to check the unit table and store all the units in tempunits.
+          g:Destroy()
+          delcount = delcount + 1
+        end
+      end
+    else
+      self:Log({"Group is dead",g:GetName()})
+    end
+  end)
+  local groupData = 
+  {
+    ["visible"] = false,
+    ["hiddenOnPlanner"] = true,
+    ["hiddenOnMFD"] = true,
+    ["tasks"] = {}, -- end of ["tasks"]
+    ["uncontrollable"] = false,
+    ["task"] = "Ground Nothing",
+    ["hidden"] = false,
+    ["units"] = tempunits,
+    ["y"] = _gy,
+    ["x"] = _gx,
+    ["name"] = _name,
+  } 
+  coalition.addGroup(_country, _CategoryID, groupData)
+
+  local _msg = string.format("Mass Group Request by %s Completed. \n We combined %d groups containing %d units. \n the new group is called %s",_playername,_delcount,_unitcount,_name)
+  self:Msg(_msg,nil,nil,15,"Admin",false)
 end
 
 --- works out the massdel command

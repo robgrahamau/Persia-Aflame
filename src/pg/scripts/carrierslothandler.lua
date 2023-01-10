@@ -102,7 +102,7 @@ function carrierslothandler:SanityChecker()
   end
 end
 
-function carrierslothandler:SetAirboss(_name,_unit,_lsoradio,_marshall,_tacanfreq,_tacanchan,_tacanvalue,_iclsfreq,_iclsval,_abnice,_handleai,_welcome,_msgdur,_emerg,_patrol,_wirecorrect)
+function carrierslothandler:Airboss(_name,_unit,_lsoradio,_marshall,_tacanfreq,_tacanchan,_tacanvalue,_iclsfreq,_iclsval,_abnice,_handleai,_welcome,_msgdur,_emerg,_patrol,_wirecorrect)
   _name = _name or self.name
   _unit = _unit or self.carrier:GetName()
   _lsoradio = _lsoradio or 118.40
