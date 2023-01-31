@@ -15,7 +15,9 @@
 carrierslothandler = {
 Classname = "Carrier Slot Handler",
 name = nil,
+arty = nil,
 carrier = nil,
+carriergroup = nil,
 prefix = nil,
 currentcoalition = 2,
 sanity = 600,
@@ -47,6 +49,7 @@ function carrierslothandler:New(carrier,prefix)
     BASE:E(string.format("Carrier Slot Handler, Error: Unable to find Carrier by name %s",carrier))
     -- return false
   end
+  self.carriergroup = self.carrier:GetGroup()
   self.prefix = prefix
   self.currentcoalition = self.carrier:GetCoalition()
   if self.currentcoalition == 1 then
@@ -153,6 +156,58 @@ function carrierslothandler:Airboss(_name,_unit,_lsoradio,_marshall,_tacanfreq,_
 		HypeMan.sendBotTable(myGrade)
   end
 end
+
+function carrierslothandler:SetAwacs(_awacs)
+  if self.airboss ~= nil then
+    self.airboss:SetAWACS(_awacs)
+  end
+end
+
+function carrierslothandler:SetRecoveryTanker(_tanker)
+  if self.airboss ~= nil then
+    self.airboss:SetRecoveryTanker(_tanker)
+  end
+end
+
+function carrierslothandler:SetCase(_case)
+  if self.airboss ~= nil then
+    self.airboss:SetRecoveryCase(_case)
+  end
+end
+
+function carrierslothandler:KillCarrier()
+  self.carriergroup:Destroy()
+  self:CheckState()
+  self:SanityChecker()
+end
+
+function carrierslothandler:RespawnCarrier()
+  self.carriergroup:Respawn()
+end
+
+function carrierslothandler:Arty(_artyname,_missiletypes,_shelltypes,_redsmoke,_bluesmoke,_orangesmoke,_greensmoke,_whitesmoke,_ilum)
+  local _artyname = artyname or self.carrergroup:GetName()
+  local _missiletypes = _missiletypes or {}
+  local _shelltypes = _shelltypes or {}
+  local _redsmoke = _redsmoke or 0
+  local _bluesmoke = _bluesmoke or 0
+  local _orangesmoke = _orangesmoke or 0
+  local _greensmoke = _greensmoke or 0
+  local _whitesmoke = _whitesmoke or 0
+  local _ilum = _ilum or 0
+
+  self.arty = ARTY:New(self.carriergroup,_artyname)
+	self.arty:SetShellTypes(_shelltypes)
+	self.arty:SetMissileTypes(_missiletypes)
+	self.arty:SetMarkAssignmentsOn()
+  self.arty:SetSmokeShells(_bluesmoke,SMOKECOLOR.Blue)
+	self.arty:SetSmokeShells(_redsmoke,SMOKECOLOR.Red)
+  self.arty:SetSmokeShells(_orangesmoke,SMOKECOLOR.Orange)
+  self.arty:SetSmokeShells(_whitesmoke,SMOKECOLOR.White)
+  self.arty:SetSmokeShells(_whitesmoke,SMOKECOLOR.Orange)
+	self.arty:SetIlluminationShells(_ilum,1)
+end
+
 --- handles the actual slot change, takes the coalition and then runs through a client set for each and sets the userflag as required.
 -- @param self
 -- @param EventData #dcs.event

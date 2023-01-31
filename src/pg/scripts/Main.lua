@@ -1,6 +1,6 @@
 -- Globals are important.
 Servername = "Persia Aflame"
-lastupdate = "27/11/2022"
+lastupdate = "31/01/2023"
 
 --- Boolean Variables
 carrier5dead = false
@@ -164,6 +164,7 @@ _LOADFILE("slotevents.lua",_SRCPATH,true,-1,15)
 _LOADFILE("save_groups.lua",_SRCPATH,true,-1,15)
 SAVE_SET = SET_GROUP:New():FilterCategories("ground"):FilterPrefixes({"IAA","GM_USAA","cjtf_blue","cjtf_red","CTLD","ctld","RSAM","REW","SCUD","BSAM","USEW","AAA","RDEF","Iran Ammo"}):FilterActive(true):FilterStart()
 MainSave = GroundUnitSave:New(SAVE_SET,"testsave_Units.lua",_PGPERPATH)
+MainSave:SetDisp(60,true)
 MainSave:Start(300)
 --hm("> simple_scenery_persistence.ua")
 --_LOADFILE("simple_scenery_persistence.lua",_SRCPATH,true,-1,15)

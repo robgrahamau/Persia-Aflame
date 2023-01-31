@@ -6,6 +6,8 @@
     SaveFile = nil,
     SavePath = nil,
     Scheduler = nil,
+    dispsec = 60,
+    forcedis = false,
  }
 
  -- Instantiate our Unitsave 
@@ -41,7 +43,10 @@ function GroundUnitSave:Stop()
         self.Scheduler:Stop()
     end
 end
-
+function GroundUnitSave:SetDisp(_amount,_on)
+    self.dispsec = _amount or 60
+    self.forcedis = _on or false
+end
 function GroundUnitSave:SetGroup(_setgroup)
     self.SetGroup = _setgroup or nil
 end
@@ -136,6 +141,9 @@ function GroundUnitSave:Save_Groups()
     end
     self.SetGroup:ForEachGroupAlive(function(_grp)
         local _unittable = {}
+        if self.forcedis == true then
+            _grp:OptionDisperseOnAttack(self.dispsec)
+        end
         local DCSgroup = Group.getByName(_grp:GetName())
         local size = DCSgroup:getSize()
         local _units = _grp:GetUnits()
@@ -292,11 +300,10 @@ function NavyUnitSave:LoadGroups()
                     ["name"]=SaveUnits[k]["units"][i]["name"],
                     ["heading"]=SaveUnits[k]["units"][i]["heading"],
                     ["playerCanDrive"]=true,  --hardcoded but easily changed.  
-                    ["coldAtStart"] = _cold -- is the unit cold at start uncomment when 2.8 drops to stable.
+                    ["coldAtStart"] = _cold, -- is the unit cold at start uncomment when 2.8 drops to stable.
                 }
                 table.insert(units,tempTable)
             end --end unit for loop
-
             -- Need to make this the proper set for naval groups.
             local groupData = 
             {

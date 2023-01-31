@@ -532,7 +532,7 @@ function CheckCarriers()
 				if carrier5arty ~= nil then
 					carrier5arty:Stop()
 				end
-				carrier5arty=ARTY:New(GROUP:FindByName("Carrier Group 5","CG5"))
+				carrier5arty=ARTY:New(GROUP:FindByName("Carrier Group 5"),"CG5")
 				carrier5arty:SetShellTypes({"MK45_127"})
 				carrier5arty:SetMissileTypes({"BGM"})
 				carrier5arty:SetMarkAssignmentsOn()
@@ -560,7 +560,7 @@ function CheckCarriers()
 				if carrier5aarty ~= nil then
 					carrier5aarty:Stop()
 				end
-				carrier5aarty=ARTY:New(GROUP:FindByName("Carrier Group 5a","CG5a"))
+				carrier5aarty=ARTY:New(GROUP:FindByName("Carrier Group 5a"),"CG5a")
 				carrier5aarty:SetShellTypes({"MK45_127"})
 				carrier5aarty:SetMissileTypes({"BGM"})
 				carrier5aarty:SetMarkAssignmentsOn()
@@ -611,7 +611,7 @@ function CheckCarriers()
 				if carrier6arty ~= nil then
 					carrier6arty:Stop()
 				end
-				carrier6arty=ARTY:New(GROUP:FindByName("Carrier Group 6","CG6"))
+				carrier6arty=ARTY:New(GROUP:FindByName("Carrier Group 6"),"CG6")
 				carrier6arty:SetShellTypes({"MK45_127"})
 				carrier6arty:SetMissileTypes({"BGM"})
 				carrier6arty:SetMarkAssignmentsOn()
@@ -641,7 +641,7 @@ function CheckCarriers()
 				if carrier6aarty ~= nil then
 					carrier6aarty:Stop()
 				end
-				carrier6aarty=ARTY:New(GROUP:FindByName("Carrier Group 7","CG7"))
+				carrier6aarty=ARTY:New(GROUP:FindByName("Carrier Group 7"),"CG7")
 				carrier6aarty:SetShellTypes({"MK45_127"})
 				carrier6aarty:SetMissileTypes({"BGM"})
 				carrier6aarty:SetMarkAssignmentsOn()

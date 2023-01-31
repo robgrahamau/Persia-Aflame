@@ -212,7 +212,7 @@ function HEVENT:OnEventMarkRemoved(EventData)
         self:Msg("Unable, Admin commands need to be active to use the routeside command",_group,nil,10)
       end
     elseif mainkey == ("-combine") then
-      self:COMBINE(text2,coord,_playername,_coalition)
+      self:massgroup(text2,coord,_playername,_coalition)
     elseif mainkey == ("-massdel") then
       if ADMIN == true then
         self:deletemassgroup(text2,coord,_playername,_coalition) -- done
@@ -268,11 +268,11 @@ function HEVENT:OnEventMarkRemoved(EventData)
       else
         self:Msg("Unable, Admin commands need to be active to use msgall",_group,nil,10)
       end
-    elseif mainkey == ("-farpspawn") then
+    elseif mainkey == ("-farpspawn") or mainkey == ("-spawnfarp") then
       if ADMIN == true then
         self:spawnfarp(text2,coord,_group,_playername,_coalition)
       else
-        self:Msg("Unable, Admin commands need to be active to use farpspawn",_group,nil,10)
+        self:Msg("Unable, Admin commands need to be active to use spawnfarp/farpspawn",_group,nil,10)
       end
     end
   end
@@ -1089,8 +1089,8 @@ function HEVENT:handleTankerRequest(text,coord,_col,_playername,_group)
     altft = 19000
     altitude = UTILS.FeetToMeters(19000)
   else
-    if altitude > 24000 then
-      altitude = 24000
+    if altitude > 34000 then
+      altitude = 34000
     elseif altitude < 6000 then
       altitude = 6000
     end
@@ -1338,31 +1338,34 @@ end
 ---@param text string marker text
 ---@param coord COORDINATE moose coordinate
 ---@param _playername string event init playername.
-function HEVENT:massgroup(text,coord,_playername)
+function HEVENT:massgroup(text,coord,_playername,coalition)
   local _playername = _playername or "Admin"
   local keywords=UTILS.Split(text,",")
   local dist = 1000
-  local col = "red"
+  local _col = "red"
   local name = nil
   for _,keyphrase in pairs(keywords) do
+    BASE:E({keywords})
     local str=UTILS.Split(keyphrase, "=")
     local key=str[1]
     local val=str[2]
+    BASE:E({key,val})
     if key:lower():find("d") then
-      dist = tonumber(val)
+      _dist = tonumber(val)
     end
     if key:lower():find("s") then
-      col = val 
+      _col = val
     end
     if key:lower():find("n") then
-      name = val
+      _name = val
     end
-    if name == nil then
+    if _name == nil then
       local _msg = string.format("Sorry %s unable to group, you did not enter a group name",_playername)
       self:Msg(_msg,nil,nil,15,"Admin",false)
     end
   end
-  self:massgroup(coord,dist,col,_name,_playername)
+  BASE:E({_dist,_col,_name,_playername})
+  self:domassgroup(coord,_dist,_col,_name,_playername)
 end
 
 --- Executes the Massgroup Command, combining groups based on distance and coalition.
@@ -1371,10 +1374,11 @@ end
 --- @param _coalition string Coalition "red" or "blue"
 --- @param _name string Combined Group name.
 --- @param _playername string player who executed the marker event if known.
-function HEVENT:massgroup(_coord,_dist,_coalition,_name,_playername)
+function HEVENT:domassgroup(_coord,_dist,_coalition,_name,_playername)
+  BASE:E({_coord,dist,_coalition,_name,_playername})
   local delcount = 0
   local _mgrs = _coord:ToStringMGRS()
-  local _msg = string.format("Mass group requested by admin %s at coord %s, all ground units within %d meters of %s coalition will be grouped",_playername,_mgrs,dist,_coalition)
+  local _msg = string.format("Mass group requested by admin %s at coord %s all groups within %d meters of %s coalition will be grouped",_playername,_mgrs,_dist,_coalition)
   self:Msg(_msg,nil,nil,30,"admin")
   local tempunits = {}
   local tempgroup = {}
@@ -1383,29 +1387,37 @@ function HEVENT:massgroup(_coord,_dist,_coalition,_name,_playername)
   local _unitcount = 0
   local _country = nil
   local _CategoryID = nil
-  local gunits = SET_GROUP:New():FilterCategoryGround():FilterActive(true):FilterOnce()
-  if _coalition == "blue" or _coalition == "Blue" or _coalition == "BLUE" then
-    gunits:FilterCoalitions("blue"):FilterCategoryGround():FilterActive(true):FilterOnce()
-  elseif _coalition == "red" then
-    gunits:FilterCoalitions("red"):FilterCategoryGround():FilterActive(true):FilterOnce()
+  local _name = "IAA_" .. _name
+  local _country = self.bluecountry
+  local gunits = nil
+  if _coalition:lower():find("blue") then
+    _country = self.bluecountry
+    gunits = SET_GROUP:New():FilterCoalitions("blue"):FilterCategoryGround():FilterActive(true):FilterOnce()
+  elseif _coalition:lower():find("red") then
+    _country = self.redcountry
+    gunits = SET_GROUP:New():FilterCoalitions("red"):FilterCategoryGround():FilterActive(true):FilterOnce()
   else
-    gunits:FilterCategoryGround():FilterActive(true):FilterOnce()
+    self:Msg("domassgroup did not detect a coalition entry check for a bug",nil,nil,15,"Admin",false)
+    return false
+  end
+  if gunits == nil then
+    self:Msg("domassgroup Error gunits was never set!",nil,nil,15,"admin",false)
+    return false
   end
   
-  gunits:ForEach(function(_grp)  
-    if g:IsAlive() == true then
+  gunits:ForEach(function(grp)  
+    if grp:IsAlive() == true then
       local _group = GROUP:FindByName(grp:GetName())
       gc = _group:GetCoordinate()
-      _country = _grp:GetCountry()
-      _CategoryID = _grp:GetCategory()
+      _CategoryID = grp:GetCategory()
       if gc == nil then
         self:Log({"Could not get Coord for group:",grp:GetName(),grp:GetCoordinate(),gc})
       else
         local d = gc:Get2DDistance(_coord)
         if d < _dist then
-          local DCSgroup = Group.getByName(_grp:GetName())
+          local DCSgroup = Group.getByName(grp:GetName())
           local size = DCSgroup:getSize()
-          local _units = _grp:GetUnits()
+          local _units = grp:GetUnits()
           for _key,_un in pairs(_units) do
             local _unit = UNIT:FindByName(_un.UnitName)
             if _unit:IsAlive() == true then
@@ -1436,7 +1448,7 @@ function HEVENT:massgroup(_coord,_dist,_coalition,_name,_playername)
               table.insert(tempunits,tmpTable) --add units to a temporary table
             end
           end-- This section here needs to check the unit table and store all the units in tempunits.
-          g:Destroy()
+          grp:Destroy()
           delcount = delcount + 1
         end
       end
@@ -1460,7 +1472,7 @@ function HEVENT:massgroup(_coord,_dist,_coalition,_name,_playername)
   } 
   coalition.addGroup(_country, _CategoryID, groupData)
 
-  local _msg = string.format("Mass Group Request by %s Completed. \n We combined %d groups containing %d units. \n the new group is called %s",_playername,_delcount,_unitcount,_name)
+  local _msg = string.format("Mass Group Request by %s Completed. \n We combined %d groups containing %d units. \n the new group is called %s",_playername,delcount,_unitcount,_name)
   self:Msg(_msg,nil,nil,15,"Admin",false)
 end
 

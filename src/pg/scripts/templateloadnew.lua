@@ -218,7 +218,7 @@ function missionspawn(_missionfile, _coalition)
     dofile(TempMizPath .. "/mission")
 
     if mission == nil then
-        MESSAGE:New("Admin Error: No misison template", 15):ToAll()
+        trigger.action.outText("Admin Error: No misison template", 15, false)
     else
         local tbl = ""
         local ctrl = ""
