@@ -19,7 +19,7 @@ SHANDLER = {
 	Handler = nil,
 	isTanker = false,
 	isJtac = false,
-	iIsAwac = false,
+	isAwac = false,
 	LastWaypoint = nil,
 	startcoord = nil,
 	airbase = nil,
@@ -167,7 +167,7 @@ end
 ---event land
 ---@param EventData any
 function SHANDLER:ELand(EventData)
-	if self:IsJtac() == false then
+	if self.isJtac == false then
 		self:Respawn()
 	else
 		self:Debug("Jtac landed do not respawn unless rtb has been flagged they refuel.")
@@ -274,7 +274,7 @@ function SHANDLER:RTB()
 		for i,p in ipairs(wp) do
 			table.insert(waypoints,i,wp[i])
 		end
-		if self:IsTanker() then
+		if self.isTanker == true then
 			self:SendMsg("We will be returning to home in 120 seconds")
 			self.Group:Route(waypoints,120)
 		else
