@@ -46,6 +46,9 @@ ctld.slingLoad = false -- if false, crates can be used WITHOUT slingloading, by 
 -- Set staticBugFix  to FALSE if use set ctld.slingLoad to TRUE
 
 ctld.enableSmokeDrop = true -- if false, helis and c-130 will not be able to drop smoke
+ctld.maxunitcount = 1100
+ctld.maxblueunits = 500
+ctld.maxredunits = 600
 
 ctld.maxExtractDistance = 125 -- max distance from vehicle to troops to allow a group extraction
 ctld.maximumDistanceLogistic = 200 -- max distance from vehicle to logistics to allow a loading or spawning operation
@@ -1682,7 +1685,18 @@ function ctld.spawnCrate(_arguments)
 
         local _crateType = ctld.crateLookupTable[tostring(_args[2])]
         local _heli = ctld.getTransportUnit(_args[1])
-
+        local _hcol = _heli:getCoalition()    
+        local ucounter = UNITCOUNTER(_hcol,true)
+        local _maxun = 1100
+        if _hcol == 1 then
+            _maxun = ctld.maxredunits
+        elseif _hcol == 2 then
+            _maxun = ctld.maxblueunits
+        end
+        if ucounter > _maxun then
+            local _msg = string.format("Warning, you may possibly be unable to unpack this crate! \n Current server unit count is %d, maximum allowed is %d \n if there are still too many units when you try and unpack and this is not a repair or fob crate you will not be able to unpack it until unit count drops.",ucounter,_maxun)
+            ctld.displayMessageToGroup(_heli,_msg,10)   
+        end
         if _crateType ~= nil and _heli ~= nil and ctld.inAir(_heli) == false then
 
             if ctld.inLogisticsZone(_heli) == false then
@@ -2302,7 +2316,19 @@ function ctld.loadTroopsFromZone(_args)
     end
 
     local _zone = ctld.inPickupZone(_heli)
-
+    local _hcol = _heli:getCoalition()    
+    local ucounter = UNITCOUNTER(_hcol,true)
+    local _maxun = 1100
+    if _hcol == 1 then
+        _maxun = ctld.maxredunits
+    elseif _hcol == 2 then
+        _maxun = ctld.maxblueunits
+    end
+    if ucounter > _maxun then
+        local _msg = string.format("Warning, you can not load troops at this time, server is over max unit count! Current Server Unit count is: %d, maximum allowed is %d",ucounter,_maxun)
+        ctld.displayMessageToGroup(_heli,_msg,10)   
+        return false
+    end
     if ctld.troopsOnboard(_heli, _troops) then
 
         if _troops then
@@ -3874,6 +3900,19 @@ function ctld.countTableEntries(_table)
 end
 
 function ctld.unpackAASystem(_heli, _nearestCrate, _nearbyCrates,_aaSystemTemplate)
+    local _hcol = _heli:getCoalition()    
+    local ucounter = UNITCOUNTER(_hcol,true)
+    local _maxun = 1100
+    if _hcol == 1 then
+        _maxun = ctld.maxredunits
+    elseif _hcol == 2 then
+        _maxun = ctld.maxblueunits
+    end
+    if ucounter > _maxun then
+        local _msg = string.format("Warning, you may not unpack this crate! Current server unit count is %d, maximum allowed is %d",ucounter,_maxun)
+        ctld.displayMessageToGroup(_heli,_msg,10)  
+        return 
+    end
 
     if ctld.rearmAASystem(_heli, _nearestCrate, _nearbyCrates,_aaSystemTemplate) then
         -- rearmed hawk
@@ -4152,7 +4191,19 @@ function ctld.repairAASystem(_heli, _nearestCrate,_aaSystem)
 end
 
 function ctld.unpackMultiCrate(_heli, _nearestCrate, _nearbyCrates)
-
+    local _hcol = _heli:getCoalition()    
+    local ucounter = UNITCOUNTER(_hcol,true)
+    local _maxun = 1100
+    if _hcol == 1 then
+        _maxun = ctld.maxredunits
+    elseif _hcol == 2 then
+        _maxun = ctld.maxblueunits
+    end
+    if ucounter > _maxun then
+        local _msg = string.format("Warning, unable to unpack this crate! Current server unit count is %d, maximum allowed is %d",ucounter,_maxun)
+        ctld.displayMessageToGroup(_heli,_msg,10)
+        return
+    end
     -- unpack multi crate
     local _nearbyMultiCrates = {}
 

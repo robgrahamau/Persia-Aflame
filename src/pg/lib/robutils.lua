@@ -572,11 +572,12 @@ function RGUTILS.writefile(_data, _savefile,_savepath)--Function for saving to f
   end
   local _fullpath = _savepath .. "" .. _savefile
   local _msg = string.format("Writing file to %s",_fullpath)
-  rlog(_msg)
+  --rlog(_msg)
   local File = io.open(_fullpath, "w")
   File:write(_data)
   File:close()
   _msg = string.format("Writing of file %s complete",_fullpath)
+  
 end
 
 function RGUTILS.GetExperience()
@@ -594,9 +595,66 @@ end
 
 
 
-function RGUTILS.SaveTable:New(_savefile,_savepath,_savetable,_tablename)
+function RGUTILS.SaveTable(_savefile,_savepath,_savetable,_tablename)
   local newMissionStr = RGUTILS.IntegratedserializeWithCycles(_tablename,_savetable) --save the Table as a serialised type with key SaveUnits
   RGUTILS.writefile(newMissionStr,_savefile,_savepath)--write the file
 
 end
 
+
+function highlightarea(_c1x,_c1z,_c2x,_c2z,_col,_linergb,_linealpha,_fillrgb,_fillalpha,_linetype,_text)
+	_linergb = _linergb or {1,0,0}
+	_linealpha = _linealpha or 1
+	_fillrgb = _fillrgb or {1,0,0}
+	_fillalpha = _fillalpha or 0.15
+	_linetype = _linetype or 1
+	_text = _text or nil
+	_col = _col or -1
+	if _c1x == nil or _c1z == nil or _c2x == nil or _c2z == nil then
+		rlog("unable to highlight missing a coordinate value")
+		return false
+	end
+	local c1 = COORDINATE:New(_c1x,0,_c1z)
+	local c2 = COORDINATE:New(_c2x,0,_c2z)
+	local markid = c1:RectToAll(c2,_col,_linergb,_linealpha,_fillrgb,_fillalpha,_linetype,false,_text)
+  return markid
+end
+
+function textarea(_c1x,_c1z,_col,_rgb,_alpha,_fillrbg,_fillalpha,_size,_text)
+	_rgb = _linergb or {1,0,0}
+	  _alpha = _linealpha or 1
+	  _fillrgb = _fillrgb or {1,0,0}
+	  _fillalpha = _fillalpha or 0.15
+	  _linetype = _linetype or 1
+	  _text = _text or nil
+	  _col = _col or -1
+	_size = _size or 16
+	  if _c1x == nil or _c1z == nil or _text == nil then
+		  rlog("unable to highlight missing a coordinate value")
+		  return false
+	  end
+	local c1 = COORDINATE:New(_c1x,0,_c1z)
+	local markid = c1:TextToAll(_text,_col,_rgb,_alpha,_fillrgb,_fillalpha,_size)
+	return markid
+end
+
+
+function grpctts(_msg,_channel,_col)
+	local ttsoptions = {
+		plaintext = _msg,
+		srsClientName = "Admin-gRPC",
+		position = {
+			lat = 0.0,
+			lon = 0.0,
+			alt = 1000.0,
+		},
+		coalition = _col,
+		provider = null,
+	}
+	if _col == "all" then
+		ttsoptions.coalition = "red"
+		GRPC.tts(_msg,_channel,ttsoptions)	
+		ttsoptions.coalition = "blue"
+		GRPC.tts(_msg,_channel,ttsoptions)	
+	end
+end

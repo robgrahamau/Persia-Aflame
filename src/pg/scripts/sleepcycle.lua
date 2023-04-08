@@ -10,13 +10,13 @@ shoradsasleep = {}
 medradsmoko = {}
 
 function wakeupunits(_table)
-	BASE:E({"WAke Units"})
+	BASE:E({"Wake Units"})
     for k,_group in pairs(_table) do
-		
 		BASE:E({_group:GetName(),"Is Now awake"})
         _group:OptionAlarmStateAuto()
     end
 end
+
 function containsgroup(_table,_lgroup)
     for k,_group in pairs(_table) do
         if _group == _lgroup then

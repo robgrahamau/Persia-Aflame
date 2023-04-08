@@ -2,8 +2,8 @@
 version = "1.110.0"
 Servername = "Persia Aflame"
 lastupdate = "21/10/2022"
-password = "hogsarebest"
-ADMINPASSWORD2 = "tgw"
+password = ""
+ADMINPASSWORD2 = ""
 PATHTODROPBOX = "C:\\Users\\root\\Dropbox\\ServerShared\\Persia_Aflame_Core_Code\\dcs\\"
 usedropbox = true
 PGPATH = lfs.writedir()

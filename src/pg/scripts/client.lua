@@ -71,7 +71,7 @@ local function permanentPlayerCheck()
 	if nowDay == 1 and nowMonth == 1 and nowHour == 0 and nowminute == 0 then
 		if newyears == false then
 			MESSAGE:New("Happy New Year from the TGW Crew to all of you!",120):ToAll()
-			STTS.TextToSpeech("Happy New Year from the TGW Crew to all of you!", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+      STTS.TextToSpeech("Happy New Year from the TGW Crew to all of you!", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
 			newyears = true
 		end
 	end
@@ -79,30 +79,34 @@ local function permanentPlayerCheck()
 		if nowminute == 0 then
 			if hrleft ~= true then
 				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 1 hour",15):ToAll()
-				hrleft = true
-				STTS.TextToSpeech("The Server will restart in 1 hour", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+				grpctts("" .. serverrestart .. ":00 Server Restart in 1 hour",253,"all")
+				-- STTS.TextToSpeech("The Server will restart in 1 hour", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
 			end
 		elseif nowminute == 30 then
 			if left30 ~= true then
 				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 30 Minutes",15):ToAll()
-				STTS.TextToSpeech("The Server will restart in 30 Minutes", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+				grpctts("" .. serverrestart .. ":00 Server Restart in 30 Minutes",253,"all")
+				-- STTS.TextToSpeech("The Server will restart in 30 Minutes", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
 				left30 = true
 			end
 		elseif nowminute == 45 then
 			if left45 ~= true then
 				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 15 Minutes",15):ToAll()
-				STTS.TextToSpeech("The Server will restart in 15 Minutes", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+        grpctts("" .. serverrestart .. ":00 Server Restart in 15 Minutes",253,"all")
+				--STTS.TextToSpeech("The Server will restart in 15 Minutes", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
 				left45 = true
 			end
 		elseif nowminute == 50 then
 			if left50 ~= true then
 				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 10 Minutes",15):ToAll()
-				left50 = true
+				grpctts("" .. serverrestart .. ":00 Server Restart in 10 Minutes",253,"all")
+        left50 = true
 			end
 		elseif nowminute == 55 then
 			if left55 ~= true then
 				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 5 Minutes Forced Save has occured.",15):ToAll()
-				STTS.TextToSpeech("The Server will restart in 5 Minutes", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+        grpctts("" .. serverrestart .. ":00 Server Restart in about 5 Minutes",253,"all")
+				-- STTS.TextToSpeech("The Server will restart in 5 Minutes", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
 				updatevalues()
 				save()
 				ctldsavedata()
@@ -113,7 +117,8 @@ local function permanentPlayerCheck()
 		elseif nowminute == 59 then
 			if left59 ~= true then
 				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 1 Minute All items now saved",15):ToAll()
-				STTS.TextToSpeech("The Server will restart in 1 Minute", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+				grpctts("" .. serverrestart .. ":00 Server Restart in 1 Minutes",253,"all")
+        -- STTS.TextToSpeech("The Server will restart in 1 Minute", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
 				updatevalues()
 				save()
 				ctldsavedata()
@@ -230,7 +235,8 @@ end
 function resettime()
   SCHEDULER:New(nil,function() 
   MESSAGE:New("SERVER RESTART WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
-  STTS.TextToSpeech("SERVER RESTART WILL HAPPEN IN ".. hourstoreset .. " HOURS", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+  -- STTS.TextToSpeech("SERVER RESTART WILL HAPPEN IN ".. hourstoreset .. " HOURS", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+  grpctts("SERVER RESTART WILL HAPPEN IN ".. hourstoreset .. " HOURS",253,"all")
   hm("` $SERVERNAME - Server Info: ` SERVER RESTART WILL HAPPEN IN ".. hourstoreset .. " HOURS \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard")
   local msgtext = "Current Active Tasking is: " .. activearea .. ""
 	MESSAGE:New(msgtext,60,"Mission Tasking Info",false):ToAll()
@@ -249,7 +255,7 @@ end,{},1)
 
 SCHEDULER:New(nil,function() 
   MESSAGE:New("SERVER RESTART WILL HAPPEN IN 1 HOUR \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard",60):ToAll()
-    STTS.TextToSpeech("SERVER RESTART WILL HAPPEN IN 1 HOUR", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+  -- STTS.TextToSpeech("SERVER RESTART WILL HAPPEN IN 1 HOUR", "253", "AM", "1", "TGW STTS Server Alert", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
   hm("` $SERVERNAME - Server Info ` SERVER RESTART WILL HAPPEN IN 1 HOUR \n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard")
 end,{},((60*60) * (resethours - 1)))
 SCHEDULER:New(nil,function() 
@@ -258,7 +264,7 @@ SCHEDULER:New(nil,function()
 end,{},(((60*60) *(resethours)) - (60*45)))
 SCHEDULER:New(nil,function() 
   MESSAGE:New("SERVER RESTART WILL HAPPEN IN Aprox 30 Minutes",10):ToAll()
-    STTS.TextToSpeech("SERVER RESTART WILL HAPPEN IN 30 Minutes", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+  --STTS.TextToSpeech("SERVER RESTART WILL HAPPEN IN 30 Minutes", "253", "AM", "1", "TGW STTS Server Alert", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
   hm("` $SERVERNAME - Server Info:` Mission Cycle will happen in 30 Minutes")
 end,{},(((60*60) *(resethours)) - (60*30)))
 SCHEDULER:New(nil,function() 
@@ -267,7 +273,7 @@ SCHEDULER:New(nil,function()
 end,{},(((60*60) *(resethours)) - (60*15)))
 SCHEDULER:New(nil,function() 
   MESSAGE:New("SERVER RESTART WILL HAPPEN IN Aprox 10 Minute",10):ToAll()
-    STTS.TextToSpeech("SERVER RESTART WILL HAPPEN IN 10 MINUTES", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+    STTS.TextToSpeech("SERVER RESTART WILL HAPPEN IN 10 MINUTES", "253", "AM", "1", "TGW STTS Server Alert", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
   hm("` $SERVERNAME - Server Info:` Mission Cycle will happen in 10 Minutes")
 end,{},(((60*60) *(resethours)) - (60*10)))
 SCHEDULER:New(nil,function() 
@@ -284,12 +290,11 @@ SCHEDULER:New(nil,function()
 end,{},(((60*60) *(resethours)) - (60*3)))
 SCHEDULER:New(nil,function() 
   MESSAGE:New("SERVER RESTART WILL HAPPEN IN Aprox 2 Minute \n Persistance Data is now being saved, Nothing beyond this point will save until restart has happened.",10):ToAll()
-  hm("5 minutes")
+  hm("2 minutes")
   updatevalues()
   save()
-  ctldsavedata()
-  saveadmingroups()
-  save_groups()
+  MainSave:Save_Groups()
+  Csave:SaveData()
   hm("` $SERVERNAME - Server Info:` Mission Cycle will happen in 2 Minutes \n - Persistance Data is now being saved, Nothing beyond this point will save until restart has happened.")
 end,{},(((60*60) *(resethours)) - (60*2)))
 SCHEDULER:New(nil,function() 

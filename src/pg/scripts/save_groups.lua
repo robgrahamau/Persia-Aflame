@@ -8,6 +8,7 @@
     Scheduler = nil,
     dispsec = 60,
     forcedis = false,
+    randomhide = true,
  }
 
  -- Instantiate our Unitsave 
@@ -30,11 +31,16 @@ function GroundUnitSave:Start(_time)
     if self.Scheduler ~= nil then
         self:Stop()
     end
-    local _msg = string.format("Starting Ground unit scheduler save in 60 seconds recurring every %d seconds",_time)
+    local _msg = string.format("Starting Ground unit scheduler save in 5 seconds recurring every %d seconds",_time)
     rlog(_msg)
     self.Scheduler = SCHEDULER:New(nil,function() 
         self:Save_Groups()
-    end,{},60,_time)
+    end,{},5,_time)
+end
+
+function GroundUnitSave:SetRandomHide(_val)
+    self.randomhide = _val
+    return self
 end
 
 function GroundUnitSave:Stop()
@@ -47,7 +53,7 @@ function GroundUnitSave:SetDisp(_amount,_on)
     self.dispsec = _amount or 60
     self.forcedis = _on or false
 end
-function GroundUnitSave:SetGroup(_setgroup)
+function GroundUnitSave:setGroup(_setgroup)
     self.SetGroup = _setgroup or nil
 end
 
@@ -107,11 +113,17 @@ function GroundUnitSave:LoadGroups()
                 }
                 table.insert(units,tempTable)
             end --end unit for loop
+            local _hidden = false
+            if self.randomhide == true then
+                if math.random(1,100) > 50 then
+                    _hidden = true
+                end
+            end
             local groupData = 
             {
                 ["visible"] = false,
-	            ["hiddenOnPlanner"] = true,
-	            ["hiddenOnMFD"] = true,
+	            ["hiddenOnPlanner"] = _hidden,
+	            ["hiddenOnMFD"] = _hidden,
                 ["tasks"] = {}, -- end of ["tasks"]
                 ["uncontrollable"] = false,
                 ["task"] = "Ground Nothing",
@@ -200,6 +212,108 @@ function GroundUnitSave:Save_Groups()
     rlog("Data saved.")
 end
 
+CTLDSave = {
+    ClassName = "CTLD Save",
+    version = "1.0",
+    SaveFile = nil,
+    SavePath = nil,
+    Scheduler = nil,
+}
+
+function CTLDSave:New(_savefile,_savepath)
+    local self = BASE:Inherit(self,BASE:New())
+    self.SaveFile = _savefile or "CTLDsavefile.lua"
+    self.SavePath = _savepath or lfs.writedir()
+    return self
+end
+
+function CTLDSave:Start(_time)
+    local _time = _time or 600
+    if self.Scheduler ~= nil then
+        self:Stop()
+    end
+    self:LoadData()
+    local _msg = string.format("Starting CTLD Save Scheduler save in 60 seconds recurring every %d seconds",_time)
+    rlog(_msg)
+    self.Scheduler = SCHEDULER:New(nil,function() self:SaveData() end,{},60,_time)
+end
+
+function CTLDSave:Stop()
+    if self.Scheduler ~=nil then
+        rlog("Stopping CTLD Save Scheduler")
+        self.Scheduler:Stop()
+    end
+end
+
+function CTLDSave:SetSaveFile(_savefile)
+    self.SaveFile = _savefile or "Unitsavefile.lua"
+end
+
+function CTLDSave:SetSaveFile(_savepath)
+    self.SavePath = _savepath or lfs.writedir()
+end
+
+function CTLDSave:LoadData()
+    cltdsave = {}
+    if RGUTILS.file_exists(self.SaveFile,self.SavePath) then -- We have an existing file
+        _LOADFILE(self.SaveFile,self.SavePath,true,5,1)
+
+        if ctldsave.completeAASystems ~= nil then
+            ctld.completeAASystems = ctldsave.completeAASystems
+        end
+        if ctldsave.droppedTroopsRED ~= nil then
+            ctld.droppedTroopsRED = ctldsave.droppedTroopsRED
+    	end
+	    if ctldsave.droppedTroopsBLUE ~= nil then
+	    	ctld.droppedTroopsBLUE = ctldsave.droppedTroopsBLUE
+    	end
+        if ctldsave.droppedVehiclesRED ~= nil then
+    		ctld.droppedVehiclesRED = ctldsave.droppedVehiclesRED
+		end
+	    if ctldsave.droppedVehiclesBLUE ~= nil then
+		    ctld.droppedVehiclesBLUE = ctldsave.droppedVehiclesBLUE
+    	end
+        if ctldsave.jtacUnits ~= nil then
+		    ctld.jtacUnits = ctldsave.jtacUnits
+    		local _jtacGroupName = nil
+	    	local _jtacUnit = nil
+		    for _jtacGroupName, _jtacDetails in pairs(ctld.jtacUnits) do
+    			print("_jtacGroupName is:" .. _jtacGroupName .. "Units we don't care about")
+			    local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+                --put to the end
+                table.insert(ctld.jtacGeneratedLaserCodes, _code)
+                ctld.JTACAutoLase(_jtacGroupName, _code) --(_jtacGroupName, 
+		    end
+        end
+        if ctldsave.extractableGroups ~= nil then
+            ctld.extractableGroups = ctldsave.extractableGroups
+        end
+        if ctldsave.nextUnitId ~= nil then
+            ctld.nextUnitId = ctldsave.nextUnitId    
+        end
+        if ctldsave.nextGroupId ~= nil then
+            ctld.nextGroupId = ctldsave.nextGroupId
+        end
+    else --Save File does not exist we start a fresh table, no spawns needed
+        rlog("Unable to find save file")
+    end
+    rlog("ctldsave: LoadData complete")
+end
+
+function CTLDSave:SaveData()
+    ctldsave = {} -- nill the table
+    ctldsave.completeAASystems = ctld.completeAASystems
+    ctldsave.droppedTroopsRED = ctld.droppedTroopsRED
+    ctldsave.droppedTroopsBLUE = ctld.droppedTroopsBLUE
+    ctldsave.droppedVehiclesRED = ctld.droppedVehiclesRED
+    ctldsave.droppedVehiclesBLUE = ctld.droppedVehiclesBLUE
+    ctldsave.jtacUnits = ctld.jtacUnits
+    ctldsave.extractableGroups = ctld.extractableGroups
+    ctldsave.nextUnitId = ctld.nextUnitId
+    ctldsave.nextGroupId = ctld.nextGroupId
+    local newMissionStr = RGUTILS.IntegratedserializeWithCycles("ctldsave",ctldsave) --save the Table as a serialised type with key SaveUnits
+    RGUTILS.writefile(newMissionStr,self.SaveFile,self.SavePath)--write the file
+end
 
 NavyUnitSave = {
     ClassName = "Navy Unit Save",
@@ -236,6 +350,7 @@ function NavyUnitSave:Start(_time)
         self:Save_Groups()
     end,{},60,_time)
 end
+
 
 function NavyUnitSave:Stop()
     if self.Scheduler == nil then

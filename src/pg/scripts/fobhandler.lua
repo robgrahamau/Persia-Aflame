@@ -24,31 +24,67 @@ fob = {
   redslots = {},
 }
 
-function fob:New(name,redspawn,bluespawn,coalition,heading)
+function fob:New(name,redspawn,bluespawn,coalition,heading,usenew,distance)
   local self = BASE:Inherit(self,BASE:New())
+  self.distance = distance or nil
   self.fobname = name
   self.heading = heading
   self.fobunit = STATIC:FindByName(name)
   self.fobcoordinate = self.fobunit:GetCoordinate()
+  self.fobheading = self.fobunit:GetHeading()
+  self.spawnheading = 0
+  self.rspawncoord = nil
   self.coalition = coalition
   self.lastcoalition = coalition
   self.group = nil
-  self.redspawn = SPAWN:New(redspawn):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
-    local redgroup = GROUP:FindByName(redspawn)
-    local _country = redgroup:GetCountry()
-    if _country == nil then
-      _country = 34
-    end
-    self:spawnctld(self.fobcoordinate,_country,heading,distance)
+  self.usenew = usenew or false
+  if self.fobheading < 180 then 
+    self.spawnheading = self.fobheading
+  else
+    self.spawnheading = self.fobheading - 360
+  end
+  if self.usenew == false then
+    self.redspawn = SPAWN:New(redspawn):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
+      local redgroup = GROUP:FindByName(redspawn)
+      local _country = redgroup:GetCountry()
+      if _country == nil then
+        _country = 34
+      end
+      self:spawnctld(self.fobcoordinate,_country,heading,self.distance)
   end)
-  self.bluespawn = SPAWN:New(bluespawn):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
+  else
+    self.rspawncoord = self.fobcoordinate:Translate(122,self.fobheading,false,false)
+    self.redspawn = SPAWN:NewWithAlias(redspawn,self.fobname .. "_ground_red"):InitGroupHeading(self.spawnheading):OnSpawnGroup(function(spawngroup) 
+      local redgroup = GROUP:FindByName(redspawn)
+      local _country = redgroup:GetCountry()
+      if _country == nil then
+        _country = 34
+      end
+      self:spawnctld(self.fobcoordinate,_country,heading,self.distance)
+    end):SpawnFromVec2(self.rspawncoord:GetVec2())
+  end
+
+  if self.usenew == false then
+    self.bluespawn = SPAWN:New(bluespawn):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
     local bluegroup = GROUP:FindByName(bluespawn)
     local _country = bluegroup:GetCountry()
     if _country == nil then
       _country = 2
     end
     self:spawnctld(self.fobcoordinate,_country,heading,distance)
-  end)
+    end)
+  else
+    self.bspawncoord = self.fobcoordinate:Translate(130,self.fobheading,false,false)
+    self.bluespawn = SPAWN:NewWithAlias(bluespawn,self.fobname .. "_ground_blue"):InitGroupHeading(self.spawnheading):OnSpawnGroup(function(spawngroup) 
+      local bluespawn = GROUP:FindByName(bluespawn)
+      local _country = bluespawn:GetCountry()
+      if _country == nil then
+        _country = 2
+      end
+      self:spawnctld(self.fobcoordinate,_country,heading,distance)
+    end):SpawnFromVec2(self.rspawncoord:GetVec2())
+
+  end
   self.marker = nil
   self:AddBlueSlots(name)
   self:AddRedSlots(name)
@@ -115,9 +151,9 @@ function fob:FlipRed()
       BASE:E({self.fobname,"Slot 100",v})
   end
   if self.group ~= nil then
-  if self.group:IsAlive() == true then
-    self.group:Destroy()
-  end
+    if self.group:IsAlive() == true then
+      self.group:Destroy()
+    end
   end
  SCHEDULER:New(nil,function() 
   self:spawnred() 
@@ -150,9 +186,9 @@ function fob:FlipBlue()
       trigger.action.setUserFlag(v,00)
   end
   if self.group ~= nil then
-  if self.group:IsAlive() == true then
-    self.group:Destroy()
-  end
+    if self.group:IsAlive() == true then
+      self.group:Destroy()
+    end
   end
   SCHEDULER:New(nil,function() 
   self:spawnblue() 

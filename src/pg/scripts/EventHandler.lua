@@ -277,6 +277,19 @@ function HEVENT:OnEventMarkRemoved(EventData)
     end
   end
 end
+function HEVENT:RequestMilkCow(text,coord,_group,_playername,_coalition)
+  -- get our nearest airbase.
+  local nearestab,nearestdistance = coord:GetClosestAirbase(nil,_coalition)
+  -- now that we have our nearest airbase we want to spawn in a unit to fly from there to here.
+  local _nook = SPAWN:NewWithAlias(self.milkcowtemplate,"MilkCow"):OnAfterSpawned(function(spawngroup) 
+    -- we need to build our task list for getting it from the airfield to our current location.
+    -- task list will be as follows
+    -- take off, if distance is less then 50km then climb to 500ft, fly over and land, trigger script to spawn farp
+    -- if farp is more then 50km climb to 2,000ft, fly over and land, trigger script to spawn farp.
+    -- after landing, either despawn, or take off and rtb.
+  end):SpawnAtAirbase(nearestab:FindByName(),Spawn.Takeoff.Hot)
+end
+
 
 function HEVENT:spawnfarp(text,coord,_group,_playername,_coalition)
   _coord = coord or nil
@@ -534,7 +547,7 @@ function HEVENT:handleflare(_text,coord,col,_group,_playername)
         end
         if key:lower() == "a" or key:lower()=="alt" then
             local _talt = tonumber(val)
-            if val == nil or val < 200 then
+            if talt == nil or talt < 200 then
              _talt = 200
             end
             _alt = UTILS.FeetToMeters(_talt)
@@ -604,7 +617,7 @@ function HEVENT:handleflare(_text,coord,col,_group,_playername)
             gc:Flare(_flarecolor,_bearing)
             if ilumination == true then
                 SCHEDULER:New(nil,function() 
-                    local _tc = coord:GetRandomCoordinateInRadius(500,10)
+                    local _tc = _coord:GetRandomCoordinateInRadius(500,10)
                     _tc:SetAltitude(_alt,_msl)
                     _tc:IlluminationBomb()
                     self:Msg(string.format("%s, %s, spot lights up",_playername,_agent))
@@ -751,24 +764,24 @@ function HEVENT:handleWeatherRequest(text, coord, _group,_coalition)
   local currentPressure = coord:GetPressure(0)
   local currentTemperature = coord:GetTemperature()
   local currentWindDirection, currentWindStrengh = coord:GetWind()
-  local currentWindDirection1a, currentWindStrength1a = coord:GetWind(UTILS.FeetToMeters(500))
-  local currentWindDirection1, currentWindStrength1 = coord:GetWind(UTILS.FeetToMeters(1000))
-  local currentWindDirection2, currentWindStrength2 = coord:GetWind(UTILS.FeetToMeters(2000))
-  local currentWindDirection5, currentWindStrength5 = coord:GetWind(UTILS.FeetToMeters(5000))
-  local currentWindDirection10, currentWindStrength10 = coord:GetWind(UTILS.FeetToMeters(10000))
+  local currentWindDirection500, currentWindStrength500 = coord:GetWind(UTILS.FeetToMeters(500))
+  local currentWindDirection1000, currentWindStrength1000 = coord:GetWind(UTILS.FeetToMeters(1000))
+  local currentWindDirection2000, currentWindStrength2000 = coord:GetWind(UTILS.FeetToMeters(2000))
+  local currentWindDirection5000, currentWindStrength5000 = coord:GetWind(UTILS.FeetToMeters(5000))
+  local currentWindDirection10000, currentWindStrength10000 = coord:GetWind(UTILS.FeetToMeters(10000))
   local weatherString = string.format("Requested weather at coordinates %s: \n Visibility: %d , Wind from %d@%.1fkts, QNH %.2f, Temperature %d", mgrs, visrep, currentWindDirection, UTILS.MpsToKnots(currentWindStrengh), currentPressure * 0.0295299830714, currentTemperature)
-  local weatherString1 = string.format("Wind 500ft MSL: Wind from%d@%.1fkts",currentWindDirection1, UTILS.MpsToKnots(currentWindStrength1a))
-  local weatherString2a = string.format("Wind 1,000ft MSL: Wind from%d@%.1fkts",currentWindDirection2, UTILS.MpsToKnots(currentWindStrength1))
-  local weatherString2 = string.format("Wind 2,000ft MSL: Wind from%d@%.1fkts",currentWindDirection2, UTILS.MpsToKnots(currentWindStrength2))
-  local weatherString5 = string.format("Wind 5,000ft MSL: Wind from%d@%.1fkts",currentWindDirection5, UTILS.MpsToKnots(currentWindStrength5))
-  local weatherString10 = string.format("Wind 10,000ft MSL: Wind from%d@%.1fkts",currentWindDirection10, UTILS.MpsToKnots(currentWindStrength10))
+  local weatherString500 = string.format("Wind 500ft MSL: Wind from%d@%.1fkts",currentWindDirection500, UTILS.MpsToKnots(currentWindStrength500))
+  local weatherString1000 = string.format("Wind 1,000ft MSL: Wind from%d@%.1fkts",currentWindDirection1000, UTILS.MpsToKnots(currentWindStrength1000))
+  local weatherString2000 = string.format("Wind 2,000ft MSL: Wind from%d@%.1fkts",currentWindDirection2000, UTILS.MpsToKnots(currentWindStrength2000))
+  local weatherString5000 = string.format("Wind 5,000ft MSL: Wind from%d@%.1fkts",currentWindDirection5000, UTILS.MpsToKnots(currentWindStrength5000))
+  local weatherString10000 = string.format("Wind 10,000ft MSL: Wind from%d@%.1fkts",currentWindDirection10000, UTILS.MpsToKnots(currentWindStrength10000))
   self:Msg(weatherString, _group, _coalition, 30, MESSAGE.Type.Information)
-  self:Msg(weatherString2a,_group, _coalition, 30, MESSAGE.Type.Information)
-  self:Msg(weatherString1, _group, _coalition,30, MESSAGE.Type.Information)
-  self:Msg(weatherString2,_group, _coalition,30, MESSAGE.Type.Information)
-  self:Msg(weatherString5, _group, _coalition,30, MESSAGE.Type.Information)
-  self:Msg(weatherString10, _group, _coalition,30, MESSAGE.Type.Information)
-  hm('Weather Requested \n ' .. weatherString .. '\n' .. weatherString1 .. '\n' .. weatherString2 .. '\n' .. weatherString5 .. '\n' .. weatherString10 .. '\n')
+  self:Msg(weatherString500, _group, _coalition,30, MESSAGE.Type.Information)
+  self:Msg(weatherString1000,_group, _coalition, 30, MESSAGE.Type.Information)
+  self:Msg(weatherString2000,_group, _coalition,30, MESSAGE.Type.Information)
+  self:Msg(weatherString5000, _group, _coalition,30, MESSAGE.Type.Information)
+  self:Msg(weatherString10000, _group, _coalition,30, MESSAGE.Type.Information)
+  hm('Weather Requested \n ' .. weatherString .. '\n' .. weatherString500 .. '\n' .. weatherString1000 .. '\n' .. weatherString2000 .. '\n' .. weatherString5000 .. '\n' .. weatherString10000 .. '\n')
 end
 
 
@@ -1100,15 +1113,17 @@ function HEVENT:handleTankerRequest(text,coord,_col,_playername,_group)
   if speed == nil then
     spknt = RGUTILS.CalculateTAS(altitude,280,0)
     speed = UTILS.KnotsToMps(spknt)
+    rlog(string.format("tanker route, speed was nil so setting it to %d kts and %d Mps",spknt,speed))
   else
-    if speed > 350 then
-      spknt = RGUTILS.CalculateTAS(altitude,350)
+    if speed > 400 then
+      spknt = RGUTILS.CalculateTAS(altitude,400,0)
     elseif speed < 200 then
-      spknt = RGUTILS.CalculateTAS(altitude,200)
+      spknt = RGUTILS.CalculateTAS(altitude,200,0)
     else
       spknt = RGUTILS.CalculateTAS(altitude,speed,0)
     end
     speed = UTILS.KnotsToMps(spknt)
+    rlog(string.format("tanker route, speed was not nil setting it to %d kts and %d Mps",spknt,speed))
   end
   if heading ~= nil then
     if heading < 0 then
@@ -1135,13 +1150,15 @@ function HEVENT:handleTankerRequest(text,coord,_col,_playername,_group)
   end
   -- actually build our task and push it to the tanker.
   tanker:ClearTasks()
-  local routeTask = tanker:TaskOrbit( coord, altitude,  speed, endcoord )
+  rlog(string.format("Sending taskorbit to tanker, altitude is %d, speed is %d",altitude,speed))
+  
+  local routeTask = tanker:TaskOrbit(coord,altitude,speed,endcoord )
   tanker:SetTask(routeTask, 2)
   local tankerTask = tanker:EnRouteTaskTanker()
   tanker:PushTask(tankerTask, 4)
   -- message to all of blue goes out.
   local _mgrs = coord:ToStringMGRS()
-  self:Msg(string.format("%s Tanker is re-routed to the location requested by %s. at %s \nIt will orbit on a heading of %d for %d nm, Alt: %d CAS: %d.\n%d minutes cooldown starting now", tanker:GetName(),_playername,_mgrs,heading,distance,altft,spknt, TANKER_COOLDOWN / 60),nil,_col,30, MESSAGE.Type.Information)
+  self:Msg(string.format("%s Tanker is re-routed to the location requested by %s. at %s \nIt will orbit on a heading of %d for %d nm, Alt: %d CAS: %d. MPS: %d \n%d minutes cooldown starting now", tanker:GetName(),_playername,_mgrs,heading,distance,altft,spknt,speed, TANKER_COOLDOWN / 60),nil,_col,30, MESSAGE.Type.Information)
   SCHEDULER:New(nil, function() self:tankerCooldownHelp(tankergroupname,_col) end, {}, TANKER_COOLDOWN)
 end
 
@@ -1149,7 +1166,7 @@ end
 ---@param tankername string
 ---@param _col int
 function HEVENT:tankerCooldownHelp(tankername,_col)
-    self:Msg(string.format("Tanker routing is now available again for %s. Use the following marker commands:\n-tanker route %s \n-tanker route %s ,h <0-360>,d <5-100>,a <10-30,000>,s <250-400> \nFor more control",tankername,tankername,tankername),nil,_col, 30, MESSAGE.Type.Information)
+    self:Msg(string.format("Tanker routing is now available again for %s. Use the following marker commands:\n-tanker route %s \n-tanker,n=%s ,h=<0-360>,d=<5-100>,a=<10-30,000>,s=<250-400> \nFor more control",tankername,tankername,tankername),nil,_col, 30, MESSAGE.Type.Information)
 end
 
 
@@ -1353,7 +1370,7 @@ function HEVENT:massgroup(text,coord,_playername,coalition)
     if key:lower():find("d") then
       _dist = tonumber(val)
     end
-    if key:lower():find("s") then
+    if key:lower():find("s") or key:lower():find("c") then
       _col = val
     end
     if key:lower():find("n") then
@@ -1388,7 +1405,7 @@ function HEVENT:domassgroup(_coord,_dist,_coalition,_name,_playername)
   local _country = nil
   local _CategoryID = nil
   local _name = "IAA_" .. _name
-  local _country = self.bluecountry
+  local _country = self.redcountry
   local gunits = nil
   if _coalition:lower():find("blue") then
     _country = self.bluecountry
@@ -1469,9 +1486,10 @@ function HEVENT:domassgroup(_coord,_dist,_coalition,_name,_playername)
     ["y"] = _gy,
     ["x"] = _gx,
     ["name"] = _name,
-  } 
-  coalition.addGroup(_country, _CategoryID, groupData)
+  }
 
+  coalition.addGroup(_country, _CategoryID, groupData)
+  rlog({_country,_CategoryID,groupData})
   local _msg = string.format("Mass Group Request by %s Completed. \n We combined %d groups containing %d units. \n the new group is called %s",_playername,delcount,_unitcount,_name)
   self:Msg(_msg,nil,nil,15,"Admin",false)
 end
