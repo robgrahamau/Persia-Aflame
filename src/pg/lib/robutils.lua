@@ -115,7 +115,7 @@ function RGUTILS.log( Arguments )
         end
         env.info( string.format( "%6d(%6d)/%1s:%30s%05s.%s(%s)" , LineCurrent, LineFrom, "Info", "Rob Debug", ":", Function, RGUTILS.oneLineSerialize( Arguments ) ) )
         hm(string.format( "%6d(%6d)/%1s:%30s%05s.%s(%s)" , LineCurrent, LineFrom, "Info", "Rob Debug", ":", Function, RGUTILS.oneLineSerialize( Arguments ) ) )
-        trigger.action.outText( string.format( "%6d(%6d)/%1s:%30s%05s.%s(%s)" , LineCurrent, LineFrom, "Info", "Rob Debug", ":", Function, RGUTILS.oneLineSerialize( Arguments ) ),true,false)
+        trigger.action.outText( string.format( "%6d(%6d)/%1s:%30s%05s.%s(%s)" , LineCurrent, LineFrom, "Info", "Rob Debug", ":", Function, RGUTILS.oneLineSerialize( Arguments ) ),15,true,false)
     else
       env.info( string.format( "%1s:%30s%05s(%s)" , "Info", "Rob Debug", ":", RGUTILS.oneLineSerialize( Arguments ) ) )
       hm(string.format( "%1s:%30s%05s(%s)" , "Info", "Rob Debug", ":", RGUTILS.oneLineSerialize( Arguments ) ) )
@@ -490,10 +490,11 @@ end
 ---@param dmsg boolean display an error message in dcs if there is an error
 ---@param _repeat integer -1 = repeat to infinity, 0 or nil = no repeat, else # of times to repeat the msg.
 ---@param _time integer time in seconds for msg to repeat displaying, defaults to 15 seconds.
-function _LOADFILE(filename,path,dmsg,_repeat,_time)
+function _LOADFILE(filename,path,dmsg,_repeat,_time,_return)
   dmsg = dmsg or false
   _repeat = _repeat or nil
   _time = _time or nil
+  _return = _return or false
   RGUTILS.log({"Attempting to load file",filename,path})    
     local ran, errorMSG = pcall(function() dofile(path .. filename) end)
 		if not ran then
@@ -502,7 +503,13 @@ function _LOADFILE(filename,path,dmsg,_repeat,_time)
         local _msg = string.format("Warning File %s errored, check log for msg",filename)
         RGUTILS.scheduledmsgtoall(_msg,_time,_repeat)
       end
+      if _return then
+        return false
+      end
 		end
+    if _return then
+      return true
+    end
 end
 
 

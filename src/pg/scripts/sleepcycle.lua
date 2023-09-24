@@ -88,3 +88,38 @@ function cycleroe()
 end
 
 SCHEDULER:New(nil,function() cycleroe()  end,{},31,SLEEPCYCLE)
+
+
+--
+
+evhhit_ChargeAttack = EVENTHANDLER:New()
+evhhit_ChargeAttack:HandleEvent(EVENTS.Hit)
+
+function evhhit_ChargeAttack:OnEventHit(EventData)
+    local attackgroup = EventData.IniGroup
+    local defendgroup = EventData.TgtGroup
+    if attackgroup ~= nil and defendgroup ~= nil and ChargeAttackOn == true then   -- the attacker must still be alive -- there must still be some units alive
+        if attackgroup:IsHelicopter() or attackgroup:IsGround() then -- if your attacking me from the helicopter or a ground unit
+            local mooseattackgroup = GROUP:FindByName(attackgroup.GroupName)
+            if mooseattackgroup then
+                local attackerlocation = mooseattackgroup:GetVec3()
+                local attackedunits = GROUP:FindByName(defendgroup.GroupName)
+                local _chargeflag = false
+                if attackedunits:GetAmmunition() > 0 and attackedunits:GetSpeedMax() > 0 then
+                    _chargeflag = true
+                end
+            end
+            if attackerlocation and _chargeflag then
+                DEBUGMESSAGE(defendgroup.GroupName ..' is charging '.. attackgroup.GroupName..'!')
+                if ChargeRandom == true then
+                local randompointneartarget = mooseattackgroup:GetCoordinate()
+                local randompointneartarget = randompointneartarget:GetRandomCoordinateInRadius(500,0)
+                    attackerlocation = randompointneartarget:GetVec3()
+                end
+                vec2Coord = { x = attackerlocation.x, y = attackerlocation.z }
+                defendgroup:TaskRouteToVec2(vec2Coord,30, ENUMS.Formation.Vehicle.Vee)
+                defendgroup:OptionAlarmStateRed()
+            end
+        end
+    end
+end

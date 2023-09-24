@@ -90,6 +90,9 @@ if abossactive == true then
 	AirbossWash:SetEmergencyLandings(true)
 	AirbossWash:SetPatrolAdInfinitum(true)
 	AirbossWash:SetMPWireCorrection(12)
+	if USEFM == true then
+		AirbossWash:SetFunkManOn()
+	end
 	--AirbossWash:setdisplaymessage(false)
 	if washingtonactive == true then
 		AirbossWash:Start()
@@ -101,9 +104,28 @@ if abossactive == true then
 	end
 
 	function AirbossWash:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
+		player_name = playerData.name:gsub('[%p]', '')
 		myGrade.messageType = 2
 		myGrade.name = playerData.name
 		HypeMan.sendBotTable(myGrade)
+		trapsheet = "AIRBOSS-Washington_trapsheet-" .. player_name
+		AirbossWash:SetTrapSheet("C:\\Users\\root\\Saved Games\\lsogrades\\",trapsheet)
+		self:_SaveTrapSheet(playerData, myGrade)
+		msg = {}
+    	msg.command = "onMissionEvent"
+    	msg.eventName = "S_EVENT_AIRBOSS"
+    	msg.initiator = {}
+    	msg.initiator.name = playerData.name
+    	msg.place = {}
+    	msg.place.name = myGrade.carriername
+    	msg.points = myGrade.points
+    	msg.grade = myGrade.grade
+    	msg.details = myGrade.details
+    	msg.case = myGrade.case
+    	msg.wire = playerData.wire
+    	msg.trapsheet = trapsheet
+    	msg.time = timer.getTime()
+		dcsbot.sendBotTable(msg)
 	end
   
 	AirbossTeddy = AIRBOSS:New("TeddyR","TeddyR")
@@ -129,12 +151,35 @@ if abossactive == true then
 	AirbossTeddy:SetRecoveryTurnTime(60)
 	AirbossTeddy:SetEmergencyLandings(true)
 	AirbossTeddy:SetWelcomePlayers(false)
-	AirbossTeddy:SetMPWireCorrection(6)
+	AirbossTeddy:SetMPWireCorrection(12)
+	if USEFM == true then
+		AirbossTeddy:SetFunkManOn()
+	end
+	--AirbossTeddy:SetMPWireCorrection(0)
 	--AirbossTeddy:setdisplaymessage(false)
 	function AirbossTeddy:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
+		player_name = playerData.name:gsub('[%p]', '')
+		trapsheet = "AIRBOSS-Teddy_trapsheet-" .. player_name
+		AirbossTeddy:SetTrapSheet("C:\\Users\\root\\Saved Games\\lsogrades\\",trapsheet)
 		myGrade.messageType = 2
 		myGrade.name = playerData.name
 		HypeMan.sendBotTable(myGrade)
+		self:_SaveTrapSheet(playerData, myGrade)
+		msg = {}
+    	msg.command = "onMissionEvent"
+    	msg.eventName = "S_EVENT_AIRBOSS"
+    	msg.initiator = {}
+    	msg.initiator.name = playerData.name
+    	msg.place = {}
+    	msg.place.name = myGrade.carriername
+    	msg.points = myGrade.points
+    	msg.grade = myGrade.grade
+    	msg.details = myGrade.details
+    	msg.case = myGrade.case
+    	msg.wire = playerData.wire
+    	msg.trapsheet = trapsheet
+    	msg.time = timer.getTime()
+		dcsbot.sendBotTable(msg)
 	end
 
 	function AirbossTeddy:OnAfterStart(From,Event,To)
@@ -165,7 +210,7 @@ if abossactive == true then
 	AirbossForest:SetMaxSectionSize(4)
 	AirbossForest:SetPatrolAdInfinitum(true)
 	AirbossForest:SetRefuelAI(15)
-	--AirbossForest:SetSoundfilesFolder("Airboss Soundfiles/")
+	AirbossForest:SetSoundfilesFolder("Airboss Soundfiles/")
 	AirbossForest:SetDefaultPlayerSkill("TOPGUN Graduate")
 	AirbossForest:SetHandleAIOFF()
 	AirbossForest:SetWelcomePlayers(false)
@@ -173,13 +218,35 @@ if abossactive == true then
 	AirbossForest:SetRecoveryTurnTime(60)
 	AirbossForest:SetEmergencyLandings(true)
 	AirbossForest:SetWelcomePlayers(false)
-	AirbossForest:SetMPWireCorrection(12)
+	AirbossForest:SetMPWireCorrection(0)
+	if USEFM == true then
+		AirbossForest:SetFunkManOn()
+	end
 	--AirbossForest:setdisplaymessage(false)
 	
 	function AirbossForest:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
+		player_name = playerData.name:gsub('[%p]', '')
 		myGrade.messageType = 2
 		myGrade.name = playerData.name
 		HypeMan.sendBotTable(myGrade)
+		trapsheet = "AIRBOSS-Forestall_trapsheet-" .. player_name
+		AirbossForest:SetTrapSheet("C:\\Users\\root\\Saved Games\\lsogrades\\",trapsheet)
+		self:_SaveTrapSheet(playerData, myGrade)
+		msg = {}
+    	msg.command = "onMissionEvent"
+    	msg.eventName = "S_EVENT_AIRBOSS"
+    	msg.initiator = {}
+    	msg.initiator.name = playerData.name
+    	msg.place = {}
+    	msg.place.name = myGrade.carriername
+    	msg.points = myGrade.points
+    	msg.grade = myGrade.grade
+    	msg.details = myGrade.details
+    	msg.case = myGrade.case
+    	msg.wire = playerData.wire
+    	msg.trapsheet = trapsheet
+    	msg.time = timer.getTime()
+		dcsbot.sendBotTable(msg)
 	end
 	if forestairboss == true then
 		AirbossForest:Start()
@@ -188,8 +255,11 @@ if abossactive == true then
 	end
 	
 	
-	
-	AirbossStennis = AIRBOSS:New("Stennis","Stennis")
+	if newslots == true then
+		AirbossStennis = AIRBOSS:New("Abe","Abe")	
+	else
+		AirbossStennis = AIRBOSS:New("Stennis","Stennis")
+	end
 	-- Delete auto recovery window.
 	AirbossStennis:Load("C:\\Users\\root\\Saved Games\\lsogrades\\")
 	AirbossStennis:SetAutoSave("C:\\Users\\root\\Saved Games\\lsogrades\\")
@@ -208,15 +278,38 @@ if abossactive == true then
 	AirbossStennis:SetPatrolAdInfinitum(true)
 	AirbossStennis:SetHandleAIOFF()
 	AirbossStennis:SetMPWireCorrection(12)
+	if USEFM == true then
+		AirbossStennis:SetFunkManOn()
+	end
 	function AirbossStennis:OnAfterStart(From,Event,To)
 		self:DeleteAllRecoveryWindows()
 	end
 	AirbossStennis:Start()
 	hm("Back of the Bus (Stennis) Airboss has been activated. \n > LSO is Now online on 119.25, Marshall 305 \n > TACAN 35x > ICLS 3 > RECOVERY PERIOD: 30 Minutes > Recovery Speed: 25 Knots")
+	
 	function AirbossStennis:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
+		player_name = playerData.name:gsub('[%p]', '')
 		myGrade.messageType = 2
 		myGrade.name = playerData.name
 		HypeMan.sendBotTable(myGrade)
+		trapsheet = "AIRBOSS-Stennis_Trapsheet-" .. player_name
+		AirbossStennis:SetTrapSheet("C:\\Users\\root\\Saved Games\\lsogrades\\",trapsheet)
+		self:_SaveTrapSheet(playerData, myGrade)
+		msg = {}
+    	msg.command = "onMissionEvent"
+    	msg.eventName = "S_EVENT_AIRBOSS"
+    	msg.initiator = {}
+    	msg.initiator.name = playerData.name
+    	msg.place = {}
+    	msg.place.name = myGrade.carriername
+    	msg.points = myGrade.points
+    	msg.grade = myGrade.grade
+    	msg.details = myGrade.details
+    	msg.case = myGrade.case
+    	msg.wire = playerData.wire
+    	msg.trapsheet = trapsheet
+    	msg.time = timer.getTime()
+		dcsbot.sendBotTable(msg)
 	end
 
 	function AirbossStennis:OnAfterRecoveryStart(From,Event,To,Case,Offset)

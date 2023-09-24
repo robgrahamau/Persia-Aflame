@@ -1,4 +1,4 @@
-env.info("--- SKYNET VERSION: 3.1.0 | BUILD TIME: 09.02.2023 1925Z ---")
+env.info("--- SKYNET VERSION: 3.0.0 | BUILD TIME: 23.07.2022 1512Z ---")
 do
 --this file contains the required units per sam type
 samTypesDB = {
@@ -1681,7 +1681,7 @@ end
 
 function SkynetIADS:setupSAMSitesAndThenActivate(setupTime)
 	self:activate()
-	self.logger:printOutputToLog("DEPRECATED: setupSAMSitesAndThenActivate, no longer needed since using enableEmission instead of AI on / off allows for the Ground units to setup with their radars turned off")
+	self.iads:printOutputToLog("DEPRECATED: setupSAMSitesAndThenActivate, no longer needed since using enableEmission instead of AI on / off allows for the Ground units to setup with their radars turned off")
 end
 
 function SkynetIADS:deactivate()
@@ -3450,7 +3450,7 @@ function SkynetIADSSAMSearchRadar:setupRangeData()
 				local sensorInformation = subEntries[j]
 				-- some sam sites have  IR and passive EWR detection, we are just interested in the radar data
 				-- investigate if upperHemisphere and headOn is ok, I guess it will work for most detection cases
-				if sensorInformation.type == Unit.SensorType.RADAR and sensorInformation['detectionDistanceAir'] then
+				if sensorInformation.type == Unit.SensorType.RADAR then
 					local upperHemisphere = sensorInformation['detectionDistanceAir']['upperHemisphere']['headOn']
 					local lowerHemisphere = sensorInformation['detectionDistanceAir']['lowerHemisphere']['headOn']
 					self.maximumRange = upperHemisphere
@@ -3509,35 +3509,7 @@ function SkynetIADSSamSite:create(samGroup, iads)
 	setmetatable(sam, self)
 	self.__index = self
 	sam.targetsInRange = false
-	sam.goLiveConstraints = {}
 	return sam
-end
-
-function SkynetIADSSamSite:addGoLiveConstraint(constraintName, constraint)
-	self.goLiveConstraints[constraintName] = constraint
-end
-
-function SkynetIADSAbstractRadarElement:areGoLiveConstraintsSatisfied(contact)
-	for constraintName, constraint in pairs(self.goLiveConstraints) do
-		if ( constraint(contact) ~= true ) then
-			return false
-		end
-	end
-	return true
-end
-
-function SkynetIADSAbstractRadarElement:removeGoLiveConstraint(constraintName)
-	local constraints = {}
-	for cName, constraint in pairs(self.goLiveConstraints) do
-		if cName ~= constraintName then
-			constraints[cName] = constraint
-		end
-	end
-	self.goLiveConstraints = constraints
-end
-
-function SkynetIADSAbstractRadarElement:getGoLiveConstraints()
-	return self.goLiveConstraints
 end
 
 function SkynetIADSSamSite:isDestroyed()
@@ -3570,7 +3542,7 @@ end
 
 function SkynetIADSSamSite:informOfContact(contact)
 	-- we make sure isTargetInRange (expensive call) is only triggered if no previous calls to this method resulted in targets in range
-	if ( self.targetsInRange == false and self:areGoLiveConstraintsSatisfied(contact) == true and self:isTargetInRange(contact) and ( contact:isIdentifiedAsHARM() == false or ( contact:isIdentifiedAsHARM() == true and self:getCanEngageHARM() == true ) ) ) then
+	if ( self.targetsInRange == false and self:isTargetInRange(contact) and ( contact:isIdentifiedAsHARM() == false or ( contact:isIdentifiedAsHARM() == true and self:getCanEngageHARM() == true ) ) ) then
 		self:goLive()
 		self.targetsInRange = true
 	end

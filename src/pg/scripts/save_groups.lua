@@ -67,6 +67,7 @@ end
 
 function GroundUnitSave:LoadGroups()
     local spawncounter = 0
+    local spwangcounter = 0
     local groupsavefile = self.SavePath .. "" .. self.SaveFile
     --SCRIPT START
     rlog({"Load Group Start",groupsavefile,self.SavePath,self.SaveFile})
@@ -134,6 +135,7 @@ function GroundUnitSave:LoadGroups()
                 ["name"] = SaveUnits[k]["name"],
             } 
             coalition.addGroup(SaveUnits[k]["CountryID"], SaveUnits[k]["CategoryID"], groupData)
+            spwangcounter = spwangcounter + 1
             -- clear our group data just to be certain though because it's a local it should auto clean.
             groupData = {}
         end --end Group for loop
@@ -141,7 +143,47 @@ function GroundUnitSave:LoadGroups()
         rlog("Unable to find save file")
         SaveUnits={} 
     end
-    local _msg = string.format("Group Saving - Spawned a total of %d groups, using file %s",spawncounter,groupsavefile)
+    
+    local _group = _group or nil
+    local _col = _col or nil
+    local tempset = SET_UNIT:New():FilterActive():FilterOnce()
+    local ucounter = 0
+    local ub = 0
+    local ur = 0
+    local un = 0
+    tempset:ForEach(function(g) 
+        ucounter = ucounter + 1
+        local uc = g:GetCoalition()
+        if uc == 1 then
+            ur = ur + 1
+        elseif uc == 2 then
+            ub = ub + 1
+        else
+            un = un + 1
+        end
+    end)
+    tempset = SET_GROUP:New():FilterActive():FilterOnce()
+    local gcounter = 0
+    local gb = 0
+    local gr = 0
+    local gn = 0
+    tempset:ForEach(function(g) 
+        gcounter = gcounter + 1
+        local gc = g:GetCoalition()
+        if gc == 1 then
+            gr = gr + 1
+        elseif gc == 2 then
+            gb = gb + 1
+        else
+            gn = gn + 1
+        end
+    end)
+
+
+
+    local _msg = string.format("Group Saving - Spawned a total of %d groups & %d units, using file %s",spwangcounter,spawncounter,groupsavefile)
+    rlog(_msg)
+    local _msg = string.format("Total Groups %d total units %s",gcounter,ucounter)
     rlog(_msg)
 end
 
@@ -176,7 +218,7 @@ function GroundUnitSave:Save_Groups()
                 {   
                     ["type"]=_unit:GetTypeName(),
                     ["transportable"]=true,
-                    ["unitID"]=_unit:GetID(),
+                    -- ["unitID"]=_unit:GetID(),
                     ["skill"]=skill,
                     ["y"]=_unit:GetVec2().y,
                     ["x"]=_unit:GetVec2().x,

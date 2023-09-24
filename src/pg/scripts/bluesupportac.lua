@@ -65,7 +65,7 @@ do
 		hm("> Coalition: Overlord11 Was shot down ")
 		Ounit:UnHandleEvent(EVENTS.Dead)
 	end
-	
+	--[[
 	Texaco11Spawn = SPAWN:NewWithAlias("Texaco 11","Texaco11"):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
 		Texaco11 = spawngroup
 		texacocount = texacocount + 1
@@ -81,7 +81,8 @@ do
 		Arco11 = spawngroup
 		arcocount = arcocount + 1
 	end,{}):InitRepeatOnLanding():InitCleanUp(600)
-
+	]]
+	
 	SkyEye1Spawn = SPAWN:NewWithAlias("SKYEYE1","Skyeye1"):InitKeepUnitNames(true):InitLimit(1,5):OnSpawnGroup(function(spawngroup)
 		SkyEye1 = spawngroup
 		skyeyecount = skyeyecount + 1
@@ -155,7 +156,7 @@ do
 
 
 SCHEDULER:New(nil,function()
-	checktankers()
+	--checktankers()
 	checkawacs()
 	checkskyeye()
   end,{},60,1800)

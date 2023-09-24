@@ -22,6 +22,7 @@ fob = {
   redstaticlist = { },
   blueslots = {},
   redslots = {},
+  sanity = 300,
 }
 
 function fob:New(name,redspawn,bluespawn,coalition,heading,usenew,distance)
@@ -38,6 +39,8 @@ function fob:New(name,redspawn,bluespawn,coalition,heading,usenew,distance)
   self.lastcoalition = coalition
   self.group = nil
   self.usenew = usenew or false
+  self.scheduler = nil
+  self.deactivated = false
   if self.fobheading < 180 then 
     self.spawnheading = self.fobheading
   else
@@ -197,6 +200,26 @@ function fob:FlipBlue()
   self.lastcoalition = 1
 end
 
+function fob:FlipNone()
+  BASE:E({self.fobname,"Flip Blue"})
+  for k,v in pairs(self.redslots) do
+      BASE:E({self.fobname,"Slot 100",v}) 
+      trigger.action.setUserFlag(v,100)
+  end
+  for k,v in pairs(self.blueslots) do 
+      BASE:E({self.fobname,"Slot 00",v})
+      trigger.action.setUserFlag(v,100)
+  end
+  if self.group ~= nil then
+    if self.group:IsAlive() == true then
+      self.group:Destroy()
+    end
+  end
+  self.coalition = 0
+  self.lastcoalition = 2
+end
+
+
 function fob:AddBlueStatics(statics)
   self.bluestaticlist = statics
 end
@@ -219,8 +242,42 @@ function fob:Start()
   end  
   self:HandleEvent(EVENTS.BaseCaptured) 
   local co = self.fobunit:GetCoordinate()
+  self.scheduler = SCHEDULER:New(nil,function() self:SanityChecker() end,{},60,self.sanity)
+  return self
 end
 
+function fob:Stop()
+  if self.scheduler ~= nil then
+    self.scheduler:Stop()
+  end
+  self.UnHandleEvent(EVENTS.BaseCaptured)
+  BASE:E({"Slot Handler Stopped",self.name})
+  return self
+end
+function fob:SanityChecker()
+  self:E({self.name,"Event Sanity Check"})
+  local ABItem = AIRBASE:FindByName(self.fobname)
+  local coalition = ABItem:GetCoalition()
+  local _coord = ABItem:GetCoordinate()
+  if ABItem:GetCoalition() == 2 and self.coalition ~= 2 then
+    if self:IsBlue() == true then
+      self:FlipBlue()
+      local col = "Coalition" 
+      local co = self.fobunit:GetCoordinate()
+      self:routegroups(_coord,15000,"red")
+    end
+  elseif ABItem:GetCoalition() == 1 and self.coalition ~= 1 then
+    if self:IsBlue() ~= true then
+      self:FlipRed()
+      local col = "Coalition"
+      local co = self.fobunit:GetCoordinate()
+      self:routegroups(_coord,15000,"blue")
+    end
+  elseif ABItem:GetCoalition() == 0 and self.coalition ~= 0 then
+    local col = "Neutral"
+    self.coalition = 0
+  end
+end
 
 function fob:IsBlue()
   if self.fobunit:GetCoalition() == 2 then
@@ -229,7 +286,6 @@ function fob:IsBlue()
     return false
   end
 end
-
 
 -- self contained routegroups
 function fob:routegroups(_coord,dist,coalition) 
@@ -258,9 +314,30 @@ function fob:routegroups(_coord,dist,coalition)
   end
 end
 
+function fob:Deactivate()
+  local ABItem = AIRBASE:FindByName(self.fobname)
+  ABItem:SetAutoCaptureOFF()
+  ABItem:SetCoalition(0)
+  for k,v in pairs(self.redslots) do
+    BASE:E({self.fobname,"Slot 100",v}) 
+    trigger.action.setUserFlag(v,100)
+  end
+  for k,v in pairs(self.blueslots) do 
+    trigger.action.setUserFlag(v,100)
+    BASE:E({self.fobname,"Slot 100",v})
+  end
+  if self.group ~= nil then
+    if self.group:IsAlive() then
+      self.group:Destroy()
+    end
+  end
+  -- scheduler to do this check in 1 minute
+  SCHEDULER:New(nil,function() if self.group ~= nil then self.group:Destroy() end end,{},60)
+end
 
 --- Fob Event Base Capture.
 function fob:OnEventBaseCaptured(EventData)
+ self:E("Event Base Capture")
  local AirbaseName = EventData.PlaceName -- The name of the airbase that was captured.
  local ABItem = AIRBASE:FindByName(AirbaseName)
  local coalition = ABItem:GetCoalition()

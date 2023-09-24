@@ -1,7 +1,7 @@
 -- Globals are important.
 Servername = "Persia Aflame"
 lastupdate = "31/01/2023"
-
+newslots = true
 --- Boolean Variables
 carrier5dead = false
 carrier6dead = false
@@ -13,21 +13,23 @@ NassauSpawned = false
 PeleliuSpawned = false
 useforrest = true
 ADMIN = false
+USEFM = true
 __HMLOADED = false
 _DEBUG = false
 _loaded = false
 LSOLOAD = true
 USEHM = true
 usenew = true
+ChargeAttackOn = true 
 --
 adminspawned = {} 
 _maxislandmainlandspawns = 24
-
+ALLFOBS = {}
 trigger.action.setUserFlag(100,0) -- don't know why this is set.. but being safe.
 
 trigger.action.setUserFlag("SSB",100) -- Set SSB active.
-activearea = "•Eastern AO areas marked by dotted Square on F10 map\n \n ROE Notice:\n • Reduce Civilian Damage."
-activeareairan = "• Defend Eastern AO areas areas marked by dotted Square on F10 map"
+activearea = "•Bandar and Eastern AO areas marked by dotted Square on F10 map\n \n ROE Notice:\n • Reduce Civilian Damage."
+activeareairan = "• Defend Attacked areas areas marked by dotted Square on F10 map"
 
 farpcounter = 0
 _spawnnumber = 0
@@ -77,16 +79,25 @@ _lsch = SCHEDULER:New(nil,function()
 		MESSAGE:New("Mission Has not loaded correctly!, Please Contact an ADMIN / Rob on DISCORD",30):ToAll()
 	end
 end,{},60,60)
+if USEFM == true then
+	mySocket=SOCKET:New()
+end
 
 if USEHM == true then
 	env.info("HypeMan")
-	_LOADFILE("Hypeman.lua","C:\\HypeMan\\",true,-1,15)
-	__HMLOADED = true
+	__HMLOADED = _LOADFILE("Hypeman.lua","C:\\HypeMan\\",false,-1,15,true)
+	if __HMLOADED == false then
+		USEHM = false
+		USEFMDegbug = false
+	end
 end
 
 function hm(msg)
 	if USEHM == true then
 		HypeMan.sendBotMessage(string.format( "%1s:(%s)" , Servername,routines.utils.oneLineSerialize( msg ) ) )
+	end
+	if USEFMDegbug == true then
+		dcsbot.sendBotMessage(string.format( "%1s:(%s)" , Servername,routines.utils.oneLineSerialize( msg ) ))
 	end
 	env.info(string.format( "%1s:(%s)" , Servername,routines.utils.oneLineSerialize( msg ) ) )
 end
@@ -104,9 +115,13 @@ hm("Math Randomisation Underway")
 for i=10,1 do local m = math.random(1,100) end
 
 hm("Hazel Link Starting.....")
-GRPC.debug = true
-GRPC.host = '0.0.0.0'
-GRPC.load()
+if GRPC ~= nil then
+	GRPC.debug = true
+	GRPC.host = '0.0.0.0'
+	GRPC.load()
+else
+	env.info("GRPC not avalible")
+end
 hm("> GRPC is a go, Ceiling Cat is real!")
 
 hm("> stts.lua")
@@ -182,12 +197,14 @@ _LOADFILE("mission_per.lua",_SRCPATH,true,-1,15)
 hm("> intel.lua")
 _LOADFILE("intel.lua",_SRCPATH,true,-1,15)
 
-hm("> dcslink.lua")
-_LOADFILE("dcslink.lua",_SRCPATH,true,-1,15)
+--hm("> dcslink.lua")
+--_LOADFILE("dcslink.lua",_SRCPATH,true,-1,15)
 
 hm("> client.lua")
 _LOADFILE("client.lua",_SRCPATH,true,-1,15)
 
+hm("> Skynet")
+_LOADFILE("skynet-iads-compiled.lua",_LIBPATH,true,-1,15)
 
 hm("> Anti Jackass Script Loading in...jackasstest.lua")
 _LOADFILE("jackasstest.lua",_SRCPATH,true,-1,15)
@@ -212,6 +229,12 @@ _LOADFILE("deepstrikes.lua",_SRCPATH,true,-1,15)
 
 hm("> newbluesupport.lua")
 _LOADFILE("newbluesupport.lua",_SRCPATH,true,-1,15)
+
+
+hm("> IADS.lua")
+_LOADFILE("iads.lua",_SRCPATH,true,-1,15)
+
+
 lasthash = inputhash
 missionpath = "C:\\Users\\root\\Dropbox\\ServerShared\\Persia_Templates\\"
 hm("> Persia Falme: ALL SCRIPTS LOADED, INTERNATIONAL WAR CRIMES ... I MEAN PERSIAN GULF AFLAME SERVER IS NOW ONLINE AND RUNNING \n PLEASE HAVE A PLEASENT AND PRODUCTIVE 8 HRS.")
@@ -317,4 +340,30 @@ end
 
 
 -- set up our zone to show the active ao
-_aobox = highlightarea(116735,67341,29359,171361,-1,{234,63,247},0.5,{234,63,247},0.35,3,nil)
+--_aobox = highlightarea(305493,75533,202114,176566,-1,{234,63,247},0.5,{234,63,247},0.35,3,nil)
+ --_aobox2 = highlightarea(158989,-50885,105557,76245,-1,{234,63,247},0.5,{234,63,247},0.35,3,nil)  -- Bandar Area
+ _aobox2 = highlightarea(198295, -325539, 32270, -107193 ,-1,{234,63,247},0.5,{234,63,247},0.35,3,nil) -- Kish/Western AO
+
+--hindgobybye = GROUP:FindByName("Hind_Sweep1")
+--hindgobyebye:Destroy()
+
+allredunits = SET_GROUP:New():FilterCategories("ground"):FilterCoalitions("red"):FilterPrefixes({"RAA","IAA","GM_USAA","cjtf_blue","cjtf_red","CTLD","ctld","RSAM","REW","SCUD","BSAM","USEW","AAA","RDEF","Iran Ammo"}):FilterActive(true):FilterOnce()
+
+SCHEDULER:New(nil,function() 
+	rediads = IADSMonitor:New("Red IADS",allredunits,"red")
+	rediads:Start()
+end,{},180)
+
+SCHEDULER:New(nil,function() 
+hindgobybye = GROUP:FindByName("Hind_Sweep1")
+hindgobyebye:Destroy() 
+end,{},600)
+
+hm("> AO.lua")
+_LOADFILE("AO.lua",_SRCPATH,true,-1,15)
+
+
+local ran, errorMSG = pcall(function() dofile(lfs.writedir() .. 'Scripts/net/DCSServerBot/DCSServerBot.lua') end)
+if not ran then
+	RGUTILS.log({"Error: ",errorMSG})
+end

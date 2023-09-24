@@ -68,8 +68,19 @@ function ScheduleLateControl(_name)
     end
 end
 
+function removeFieldsID(tbl, _field)
+    for k, v in pairs(tbl) do
+        if k == _field then
+            tbl[k] = nil
+        elseif type(v) == "table" then
+            removeFieldsID(v, _field)
+        end
+    end
+end
+
 function tablespawn(tbl, _country, _cat)
-    --dumpinfo(tbl)
+    removeFieldsID(tbl, "unitId")
+    removeFieldsID(tbl, "groupId")
 
     for k, v in pairs(tbl) do
         --        BASE:E({k, v})
@@ -104,15 +115,18 @@ function tablespawn(tbl, _country, _cat)
         if spawnit == true then
             if _cat == Group.Category.STRUCTURE then
                 coalition.addStaticObject(_country, v)
+                _DATABASE:AddGroup(v.name) -- Suggested by Rob 2022-11-22 -- Breaks MOOSE!
             else
                 local spawnedgroup = coalition.addGroup(_country, _subcat, v)
                 if v.lateActivation then
                     table.insert(spawnLateActivate, v.name)
                     GROUP:NewTemplate(v, 2, _subcat, _country) --We need to add this as otherwise late activated groups aren't added to the moose template
+                    _DATABASE:AddGroup(v.name) -- Suggested by Rob 2022-11-22  - Doesn't like doing it on late activation units
                     ScheduleLateActivation(v.name)
                 end
                 if v.uncontrolled then
                     table.insert(spawnLateControl, v.name)
+                    _DATABASE:AddGroup(v.name) -- Suggested by Rob 2022-11-22
                     ScheduleLateControl(v.name)
                 end
             end
@@ -218,7 +232,7 @@ function missionspawn(_missionfile, _coalition)
     dofile(TempMizPath .. "/mission")
 
     if mission == nil then
-        trigger.action.outText("Admin Error: No misison template", 15, false)
+        MESSAGE:New("Admin Error: No misison template", 15):ToAll()
     else
         local tbl = ""
         local ctrl = ""

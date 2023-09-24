@@ -128,11 +128,13 @@ local function permanentPlayerCheck()
 			end
 		end
 	end
-    SetPlayer:ForEachClient(function(PlayerClient)
+
+
+  SetPlayer:ForEachClient(function(PlayerClient)
       local PlayerID = PlayerClient.ObjectName
       local Coalition = PlayerClient:GetCoalition()
       local col = "Irani Defenders"
-	  local mission = activeareairan
+	    local mission = activeareairan
       if Coalition == 2 then
         col = "Coalition Forces"
 		mission = activearea
@@ -149,7 +151,7 @@ local function permanentPlayerCheck()
 		end
         if PlayerMap[PlayerID] ~= true then
           PlayerMap[PlayerID] = true
-          local MessageText = "Welcome to Persia Aflame by Rob Graham Version: "..version.." Last update:"..lastupdate.." ".. PlayerName .. "\n Powered By Moose, Player Donations, OverlordBot, Lots of Pain Killers, and lets not forget the space server Hamsters! \n THE EYES BOO GO FOR THE EYES! \n DCS Server Version: STABLE \n Current Active Tasking is: " .. mission .. "\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n, You are on " ..col..", Please be aware this mission is geared towards Coalition Forces attacking Iran is defending by and large. Please check the mission brief for more information ALT+B \n Please Join the DISCORD SEE ALT+B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n and check your leadboard spot http://taskgroupwarrior.info:8080/leaderBoard \n UNICOM is 122.80 VHF, use for ATC please."
+          local MessageText = "Welcome to Persia Aflame by Rob Graham Version: "..version.." Last update:"..lastupdate.." ".. PlayerName .. "\n Powered By Moose, Player Donations, OverlordBot, Lots of Pain Killers, and lets not forget the space server Hamsters! \n THE EYES BOO GO FOR THE EYES! \n DCS Server Version: Open Beta \n Current Active Tasking is: " .. mission .. "\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n Current Server time is: ".. nowHour .. ":" .. nowminute .."\n, You are on " ..col..", Please be aware this mission is geared towards Coalition Forces attacking Iran is defending by and large. Please check the mission brief for more information ALT+B \n Please Join the DISCORD SEE ALT+B for Links \n Supplied by core members of Http://TaskGroupWarrior.Info \n Current Time is: " .. currenttime .. " Server Mission Cycle:" .. restarttime .." \n A Reset will always happen at " .. serverrestart .. ":00  Sydney Australia time. \n remember to visit our website at http://taskgroupwarrior.info \n you can check the leaderboard on discord at: https://discord.gg/F6amrC4PkA \n UNICOM is 122.80 VHF, use for ATC please."
           MESSAGE:New(MessageText,15,"Server Info",false):ToClient(PlayerClient)
           hm(">` $SERVERNAME - Ground Crew:` " .. PlayerClient:GetPlayerName() .. " is in the pit, straps are tight, their " ..PlayerClient:GetTypeName() .. " belonging to " .. col .. " is fueled and ready to go \n > Good Luck Out there")
 		  SCHEDULER:New(nil,function() 
@@ -172,6 +174,7 @@ end
 C_Arco12 = nil
 
 function Arco11A10()
+  local __ARCO11 = GROUP:FindByName("Arco 11")
   local rf = ZONE:New("rf")
   local altitude = UTILS.FeetToMeters(15000)
   local speed = UTILS.KnotsToMps(260) 
@@ -179,11 +182,11 @@ function Arco11A10()
   local distance = 50
   local coord = rf:GetCoordinate()
   local endcoord = coord:Translate(UTILS.NMToMeters(distance),heading)
-  Arco11:ClearTasks()
-  local routeTask = Arco11:TaskOrbit(coord,altitude,speed,endcoord)
-  Arco11:SetTask(routeTask,2)
-  local tankerTask = Arco11:EnRouteTaskTanker()
-  Arco11:PushTask(tankerTask,4)
+  __ARCO11:ClearTasks()
+  local routeTask = __ARCO11:TaskOrbit(coord,altitude,speed,endcoord)
+  __ARCO11:SetTask(routeTask,2)
+  local tankerTask = __ARCO11:EnRouteTaskTanker()
+  __ARCO11:PushTask(tankerTask,4)
   MESSAGE:New("ARCO11 is now reducing speed to 260 Knots Ground and moving to Anchor point for A10 Refueling",15):ToBlue()
   hm("Arco has increased its speed to 260 Knots ground speed to cater to slow A10's")
   C_Arco11:Remove()
@@ -191,6 +194,7 @@ function Arco11A10()
 end
 
 function Arco11FTR()
+  local __ARCO11 = GROUP:FindByName("Arco 11")
   local rf = ZONE:New("rf")
   local altitude = UTILS.FeetToMeters(15000)
   local speed = UTILS.KnotsToMps(360) 
@@ -198,20 +202,27 @@ function Arco11FTR()
   local distance = 50
   local coord = rf:GetCoordinate()
   local endcoord = coord:Translate(UTILS.NMToMeters(distance),heading)
-  Arco11:ClearTasks()
-  local routeTask = Arco11:TaskOrbit(coord,altitude,speed,endcoord)
-  Arco11:SetTask(routeTask,2)
-  local tankerTask = Arco11:EnRouteTaskTanker()
-  Arco11:PushTask(tankerTask,4)
+  __ARCO11:ClearTasks()
+  local routeTask = __ARCO11:TaskOrbit(coord,altitude,speed,endcoord)
+  __ARCO11:SetTask(routeTask,2)
+  local tankerTask = __ARCO11:EnRouteTaskTanker()
+  __ARCO11:PushTask(tankerTask,4)
   MESSAGE:New("ARCO11 is now increasing speed to 360 Knots Ground and moving to Anchor point for FGTR Refueling",15):ToBlue()
   hm("Arco has increased its speed to 360 knots over the ground for Fighter Refueling")
   C_Arco12:Remove()
   C_Arco11 = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Change ARCO11 Speed for A10",C_tanker,Arco11A10,nil)
 end
 
+function TnkerBroadcast()
+  trigger.action.setUserFlag("tnkerbrd",1) 
+  MESSAGE:New("Western Tankers Pinging their Tacan's for 5 minutes, 80x & 81x",5,"TANKER INFO"):ToBlue()
+end
+
 C_menu = MENU_COALITION:New(coalition.side.BLUE,"AI CONTROL")
 C_tanker = MENU_COALITION:New(coalition.side.BLUE,"Tanker Control",C_menu)
 C_Arco11 = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Change ARCO11 Speed for A10",C_tanker,Arco11A10,nil)
+C_TACANS = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Request TCN Pulse",C_tanker,TnkerBroadcast,nil)
+
 function irancurrenttask()
   MESSAGE:New("Updated Tasking from HQ \n " .. activeareairan .. " \n Repel the Infidels",60):ToRed()
 end

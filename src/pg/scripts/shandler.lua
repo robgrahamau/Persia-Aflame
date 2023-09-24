@@ -25,7 +25,10 @@ SHANDLER = {
 	airbase = nil,
 	checkalive = false,
 	rtbflagged = false,
-	debug = false,
+	debug = true,
+    takenoff = false,
+	fifty = false,
+	twenty = false,
 }
 ---Instanced the Handler
 ---@param _name any
@@ -45,10 +48,9 @@ end
 
 ---handles debug msgs
 ---@param _msg any
-function SHANDLER:Debug(_msg)
-	local _m = string.format("SHANDLER %s Debug:",self.Name)
+function SHANDLER:RDebug(_msg)
 	if self.debug == true then
-		rlog({_m,_msg})
+		rlog(_msg)
 	end
 end
 
@@ -150,7 +152,9 @@ end
 
 ---sub
 function SHANDLER:Sub()
+    self:E({"sub entered, unit is",self.Unit})
 	if self.Unit ~= nil then
+        self:E({"sub Scribing"})
 		self.Unit:HandleEvent(EVENTS.Dead,self.EDead)
 		self.Unit:HandleEvent(EVENTS.Land,self.ELand)
 	end
@@ -167,10 +171,12 @@ end
 ---event land
 ---@param EventData any
 function SHANDLER:ELand(EventData)
-	if self.isJtac == false then
+	self:E({"Eland",EventData})
+    if self.isJtac == false then
 		self:Respawn()
+        self:E({"Eland jtac false"})
 	else
-		self:Debug("Jtac landed do not respawn unless rtb has been flagged they refuel.")
+		-- self:RDebug("Jtac landed do not respawn unless rtb has been flagged they refuel.")
 		if self.rtbflagged == true then
 			self:Respawn()
 		end
@@ -193,43 +199,47 @@ end
 function SHANDLER:Respawn()
 	if self.rtbflagged == true then
 		self.rtbflagged = false
-		self:Debug("rtbflagged reset")
+		self:E("rtbflagged reset")
 	end
+    self.takenoff = false
+	self.fifty = false
+	self.twenty = false
 	if self.Group ~= nil then
 		if self.Group:IsAlive() == true then
 			self:remcount()
 			self:USub()
 			self.Group = self.Group:Respawn()
-			self:Debug("Group was alive and active so we unsubbed and added a unit back to the limit then respawned.")
+			self:E("Group was alive and active so we unsubbed and added a unit back to the limit then respawned.")
 		end
 	
 		-- check if we can actually spawn
 		if self.Counter < self.Limit then
 			self:USub() -- unsub just incase.
+            self.Group = GROUP:FindByName(self.Name):Respawn()
 			self.Group:Activate() -- activate our group 
-			self:Debug("Activating our group as it should be late activated")
+			self:RDebug("Activating our group as it should be late activated")
 			if self.startcoord == nil then
 				self.startcoord = self.Group:GetCoordinate()
 			end
 			if self.airbase == nil then
 				self.airbase = self.startcoord:GetClosestAirbase()
-				self:Debug("Storing Airbase")
+				self:RDebug("Storing Airbase")
 			end	
 			self.Unit = self.Group:GetUnit(1)
-			self:Debug("Getting unit 1")
+			self:RDebug("Getting unit 1")
 			-- subscribe to our events.
 			self:Sub()
 			
 			self:addcount()
-			self:Debug("Added Count")
+			self:RDebug("Added Count")
 			if self.IsJtac == true then
 				self:AddJtac()
-				self:Debug("Added Jtac")
+				self:RDebug("Added Jtac")
 			end
-			self:Debug("End Respawn")
+			self:RDebug("End Respawn")
 		else
 			local _msg = string.format("Unable to spawn in %s as limit: %d was reached Counter is:%d",self.Name,self.Limit,self.Counter)
-			self:Debug(_msg)
+			self:RDebug(_msg)
 		end
 	else
 		local _msg = string.format("ERROR We were unable to respawn %n as the group is NIL! This should not be",self.Name)
@@ -239,7 +249,7 @@ end
 
 ---addjtac
 function SHANDLER:AddJtac()
-	self:Debug("Add Jtac")
+	self:RDebug("Add Jtac")
 	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
 	--put to the end
 	table.insert(ctld.jtacGeneratedLaserCodes, _code)
@@ -249,8 +259,10 @@ end
 ---send a msg
 ---@param _msg any
 function SHANDLER:SendMsg(_msg)
-	self:Debug({"Send Msg",msg})
-	local _m = string.format("%s : %s",self.Unit:GetCallsign(),_msg)
+	self:RDebug({"Send Msg",msg})
+	if _msg == nil then
+		_msg = " "
+	end
 	if self.Group:GetCoalition() == 1 then
 		RGUTILS.MessageRed(_msg,15,false)
 	else
@@ -288,20 +300,51 @@ end
 function SHANDLER:HeartBeat()
 	-- Ok we want to do some checks using the unit data
 	-- is our fuel getting below 20%? because if it is we will want to let people know
-	local fuellevel = self.Unit:GetFuel()
-	if fuellevel < 0.2 then
-		self:SendMsg("Heads up my fuel level is at 20%, I will RTB at 15%")
-	end
-	if fuellevel < 0.15 then
-		if self.rtbflagged == false then
-			self:RTB()
+	if self.Group:IsAlive() == true then
+        local fuellevel = self.Unit:GetFuel()
+		if fuellevel == nil then
+			self:E({"We had nil in get fuel"})
+			fuellevel = self.Group:GetFuel()
+			if fuellevel == nil then
+				self:E({"Fuel was still nil we are setting to 0.2 for this pass"})
+				fuellevel = 0.2
+			end
 		end
-	end
+	    if fuellevel < 0.5 and self.fifty == false then
+			self:SendMsg("Heads up we are at 50% fuel remaining")
+			self.fifty = true
+		end
+		if fuellevel < 0.2 and self.twenty == false then
+			self.twenty = true
+		   	self:SendMsg("Heads up my fuel level is at 20%, I will RTB at 15%")
+	    end
+	    if fuellevel < 0.15 then
+	    	if self.rtbflagged == false then
+		    	self:RTB()
+		   	end
+	    end
+		
+    end
+    	-- do i want to do a check for alive in here just incase the events don't fire? ??? coding it but setting a flag for it
+   	if self.checkalive == true then
+	    if self.Group:IsAlive() ~= true then
+   			self:Respawn()
+	    end
+    end
+    if self.checkifonground == true then
+        local currentspeed = self.Group:GetAirspeedTrue()
+        if currentspeed < 100 then
+            if self.takenoff == true then
+                BASE:E({"we have taken off and yet now our TAS is dead slow, this suggests we have landed and not respawned, respawning"})
+                self:Respawn()
+            end
+        else
+            if self.takenoff == false then
+                self.takenoff = true
+            end
+        end
+    end
 
-	-- do i want to do a check for alive in here just incase the events don't fire? ??? coding it but setting a flag for it
-	if self.checkalive == true then
-		if self.Group:IsAlive() ~= true then
-			self:Respawn()
-		end
-	end
+
+
 end
