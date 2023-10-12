@@ -115,7 +115,7 @@ function tablespawn(tbl, _country, _cat)
         if spawnit == true then
             if _cat == Group.Category.STRUCTURE then
                 coalition.addStaticObject(_country, v)
-                _DATABASE:AddGroup(v.name) -- Suggested by Rob 2022-11-22 -- Breaks MOOSE!
+                _DATABASE:AddStatic(v.name) -- Suggested by Rob 2022-11-22 -- Breaks MOOSE! -- fixed rob to static which it should be 2023-10-05
             else
                 local spawnedgroup = coalition.addGroup(_country, _subcat, v)
                 if v.lateActivation then
