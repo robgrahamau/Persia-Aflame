@@ -188,6 +188,7 @@ _MAINEVENT = HEVENT:New(true,true,false,1,1)
 _MAINEVENT:setblueprefix("GM_USAA")
 _MAINEVENT:setredprefix("IAA")
 _MAINEVENT:SetDebug(true)
+_MAINEVENT:SetMilkcow("t_ch47")
 _MAINEVENT:Start()
 
 hm("> mission_per.lua")

@@ -19,6 +19,9 @@ HEVENT = {
     neutralprefix = "untf_",
     neutralcountry = country.id.UN_PEACEKEEPERS,
     RDEBUG = false,
+    milkcowtemplate = nil,
+    milkcowuses = 3,
+    spawnedfac = nil,
 }
 
 
@@ -37,9 +40,12 @@ function HEVENT:New(_markers,_lqm,_death,_tankertime,_tankercooldown)
     self.TANKERTIMER= _tankertime or TANKERTIMER
     self.TANKER_COOLDOWN = _tankercooldown or TANKER_COOLDOWN
     self._handledead = _death or false
+    self.milkcowspawns = 0
     return self
 end
-
+function HEVENT:SetMilkcow(_group)
+  self.milkcowtemplate = _group
+end
 function HEVENT:SetDebug(_debug)
     _debug = _debug or true
     self.RDEBUG = _debug
@@ -164,7 +170,7 @@ end
 function HEVENT:OnEventMarkRemoved(EventData)
   if EventData.text~=nil and EventData.text:lower():find("-") then
     local dcsgroupname = EventData.IniDCSGroupName
-    local _playername = EventData.IniPlayerName
+    local _playername = EventData.IniPlayerName or "Unknown"
     local _group = GROUP:FindByName(dcsgroupname)
     local text = EventData.text:lower()
     local text2 = EventData.text
@@ -194,6 +200,8 @@ function HEVENT:OnEventMarkRemoved(EventData)
       self:handlehelp(_group) -- partly done.
     elseif mainkey == ("-smoke") then
       self:handleSmoke(text2,coord,_coalition,_group,_playername) -- confirmed.
+    elseif mainkey == ("-milkcow") then
+      self:handleMilkCow(text2,coord,_group,_playername,_coalition)
     elseif mainkey == ("-groupcheck") then 
       self:groupchecker(_group_coalition) -- confirmed.
     elseif mainkey == ("-flare") then
@@ -281,18 +289,78 @@ function HEVENT:OnEventMarkRemoved(EventData)
     end
   end
 end
-function HEVENT:RequestMilkCow(text,coord,_group,_playername,_coalition)
+
+function HEVENT:handleCAPRequest(text,coord,_group,_playername,_coalition)
+  if _playername == nil then
+    _playername = "Player"
+  end
+  local currentTime = os.time()
+  local keywords=UTILS.Split(text, ",")
+  local heading = nil
+  local distance = nil
+  local endcoord = nil
+  local endpoint = false
+  local altitude = nil
+  local altft = nil
+  local spknt = nil
+  local speed = nil
+  BASE:E({"keywords =",keywords})
+  -- gets our distances etc.0
+  for _,keyphrase in pairs(keywords) do
+    local str=UTILS.Split(keyphrase, "=")
+    local key=str[1]
+    local val=str[2]
+    if key:lower():find("h") then
+      heading = tonumber(val)
+    end
+    if key:lower():find("d") then
+      distance = tonumber(val)
+    end
+    if key:lower():find("a") then
+      altitude = tonumber(val)
+    end
+    if key:lower():find("s") then
+      speed = tonumber(val)
+    end
+  end
+  -- ok now we have to actually set this all up for the cap.
+end
+
+function HEVENT:handleMilkCow(text,coord,_group,_playername,_coalition)
+  local _coord = coord
+  local _col = _coalition
+  local _mgrs = _coord:ToStringMGRS()
+  local msg = string.format("%s, this is %s requesting a FARP at %s.",_agent,_playername,_mgrs)
+  self:Msg(msg,nil,_col,10)
   -- get our nearest airbase.
   local nearestab = coord:GetClosestAirbase(nil,_coalition)
-  -- now that we have our nearest airbase we want to spawn in a unit to fly from there to here.
-  local _nook = SPAWN:NewWithAlias(self.milkcowtemplate,"MilkCow"):SpawnAtAirbase(nearestab:FindByName(),Spawn.Takeoff.Hot)
+  if self.milkcowtemplate == nil then
+    msg = string.format("%s, %s unable at this time no assets avalible",_playername,_agent)
+    self:Msg(msg,nil,_col,10)
+    return false
+  end
+  if self.milkcowspawns == self.milkcowuses then
+    msg = string.format("%s, %s unable to at this time, all the cows are currently deployed you'll have to wait until tomorrow buddy.",_playername,_agent)
+    self:Msg(msg,nil,_col,10)
+    return false
+  end
+  local _nook = SPAWN:NewWithAlias(self.milkcowtemplate,"MilkCow"):SpawnAtAirbase(nearestab,Spawn.Takeoff.Hot)
+  if _nook == nil then
+    msg = string.format("%s, %s inform command we have had a FOBAR error, milkcows are down there are no moos happening today",_playername,_agent)
+    self:Msg(msg,nil,_col,10)
+    return false
+  end
+
+  self.milkcowspawns = self.milkcowspawns + 1
   -- ok we have spawned the milkcow now we need to route it from its current location to the new location.
+  msg = string.format("%s, Milkcow request recieved unit is taking off from %s this time for coordinates %s",_playername,_mgrs)
+  self:Msg(msg,nil,_col,10)
   local Route = {}
   local FromCoord = nearestab:GetCoordinate()
   local fromheading = FromCoord:HeadingTo(coord)
   local distance = FromCoord:Get2DDistance(coord)
   local midpoint = FromCoord:Translate((distance/2),fromheading)
-  midpoint:AddAlt(100)
+  midpoint:AddAlt(150)
   local ToCoord = coord
   Route[#Route+1] = FromCoord:WaypointAirTakeOffRunway(COORDINATE.WaypointAltType.BARO,UTILS:KnotsToKmph(120))
   Route[#Route+1] = midpoint:WaypointAirFlyOverPoint(COORDINATE.WaypointAltType.RADIO,UTILS.KnotsToKmph(120))
@@ -304,11 +372,13 @@ function HEVENT:RequestMilkCow(text,coord,_group,_playername,_coalition)
   _nook:SetTaskWaypoint(Route[#Route],combotask)
   Route[#Route+1] = FromCoord:WaypointAirLanding(UTILS.KnotsToKmph(120))
   _nook:Route(Route,1)  
+  self:Log({"Should have pushed all data to the milkcow and it should be going were we want it to be going."})
 end
 
 
 function MilkCowFarpSpawn(Veh,coord,_group,_playername,_coalition)
-  HEVENT:spawnfarp(coord,_group,_playername,_coalition)
+  self:Log({"Milkcow should have arrived and should be dropping its stuff.."})
+  HEVENT:spawnfarp("",coord,_group,_playername,_coalition)
   Veh:Destroy()
 end
 
@@ -853,10 +923,16 @@ function HEVENT:handlehelp(_group)
   local _msg = self:Msg(msgtext,_group,60)
 end
 
-
+--- Handles our scout requests.
+---@param text any
+---@param coord COORDINATE
+---@param _col COALITION
+---@param _playername string
+---@param _group GROUP
 function HEVENT:handleScoutRequest(text,coord,_col,_playername,_group)
   if _col ~= 2 then
     self:Msg("Sorry command is Blue Coalition only at this time",_group,10)
+    return false
   end
   if _playername == nil then
     _playername = "Player"
@@ -889,6 +965,7 @@ function HEVENT:handleScoutRequest(text,coord,_col,_playername,_group)
       speed = tonumber(val)
     end
   end
+
   local nab = coord:GetClosestAirbase(nil,_col) -- stores the nearest friendly airbase.
   local newafac = SPAWN:NewWithAlias("GM_AFAC","Laser 11"):SpawnAtAirbase(nab,SPAWN.Takeoff.Air,500)
 	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
@@ -911,10 +988,10 @@ function HEVENT:handleScoutRequest(text,coord,_col,_playername,_group)
     spknt = RGUTILS.CalculateTAS(altitude,280,0)
     speed = UTILS.KnotsToMps(spknt)
   else
-    if speed > 220 then
-      spknt = RGUTILS.CalculateTAS(altitude,220)
-    elseif speed < 90 then
-      spknt = RGUTILS.CalculateTAS(altitude,90)
+    if speed > 350 then
+      spknt = RGUTILS.CalculateTAS(altitude,220,0)
+    elseif speed < 175 then
+      spknt = RGUTILS.CalculateTAS(altitude,175,0)
     else
       spknt = RGUTILS.CalculateTAS(altitude,speed,0)
     end
@@ -951,10 +1028,7 @@ function HEVENT:handleScoutRequest(text,coord,_col,_playername,_group)
   newafac:PushTask(afacTask, 4)
   -- message to all of blue goes out.
   local _mgrs = coord:ToStringMGRS()
-  self:Msg(string.format("%s AFAC lanched from %s and is enroute to the location requested by %s. at %s \nIt will orbit on a heading of %d for %d nm, Alt: %d CAS: %d.\n%d minutes cooldown starting now", newafac:GetName(),nab:GetName(), _playername,_mgrs,heading,distance,altft,spknt, self.AFAC_COOLDOWN / 60),nil,_col,30, MESSAGE.Type.Information)
-
-
-
+  self:Msg(string.format("%s AFAC lanched from %s and is enroute to %s  requested by %s \nIt will orbit on a heading of %d for %d nm, Alt: %d CAS: %d.\n%d minutes cooldown starting now", newafac:GetName(),nab:GetName(),_mgrs,_playername,heading,distance,altft,spknt, self.AFAC_COOLDOWN / 60),nil,_col,30, MESSAGE.Type.Information)
 
 end
 
@@ -1063,9 +1137,9 @@ function HEVENT:handleAfacRequest(text,coord,_col,_playername,_group)
       speed = UTILS.KnotsToMps(spknt)
     else
       if speed > 220 then
-        spknt = RGUTILS.CalculateTAS(altitude,220)
+        spknt = RGUTILS.CalculateTAS(altitude,300,0)
       elseif speed < 90 then
-        spknt = RGUTILS.CalculateTAS(altitude,90)
+        spknt = RGUTILS.CalculateTAS(altitude,175,0)
       else
         spknt = RGUTILS.CalculateTAS(altitude,speed,0)
       end

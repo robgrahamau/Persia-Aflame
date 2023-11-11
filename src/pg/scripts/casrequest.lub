@@ -123,8 +123,7 @@ function C_CAS:spawncas(_client,_size)
     else
         local _g = GROUP:FindByName(self.groupname)
         local _mgrs = _g:GetCoordinate()
-        _mgrs = _mgrs:G
-        local _msg = 
+        
     end
 end
 
