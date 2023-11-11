@@ -41,6 +41,7 @@ function fob:New(name,redspawn,bluespawn,coalition,heading,usenew,distance)
   self.usenew = usenew or false
   self.scheduler = nil
   self.deactivated = false
+  self.ctldfob = nil
   if self.fobheading < 180 then 
     self.spawnheading = self.fobheading
   else
@@ -115,6 +116,8 @@ function fob:spawnctld(_coordinate,_country,heading,distance)
   local _name = "ctld Deployed FOB #" .. _unitId
   local _fob = nil
   _fob = ctld.spawnFOB(_country, 211, vec3, _name)
+  local _cltdfobname = _fob:getName()
+  self.ctldfob = _ctldfobname
   table.insert(ctld.logisticUnits, _fob:getName())
   if ctld.troopPickupAtFOB == true then
     table.insert(ctld.builtFOBS, _fob:getName())
@@ -332,8 +335,23 @@ function fob:Deactivate()
     end
   end
   -- scheduler to do this check in 1 minute
-  SCHEDULER:New(nil,function() if self.group ~= nil then self.group:Destroy() end end,{},60)
+  SCHEDULER:New(nil,function() 
+    if self.group ~= nil
+     then self.group:Destroy()
+    end
+    local _fob = STATIC:FindByName(self.ctldfob)
+    if _fob ~= nil then
+      _fob:Destroy()
+    end
+
+  end,{},60)
 end
+
+function fob:Activate()
+  local ABItem = AIRBASE:FindByName(self.fobname)
+  ABItem:SetAutoCaptureON()
+end
+
 
 --- Fob Event Base Capture.
 function fob:OnEventBaseCaptured(EventData)

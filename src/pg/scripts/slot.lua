@@ -208,7 +208,7 @@ if newslots == true then
 end
 
 
-ALLFOBS = {}
+
 -- Fobs
 BN85 = fob:New("BN85","red_bn85","blue_bn85",2,0):Start()
 table.insert(ALLFOBS,BN85)

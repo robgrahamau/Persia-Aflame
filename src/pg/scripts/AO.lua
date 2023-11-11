@@ -1,8 +1,8 @@
 -- Current Fobs BQ99, BR31, BS02 BQ26, CQ37
 -- ANY FARP that is not active needs to be deactived in here
 AOBOUNDRY = {
-    topleftx=198295,
-    topleftz=-325539,
+    topleftx=178295,
+    topleftz=-224688,
     bottomrightx=32270,
     bottomrightz=-107193,
     boundrycolor1 = {234,63,247},
@@ -34,7 +34,7 @@ BASE:E({"BlueGroundForces"})
 -- FARP DEACTIVATION
 BN85:Deactivate()
 --BQ26:Deactivate()
-BQ51:Deactivate()
+--BQ51:Deactivate()
 --BQ99:Deactivate()
 --BR31:Deactivate()
 --BS02:Deactivate()
@@ -78,3 +78,14 @@ GQ06:Deactivate()
 FP84:Deactivate()
 CBH:Deactivate()
 ISR:Deactivate()
+
+
+ABItem = AIRBASE:FindByName(AIRBASE.PersianGulf["Qeshm_Island"])
+ABItem:SetAutoCaptureOFF()
+ABItem:SetCoalition(2)
+ABItem = AIRBASE:FindByName(AIRBASE.PersianGulf["Bandar_Abbas_Intl"])
+ABItem:SetAutoCaptureOFF()
+ABItem:SetCoalition(2)
+ABItem = AIRBASE:FindByName(AIRBASE.PersianGulf["Havadarya"])
+ABItem:SetAutoCaptureOFF()
+ABItem:SetCoalition(2)

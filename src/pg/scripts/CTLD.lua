@@ -142,6 +142,7 @@ ctld.JTAC_dropEnabled = true -- allow JTAC Crate spawn from F10 menu
 
 ctld.JTAC_maxDistance = 7000 -- How far a JTAC can "see" in meters (with Line of Sight)
 ctld.JTAC_maxSpot = 7000
+ctld.AFAC_maxDistance = 18000 -- how far the AFAC can see 
 
 ctld.JTAC_smokeOn_RED = true -- enables marking of target with smoke for RED forces
 ctld.JTAC_smokeOn_BLUE = true -- enables marking of target with smoke for BLUE forces
@@ -376,20 +377,20 @@ ctld.spawnableCrates = {
         { weight = 803, desc = "SKP-11 - JTAC", unit = "SKP-11", side = 1, }, -- used as jtac and unarmed, not on the crate list if JTAC is disabled
 		{ weight = 790, desc = "HL - DHSK", unit = "HL_DSHK", side = 1 },
 		{ weight = 791, desc = "HL - KORD", unit = "HL_KORD", side = 1 },
-		{ weight = 792, desc = "LC - DHSK", unit = "tt_DSHK", },
-		{ weight = 793, desc = "LC - KORD", unit = "tt_KORD", },
+		{ weight = 792, desc = "LC - DHSK", unit = "tt_DSHK", side = 2},
+		{ weight = 793, desc = "LC - KORD", unit = "tt_KORD", side = 2},
 		{ weight = 794, desc = "HL - B8M1", unit = "HL_B8M1", side = 1 },
         { weight = 850, desc = "SPH 2S19 Msta", unit = "SAU Msta", side = 1, cratesRequired = 2 },
         { weight = 855, desc = "M-109 Paladin", unit = "M-109", side = 2, cratesRequired = 2 },
 		{ weight = 830, desc = "M1126 Stryker ICV", unit = "M1126 Stryker ICV", side = 2 , cratesRequired = 2},
 		{ weight = 1200, desc = "M-1 Abrams", unit = "M-1 Abrams", side = 2 , cratesRequired = 2},
 		{ weight = 1219, desc = "ZTZ96B", unit = "ZTZ96B", side = 1 , cratesRequired = 2},
-		
     },
     ["AA/SHRT SAM Crates"] = {
 		{ weight = 859,  desc = "ZSU-57-2", unit = "ZSU_57_2", side = 1, cratesRequired = 1 },
 		{ weight = 861, desc = "ZSU-23-4 Shilka", unit = "ZSU-23-4 Shilka", side = 1, cratesRequired = 2 },
 		{ weight = 863, desc = "Gepard SPAAA", unit = "Gepard", side = 2, cratesRequired = 2 },
+        { weight = 854, desc = "C-RAM", unit = "HEMTT_C-RAM_Phalanx", side=2,cratesRequired = 2},
         { weight = 860, desc = "Strela-1 9P31", unit = "Strela-1 9P31", side = 1, cratesRequired = 1 },       
         { weight = 862, desc = "M1097 Avenger", unit = "M1097 Avenger", side = 2, cratesRequired = 1 },
         { weight = 856, desc = "M6 Linebacker", unit = "M6 Linebacker", side = 2, cratesRequired = 2 },
@@ -5668,17 +5669,29 @@ function ctld.getCurrentUnit(_jtacUnit, _jtacGroupName)
         -- calc distance
         _tempPoint = _unit:getPoint()
         --   tempPosition = unit:getPosition()
-
+        _temptype = _unit:getTypeName()
         _tempDist = ctld.getDistance(_unit:getPoint(), _jtacUnit:getPoint())
-        if _tempDist < ctld.JTAC_maxDistance then
-            -- calc visible
+        if _temptype == "MQ-9 Reaper" then
+            if _tempDist < ctld.AFAC_maxDistance then
+                -- calc visible
+                -- check slightly above the target as rounding errors can cause issues, plus the unit has some height anyways
+                local _offsetEnemyPos = { x = _tempPoint.x, y = _tempPoint.y + 2.0, z = _tempPoint.z }
+                local _offsetJTACPos = { x = _jtacPoint.x, y = _jtacPoint.y + 2.0, z = _jtacPoint.z }
 
-            -- check slightly above the target as rounding errors can cause issues, plus the unit has some height anyways
-            local _offsetEnemyPos = { x = _tempPoint.x, y = _tempPoint.y + 2.0, z = _tempPoint.z }
-            local _offsetJTACPos = { x = _jtacPoint.x, y = _jtacPoint.y + 2.0, z = _jtacPoint.z }
+                if land.isVisible(_offsetEnemyPos, _offsetJTACPos) then
+                    return _unit
+                end
+            end
+        else
+            if _tempDist < ctld.JTAC_maxDistance then
+                -- calc visible
+                -- check slightly above the target as rounding errors can cause issues, plus the unit has some height anyways
+                local _offsetEnemyPos = { x = _tempPoint.x, y = _tempPoint.y + 2.0, z = _tempPoint.z }
+                local _offsetJTACPos = { x = _jtacPoint.x, y = _jtacPoint.y + 2.0, z = _jtacPoint.z }
 
-            if land.isVisible(_offsetEnemyPos, _offsetJTACPos) then
-                return _unit
+                if land.isVisible(_offsetEnemyPos, _offsetJTACPos) then
+                    return _unit
+                end
             end
         end
     end
@@ -5692,7 +5705,9 @@ function ctld.findNearestVisibleEnemy(_jtacUnit, _targetType,_distance)
     --local startTime = os.clock()
 
     local _maxDistance = _distance or ctld.JTAC_maxDistance
-
+    if _jtacUnit:getTypeName() == "MQ-9 Reaper" then
+        _maxDistance = _distance or ctld.AFAC_maxDistance -- if it's a reaper we go to this distance.
+    end
     local _nearestDistance = _maxDistance
 
     local _jtacPoint = _jtacUnit:getPoint()
@@ -5806,7 +5821,9 @@ end
 function ctld.listNearbyEnemies(_jtacUnit)
 
     local _maxDistance =  ctld.JTAC_maxDistance
-
+    if _jtacUnit:getTypeName() == "MQ-9 Reaper" then
+        _maxDistance = ctld.AFAC_maxDistance -- if it's a reaper we go to this distance.
+    end
     local _jtacPoint = _jtacUnit:getPoint()
     local _coa =    _jtacUnit:getCoalition()
 

@@ -188,6 +188,8 @@ function HEVENT:OnEventMarkRemoved(EventData)
       self:handleTankerRequest(text2,coord,_coalition,_playername,_group) -- Confirmed
     elseif mainkey == ("-afac") then
       self:handleAfacRequest(text2,coord,_coalition,_playername,_group) -- Confirmed
+    elseif mainkey == ("-scout") then
+      self:handleScoutRequest(text2,coord,_coalition,_playername,_group) -- Confirmed
     elseif mainkey == ("-help") then
       self:handlehelp(_group) -- partly done.
     elseif mainkey == ("-smoke") then
@@ -219,6 +221,8 @@ function HEVENT:OnEventMarkRemoved(EventData)
       else
         self:Msg("Unable, Admin commands need to be active to use the massdel command",_group,nil,10)
       end
+    elseif mainkey == ("-embark") then
+        self:Embark(text2,coord,_playername,_group,_coalition) -- done
     elseif mainkey == ("-massgroup") then
       if ADMIN == true then
         self:massgroup(text2,coord,_playername,_coalition) -- done
@@ -251,7 +255,7 @@ function HEVENT:OnEventMarkRemoved(EventData)
       end
     elseif mainkey == ("-load") then
       if ADMIN == true then
-        _loadfile("input.lua",_MCPATH)
+        _LOADFILE("input.lua",_MCPATH)
         self:Msg("input.lua should have completed its run",_group,nil,10)
       else
         self:Msg("unable, Admin Commands need to be active to input a file",_group,nil,10)
@@ -279,17 +283,34 @@ function HEVENT:OnEventMarkRemoved(EventData)
 end
 function HEVENT:RequestMilkCow(text,coord,_group,_playername,_coalition)
   -- get our nearest airbase.
-  local nearestab,nearestdistance = coord:GetClosestAirbase(nil,_coalition)
+  local nearestab = coord:GetClosestAirbase(nil,_coalition)
   -- now that we have our nearest airbase we want to spawn in a unit to fly from there to here.
-  local _nook = SPAWN:NewWithAlias(self.milkcowtemplate,"MilkCow"):OnAfterSpawned(function(spawngroup) 
-    -- we need to build our task list for getting it from the airfield to our current location.
-    -- task list will be as follows
-    -- take off, if distance is less then 50km then climb to 500ft, fly over and land, trigger script to spawn farp
-    -- if farp is more then 50km climb to 2,000ft, fly over and land, trigger script to spawn farp.
-    -- after landing, either despawn, or take off and rtb.
-  end):SpawnAtAirbase(nearestab:FindByName(),Spawn.Takeoff.Hot)
+  local _nook = SPAWN:NewWithAlias(self.milkcowtemplate,"MilkCow"):SpawnAtAirbase(nearestab:FindByName(),Spawn.Takeoff.Hot)
+  -- ok we have spawned the milkcow now we need to route it from its current location to the new location.
+  local Route = {}
+  local FromCoord = nearestab:GetCoordinate()
+  local fromheading = FromCoord:HeadingTo(coord)
+  local distance = FromCoord:Get2DDistance(coord)
+  local midpoint = FromCoord:Translate((distance/2),fromheading)
+  midpoint:AddAlt(100)
+  local ToCoord = coord
+  Route[#Route+1] = FromCoord:WaypointAirTakeOffRunway(COORDINATE.WaypointAltType.BARO,UTILS:KnotsToKmph(120))
+  Route[#Route+1] = midpoint:WaypointAirFlyOverPoint(COORDINATE.WaypointAltType.RADIO,UTILS.KnotsToKmph(120))
+  Route[#Route+1] = ToCoord:WaypointAirFlyOverPoint(COORDINATE.WaypointAltType.RADIO,UTILS.KnotsToKmph(120))
+  local Tasks = {}
+  Tasks[#Tasks+1] = _nook:TaskLandAtVec2(ToCoord:GetVec2(),300)
+  Tasks[#Tasks+1] = _nook:TaskFunction("MilkCowFarpSpawn",coord,_group,_playername,_coalition)
+  local combotask = _nook:TaskCombo(Tasks)
+  _nook:SetTaskWaypoint(Route[#Route],combotask)
+  Route[#Route+1] = FromCoord:WaypointAirLanding(UTILS.KnotsToKmph(120))
+  _nook:Route(Route,1)  
 end
 
+
+function MilkCowFarpSpawn(Veh,coord,_group,_playername,_coalition)
+  HEVENT:spawnfarp(coord,_group,_playername,_coalition)
+  Veh:Destroy()
+end
 
 function HEVENT:spawnfarp(text,coord,_group,_playername,_coalition)
   _coord = coord or nil
@@ -832,6 +853,111 @@ function HEVENT:handlehelp(_group)
   local _msg = self:Msg(msgtext,_group,60)
 end
 
+
+function HEVENT:handleScoutRequest(text,coord,_col,_playername,_group)
+  if _col ~= 2 then
+    self:Msg("Sorry command is Blue Coalition only at this time",_group,10)
+  end
+  if _playername == nil then
+    _playername = "Player"
+  end
+  local currentTime = os.time()
+  local keywords=UTILS.Split(text, ",")
+  local heading = nil
+  local distance = nil
+  local endcoord = nil
+  local endpoint = false
+  local altitude = nil
+  local altft = nil
+  local spknt = nil
+  local speed = nil
+  BASE:E({"keywords =",keywords})
+  for _,keyphrase in pairs(keywords) do
+    local str=UTILS.Split(keyphrase, "=")
+    local key=str[1]
+    local val=str[2]
+    if key:lower():find("h") then
+      heading = tonumber(val)
+    end
+    if key:lower():find("d") then
+      distance = tonumber(val)
+    end
+    if key:lower():find("a") then
+      altitude = tonumber(val)
+    end
+    if key:lower():find("s") then
+      speed = tonumber(val)
+    end
+  end
+  local nab = coord:GetClosestAirbase(nil,_col) -- stores the nearest friendly airbase.
+  local newafac = SPAWN:NewWithAlias("GM_AFAC","Laser 11"):SpawnAtAirbase(nab,SPAWN.Takeoff.Air,500)
+	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+  table.insert(ctld.jtacGeneratedLaserCodes, _code)
+  ctld.JTACAutoLase(newafac:GetName(), _code) 
+
+  if altitude == nil then
+    altft = 12000
+    altitude = UTILS.FeetToMeters(12000)
+  else
+    if altitude > 34000 then
+      altitude = 34000
+    elseif altitude < 1000 then
+      altitude = 1000
+    end
+    altft = altitude
+    altitude = UTILS.FeetToMeters(altft)
+  end
+  if speed == nil then
+    spknt = RGUTILS.CalculateTAS(altitude,280,0)
+    speed = UTILS.KnotsToMps(spknt)
+  else
+    if speed > 220 then
+      spknt = RGUTILS.CalculateTAS(altitude,220)
+    elseif speed < 90 then
+      spknt = RGUTILS.CalculateTAS(altitude,90)
+    else
+      spknt = RGUTILS.CalculateTAS(altitude,speed,0)
+    end
+    speed = UTILS.KnotsToMps(spknt)
+  end
+  if heading ~= nil then
+    if heading < 0 then
+      heading = 0
+    elseif heading > 360 then
+      heading = 360
+    end
+    if distance ~= nil then
+      if distance > 100 then
+        distance = 100
+      end
+      if distance < 5 then
+        distance = 5
+      end
+      endcoord = coord:Translate(UTILS.NMToMeters(distance),heading)
+    else
+      endcoord = coord:Translate(UTILS.NMToMeters(25),heading)
+      distance = 25
+    end
+  else
+    heading = math.random(0,360)
+    endcoord = coord:Translate(UTILS.NMToMeters(25),heading)
+    distance = 25
+  end
+  -- actually build our task and push it to the AFAC.
+  newafac:ClearTasks()
+  local routeTask = newafac:TaskOrbit( coord, altitude,  speed, endcoord )
+  newafac:SetTask(routeTask, 2)    
+  local afacTask = newafac:EnRouteTaskFAC(UTILS.NMToMeters(10),1)
+  newafac:PushTask(afacTask, 4)
+  -- message to all of blue goes out.
+  local _mgrs = coord:ToStringMGRS()
+  self:Msg(string.format("%s AFAC lanched from %s and is enroute to the location requested by %s. at %s \nIt will orbit on a heading of %d for %d nm, Alt: %d CAS: %d.\n%d minutes cooldown starting now", newafac:GetName(),nab:GetName(), _playername,_mgrs,heading,distance,altft,spknt, self.AFAC_COOLDOWN / 60),nil,_col,30, MESSAGE.Type.Information)
+
+
+
+
+end
+
 --- Handles AFAC requests for both red and blue.
 -- requires that you enter the group name, works as follows:
 -- -afac route,n=My afac Group Name,a=15000,h=120,d=20,s=330 
@@ -863,9 +989,9 @@ function HEVENT:handleAfacRequest(text,coord,_col,_playername,_group)
     local afacgroupname = nil
     local afacgroup
     local afacname = ""
-    local _afac 
+    local _afac = nil
 
-    BASE:E({keywords=keywords})
+    BASE:E({"keywords=",keywords})
     for _,keyphrase in pairs(keywords) do
       local str=UTILS.Split(keyphrase, "=")
       local key=str[1]
@@ -1263,6 +1389,47 @@ function HEVENT:newhandlespawn(text,coord,_group,_playername,_coalition)
   end
 end
 
+
+function HEVENT:Embark(text,coord,_playername,_group,_col)
+  local keywords=UTILS.Split(text,",")
+  local dist = 1000
+  local cl = "red"
+  local gcount = 0
+  for _,keyphrase in pairs(keywords) do
+    local str=UTILS.Split(keyphrase, "=")
+    local key=str[1]
+    local val=str[2]
+    if key:lower():find("d") then
+      dist = tonumber(val)
+    end
+    if _col == 2 then
+      cl = "blue"
+    end
+  end
+  local gunits = SET_GROUP:New():FilterCoalitions(cl):FilterActive(true):FilterCategoryGround():FilterOnce()
+  if gunits ~= nil then
+    gunits:ForEach(function(g) 
+      if g:IsAlive() == true then
+        local unit = g:GetUnit(1) -- Wrapper.Unit#UNIT
+        local desc = unit:GetDesc() or nil
+        if desc.attributes.Infantry then
+          gc = g:GetCoordinate()
+          if gc == nil then
+            BASE:E({"Could not get Coord for group:",g:GetName(),g:GetCoordinate(),gc})
+          else
+            local d = gc:Get2DDistance(coord)
+					  if d < dist then
+              gcount = gcount + 1
+              local embark = g:TaskEmbarkToTransport(coord,500)
+              g:SetTask(embark,2)
+            end
+          end
+        end
+      end
+    end)
+  end
+  self:Msg(string.format("Routing %d infantry groups with in a distance %d of coalition %s to the marker point for embarking",gcount,dist,cl),_group,_col,15,"Command")
+end
 
 --- Routes Mass Group based on distance from the marker.
 ---@param text string

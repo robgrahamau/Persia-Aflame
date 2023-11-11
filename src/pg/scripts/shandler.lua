@@ -147,6 +147,8 @@ function SHANDLER:USub()
 		-- unhandle our events
 		self.Unit:UnHandleEvent(EVENTS.Dead)
 		self.Unit:UnHandleEvent(EVENTS.Land)
+		self.Unit:UnHandleEvent(EVENTS.Crash)
+		self.Unit:UnHandleEvent(EVENTS.PilotDead)
 	end
 end
 
@@ -154,14 +156,17 @@ end
 function SHANDLER:Sub()
     self:E({"sub entered, unit is",self.Unit})
 	if self.Unit ~= nil then
-        self:E({"sub Scribing"})
+        self:E({"subscribing"})
 		self.Unit:HandleEvent(EVENTS.Dead,self.EDead)
+		self.Unit:HandleEvent(EVENTS.Crash,self.EDead)
+		self.Unit:HandleEvent(EVENTS.PilotDead,self.EDead)
 		self.Unit:HandleEvent(EVENTS.Land,self.ELand)
 	end
 end
 ---event dead
 ---@param EventData any
 function SHANDLER:EDead(EventData)
+	self:SendMsg(string.format("%s : Mayday, Mayday, Mayday we're hit!",self.Name))
 	local _msg = string.format("%s has been killed")
 	hm(_msg)
 	self:add_death()
@@ -211,7 +216,6 @@ function SHANDLER:Respawn()
 			self.Group = self.Group:Respawn()
 			self:E("Group was alive and active so we unsubbed and added a unit back to the limit then respawned.")
 		end
-	
 		-- check if we can actually spawn
 		if self.Counter < self.Limit then
 			self:USub() -- unsub just incase.
@@ -273,26 +277,31 @@ end
 ---handle rtb command
 function SHANDLER:RTB()
 	if self.rtbflagged == false then
-		local currentcoord = self.Group:GetCoordinate()
-		local headingto = currentcoord:HeadingTo(self.startcoord)
-		local distanceto = currentcoord:Get2DDistance(self.startcoord)
-		local descentpoint = distanceto - UTILS.NMToMeters(5)
-		local wp1 = currentcoord:Translate(descentpoint,headingto)
-		wp1 = wp1:SetAltitude(UTILS.FeetToMeters(25000),true)
-		local wp = {}
-		local waypoints = {}
-		wp[1] = wp1:WaypointAirTurningPoint("BARO",UTILS.KnotsToKmph(RGUTILS.CalculateTAS(25000,300)),nil,"Home")
-		wp[2] = self.startcoord:WaypointAirLanding(UTILS.KnotsToMps(200),self.airbase,nil,"Landing")
-		for i,p in ipairs(wp) do
-			table.insert(waypoints,i,wp[i])
+		if self.Group:IsAlive() == true then -- add a check for is alive.. because this might trigger if its not alive.
+			local currentcoord = self.Group:GetCoordinate()
+			if currentcoord == nil then
+				return false -- we can't do any of this if the coord is not valid so we exit.
+			end
+			local headingto = currentcoord:HeadingTo(self.startcoord)
+			local distanceto = currentcoord:Get2DDistance(self.startcoord)
+			local descentpoint = distanceto - UTILS.NMToMeters(5)
+			local wp1 = currentcoord:Translate(descentpoint,headingto)
+			wp1 = wp1:SetAltitude(UTILS.FeetToMeters(25000),true)
+			local wp = {}
+			local waypoints = {}
+			wp[1] = wp1:WaypointAirTurningPoint("BARO",UTILS.KnotsToKmph(RGUTILS.CalculateTAS(25000,300)),nil,"Home")
+			wp[2] = self.startcoord:WaypointAirLanding(UTILS.KnotsToMps(200),self.airbase,nil,"Landing")
+			for i,p in ipairs(wp) do
+				table.insert(waypoints,i,wp[i])
+			end
+			if self.isTanker == true then
+				self:SendMsg(string.format("%s : Will be returning to home in 120 seconds",self.Name))
+				self.Group:Route(waypoints,120)
+			else
+				self.Group:Route(waypoints,20)
+			end
+			self.rtbflagged = true
 		end
-		if self.isTanker == true then
-			self:SendMsg("We will be returning to home in 120 seconds")
-			self.Group:Route(waypoints,120)
-		else
-			self.Group:Route(waypoints,20)
-		end
-		self.rtbflagged = true
 	end
 end
 
@@ -311,12 +320,12 @@ function SHANDLER:HeartBeat()
 			end
 		end
 	    if fuellevel < 0.5 and self.fifty == false then
-			self:SendMsg("Heads up we are at 50% fuel remaining")
+			self:SendMsg(string.format("%s to all, Heads up we are at 50%% fuel remaining",self.Name))
 			self.fifty = true
 		end
 		if fuellevel < 0.2 and self.twenty == false then
 			self.twenty = true
-		   	self:SendMsg("Heads up my fuel level is at 20%, I will RTB at 15%")
+		   	self:SendMsg(string.format("%s to all, Heads up my fuel level is at 20%%, I will RTB at 15%%",self.Name))
 	    end
 	    if fuellevel < 0.15 then
 	    	if self.rtbflagged == false then

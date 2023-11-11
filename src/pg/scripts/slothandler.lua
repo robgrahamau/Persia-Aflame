@@ -130,6 +130,29 @@ function slothandler:SanityChecker()
   end
 end
 
+
+
+--- Sets Autocapture off and forces base to the coalition returns self
+-- @param number coalition
+-- @returns self
+function slothandler:SetCapture(_coalition)
+  self.airfield:SetAutoCaptureOFF()
+  self.airfield:SetCoalition(_coalition)
+  return self
+
+end
+
+--- Sets Autocapture on/off 
+-- @param boolean on/off 
+-- returns self
+function slothandler:SetAutoCapture(_true)
+  local _true = _true or true
+  if _true == false then
+    self.airfield:SetAutoCaptureOFF()
+  else
+    self.airfield:SetAutoCaptureON()
+  end
+end
 --- sets up the blue Ctld handlers
 -- @param number heading in degree's from the Airfield Coordinate for the CTLD spawn
 -- @param number Distance in meters from the airfield coordinate for the CTLD spawn

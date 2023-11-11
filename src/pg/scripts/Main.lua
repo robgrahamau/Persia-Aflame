@@ -28,7 +28,7 @@ ALLFOBS = {}
 trigger.action.setUserFlag(100,0) -- don't know why this is set.. but being safe.
 
 trigger.action.setUserFlag("SSB",100) -- Set SSB active.
-activearea = "•Bandar and Eastern AO areas marked by dotted Square on F10 map\n \n ROE Notice:\n • Reduce Civilian Damage."
+activearea = "•Lars through to southern coast see area on F10 map\n \n ROE Notice:\n • Reduce Civilian Damage."
 activeareairan = "• Defend Attacked areas areas marked by dotted Square on F10 map"
 
 farpcounter = 0

@@ -105,7 +105,7 @@ RED_EW_SET:ForEachGroupAlive(function(g)
 	intel_reports[gid] = text
 	MESSAGE:New(text,15,"CIA Intel Update"):ToAll()  
 	local m = co:MarkToAll(EW_INTEL[gid].text,true)
-	HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
+	hm('** $SERVERNAME - INTEL REPORT ** \n ```' .. text .. '```')
 	EW_INTEL[gid].markerid = m
   else
 	BASE:E({"We had a NIL COORD in EW SET:",gid})
@@ -315,7 +315,7 @@ if inteltype == 1 or inteltype == 4 or inteltype == 5 then
           local text = "CIA Report " .. nowHour .. ":" ..nowminute .. ", Detected a known Surface to Air Installation \n " .. lldm .. "\n " .. llds .. "\n " .. mgrs .. ""
           k.text = text
           intel_reports[k.group:GetName()] = text
-		  HypeMan.sendBotMessage('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. ' threat level is: ' .. threatlevel ..'```')
+		  hm('** $SERVERNAME - INTEL REPORT ** \n > ```' .. text .. ' threat level is: ' .. threatlevel ..'```')
           MESSAGE:New(text,15,"CIA Intel Update"):ToBlue()
           local m = co:MarkToCoalitionBlue(k.text,true)
           k.markerid = m
