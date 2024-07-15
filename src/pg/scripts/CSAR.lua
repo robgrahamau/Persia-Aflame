@@ -83,6 +83,33 @@ end
 --  trigger.action.outSoundForGroup(Heliname, 'poppingsmoke-short.ogg')
 --end
 
+function my_csar:OnAfterApproach(from, event, to, heliname, groupname)
+  -- trigger units to move towards the pick up.
+  local gcount = 0
+  local dist = 2000
+  local _cood = groupname:GetCoordinate()
+  local gunits = nil
+  gunits = SET_GROUP:New():FilterCoalitions(cl):FilterActive(true):FilterCategoryGround():FilterOnce()
+  if gunits ~= nil then  
+    gunits:ForEach(function(g)
+      if g:IsAlive() == true then
+  	  	local gc = g:GetCoordinate()
+		    if gc == nil then
+  				BASE:E({"Could not get Coord for group:",g:GetName(),g:GetCoordinate(),gc})
+			  else
+    			local d = gc:Get2DDistance(coord)
+	  		  if d < dist then
+            gcount = gcount + 1
+	  	  		local rcoord = coord:GetRandomCoordinateInRadius(500,100)
+					  g:RouteGroundTo(rcoord,math.random(10,20),randomform(),5)
+				  end
+			  end
+		  end
+    end)
+  end
+end
+
+
 function my_csar:OnAfterPilotDown(From,Event,To,Group,Frequency,Leadername,CoordinatesText)
  -- Should only do when in enemy territory. Maybe check where closest enemy group is, or if nearest airfield is friendly or not?
  -- try SET_AIRBASE:FindNearestAirbaseFromPointVec2( PointVec2 )
@@ -107,17 +134,16 @@ function my_csar:OnAfterPilotDown(From,Event,To,Group,Frequency,Leadername,Coord
  if abx == nil then
   DEBUGMESSAGE('ERROR - ABX IS NIL')
   else
- if abx:GetCoalition() == coalition.side.RED  then
-   -- DEBUGMESSAGE('NEAREST AIRBASE IS RED!')
-   if math.random(3) > 1 then -- Only do 66% of the time - some will not have any hostiles
-     for i = 1, math.random(4)  do
-       local spawnpos = COORDINATE:NewFromVec3(Group:GetCoordinate()):GetRandomCoordinateInRadius(160, 120)
-     
-       local unitalias = "CSAR-"..MyUID() -- MyUID so it doesn't override old unit each time this is triggered
-       --if spawnpos.y > 50 then -- Only spawn if altitude is significant enough to be away from the sea (Don't want red units spawning in sea)
-       if spawnpos:GetSurfaceType() ~= 3 then -- Don't spawn if in ocean
-         SPAWN:NewWithAlias("GM_RCSARInf", unitalias):InitRandomizePosition( true , 300, 200):SpawnFromVec3(spawnpos:GetVec3())
-       end
+    if abx:GetCoalition() == coalition.side.RED  then
+      -- DEBUGMESSAGE('NEAREST AIRBASE IS RED!')
+      if math.random(3) > 1 then -- Only do 66% of the time - some will not have any hostiles
+        for i = 1, math.random(4)  do
+          local spawnpos = COORDINATE:NewFromVec3(Group:GetCoordinate()):GetRandomCoordinateInRadius(160, 120)
+         local unitalias = "CSAR-"..MyUID() -- MyUID so it doesn't override old unit each time this is triggered
+         --if spawnpos.y > 50 then -- Only spawn if altitude is significant enough to be away from the sea (Don't want red units spawning in sea)
+         if spawnpos:GetSurfaceType() ~= 3 then -- Don't spawn if in ocean
+             SPAWN:NewWithAlias("GM_RCSARInf", unitalias):InitRandomizePosition( true , 1000, 500):SpawnFromVec3(spawnpos:GetVec3())
+        end
      end  -- for
      --MESSAGE:New('Enemy Hostiles closing in on downed pilot!' ,25):ToAll()  -- Would LOVE to delay this message!
 
@@ -125,8 +151,7 @@ function my_csar:OnAfterPilotDown(From,Event,To,Group,Frequency,Leadername,Coord
      if hotmessageno > #hotmessages then 
       hotmessageno = 1
      end
-
-     MESSAGE:New(hotmessages[hotmessageno], 25):ToBlue()
+     SCHEDULER:New(nil,function()  MESSAGE:New(hotmessages[hotmessageno], 25):ToBlue() end,{},random(30,300)) -- randomize between 30 seconds and 5 minutes.
      
     end --math random for spawn 
 else

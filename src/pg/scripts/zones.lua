@@ -51,9 +51,9 @@ function randomform()
   end  
   -- return "Off road" -- try and fix the @$@ routing issues of late.
 end
-rbg = SET_GROUP:New():FilterCoalitions("red"):FilterActive(true):FilterStart()
-abg = SET_GROUP:New():FilterCoalitions("blue"):FilterActive(true):FilterStart()
-
+--rbg = SET_GROUP:New():FilterCoalitions("red"):FilterActive(true):FilterStart()
+--abg = SET_GROUP:New():FilterCoalitions("blue"):FilterActive(true):FilterStart()
+--[[
 function routegroups(_coord,dist,coalition)
 	local gunits = nil
 	if coalition:lower() == "blue" then
@@ -79,6 +79,8 @@ function routegroups(_coord,dist,coalition)
 		end)
 	end
 end
+
+]]
 
 function spawnctld(airbase,country,heading,distance)
 	if heading == nil then

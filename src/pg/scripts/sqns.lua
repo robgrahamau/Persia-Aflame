@@ -22,7 +22,7 @@ sqntime = (60*15),
 sqntimer = nil,
 startroute = 2,
 endroute = 5,
-offsetroute = 15,
+offsetroute = 25,
 altitude = 5000,
 takeoff = false,
 cooldown = (5) * 60,
@@ -52,6 +52,8 @@ function sqn:New(sqnname,sqnunit,sqncleanup,sqnamount,flightsize,sqntime,airbase
   self.flightsize = flightsize
   self.spawntype = _spawntype
   self.srunning = false
+  self.sqnamount = sqnamount
+  self.takeoff = false 
   return self
 end
 
@@ -69,28 +71,45 @@ function sqn:Spawn()
 			:InitCleanUp(self.sqncleanup)
 			:InitAirbase(self.airbase,self.spawntype)
 			:InitGrouping(self.flightsize)
-			:InitRepeatOnLanding()
-			:OnSpawnGroup(function(spawngroup) 
-				self.sqnamount = self.sqnamount - self.flightsize
-				self.spawnedunit = spawngroup
-				if col == 1 then
-					MESSAGE:New(string.format("%s, to all players, %s to all players, Comm activity detected at %s possible launch in progress",agency,ab:AirbaseName()),10):ToBlue()
-					if STTS ~= nil then
-						STTS.TextToSpeech(string.format("%s, to all players, %s to all players, Comm activity detected at %s possible launch in progress",agency,ab:AirbaseName()), sttsfreq, "AM", "1", agency, "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
-					end
-				end
-			end)
 			:InitRandomizeRoute(self.startroute,self.endroute,UTILS.NMToMeters(self.offsetroute),UTILS.FeetToMeters(self.altitude))
 			
 		if self.spawnedunit == nil then
 			if self.sqnamount > 0 then
 				self.takeoff = false
-				self.sqnspawner:Spawn()
+				self.sqnamount = self.sqnamount - self.flightsize
+				self.spawnedunit = self.sqnspawner:Spawn()
+				local _col = self.spawnedunit:GetCoalition()
+				local abase = self.airbase
+				if abase == nil then
+					abase = "unknown"
+				end
+				if _col == 1 then
+					MESSAGE:New(string.format("%s, Big Picture, Comm activity detected possible launch from %s in progress",agency,abase),30):ToBlue()
+				end
 			end
 		else
-			if self.spawnedunit:IsAlive() ~= true then
+			local _un = self.spawnedunit:GetUnits()
+			local _alive = false
+			if _un ~= nil then
+				for k,v in pairs(_un) do
+					if v:IsAlive() == true then
+						_alive = true
+					end
+				end	
+			end
+			if _alive ~= true then
+			--if self.spawnedunit:IsAlive() ~= true then
 				self.takeoff = false
-				self.sqnspawner:Spawn()
+				self.sqnamount = self.sqnamount - self.flightsize
+				self.spawnedunit = self.sqnspawner:Spawn()
+				local _col = self.spawnedunit:GetCoalition()
+				local abase = self.airbase
+				if abase == nil then
+					abase = "unknown"
+				end
+				if _col == 1 then
+					MESSAGE:New(string.format("%s, Big Picture, Comm activity detected possible launch from %s in progress",agency,abase),30):ToBlue()
+				end
 			else
 				BASE:E({self.sqnname,"Unable to spawn because unit is still alive"})
 			end
@@ -102,19 +121,24 @@ function sqn:Spawn()
 end
 
 function sqn:Check()
-	BASE:E({"sqn check",self.sqnname})
+	BASE:E({"sqn check",self.sqnname, self.srunning})
 	-- if we are running
 	if self.srunning == true then
 		-- schedule to self ourself again.
+		local nextcheck = math.random( (self.sqntime / (math.random(2,4))), self.sqntime)
+		if nextcheck < 60 then
+			nextcheck = 60
+		end
 		self.sqntimer = SCHEDULER:New(nil,function() 
 			self:Check()
-		end,{},math.random((self.sqntime /2),self.sqntime))
+		end,{},nextcheck)
 		-- if we are not nil.
 		if self.spawnedunit ~= nil then
-			BASE:E({"SQN CHECK START:",self.sqnname,self.spawnedunit:IsAirborne(),self.takeoff,self.spawnedunit:IsAlive()})
+			BASE:E({"SQN CHECK START:",self.sqnname,self.sqnamount,self.spawnedunit:IsAirborne(),self.takeoff,self.spawnedunit:IsAlive()})
 			-- if we are not in the air and we have taken off 
 			if (self.spawnedunit:IsAirborne() ~= true) and (self.takeoff == true)  then
-				-- if we are alive
+				BASE:E({"SQN CHECK We are not airborn and we have taken off handling this"})
+				-- if we are alive and have taken off 
 				if self.spawnedunit:IsAlive() == true then
 					-- return each unit to the table.
 					for _,units in pairs(self.spawnedunit:GetUnits()) do
@@ -127,14 +151,31 @@ function sqn:Check()
 					self.takeoff = false
 					-- set the spawned unit to nil.
 					self.spawnedunit = nil
-				end
+					BASE:E({"SQN CHECK END:",self.sqnname,self.sqnamount,self.spawnedunit:IsAirborne(),self.takeoff})
+				end		
 			elseif (self.spawnedunit:IsAirborne() == true) and (self.takeoff == false ) then
 				-- if we are in the air and take off is false set to true.
 				self.takeoff = true
+				BASE:E({"SQN CHECK END:",self.sqnname,self.sqnamount,self.spawnedunit:IsAirborne(),self.takeoff,self.spawnedunit:IsAlive()})
+
 			elseif self.spawnedunit:IsAlive() ~= true then
+				-- we need to quickly double check that all units are actually dead
+				local _un = self.spawnedunit:GetUnits()
+				local _alive = false
+				if _un == nil then
+					_alive = false
+				else
+					for k,v in pairs(_un) do
+						if v:IsAlive() == true then
+							_alive = true
+						end
+					end
+				end
 				-- if we aren't alive then yeah set false and nil.
-				self.takeoff = false
-				self.spawnedunit = nil
+				if _alive == false then
+					self.takeoff = false
+					self.spawnedunit = nil
+				end
 			else
 				BASE:E({"SQN CHECK: Is in air",self.sqnname})
 			end
@@ -144,8 +185,12 @@ function sqn:Check()
 				BASE:E({"SQN CHECK END:",self.sqnname,"Destroyed, now Nil",self.takeoff})
 			end
 		else
+			BASE:E({"SQN CHECK Spawn:",self.sqnname,self.takeoff})
 			if self.sqnamount > 0 then
 					self:Spawn() 
+					BASE:E({"SQN CHECK >0:",self.sqnname,self.spawnedunit:IsAirborne(),self.takeoff,self.spawnedunit:IsAlive()})
+			else
+				BASE:E({"SQN CHECK Spawn: < 0",self.sqnname,self.spawnedunit:IsAirborne(),self.takeoff,self.spawnedunit:IsAlive()})
 			end
 		end  
 	else
@@ -261,6 +306,7 @@ function intercept:New(sqnname,sqnunit,sqncleanup,sqnamount,flightsize,sqntime,z
 	self.flightsize = flightsize
 	self.zone = zone
 	self.zoneobject = nil
+	self.sqnamount = sqnamount
 	return self
 end
 
@@ -301,10 +347,11 @@ function intercept:Spawn()
 		self.sqnspawner = SPAWN:NewWithAlias(self.sqnunit,self.sqnname)
 		:InitCleanUp(self.sqncleanup)
 		:OnSpawnGroup(function(spawngroup) 
+			col = spawngroup:GetCoalition()
 			if col == 1 then
 				MESSAGE:New(string.format("%s, to all players, %s to all players, Comm activity detected at %s possible launch in progress",agency,ab:AirbaseName()),10):ToBlue()
 				if STTS ~= nil then
-					STTS.TextToSpeech(string.format("%s, to all Cats, %s to all Cats, Comm activity detected at %s possible launch in progress",agency,ab:AirbaseName()), sttsfreq, "AM", "1", agency, "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+					STTS.TextToSpeech(string.format("%s, Big Picture, Comm activity detected at %s possible launch in progress",agency,ab:AirbaseName()), sttsfreq, "AM", "1", agency, "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
 				end
 			end
 			self.sqnamount = self.sqnamount - self.flightsize

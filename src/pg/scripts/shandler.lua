@@ -41,6 +41,7 @@ function SHANDLER:New(_name,_limit,_checkalive)
 	self.Group = GROUP:FindByName(_name)
 	self.Limit = _limit
 	self.checkalive = _checkalive or false
+	self.Deaths = 0
 	local _m = string.format("Creating Support Handler %s",self.Name)
 	rlog(_m)
 	return self
@@ -166,11 +167,15 @@ end
 ---event dead
 ---@param EventData any
 function SHANDLER:EDead(EventData)
-	self:SendMsg(string.format("%s : Mayday, Mayday, Mayday we're hit!",self.Name))
-	local _msg = string.format("%s has been killed")
+	if self.Deaths == nil then
+		self.Deaths = 0
+	end
+	self.Deaths = self.Deaths + 1
+	local _msg = string.format("%s : Mayday, Mayday, Mayday we're hit!",self.Name)
+	self:SendMsg(_msg)
+	_msg = string.format("%s has been killed",self.Name)
 	hm(_msg)
-	self:add_death()
-	self:Respawn()
+	return self
 end
 
 ---event land
@@ -186,6 +191,7 @@ function SHANDLER:ELand(EventData)
 			self:Respawn()
 		end
 	end
+	return self
 end
 
 
@@ -311,6 +317,7 @@ function SHANDLER:HeartBeat()
 	-- is our fuel getting below 20%? because if it is we will want to let people know
 	if self.Group:IsAlive() == true then
         local fuellevel = self.Unit:GetFuel()
+		self:E({"Fuel level for aircraft is:",self.Name,fuellevel})
 		if fuellevel == nil then
 			self:E({"We had nil in get fuel"})
 			fuellevel = self.Group:GetFuel()

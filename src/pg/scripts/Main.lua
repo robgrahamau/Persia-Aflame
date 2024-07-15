@@ -13,7 +13,8 @@ NassauSpawned = false
 PeleliuSpawned = false
 useforrest = true
 ADMIN = false
-USEFM = true
+USEFM = false
+USEDCSBOT = true
 __HMLOADED = false
 _DEBUG = false
 _loaded = false
@@ -94,12 +95,15 @@ end
 
 function hm(msg)
 	if USEHM == true then
-		HypeMan.sendBotMessage(string.format( "%1s:(%s)" , Servername,routines.utils.oneLineSerialize( msg ) ) )
+		HypeMan.sendBotMessage(string.format( "%1s:(%s)" , Servername,UTILS.OneLineSerialize ( msg ) ) )
+	end
+	if USEDCSBOT == true then
+		dcsbot.sendBotMessage(string.format( "%1s:(%s)" , Servername,UTILS.OneLineSerialize ( msg ) ))
 	end
 	if USEFMDegbug == true then
-		dcsbot.sendBotMessage(string.format( "%1s:(%s)" , Servername,routines.utils.oneLineSerialize( msg ) ))
+		dcsbot.sendBotMessage(string.format( "%1s:(%s)" , Servername,UTILS.OneLineSerialize ( msg ) ))
 	end
-	env.info(string.format( "%1s:(%s)" , Servername,routines.utils.oneLineSerialize( msg ) ) )
+	env.info(string.format( "%1s:(%s)" , Servername,UTILS.OneLineSerialize ( msg ) ) )
 end
 
 function hmlso(msg)
@@ -165,7 +169,7 @@ hm("> Slotbased Events - slotevents.lua")
 _LOADFILE("slotevents.lua",_SRCPATH,true,-1,15)
 
 _LOADFILE("save_groups.lua",_SRCPATH,true,-1,15)
-SAVE_SET = SET_GROUP:New():FilterCategories("ground"):FilterPrefixes({"RAA","IAA","GM_USAA","cjtf_blue","cjtf_red","CTLD","ctld","RSAM","REW","SCUD","BSAM","USEW","AAA","RDEF","Iran Ammo"}):FilterActive(true):FilterStart()
+SAVE_SET = SET_GROUP:New():FilterCategories("ground"):FilterPrefixes({"Olympus","RAA","IAA","GM_USAA","cjtf_blue","cjtf_red","CTLD","ctld","RSAM","REW","SCUD","BSAM","USEW","AAA","RDEF","Iran Ammo"}):FilterActive(true):FilterStart()
 MainSave = GroundUnitSave:New(SAVE_SET,"testsave_Units.lua",_PGPERPATH)
 MainSave:SetDisp(60,true)
 MainSave:Start(300)
@@ -180,7 +184,10 @@ _LOADFILE("shandler.lua",_SRCPATH,true,-1,15)
 hm("> bluesupportac.lua")
 _LOADFILE("bluesupportac.lua",_SRCPATH,true,-1,15)
 
-
+-- hm("> CapHandler.lua")
+-- _LOADFILE("CapHandler.lua",_SRCPATH,true,-1,15)
+-- hm("> BlueCap.lua")
+-- _LOADFILE("BlueCAP.lua",_SRCPATH,true,-1,15)
 hm(">EventHandler")
 _LOADFILE("EventHandler.lua",_SRCPATH,true,-1,15)
 
@@ -198,42 +205,39 @@ _LOADFILE("mission_per.lua",_SRCPATH,true,-1,15)
 hm("> intel.lua")
 _LOADFILE("intel.lua",_SRCPATH,true,-1,15)
 
---hm("> dcslink.lua")
---_LOADFILE("dcslink.lua",_SRCPATH,true,-1,15)
-
 hm("> client.lua")
 _LOADFILE("client.lua",_SRCPATH,true,-1,15)
 
-hm("> Skynet")
-_LOADFILE("skynet-iads-compiled.lua",_LIBPATH,true,-1,15)
+--hm("> Skynet")
+--_LOADFILE("skynet-iads-compiled.lua",_LIBPATH,true,-1,15)
 
-hm("> Anti Jackass Script Loading in...jackasstest.lua")
-_LOADFILE("jackasstest.lua",_SRCPATH,true,-1,15)
+--hm("> Anti Jackass Script Loading in...jackasstest.lua")
+--_LOADFILE("jackasstest.lua",_SRCPATH,true,-1,15)
 
 hm("> robcommands.lua")
 _LOADFILE("robcommands.lua",_MCPATH,true,-1,15)
 
 hm("> CSAR.lua")
-_LOADFILE("CSAR.lua",_SRCPATH,true,-1,15)
+-- _LOADFILE("CSAR.lua",_SRCPATH,true,-1,15)
 
-hm("> Persia Aflame, Starting 'Sleep Cycle' for RED Anti Air")
-_LOADFILE("sleepcycle.lua",_SRCPATH,true,-1,15)
+--hm("> Persia Aflame, Starting 'Sleep Cycle' for RED Anti Air")
+--_LOADFILE("sleepcycle.lua",_SRCPATH,true,-1,15)
 
 hm("> templateload.lua")
 _LOADFILE("templateloadnew.lua",_SRCPATH,true,-1,15)
 
-hm("> deepstrike.lua")
-_LOADFILE("deepstrike.lua",_SRCPATH,true,-1,15)
+--hm("> deepstrike.lua")
+--_LOADFILE("deepstrike.lua",_SRCPATH,true,-1,15)
 
-hm("> deepstrikes.lua")
-_LOADFILE("deepstrikes.lua",_SRCPATH,true,-1,15)
+--hm("> deepstrikes.lua")
+--_LOADFILE("deepstrikes.lua",_SRCPATH,true,-1,15)
 
 hm("> newbluesupport.lua")
 _LOADFILE("newbluesupport.lua",_SRCPATH,true,-1,15)
 
 
-hm("> IADS.lua")
-_LOADFILE("iads.lua",_SRCPATH,true,-1,15)
+--hm("> IADS.lua")
+--_LOADFILE("iads.lua",_SRCPATH,true,-1,15)
 
 
 lasthash = inputhash
@@ -332,7 +336,7 @@ SCHEDULER:New(nil,function()
 		BASE:E({"error in runrob",errorMSG})
 	end
 	
-end,{},0,5)
+end,{},0,15)
 
 if _loaded == true then
 	_lsch:Stop()
@@ -340,23 +344,25 @@ if _loaded == true then
 end
 
 
--- set up our zone to show the active ao
+-- set up our zone to show the active ao #set this in AO.lua now
+
+
 --_aobox = highlightarea(305493,75533,202114,176566,-1,{234,63,247},0.5,{234,63,247},0.35,3,nil)
  --_aobox2 = highlightarea(158989,-50885,105557,76245,-1,{234,63,247},0.5,{234,63,247},0.35,3,nil)  -- Bandar Area
- _aobox2 = highlightarea(198295, -325539, 32270, -107193 ,-1,{234,63,247},0.5,{234,63,247},0.35,3,nil) -- Kish/Western AO
+-- _aobox2 = highlightarea(198295, -325539, 32270, -107193 ,-1,{234,63,247},0.5,{234,63,247},0.35,3,nil) -- Kish/Western AO
 
 --hindgobybye = GROUP:FindByName("Hind_Sweep1")
 --hindgobyebye:Destroy()
 
 allredunits = SET_GROUP:New():FilterCategories("ground"):FilterCoalitions("red"):FilterPrefixes({"RAA","IAA","GM_USAA","cjtf_blue","cjtf_red","CTLD","ctld","RSAM","REW","SCUD","BSAM","USEW","AAA","RDEF","Iran Ammo"}):FilterActive(true):FilterOnce()
-
+--[[
 SCHEDULER:New(nil,function() 
 	rediads = IADSMonitor:New("Red IADS",allredunits,"red")
 	rediads:Start()
 end,{},180)
-
+]]
 SCHEDULER:New(nil,function() 
-hindgobybye = GROUP:FindByName("Hind_Sweep1")
+hindgobyebye = GROUP:FindByName("Hind_Sweep1")
 hindgobyebye:Destroy() 
 end,{},600)
 

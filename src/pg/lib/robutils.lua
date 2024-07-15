@@ -508,6 +508,7 @@ function _LOADFILE(filename,path,dmsg,_repeat,_time,_return)
       end
 		end
     if _return then
+      RGUTILS.log({"load file success"})    
       return true
     end
 end

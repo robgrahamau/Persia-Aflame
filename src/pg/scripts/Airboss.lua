@@ -5,7 +5,7 @@ env.info("--------------LAST CHANGED IN VER: 1.26.00 -------------------")
 env.info("--------------USES MOOSE AND CTDL ------------------------")
 
 abossactive = true
-washingtonactive = true
+washingtonactive = false
 teddyairboss = true
 forestairboss = true
 useawacs = false
@@ -74,7 +74,7 @@ if abossactive == true then
   		ShellForest:SetLowFuelThreshold(0.2)
   		ShellForest:Start()
 	end
-	
+	--[[
 	AirbossWash = AIRBOSS:New("Washington","Washington")
 	AirbossWash:Load("C:\\Users\\root\\Saved Games\\lsogrades\\")
 	AirbossWash:SetAutoSave("C:\\Users\\root\\Saved Games\\lsogrades\\")
@@ -110,7 +110,7 @@ if abossactive == true then
 		HypeMan.sendBotTable(myGrade)
 		trapsheet = "AIRBOSS-Washington_trapsheet-" .. player_name
 		AirbossWash:SetTrapSheet("C:\\Users\\root\\Saved Games\\lsogrades\\",trapsheet)
-		self:_SaveTrapSheet(playerData, myGrade)
+		AirbossWash:_SaveTrapSheet(playerData, myGrade)
 		msg = {}
     	msg.command = "onMissionEvent"
     	msg.eventName = "S_EVENT_AIRBOSS"
@@ -127,7 +127,7 @@ if abossactive == true then
     	msg.time = timer.getTime()
 		dcsbot.sendBotTable(msg)
 	end
-  
+	]]
 	AirbossTeddy = AIRBOSS:New("TeddyR","TeddyR")
 	AirbossTeddy:Load("C:\\Users\\root\\Saved Games\\lsogrades\\")
 	AirbossTeddy:SetAutoSave("C:\\Users\\root\\Saved Games\\lsogrades\\")
@@ -152,11 +152,8 @@ if abossactive == true then
 	AirbossTeddy:SetEmergencyLandings(true)
 	AirbossTeddy:SetWelcomePlayers(false)
 	AirbossTeddy:SetMPWireCorrection(12)
-	if USEFM == true then
-		AirbossTeddy:SetFunkManOn()
-	end
-	--AirbossTeddy:SetMPWireCorrection(0)
-	--AirbossTeddy:setdisplaymessage(false)
+	AirbossTeddy:SetFunkManOn(10042, "127.0.0.1")
+		--AirbossTeddy:setdisplaymessage(false)
 	function AirbossTeddy:OnAfterLSOGrade(From, Event, To, playerData, myGrade)
 		player_name = playerData.name:gsub('[%p]', '')
 		trapsheet = "AIRBOSS-Teddy_trapsheet-" .. player_name
@@ -194,7 +191,7 @@ if abossactive == true then
 		CV_TDY:SetPatrolAdInfinitum(true) 
 		hm("Airboss is not started for Teddy, running on Navygroup patrol ad infinitum")
 	end
-	
+	--[[
 	AirbossForest = AIRBOSS:New("Forrestal","Forrestal")
 	AirbossForest:Load("C:\\Users\\root\\Saved Games\\lsogrades\\")
 	AirbossForest:SetAutoSave("C:\\Users\\root\\Saved Games\\lsogrades\\")
@@ -324,5 +321,6 @@ if abossactive == true then
 			CV_WASH:AddTurnIntoWind(timerecovery_start,timeend,25,false,0) 
 		end
 	end
+	]]
 end
 

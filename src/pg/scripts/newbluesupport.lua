@@ -50,4 +50,12 @@ RARCO11:IsTanker(true)
 RARCO11.checkalive = true 
 RARCO11:Start()
 
+USEWOVERLORD = SHANDLER:New("USEW Overlord",4,true)
+USEWOVERLORD:IsAwac(true)
+USEWOVERLORD:Start()
+
+USEWMagic = SHANDLER:New("USEW Magic",4,true)
+USEWMagic:IsAwac(true)
+USEWMagic:Start()
+
 rlog("Loaded all tankers for both red and blue")

@@ -75,37 +75,50 @@ local function permanentPlayerCheck()
 			newyears = true
 		end
 	end
+  if nowDay == 11 and nowMonth == 11 and nowHour == 11 and nowminute == 0 then
+		if remday == false then
+			MESSAGE:New("Task Group Warrior would like to thank all who have served and all who have paid the ultimate sacrifice in the name of peace and the freedoms we enjoy \n Please observe a minute silence for those who have fallen. \n They shall not grow old, as we that are left grow old \n Age shall not weary them, nor the years condemn. \n At the going down of the sun and in the morning \n We shall remember them.",120):ToAll()
+      STTS.TextToSpeech("Task Group Warrior would like to thank all who have served and all who have paid the ultimate sacrifice in the name of peace and the freedoms we enjoy. Please observe a minute silence for those who have fallen. They shall not grow old, as we that are left grow old. Age shall not weary them, nor the years condemn. At the going down of the sun and in the morning,  We shall remember them. Least We Forget", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+			remday = true
+		end
+	end
 	if nowHour == (serverrestart - 1) then
 		if nowminute == 0 then
 			if hrleft ~= true then
-				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 1 hour",15):ToAll()
-				grpctts("" .. serverrestart .. ":00 Server Restart in 1 hour",253,"all")
+				MESSAGE:New("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in 1 hour",15):ToAll()
+				grpctts("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in 1 hour",253,"all")
 				-- STTS.TextToSpeech("The Server will restart in 1 hour", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
+        updatevalues()
+				save()
+				ctldsavedata()
+				saveadmingroups()
+				save_groups()
+        hrleft = true
 			end
 		elseif nowminute == 30 then
 			if left30 ~= true then
-				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 30 Minutes",15):ToAll()
-				grpctts("" .. serverrestart .. ":00 Server Restart in 30 Minutes",253,"all")
+				MESSAGE:New("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in 30 Minutes",15):ToAll()
+				grpctts("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in 30 Minutes",253,"all")
 				-- STTS.TextToSpeech("The Server will restart in 30 Minutes", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
 				left30 = true
 			end
 		elseif nowminute == 45 then
 			if left45 ~= true then
-				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 15 Minutes",15):ToAll()
-        grpctts("" .. serverrestart .. ":00 Server Restart in 15 Minutes",253,"all")
+				MESSAGE:New("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in 15 Minutes",15):ToAll()
+        grpctts("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in 15 Minutes",253,"all")
 				--STTS.TextToSpeech("The Server will restart in 15 Minutes", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
 				left45 = true
 			end
 		elseif nowminute == 50 then
 			if left50 ~= true then
-				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 10 Minutes",15):ToAll()
-				grpctts("" .. serverrestart .. ":00 Server Restart in 10 Minutes",253,"all")
+				MESSAGE:New("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in 10 Minutes",15):ToAll()
+				grpctts("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in 10 Minutes",253,"all")
         left50 = true
 			end
 		elseif nowminute == 55 then
 			if left55 ~= true then
-				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 5 Minutes Forced Save has occured.",15):ToAll()
-        grpctts("" .. serverrestart .. ":00 Server Restart in about 5 Minutes",253,"all")
+				MESSAGE:New("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in 5 Minutes Persistance Save Commenced.",15):ToAll()
+        grpctts("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in about 5 Minutes",253,"all")
 				-- STTS.TextToSpeech("The Server will restart in 5 Minutes", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
 				updatevalues()
 				save()
@@ -116,8 +129,8 @@ local function permanentPlayerCheck()
 			end
 		elseif nowminute == 59 then
 			if left59 ~= true then
-				MESSAGE:New("" .. serverrestart .. ":00 Server Restart in 1 Minute All items now saved",15):ToAll()
-				grpctts("" .. serverrestart .. ":00 Server Restart in 1 Minutes",253,"all")
+				MESSAGE:New("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in 1 Minute All items now saved again",15):ToAll()
+				grpctts("A server restart is scheduled at: " .. serverrestart .. ":00 Server Restart in 1 Minutes",253,"all")
         -- STTS.TextToSpeech("The Server will restart in 1 Minute", "253", "AM", "1", "Testing", "2", nil, 1, "female", "en-US", "Microsoft Zira Desktop", false)
 				updatevalues()
 				save()
@@ -220,6 +233,7 @@ end
 
 C_menu = MENU_COALITION:New(coalition.side.BLUE,"AI CONTROL")
 C_tanker = MENU_COALITION:New(coalition.side.BLUE,"Tanker Control",C_menu)
+
 C_Arco11 = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Change ARCO11 Speed for A10",C_tanker,Arco11A10,nil)
 C_TACANS = MENU_COALITION_COMMAND:New(coalition.side.BLUE,"Request TCN Pulse",C_tanker,TnkerBroadcast,nil)
 

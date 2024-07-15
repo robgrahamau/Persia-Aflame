@@ -1,5 +1,5 @@
 
-
+--[[
 Arco11 = GROUP:FindByName("Arco 11")
 arcocount = 0
 arcolimit = 4
@@ -25,7 +25,7 @@ Magiccount = 0
 Magiclimit = 4
 
 Shell21 = GROUP:FindByName("Shell21")
-
+]]
 SkyEye1 = GROUP:FindByName("SKYEYE1")
 skyeyecount = 0
 skyeyelimit = 5
@@ -34,6 +34,7 @@ SkyEye2 = GROUP:FindByName("SKYEYE2-1")
 skyeye2count = 0
 
 do
+	--[[
 	USMagicSpawn = SPAWN:NewWithAlias("USEW Magic","USEW Magic11"):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
 		USMagic = spawngroup
 		Magiccount = Magiccount + 1
@@ -65,6 +66,7 @@ do
 		hm("> Coalition: Overlord11 Was shot down ")
 		Ounit:UnHandleEvent(EVENTS.Dead)
 	end
+	]]
 	--[[
 	Texaco11Spawn = SPAWN:NewWithAlias("Texaco 11","Texaco11"):InitKeepUnitNames(true):OnSpawnGroup(function(spawngroup) 
 		Texaco11 = spawngroup
@@ -138,7 +140,7 @@ do
 	end
 	
 	function checkskyeye()
-		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Al_Dhafra_AB)
+		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf["Al_Dhafra_AB"])
 		if ab:GetCoalition() == 2 then
 			if SkyEye1:IsAlive() ~= true and skyeyecount < skyeyelimit then
 				SkyEye1Spawn:Spawn()
@@ -157,7 +159,7 @@ do
 
 SCHEDULER:New(nil,function()
 	--checktankers()
-	checkawacs()
+	--checkawacs()
 	checkskyeye()
   end,{},60,1800)
 

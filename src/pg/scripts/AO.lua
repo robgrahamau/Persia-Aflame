@@ -1,14 +1,33 @@
 -- Current Fobs BQ99, BR31, BS02 BQ26, CQ37
 -- ANY FARP that is not active needs to be deactived in here
+
 AOBOUNDRY = {
-    topleftx=178295,
-    topleftz=-224688,
-    bottomrightx=32270,
-    bottomrightz=-107193,
-    boundrycolor1 = {234,63,247},
-    boundrycolor2 = {234,63,247},
+	topleftx=117310,
+	topleftz=-191922,
+	bottomrightx=-122960,
+	bottomrightz=41111,
+	boundrycolor1 = {234,63,247},
+	boundrycolor2 = {234,63,247},
 }
+
 _aobox = highlightarea(AOBOUNDRY.topleftx, AOBOUNDRY.topleftz, AOBOUNDRY.bottomrightx, AOBOUNDRY.bottomrightz ,-1,AOBOUNDRY.boundrycolor1,0.5,AOBOUNDRY.boundrycolor2,0.35,3,nil) -- Kish/Western AO
+
+AOBOUNDRY2 = {
+	topleftx=121055,
+	topleftz=-293982,
+	bottomrightx=-3621,
+	bottomrightz=-192318,
+	boundrycolor1 = {234,63,247},
+	boundrycolor2 = {234,63,247},
+}
+
+
+USEAO2 = true
+_aobox2 = nil
+--COORDINATE:RemoveMark(_aobox)
+if USEAO2 == true then
+	_aobox2 = highlightarea(AOBOUNDRY2.topleftx, AOBOUNDRY2.topleftz, AOBOUNDRY2.bottomrightx, AOBOUNDRY2.bottomrightz ,-1,AOBOUNDRY2.boundrycolor1,0.5,AOBOUNDRY2.boundrycolor2,0.35,3,nil) -- Kish/Western AO
+end
 
 -- Dynamically Drawn Intel Zones.
 BASE:E({"BlueGroundForces"})
@@ -32,60 +51,71 @@ BASE:E({"BlueGroundForces"})
 	redzone:StartUpdate(0,300,nil,true)
 
 -- FARP DEACTIVATION
-BN85:Deactivate()
+
+
+--CQ37:Deactivate()
+--CQ34:Deactivate()
+CR43:Deactivate()
+--CR71:Deactivate()
+CS80:Deactivate()
+--BN85:Deactivate()
 --BQ26:Deactivate()
 --BQ51:Deactivate()
 --BQ99:Deactivate()
 --BR31:Deactivate()
---BS02:Deactivate()
-CT75:Deactivate()
-DP05:Deactivate()
+BS02:Deactivate()
+--CT75:Deactivate()
+--DP05:Deactivate()
+--DQ28:Deactivate()
+--DQ49:Deactivate()
 DR35:Deactivate()
+--DR84:Deactivate() 
 DS34:Deactivate()
-DU06:Deactivate()
-EP36:Deactivate()
+DS30:Deactivate() 
+--DU06:Deactivate()
+
+--EP36:Deactivate()
 EQ13:Deactivate()
-ER00:Deactivate()
-FR47:Deactivate()
---YK65:Deactivate()
-YN50:Deactivate()
-CR43:Deactivate()
-CR71:Deactivate()
---CQ37:Deactivate()
-CQ34:Deactivate()
-CS80:Deactivate()
-DQ28:Deactivate()
-DQ49:Deactivate()
 EQ47:Deactivate()
+ER84:Deactivate() 
+ER00:Deactivate()
+
 ER41:Deactivate()
 EP99:Deactivate()
 EQ97:Deactivate()
 ER68:Deactivate()
 EQ53:Deactivate()
-
-FQ43:Deactivate() 
-ER84:Deactivate() 
-DR84:Deactivate() 
 ER27:Deactivate() 
-DS30:Deactivate() 
 ES21:Deactivate() 
 ES84:Deactivate() 
+FP84:Deactivate()
+FQ43:Deactivate() 
 FT31:Deactivate() 
-RKM09:Deactivate()
+FR47:Deactivate()
+GQ06:Deactivate()
 GS04:Deactivate() 
 GR56:Deactivate()
-GQ06:Deactivate()
-FP84:Deactivate()
+--YK65:Deactivate()
+--YN50:Deactivate()
+--RKM09:Deactivate()
+
 CBH:Deactivate()
 ISR:Deactivate()
 
 
-ABItem = AIRBASE:FindByName(AIRBASE.PersianGulf["Qeshm_Island"])
-ABItem:SetAutoCaptureOFF()
-ABItem:SetCoalition(2)
+
+--ABItem = AIRBASE:FindByName(AIRBASE.PersianGulf["Qeshm_Island"])
+-- ABItem:SetAutoCaptureOFF()
+-- ABItem:SetCoalition(1)
 ABItem = AIRBASE:FindByName(AIRBASE.PersianGulf["Bandar_Abbas_Intl"])
 ABItem:SetAutoCaptureOFF()
-ABItem:SetCoalition(2)
+ABItem:SetCoalition(1)
 ABItem = AIRBASE:FindByName(AIRBASE.PersianGulf["Havadarya"])
+ABItem:SetAutoCaptureOFF()
+ABItem:SetCoalition(1)
+ABItem = AIRBASE:FindByName(AIRBASE.PersianGulf["Al_Minhad_AB"])
+ABItem:SetAutoCaptureOFF()
+ABItem:SetCoalition(2)
+ABItem = AIRBASE:FindByName(AIRBASE.PersianGulf["Al_Dhafra_AB"])
 ABItem:SetAutoCaptureOFF()
 ABItem:SetCoalition(2)

@@ -35,7 +35,7 @@ mist = {}
 -- don't change these
 mist.majorVersion = 4
 mist.minorVersion = 5
-mist.build = 119
+mist.build = 122
 
 -- forward declaration of log shorthand
 local log
@@ -97,57 +97,6 @@ do -- the main scope
 			mist.DBs.missionData.countries = {}
 		end
 
-		mist.DBs.zonesByName = {}
-		mist.DBs.zonesByNum = {}
-		
-
-		if env.mission.triggers and env.mission.triggers.zones then
-			for zone_ind, zone_data in pairs(env.mission.triggers.zones) do
-				if type(zone_data) == 'table' then
-					local zone = mist.utils.deepCopy(zone_data)
-					--log:warn(zone)
-					zone.point = {}	-- point is used by SSE
-					zone.point.x = zone_data.x
-					zone.point.y = land.getHeight({x = zone_data.x, y = zone_data.y})
-					zone.point.z = zone_data.y
-                    zone.properties = {}
-                    if zone_data.properties then
-                        for propInd, prop in pairs(zone_data.properties) do
-                            if prop.value and tostring(prop.value) ~= "" then
-                                zone.properties[prop.key] = prop.value                                
-                            end
-                        end
-                    end
-                    if zone.verticies then -- trust but verify
-                        local r = 0
-                        for i = 1, #zone.verticies do
-                            local dist = mist.utils.get2DDist(zone.point, zone.verticies[i])
-                            if dist > r then
-                                r = mist.utils.deepCopy(dist)
-                            end
-                        end
-                        zone.radius = r
-                    
-                    end
-					if zone.linkUnit then
-						local uRef = mist.DBs.unitsByName[zone.linkUnit]
-						if zone.verticies then
-							local offset = {}
-							for i = 1, #zone.verticies do
-								table.insert(offset, {dist = mist.utils.get2DDist(uRef.point, zone.verticies[i]), heading = mist.getHeadingPoints(uRef.point, zone.verticies[i]) + uRef.heading})
-							end
-							zone.offset = offset
-						else
-							zone.offset = {dist = mist.utils.get2DDist(uRef.point, zone.point), heading = mist.getHeadingPoints(uRef.point, zone.point) + uRef.heading}
-						end
-					end
-
-					mist.DBs.zonesByName[zone_data.name] = zone
-					mist.DBs.zonesByNum[#mist.DBs.zonesByNum + 1] = mist.utils.deepCopy(zone)	--[[deepcopy so that the zone in zones_by_name and the zone in
-																								zones_by_num se are different objects.. don't want them linked.]]
-				end
-			end
-		end
         
         mist.DBs.drawingByName = {}
         mist.DBs.drawingIndexed = {}
@@ -402,6 +351,13 @@ do -- the main scope
 
 														if unit_data.canCargo then
 															units_tbl[unit_num].canCargo = unit_data.canCargo
+														end
+														
+														if unit_data.category == "Heliports" then
+															if not abRef.units[unit_data.unitId] then
+																abRef.units[unit_data.unitId] = {name = unit_data.name}
+															end
+														
 														end
 													end
 
@@ -820,17 +776,70 @@ do -- the main scope
 										end
 										table.insert(mist.DBs.spawnsByBase[abRef.airbase[unit_data.airdromeId].name], unit_data.unitName)
 									end
-									if unit_data.helipadId then
+									if unit_data.helipadId and abRef.units[unit_data.helipadId] and abRef.units[unit_data.helipadId].name then
 										if not mist.DBs.spawnsByBase[abRef.units[unit_data.helipadId].name] then
 											mist.DBs.spawnsByBase[abRef.units[unit_data.helipadId].name] = {}
 										end
 										table.insert(mist.DBs.spawnsByBase[abRef.units[unit_data.helipadId].name], unit_data.unitName)
 									end
-									
+							
 								end
 							end
 						end
 					end
+				end
+			end
+		end
+		
+		mist.DBs.zonesByName = {}
+		mist.DBs.zonesByNum = {}
+
+		if env.mission.triggers and env.mission.triggers.zones then
+			for zone_ind, zone_data in pairs(env.mission.triggers.zones) do
+				if type(zone_data) == 'table' then
+					local zone = mist.utils.deepCopy(zone_data)
+					--log:warn(zone)
+					zone.point = {}	-- point is used by SSE
+					zone.point.x = zone_data.x
+					zone.point.y = land.getHeight({x = zone_data.x, y = zone_data.y})
+					zone.point.z = zone_data.y
+                    zone.properties = {}
+                    if zone_data.properties then
+                        for propInd, prop in pairs(zone_data.properties) do
+                            if prop.value and tostring(prop.value) ~= "" then
+                                zone.properties[prop.key] = prop.value                                
+                            end
+                        end
+                    end
+                    if zone.verticies then -- trust but verify
+                        local r = 0
+                        for i = 1, #zone.verticies do
+                            local dist = mist.utils.get2DDist(zone.point, zone.verticies[i])
+                            if dist > r then
+                                r = mist.utils.deepCopy(dist)
+                            end
+                        end
+                        zone.radius = r
+                    
+                    end
+					if zone.linkUnit then
+						local uRef = mist.DBs.unitsByName[zone.linkUnit]
+						if uRef then 
+							if zone.verticies then
+								local offset = {}
+								for i = 1, #zone.verticies do
+									table.insert(offset, {dist = mist.utils.get2DDist(uRef.point, zone.verticies[i]), heading = mist.getHeadingPoints(uRef.point, zone.verticies[i]) + uRef.heading})
+								end
+								zone.offset = offset
+							else
+								zone.offset = {dist = mist.utils.get2DDist(uRef.point, zone.point), heading = mist.getHeadingPoints(uRef.point, zone.point) + uRef.heading}
+							end
+						end
+					end
+
+					mist.DBs.zonesByName[zone_data.name] = zone
+					mist.DBs.zonesByNum[#mist.DBs.zonesByNum + 1] = mist.utils.deepCopy(zone)	--[[deepcopy so that the zone in zones_by_name and the zone in
+																								zones_by_num se are different objects.. don't want them linked.]]
 				end
 			end
 		end
@@ -998,7 +1007,7 @@ do -- the main scope
 				if #unitOneRef > 0 and unitOneRef[1] and type(unitOneRef[1]) == 'table' then
                     newTable.countryId = tonumber(unitOneRef[1]:getCountry())
                     newTable.coalitionId = tonumber(unitOneRef[1]:getCoalition())
-                    newTable.category = tonumber(newObject:getCategory())
+                    newTable.category = tonumber(Object.getCategory(newObject))
                 else
                     log:warn('getUnits failed to return on $1 ; Built Data: $2.', event, newTable)
                     return false
@@ -1115,7 +1124,7 @@ do -- the main scope
 				newTable.units[1].country = newTable.country
 				newTable.units[1].coalitionId = newTable.coalitionId
 				newTable.units[1].coalition = newTable.coalition
-				if newObject:getCategory() == 6 and newObject:getCargoDisplayName() then
+				if Object.getCategory(newObject) == 6 and newObject:getCargoDisplayName() then
 					local mass = newObject:getCargoDisplayName()
 					mass = string.gsub(mass, ' ', '')
 					mass = string.gsub(mass, 'kg', '')
@@ -3422,7 +3431,7 @@ function mist.getUnitsInPolygon(unit_names, polyZone, max_alt)
 	local inZoneUnits = {}
 	for i =1, #units do
 		local lUnit = units[i]
-        local lCat = lUnit:getCategory()
+        local lCat = Object.getCategory(lUnit)
         if lUnit:isExist() == true and ((lCat == 1 and lUnit:isActive()) or lCat ~= 1) and mist.pointInPolygon(lUnit:getPosition().p, polyZone, max_alt) then
 			inZoneUnits[#inZoneUnits + 1] = lUnit
 		end
@@ -3468,7 +3477,7 @@ function mist.getUnitsInZones(unit_names, zone_names, zone_type)
 	for units_ind = 1, #units do
         local lUnit = units[units_ind]
         local unit_pos = lUnit:getPosition().p
-        local lCat = lUnit:getCategory()
+        local lCat = Object.getCategory(lUnit)
         for zones_ind = 1, #zones do
 			if zone_type == 'sphere' then	--add land height value for sphere zone type
 				local alt = land.getHeight({x = zones[zones_ind].x, y = zones[zones_ind].z})
@@ -3531,7 +3540,7 @@ function mist.getUnitsInMovingZones(unit_names, zone_unit_names, radius, zone_ty
 
 	for units_ind = 1, #units do
         local lUnit = units[units_ind]
-        local lCat = lUnit:getCategory()
+        local lCat = Object.getCategory(lUnit)
         local unit_pos = lUnit:getPosition().p
 		for zone_units_ind = 1, #zone_units do
 			
@@ -3559,7 +3568,7 @@ function mist.getUnitsLOS(unitset1, altoffset1, unitset2, altoffset2, radius)
 	-- get the positions all in one step, saves execution time.
 	for unitset1_ind = 1, #unitset1 do
 		local unit1 = Unit.getByName(unitset1[unitset1_ind])
-        local lCat = unit1:getCategory()
+        local lCat = Object.getCategory(unit1)
 		if unit1 and ((lCat == 1 and unit1:isActive()) or lCat ~= 1) and unit:isExist() == true then
 			unit_info1[#unit_info1 + 1] = {}
 			unit_info1[#unit_info1].unit = unit1
@@ -3569,7 +3578,7 @@ function mist.getUnitsLOS(unitset1, altoffset1, unitset2, altoffset2, radius)
 
 	for unitset2_ind = 1, #unitset2 do
 		local unit2 = Unit.getByName(unitset2[unitset2_ind])
-        local lCat = unit2:getCategory()
+        local lCat = Object.getCategory(unit2)
 		if unit2 and ((lCat == 1 and unit2:isActive()) or lCat ~= 1) and unit:isExist() == true then
 			unit_info2[#unit_info2 + 1] = {}
 			unit_info2[#unit_info2].unit = unit2

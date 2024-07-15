@@ -23,4 +23,4 @@ end,{}):InitRepeatOnLanding():SpawnScheduled(1800,0.25)
 
 --TANKER = SPAWN:New("Texaco11"):InitLimit(1,2):InitCleanUp(600):InitRepeatOnLanding():SpawnScheduled(1800,0.25)
 
-rlooksee = SET_GROUP:New():FilterPrefixes({"REW","RSAM","RAWAC"}):FilterCoalitions("red"):FilterActive():FilterStart()
+-- rlooksee = SET_GROUP:New():FilterPrefixes({"REW","RSAM","RAWAC"}):FilterCoalitions("red"):FilterActive():FilterStart()

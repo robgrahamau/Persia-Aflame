@@ -55,12 +55,12 @@ function bluekishcap()
 end
 
 function checkislands()
-	local am = AIRBASE:FindByName(AIRBASE.PersianGulf.Abu_Musa_Island_Airport)
-	local si = AIRBASE:FindByName(AIRBASE.PersianGulf.Sirri_Island)
-	local tk = AIRBASE:FindByName(AIRBASE.PersianGulf.Tunb_Kochak)
-	local ta = AIRBASE:FindByName(AIRBASE.PersianGulf.Tunb_Island_AFB)
-	local qs = AIRBASE:FindByName(AIRBASE.PersianGulf.Qeshm_Island)
-	local abna = AIRBASE:FindByName(AIRBASE.PersianGulf.Sir_Abu_Nuayr)
+	local am = AIRBASE:FindByName(AIRBASE.PersianGulf["Abu_Musa_Island_Airport"])
+	local si = AIRBASE:FindByName(AIRBASE.PersianGulf["Sirri_Island"])
+	local tk = AIRBASE:FindByName(AIRBASE.PersianGulf["Tunb_Kochak"])
+	local ta = AIRBASE:FindByName(AIRBASE.PersianGulf["Tunb_Island_AFB"])
+	local qs = AIRBASE:FindByName(AIRBASE.PersianGulf["Qeshm_Island"])
+	local abna = AIRBASE:FindByName(AIRBASE.PersianGulf["Sir_Abu_Nuayr"])
 	
 	if tk:GetCoalition() == 2 and ta:GetCoalition() == 2 and si:GetCoalition() == 2 and am:GetCoalition() == 2 then
 	  if PeleliuSpawned == false then
@@ -142,8 +142,8 @@ BASE:E({"Initalising Scheduler"})
 function spawnmainland()
   if _spawnnumber ~= _maxislandmainlandspawns then
   _spawnnumber = _spawnnumber + 1
-  local _shiraz = AIRBASE:FindByName(AIRBASE.PersianGulf.Shiraz_International_Airport)
-  local _kerman = AIRBASE:FindByName(AIRBASE.PersianGulf.Kerman_Airport)
+  local _shiraz = AIRBASE:FindByName(AIRBASE.PersianGulf.Shiraz_Intl)
+  local _kerman = AIRBASE:FindByName(AIRBASE.PersianGulf.Kerman)
   if _shiraz:GetCoalition() == 1 then
     if mainlandsead == nil then
       mainlandsead = SPAWN:NewWithAlias("MainlandSead","MSF_" .. _spawnnumber .. ""):InitRandomizeRoute(1,5,10000,1000):InitCleanUp(300):Spawn()
@@ -176,8 +176,8 @@ end
 
 function spawnislands()
   if _spawnnumber ~= _maxislandmainlandspawns then
-  local _shiraz = AIRBASE:FindByName(AIRBASE.PersianGulf.Shiraz_International_Airport)
-  local _kerman = AIRBASE:FindByName(AIRBASE.PersianGulf.Kerman_Airport)
+    local _shiraz = AIRBASE:FindByName(AIRBASE.PersianGulf.Shiraz_Intl)
+    local _kerman = AIRBASE:FindByName(AIRBASE.PersianGulf.Kerman)
   _spawnnumber = _spawnnumber + 1
   if _shiraz:GetCoalition() == 1 then
     if islandsead == nil then
@@ -261,12 +261,21 @@ SCHEDULER:New(nil,function()
     end
   end
   local iss = math.random(1,100)
-  if iss < 50 then
-  spawnislands()
+  local lowerchance = 25
+  local upperchance = 50
+  local chance_island = math.random(lowerchance,upperchance)
+  BASE:E({"Checking for a sweep of the islands",iss,lowerchance,upperchance,chance_island})
+
+  if iss > chance_island then
+    spawnislands()
   end
   iss = math.random(1,100)
   iss = math.random(1,100)
-  if iss < 50 then
+  local lowerchance = 50
+  local upperchance = 75
+  local chance_mainland = math.random(lowerchance,upperchance)
+  BASE:E({"Checking for a sweep of the mainland",iss,lowerchance,upperchance,chance_mainland})
+  if iss > chance_mainland then
   spawnmainland()
   end
  end,{},(60*(math.random(15,60))),(60*60),0.75)

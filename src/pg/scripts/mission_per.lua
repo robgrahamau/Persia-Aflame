@@ -192,6 +192,7 @@ function loadvalues()
     BASE:E({"Loading in values from mainmission to new sqns"})
 	hm("Now loading main mission persistence data")
 	-- Sqn #'s
+	--[[
 	i30th:SetSqnCount(mainmission.i30th)
 	i30th_1:SetSqnCount(mainmission.i30th_1)
 	i30th_2:SetSqnCount(mainmission.i30th_2)
@@ -227,7 +228,7 @@ function loadvalues()
     cv5alert:SetSqnCount(mainmission.cv5alert)
     cv6alert:SetSqnCount(mainmission.cv6alert)
     BASE:E({"new sqns done"})
-	
+	]]
 	-- This checks for a nil if it is then it just sets it all true, way to stop issues if the values don't exist.
 	if mainmission.ships == nil then
 		mainmission.shipgroup1 = true
@@ -299,7 +300,9 @@ function loadvalues()
 			awacsTeddy:Stop()
 		end
 		if abossactive == true then
-			AirbossTeddy:Stop()
+			if AIrbossTeddy ~= nil then
+				AirbossTeddy:Stop()
+			end
 		end
 	else
 		cg5 = GROUP:FindByName("Carrier Group 5")
@@ -324,7 +327,9 @@ function loadvalues()
 		hm("** WARNING CARRIER GROUP 5a USS FORESTALL WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
 		ShellForest:Stop()
 		if abossactive == true then
-			AirbossForest:Stop()
+			if AirbossForest ~= nil then
+				AirbossForest:Stop()
+			end
 		end
 	else
 		cg5a = GROUP:FindByName("Carrier Group 5a")
@@ -347,7 +352,9 @@ function loadvalues()
 		cg6:Destroy()
 		hm("** WARNING CARRIER GROUP 6 WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
 		if abossactive  == true then
-			AirbossStennis:Stop()
+			if AirbossStennis ~= nil then
+				AirbossStennis:Stop()
+			end
 		end
 		ShellStennis:Stop()
 		if useawacs == true then
@@ -373,7 +380,9 @@ function loadvalues()
 		cg6a:Destroy()
 		if abossactive  == true then
 			if washingtonactive == true then
-				AirbossWash:Stop()
+				if AirbossWash ~= nil then
+					AirbossWash:Stop()
+				end
 			end
 		end
 		hm("** WARNING CARRIER GROUP 6a USS Washington WAS PREVIOUSLY RENDERED TOO DAMAGED TO FIGHT AND IS NO LONGER AVALIBLE **")
@@ -520,7 +529,9 @@ function CheckCarriers()
 				hm("** US COALITION COMMAND REPORTS A REPAIRED TEDDY HAS RETURNED TO THE AO**")
 				cg5:OnReSpawn(function(group) 
 					if abossactive  == true then
-						AirbossTeddy:Start()
+						if AirbossTeddy ~= nil then
+							AirbossTeddy:Start()
+						end
 					end
 					ShellTeddy:Start()
 					if useawacs == true then
@@ -598,7 +609,9 @@ function CheckCarriers()
 				hm("** US COALITION COMMAND REPORTS A REPAIRED STENNIS HAS RETURNED TO THE AO**")
 				cg6:OnReSpawn(function(group) 
 					if abossactive  == true then
+						if AirbossStennis ~= nil then
 						AirbossStennis:Start()
+						end
 					end
 					ShellStennis:Start()
 					if useawacs == true then
@@ -632,7 +645,9 @@ function CheckCarriers()
 				hm("** US COALITION COMMAND REPORTS A REPAIRED WASHINGTON HAS RETURNED TO THE AO**")
 				cg6a:OnReSpawn(function(group) 
 					if abossactive  == true then
-						AirbossWash:Start()
+						if AirbossWash ~= nil then
+							AirbossWash:Start()
+						end 
 					end
 					cg6alife = cg6a:GetLife()
 				end)
@@ -672,7 +687,7 @@ function reinforce()
     
 	if mnowTime > mainmission.nextupdate then
 		BASE:E({"Reinforcements arriving"})
-
+		--[[
 		BASE:E({"Updating New SQNS"})
 		updatesqn(cap1,24,16,mainmission.cap1)
 		updatesqn(cap2,24,16,mainmission.cap2)
@@ -731,7 +746,7 @@ function reinforce()
 		else
 			BASE:E({"Reinforcements Kish not held by Red"})
 		end
-		
+		]]
 		CheckCarriers()
 		mainmission.nextupdate = mnowTime + reinforcements
 		mainmission.lastupdatehour = mnowHour
@@ -747,7 +762,7 @@ function updatevalues()
 	hm("Should be saving Main Mission Now")
 
 	hm({"Saving BLUE SQN #'s"})
-    mainmission.cap1 = cap1:GetSqnCount()
+    --[[mainmission.cap1 = cap1:GetSqnCount()
     mainmission.cap2 = cap2:GetSqnCount()
     mainmission.cap3 = cap3:GetSqnCount()
     mainmission.cap4 = cap4:GetSqnCount()
@@ -772,6 +787,7 @@ function updatevalues()
     mainmission.i33rd_2 = i33rd_2:GetSqnCount()
     mainmission.i91st = i91st:GetSqnCount()
     mainmission.i91st_1 = i91st_1:GetSqnCount()
+	]]
 	hm("Saving Ship Group State")
 	mainmission.shipgroup1 = false
 	if GROUP:FindByName("Cuban Tanker 1"):IsAlive() == true then

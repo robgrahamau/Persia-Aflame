@@ -17,6 +17,7 @@
 slothandler = {
 Classname = "Slot Handler",
 airfield = nil,
+stoage = nil,
 defaultcoalition = nil,
 prefix = nil,
 currentcoalition = nil,
@@ -30,7 +31,7 @@ ctldredheading = 180,
 ctldreddistance = 2000,
 ctldredcountry = 32,
 coord = nil,
-sanity = 300,
+sanity = 600,
 _routegroups = false,
 routedist = 5000,
 scheduler = nil,
@@ -51,9 +52,11 @@ function slothandler:New(airfield,_coalition,prefix)
   self.name = airfield
   self.airfield = AIRBASE:FindByName(airfield)
   self.coord = self.airfield:GetCoordinate()
+  self.storage = self.airfield:GetStorage()
   self.defaultcoalition = _coalition
   self.prefix = prefix
   self.currentcoalition = 0
+  self.rednotallowed = {}
   self.redslots = SET_CLIENT:New():FilterCoalitions("red"):FilterPrefixes(prefix):FilterOnce()
   -- self.redslots:ForEachClient(function(_client) BASE:E({self.name,"we have a R client",_client:GetName()}) end)
   self.blueslots = SET_CLIENT:New():FilterCoalitions("blue"):FilterPrefixes(prefix):FilterOnce()
@@ -106,6 +109,14 @@ function slothandler:routegroups(_coord,dist,coalition)
   end
 end
 
+function slothandler:SetRedNotAllowed(notallowed)
+  for k,v in pairs(notallowed) do
+    self:E({k,v})
+  end
+  self:E({"Slot handler updated Rednotallowed is",notallowed})
+  self.rednotallowed = notallowed
+end
+
 function slothandler:Stop()
   if self.scheduler ~= nil then
     self.scheduler:Stop()
@@ -122,15 +133,41 @@ end
 function slothandler:SanityChecker()
   BASE:T({self.name,"Sanity Checker"})
   local _coalition = self.airfield:GetCoalition()
-  
+  if _coalition == 1 then
+    self:WHupdate()
+  end
   if self.currentcoalition ~= _coalition then
     -- run our slot stuff.
 	BASE:E({"Sanity checker",self.name,_coalition,self.currentcoalition})
     self:SlotChange(_coalition)
   end
+  
 end
 
-
+function slothandler:WHupdate()
+  self:E("WHupdate",self.rednotallowed)
+  for k,v in pairs(self.rednotallowed) do
+    BASE:E({k,v})
+  end
+  if self.rednotallowed ~= nil then
+    local _coalition = self.airfield:GetCoalition()
+    if _coalition == 1 then
+      self:E({"Coalition is 1 setting rednotallowed"})
+      for k,v in pairs(self.rednotallowed) do
+        BASE:E("Setting",v,"To",0)
+        self.storage:SetAmount(v,0)
+      end
+    else
+      if _coalition == 2 then
+        self:E({"Coalition is 2 setting rednotallowed"})
+        for k,v in pairs(self.rednotallowed) do
+          BASE:E("Setting",v,"To",2)
+          self.storage:SetAmount(v,0)
+        end
+      end
+    end
+  end
+end
 
 --- Sets Autocapture off and forces base to the coalition returns self
 -- @param number coalition
@@ -240,27 +277,7 @@ function slothandler:SpawnCTLD(_coalition)
     local _unitID = ctld.getNextUnitId()
     local _name = "ctld Deployed FOB #" .. _unitID
     local _fob = nil
-	--[[
-	if _coalition == 1 then
-		if self.redctld ~= nil then
-			if self.redctld:IsAlive() == true then
-				--MESSAGE:New("CTLD Logistics building should still be alive, not respawning if it is not report on discord",30):ToRed()
-				hm("CTLD Logistics building should still be alive, not respawning")
-			return false
-			end
-		end
-	elseif _coalition == 2 then 
-		if self.bluectld ~= nil then
-			if self.bluectld:IsAlive() == true then
-				--MESSAGE:New("CTLD Logistics building should still be alive, not respawning if it is not report on discord",30):ToBlue()
-				hm("CTLD Logistics building should still be alive, not respawning")
-				return false
-			end
-		end
-	elseif _coalition == 3 or _coalition == 0 then
-		hm("CTLD Logistics building not built coalition was 3 or 0")
-	end
-	]]
+
     _fob = ctld.spawnFOB(_ccount,211,vec3,_name)
     table.insert(ctld.logisticUnits, _fob:getName())
     if ctld.troopPickupAtFOB == true then
@@ -286,6 +303,7 @@ function slothandler:SlotChange(_coalition)
     BASE:E(string.format("%s,slot handler,slot change coalition %d",self.name,_coalition))
 	-- lets do another sanity check just incase
 	if self.currentcoalition ~= _coalition then
+    self:WHupdate()
     local bflag = 0
     local rflag = 0
      bmsg = "Airfield " .. self.name .. " was captured, slots open"

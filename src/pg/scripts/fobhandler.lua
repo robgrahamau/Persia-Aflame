@@ -22,7 +22,8 @@ fob = {
   redstaticlist = { },
   blueslots = {},
   redslots = {},
-  sanity = 300,
+  rednotallowed = nil,
+  sanity = 600,
 }
 
 function fob:New(name,redspawn,bluespawn,coalition,heading,usenew,distance)
@@ -95,6 +96,30 @@ function fob:New(name,redspawn,bluespawn,coalition,heading,usenew,distance)
   BASE:E({self.fobname,"Created",self.coalition})
   return self
 end
+function fob:SetRedNotAllowed(_table)
+  self:E({"renotallowedupdate"})
+  self.rednotallowed = _table
+  return self
+end
+
+function fob:WHupdate()
+  self:E({"WHUPDATE"})
+  self.airfield = AIRBASE:FindByName(self.fobname)
+  if self.rednotallowed ~= nil then
+    local _coalition = self.airfield:GetCoalition()
+    if _coalition == 1 then
+      local _stores = self.airfield:GetStorage()
+      for k,v in pairs(self.rednotallowed) do
+        _stores:SetAmount(v,0)
+      end
+    elseif _coalition == 2 then
+        local _stores = self.airfield:GetStorage()
+        for k,v in pairs(self.rednotallowed) do
+          _stores:SetAmount(v,100)
+        end
+    end
+  end
+end
 
 function fob:spawnctld(_coordinate,_country,heading,distance)
   if heading == nil then
@@ -147,6 +172,7 @@ function fob:SetCTLD(ctldvalue,zone)
 end
 
 function fob:FlipRed()
+  self:WHupdate()
   BASE:E({self.fobname,"Flip Red"})
   for k,v in pairs(self.redslots) do 
       trigger.action.setUserFlag(v,00)
@@ -171,13 +197,17 @@ end
 
 function fob:spawnred()
   if self:IsBlue() == false then
-    self.group = self.redspawn:Spawn()
+    if self.deactivated ~= true then
+      self.group = self.redspawn:Spawn()
+    end
   end
 end
 
 function fob:spawnblue()
   if self:IsBlue() == true then
-    self.group = self.bluespawn:Spawn()
+    if self.deactivated ~= true then
+      self.group = self.bluespawn:Spawn()
+    end
   end
 end
 
@@ -197,7 +227,7 @@ function fob:FlipBlue()
     end
   end
   SCHEDULER:New(nil,function() 
-  self:spawnblue() 
+      self:spawnblue() 
    end,{},60)
   self.coalition = 2
   self.lastcoalition = 1
@@ -262,6 +292,9 @@ function fob:SanityChecker()
   local ABItem = AIRBASE:FindByName(self.fobname)
   local coalition = ABItem:GetCoalition()
   local _coord = ABItem:GetCoordinate()
+  if ABItem:GetCoalition() == 1 then
+    self:WHupdate()
+  end
   if ABItem:GetCoalition() == 2 and self.coalition ~= 2 then
     if self:IsBlue() == true then
       self:FlipBlue()
@@ -339,14 +372,20 @@ function fob:Deactivate()
     if self.group ~= nil
      then self.group:Destroy()
     end
-    local _fob = STATIC:FindByName(self.ctldfob)
+    if self.ctldfob ~= nil then
+      local _fob = STATIC:FindByName(self.ctldfob)
+    end
     if _fob ~= nil then
       _fob:Destroy()
     end
 
-  end,{},60)
+  end,{},240)
 end
-
+function fob:ForceCoalition(side)
+  local ABItem = AIRBASE:FindByName(self.fobname)
+  ABItem:SetAutoCaptureOff()
+  ABItem:SetCoalition(side)
+end
 function fob:Activate()
   local ABItem = AIRBASE:FindByName(self.fobname)
   ABItem:SetAutoCaptureON()

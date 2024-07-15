@@ -92,8 +92,8 @@ SCHEDULER:New(nil,function() cycleroe()  end,{},31,SLEEPCYCLE)
 
 --
 
-evhhit_ChargeAttack = EVENTHANDLER:New()
-evhhit_ChargeAttack:HandleEvent(EVENTS.Hit)
+-- evhhit_ChargeAttack = EVENTHANDLER:New()
+-- evhhit_ChargeAttack:HandleEvent(EVENTS.Hit)
 
 function evhhit_ChargeAttack:OnEventHit(EventData)
     local attackgroup = EventData.IniGroup

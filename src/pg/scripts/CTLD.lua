@@ -285,6 +285,7 @@ ctld.unitLoadLimits = {
 	 ["Mi-8MT"] = 16,
 	 ["Mi-24P"] = 8,
 	 ["UH-60L"] = 14,
+     ["OH58D"] = 0,
 }
 
 
@@ -303,12 +304,15 @@ ctld.unitLoadLimits = {
 -- Will allow Mistral Gazelle to only transport crates, not troops
 
 ctld.unitActions = {
-	 ["SA342Mistral"] = {crates=true, troops=true},
-     ["SA342L"] = {crates=false, troops=true},
-     ["SA342M"] = {crates=false, troops=true},
-     ["Ka-50"] = {crates = false, troops=false},
+	["UH-1H"] =  {crates=true, troops=true},
+    ["SA342Mistral"] = {crates=true, troops=true},
+     ["SA342L"] = {crates=true, troops=true},
+     ["SA342M"] = {crates=true, troops=true},
+     ["Ka-50"] = {crates = true, troops=false},
+     ["Ka-50_3"] = {crates = true, troops=false},
      ["Mi-24P"] = {crates = false, troops=true},
-	 ["AH-64D_BLK_II"] = {creates=false, troops=false}
+	 ["AH-64D_BLK_II"] = {creates=false, troops=false},
+     ["OH58D"] = {creates=false, troops=false},
 }
 
 -- ************** WEIGHT CALCULATIONS FOR INFANTRY GROUPS ******************
@@ -329,7 +333,7 @@ ctld.MANPAD_WEIGHT = 18 -- kg
 ctld.RPG_WEIGHT = 7.6 -- kg
 ctld.MG_WEIGHT = 10 -- kg
 ctld.MORTAR_WEIGHT = 26 -- kg
-ctld.JTAC_WEIGHT = 15 -- kg
+ctld.JTAC_WEIGHT = 18 -- kg
 
 -- ************** INFANTRY GROUPS FOR PICKUP ******************
 -- Unit Types
@@ -5450,13 +5454,19 @@ function ctld.JTACAutoLase(_jtacGroupName, _laserCode, _smoke, _lock, _colour, _
             ctld.notifyCoalition(fullMessage, 10, _jtacUnit:getCoalition(), _radio, message)
 
 	        -- JTAC Unit stop his route -----------------
-	        trigger.action.groupStopMoving(Group.getByName(_jtacGroupName)) -- stop JTAC
-            
+            if _jtacUnit:getTypeName() == "MQ-9 Reaper" then
+                -- we don't stop we are flying
+            else
+	            trigger.action.groupStopMoving(Group.getByName(_jtacGroupName)) -- stop JTAC
+            end
             -- create smoke
             if _smoke == true then
-
-                --create first smoke
-                ctld.createSmokeMarker(_enemyUnit, _colour)
+                if _jtacUnit:getTypeName() == "MQ-9 Reaper" then
+                    -- we don't make smoke.
+                else
+                    --create first smoke
+                    ctld.createSmokeMarker(_enemyUnit, _colour)
+                end
             end
         end
     end
@@ -5470,18 +5480,18 @@ function ctld.JTACAutoLase(_jtacGroupName, _laserCode, _smoke, _lock, _colour, _
 
 
         if _smoke == true then
-            local _nextSmokeTime = ctld.jtacSmokeMarks[_enemyUnit:getName()]
-
-            --recreate smoke marker after 5 mins
-            if _nextSmokeTime ~= nil and _nextSmokeTime < timer.getTime() then
-
-                ctld.createSmokeMarker(_enemyUnit, _colour)
+            if _jtacUnit:getTypeName() == "MQ-9 Reaper" then
+                -- we don't make smoke.
+            else
+                local _nextSmokeTime = ctld.jtacSmokeMarks[_enemyUnit:getName()]
+                --recreate smoke marker after 5 mins
+                if _nextSmokeTime ~= nil and _nextSmokeTime < timer.getTime() then
+                    ctld.createSmokeMarker(_enemyUnit, _colour)
+                end
             end
         end
-
     else
         -- env.info('LASE: No Enemies Nearby')
-
         -- stop lazing the old spot
         ctld.cancelLase(_jtacGroupName)
         --  env.info('Timer Slow timerSparkleLase '..jtacGroupName.." "..laserCode.." "..enemyUnit:getName())

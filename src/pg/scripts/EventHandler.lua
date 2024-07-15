@@ -22,6 +22,8 @@ HEVENT = {
     milkcowtemplate = nil,
     milkcowuses = 3,
     spawnedfac = nil,
+    maxafacspawns = 5,
+    currentafacspawns = 0,
 }
 
 
@@ -41,6 +43,8 @@ function HEVENT:New(_markers,_lqm,_death,_tankertime,_tankercooldown)
     self.TANKER_COOLDOWN = _tankercooldown or TANKER_COOLDOWN
     self._handledead = _death or false
     self.milkcowspawns = 0
+    self.currentawacspawns = 0
+    self.maxafacspawns = 3
     return self
 end
 function HEVENT:SetMilkcow(_group)
@@ -327,9 +331,12 @@ function HEVENT:handleCAPRequest(text,coord,_group,_playername,_coalition)
 end
 
 function HEVENT:handleMilkCow(text,coord,_group,_playername,_coalition)
+  local _playerame = _playername or "Unknown"
   local _coord = coord
   local _col = _coalition
   local _mgrs = _coord:ToStringMGRS()
+  local _agent = BLUEFIRESUPPORTNAME
+  self:E({_playername,_coord,_agent,_mgrs})
   local msg = string.format("%s, this is %s requesting a FARP at %s.",_agent,_playername,_mgrs)
   self:Msg(msg,nil,_col,10)
   -- get our nearest airbase.
@@ -344,7 +351,7 @@ function HEVENT:handleMilkCow(text,coord,_group,_playername,_coalition)
     self:Msg(msg,nil,_col,10)
     return false
   end
-  local _nook = SPAWN:NewWithAlias(self.milkcowtemplate,"MilkCow"):SpawnAtAirbase(nearestab,Spawn.Takeoff.Hot)
+  local _nook = SPAWN:NewWithAlias(self.milkcowtemplate,"MilkCow"):SpawnAtAirbase(nearestab,SPAWN.Takeoff.Runway,00)
   if _nook == nil then
     msg = string.format("%s, %s inform command we have had a FOBAR error, milkcows are down there are no moos happening today",_playername,_agent)
     self:Msg(msg,nil,_col,10)
@@ -353,31 +360,38 @@ function HEVENT:handleMilkCow(text,coord,_group,_playername,_coalition)
 
   self.milkcowspawns = self.milkcowspawns + 1
   -- ok we have spawned the milkcow now we need to route it from its current location to the new location.
-  msg = string.format("%s, Milkcow request recieved unit is taking off from %s this time for coordinates %s",_playername,_mgrs)
-  self:Msg(msg,nil,_col,10)
+ 
   local Route = {}
   local FromCoord = nearestab:GetCoordinate()
   local fromheading = FromCoord:HeadingTo(coord)
   local distance = FromCoord:Get2DDistance(coord)
   local midpoint = FromCoord:Translate((distance/2),fromheading)
-  midpoint:AddAlt(150)
+  local mvec3 = midpoint:GetVec2()
+  midpoint = COORDINATE:NewFromVec2(mvec3,150)
   local ToCoord = coord
-  Route[#Route+1] = FromCoord:WaypointAirTakeOffRunway(COORDINATE.WaypointAltType.BARO,UTILS:KnotsToKmph(120))
-  Route[#Route+1] = midpoint:WaypointAirFlyOverPoint(COORDINATE.WaypointAltType.RADIO,UTILS.KnotsToKmph(120))
-  Route[#Route+1] = ToCoord:WaypointAirFlyOverPoint(COORDINATE.WaypointAltType.RADIO,UTILS.KnotsToKmph(120))
+  local speed = UTILS.KnotsToKmph(120)
+  Route[#Route+1] = FromCoord:WaypointAirTakeOffRunway(COORDINATE.WaypointAltType.BARO,speed)
+  Route[#Route+1] = midpoint:WaypointAirFlyOverPoint(COORDINATE.WaypointAltType.RADIO,speed)
+  Route[#Route+1] = ToCoord:WaypointAirFlyOverPoint(COORDINATE.WaypointAltType.RADIO,speed)
   local Tasks = {}
-  Tasks[#Tasks+1] = _nook:TaskLandAtVec2(ToCoord:GetVec2(),300)
+  Tasks[#Tasks+1] = _nook:TaskLandAtVec2(ToCoord:GetVec2(),150)
   Tasks[#Tasks+1] = _nook:TaskFunction("MilkCowFarpSpawn",coord,_group,_playername,_coalition)
   local combotask = _nook:TaskCombo(Tasks)
   _nook:SetTaskWaypoint(Route[#Route],combotask)
-  Route[#Route+1] = FromCoord:WaypointAirLanding(UTILS.KnotsToKmph(120))
+  Route[#Route+1] = FromCoord:WaypointAirLanding(speed)
   _nook:Route(Route,1)  
   self:Log({"Should have pushed all data to the milkcow and it should be going were we want it to be going."})
+
+  msg = string.format("%s, Milkcow request recieved unit is taking off from this time for coordinates %s",_playername,_mgrs)
+  self:Msg(msg,nil,_col,10)
+end
+function MilkCowArrived()
+  HEVENT:Msg("Milk Cow is landing at target Coordinates Base should take 150 seconds to create",nil,2,10)
 end
 
-
 function MilkCowFarpSpawn(Veh,coord,_group,_playername,_coalition)
-  self:Log({"Milkcow should have arrived and should be dropping its stuff.."})
+  HEVENT:Msg("Farp should be creating now",nil,2,10)
+  BASE:E({"Milkcow should have arrived and should be dropping its stuff.."})
   HEVENT:spawnfarp("",coord,_group,_playername,_coalition)
   Veh:Destroy()
 end
@@ -947,6 +961,9 @@ function HEVENT:handleScoutRequest(text,coord,_col,_playername,_group)
   local altft = nil
   local spknt = nil
   local speed = nil
+  local nab = nil
+  local newafac = nil
+  local _code = nil
   BASE:E({"keywords =",keywords})
   for _,keyphrase in pairs(keywords) do
     local str=UTILS.Split(keyphrase, "=")
@@ -965,12 +982,17 @@ function HEVENT:handleScoutRequest(text,coord,_col,_playername,_group)
       speed = tonumber(val)
     end
   end
-
-  local nab = coord:GetClosestAirbase(nil,_col) -- stores the nearest friendly airbase.
-  local newafac = SPAWN:NewWithAlias("GM_AFAC","Laser 11"):SpawnAtAirbase(nab,SPAWN.Takeoff.Air,500)
-	local _code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
-  table.insert(ctld.jtacGeneratedLaserCodes, _code)
-  ctld.JTACAutoLase(newafac:GetName(), _code) 
+  if self.currentafacspawns < self.maxafacspawns then
+    nab = coord:GetClosestAirbase( Airbase.Category.AIRDROME,_col) -- stores the nearest friendly airbase.
+    newafac = SPAWN:NewWithAlias("GM_AFAC","Laser 11"):SpawnAtAirbase(nab,SPAWN.Takeoff.Air,500)
+  	_code = table.remove(ctld.jtacGeneratedLaserCodes, 1)
+    table.insert(ctld.jtacGeneratedLaserCodes, _code)
+    ctld.JTACAutoLase(newafac:GetName(), _code) 
+    self.currentafacspawns = self.currentafacspawns + 1
+  else
+    self:Msg(string.format("%s AFAC is unable to be launched, the %d Afac's assigned for these 12 hours have been destroyed and we are waiting resupply", _playername,self.maxafacspawns),nil,_col,30, MESSAGE.Type.Information)
+    return false
+  end
 
   if altitude == nil then
     altft = 12000
@@ -1028,7 +1050,7 @@ function HEVENT:handleScoutRequest(text,coord,_col,_playername,_group)
   newafac:PushTask(afacTask, 4)
   -- message to all of blue goes out.
   local _mgrs = coord:ToStringMGRS()
-  self:Msg(string.format("%s AFAC lanched from %s and is enroute to %s  requested by %s \nIt will orbit on a heading of %d for %d nm, Alt: %d CAS: %d.\n%d minutes cooldown starting now", newafac:GetName(),nab:GetName(),_mgrs,_playername,heading,distance,altft,spknt, self.AFAC_COOLDOWN / 60),nil,_col,30, MESSAGE.Type.Information)
+  self:Msg(string.format("%s AFAC luanched from %s and is enroute to %s  requested by %s you have %d remaining DCS FAC Freq: 265mhz Enfield 9 \nIt will orbit on a heading of %d for %d nm, Alt: %d CAS: %d.\n%d minutes cooldown starting now", newafac:GetName(),nab:GetName(),_mgrs,_playername,(self.maxafacspawns - self.currentafacspawns),heading,distance,altft,spknt, self.AFAC_COOLDOWN / 60),nil,_col,30, MESSAGE.Type.Information)
 
 end
 
