@@ -35,7 +35,7 @@ mist = {}
 -- don't change these
 mist.majorVersion = 4
 mist.minorVersion = 5
-mist.build = 122
+mist.build = 127
 
 -- forward declaration of log shorthand
 local log
@@ -695,7 +695,6 @@ do -- the main scope
             ["FARP"] = "farps",
             ["Fueltank"] = "fueltank_cargo",
             ["Gate"] = "gate",
-            ["FARP Fuel Depot"] = "gsm rus",
             ["Armed house"] = "home1_a",
             ["FARP Command Post"] = "kp-ug",
             ["Watch Tower Armed"] = "ohr-vyshka",
@@ -704,7 +703,6 @@ do -- the main scope
             ["Pipes big"] = "pipes_big_cargo",
             ["Oil platform"] = "plavbaza",
             ["Tetrapod"] = "tetrapod_cargo",
-            ["Fuel tank"] = "toplivo",
             ["Trunks long"] = "trunks_long_cargo",
             ["Trunks small"] = "trunks_small_cargo",
             ["Passenger liner"] = "yastrebow",
@@ -1074,6 +1072,10 @@ do -- the main scope
 
 					newTable.units[unitId].type = unitData:getTypeName()
 					newTable.units[unitId].unitId = tonumber(unitData:getID())
+					
+					if unitData:getPlayerName() ~= "" and not mist.DBs.MEunitsByName[newTable.units[unitId].unitName] then
+						newTable.dynamicSlot = timer.getTime()
+					end
 
 
 					newTable.units[unitId].groupName = newTable.groupName
@@ -1094,7 +1096,11 @@ do -- the main scope
 							mistAddedObjects[index] = nil
 						end
 						if found == false then
-							newTable.units[unitId].skill = "High"
+							if newTable.dynamicSlot then
+								newTable.units[unitId].skill = "Client"
+							else
+								newTable.units[unitId].skill = "High"
+							end
 							newTable.units[unitId].alt_type = "BARO"
 						end
 						if newTable.units[unitId].alt_type == "RADIO" then -- raw postition MSL was grabbed for group, but spawn is AGL, so re-offset it
@@ -1152,10 +1158,12 @@ do -- the main scope
 				end
 			end
 		end
+		--dbLog:warn(newTable)
 		--mist.debug.writeData(mist.utils.serialize,{'msg', newTable}, timer.getAbsTime() ..'Group.lua')
 		newTable.timeAdded = timer.getAbsTime() -- only on the dynGroupsAdded table. For other reference, see start time
 		--mist.debug.dumpDBs()
 		--end
+		--dbLog:warn(newTable)
 		--dbLog:info('endDbUpdate')
 		return newTable
 	end
@@ -1343,6 +1351,13 @@ do -- the main scope
 				--dbLog:info('byId')
 				mist.DBs.unitsById[tonumber(newUnitData.unitId)] = ldeepCopy(newUnitData)
 			end
+			
+			if newTable.dynamicSlot then
+				mist.DBs.humansByName[newTable.units[1].unitName] = ldeepCopy(newUnitData)
+				if newUnitData.unitId then 
+					mist.DBs.humansById[newTable.units[1].unitId] = ldeepCopy(newUnitData)
+				end
+			end
 			mist.DBs.unitsByName[newUnitData.unitName] = ldeepCopy(newUnitData)
 		end
 		-- this is a really annoying DB to populate. Gotta create new tables in case its missing
@@ -1385,6 +1400,9 @@ do -- the main scope
 		--dbLog:info('add to dynGroups')
 		mist.DBs.dynGroupsAdded[#mist.DBs.dynGroupsAdded + 1] = ldeepCopy(newTable)
 		--dbLog:info('clear entry')
+		
+
+		
 		updateChecker[newTable.name] = nil
 		--dbLog:info('return')
 		return true
@@ -1438,14 +1456,15 @@ do -- the main scope
 		-- dont need to add units spawned in at the start of the mission if mist is loaded in init line
 		if event.id == world.event.S_EVENT_BIRTH and timer.getTime0() < timer.getAbsTime() then
 
-			if Object.getCategory(event.initiator) == 1 and not Unit.getPlayerName(event.initiator) then -- simple player check, will need to later check to see if unit was spawned with a player in a flight
+			if Object.getCategory(event.initiator) == 1  then 
 				--log:info('Object is a Unit')
-				if Unit.getGroup(event.initiator) then
+				local g =  Unit.getGroup(event.initiator)
+				if g and event.initiator:getPlayerName() ~= "" and not mist.DBs.MEunitsByName[event.initiator:getName()] then
 				--	log:info(Unit.getGroup(event.initiator):getName())
-                    local g = Unit.getGroup(event.initiator)
-					if not tempSpawnedGroups[g:getName()] then
-						--log:info('added')
-						tempSpawnedGroups[g:getName()] = {type = 'group', gp = g}
+					local gName = g:getName()
+					if not tempSpawnedGroups[gName] then
+						--log:warn('addedTo tempSpawnedGroups: $1', gName)
+						tempSpawnedGroups[gName] = {type = 'group', gp = g}
 						tempSpawnGroupsCounter = tempSpawnGroupsCounter + 1
 					end
 				else
@@ -1493,7 +1512,7 @@ do -- the main scope
 					task.t = timer.getTime() + task.rep	--schedule next run
 					local err, errmsg = pcall(task.f, unpack(task.vars, 1, table.maxn(task.vars)))
 					if not err then
-						log:error('Error in scheduled function: $1' .. errmsg)
+						log:error('Error in scheduled function: $1', errmsg)
 					end
 					--scheduledTasks[i].f(unpack(scheduledTasks[i].vars, 1, table.maxn(scheduledTasks[i].vars)))	-- do the task
 					i = i + 1
@@ -1519,7 +1538,7 @@ do -- the main scope
 					id = tostring(original_id) .. ' #' .. tostring(id_ind)
 					id_ind = id_ind + 1
 				end
-
+				local valid
 				if mist.DBs.aliveUnits and mist.DBs.aliveUnits[val.object.id_] then
 					--log:info('object found in alive_units')
 					val.objectData = mist.utils.deepCopy(mist.DBs.aliveUnits[val.object.id_])
@@ -1532,6 +1551,7 @@ do -- the main scope
 					--trigger.action.outText('remove via death: ' .. Unit.getName(val.object),20)
 						mist.DBs.activeHumans[Unit.getName(val.object)] = nil
 					end]]
+					valid = true
 				elseif mist.DBs.removedAliveUnits and mist.DBs.removedAliveUnits[val.object.id_] then	-- it didn't exist in alive_units, check old_alive_units
 					--log:info('object found in old_alive_units')
 					val.objectData = mist.utils.deepCopy(mist.DBs.removedAliveUnits[val.object.id_])
@@ -1540,32 +1560,37 @@ do -- the main scope
 						val.objectPos = pos.p
 					end
 					val.objectType = mist.DBs.removedAliveUnits[val.object.id_].category
-
+					valid = true
 				else	--attempt to determine if static object...
 					--log:info('object not found in alive units or old alive units')
-					local pos = Object.getPosition(val.object)
-					if pos then
-						local static_found = false
-						for ind, static in pairs(mist.DBs.unitsByCat.static) do
-							if ((pos.p.x - static.point.x)^2 + (pos.p.z - static.point.y)^2)^0.5 < 0.1 then --really, it should be zero...
-								--log:info('correlated dead static object to position')
-								val.objectData = static
-								val.objectPos = pos.p
-								val.objectType = 'static'
-								static_found = true
-								break
+					if Object.isExist(val.object) then 
+						local pos = Object.getPosition(val.object)
+						if pos then
+							local static_found = false
+							for ind, static in pairs(mist.DBs.unitsByCat.static) do
+								if ((pos.p.x - static.point.x)^2 + (pos.p.z - static.point.y)^2)^0.5 < 0.1 then --really, it should be zero...
+									--log:info('correlated dead static object to position')
+									val.objectData = static
+									val.objectPos = pos.p
+									val.objectType = 'static'
+									static_found = true
+									break
+								end
 							end
+							if not static_found then
+								val.objectPos = pos.p
+								val.objectType = 'building'
+								val.typeName = Object.getTypeName(val.object)
+							end
+						else
+							val.objectType = 'unknown'
 						end
-						if not static_found then
-							val.objectPos = pos.p
-							val.objectType = 'building'
-                            val.typeName = Object.getTypeName(val.object)
-						end
-					else
-						val.objectType = 'unknown'
+						valid = true
 					end
 				end
-				mist.DBs.deadObjects[id] = val
+				if valid then
+					mist.DBs.deadObjects[id] = val
+				end
 			end
 		end
 	end
@@ -2019,7 +2044,7 @@ do -- the main scope
             
             end
         end
-		--mist.debug.writeData(mist.utils.serialize,{'msg', newGroup}, 'newGroupPushedToAddGroup.lua')
+		--mist.debug.writeData(mist.utils.serialize,{'msg', newGroup}, newGroup.name ..'.lua')
         --log:warn(newGroup)
 		-- sanitize table
 		newGroup.groupName = nil
@@ -3560,7 +3585,7 @@ function mist.getUnitsInMovingZones(unit_names, zone_unit_names, radius, zone_ty
 end
 
 function mist.getUnitsLOS(unitset1, altoffset1, unitset2, altoffset2, radius)
-	log:info("$1, $2, $3, $4, $5", unitset1, altoffset1, unitset2, altoffset2, radius)
+	--log:info("$1, $2, $3, $4, $5", unitset1, altoffset1, unitset2, altoffset2, radius)
 	radius = radius or math.huge
 	local unit_info1 = {}
 	local unit_info2 = {}
@@ -3568,21 +3593,25 @@ function mist.getUnitsLOS(unitset1, altoffset1, unitset2, altoffset2, radius)
 	-- get the positions all in one step, saves execution time.
 	for unitset1_ind = 1, #unitset1 do
 		local unit1 = Unit.getByName(unitset1[unitset1_ind])
-        local lCat = Object.getCategory(unit1)
-		if unit1 and ((lCat == 1 and unit1:isActive()) or lCat ~= 1) and unit:isExist() == true then
-			unit_info1[#unit_info1 + 1] = {}
-			unit_info1[#unit_info1].unit = unit1
-			unit_info1[#unit_info1].pos	= unit1:getPosition().p
+        if unit1 then 
+			local lCat = Object.getCategory(unit1)
+			if ((lCat == 1 and unit1:isActive()) or lCat ~= 1) and unit1:isExist() == true then
+				unit_info1[#unit_info1 + 1] = {}
+				unit_info1[#unit_info1].unit = unit1
+				unit_info1[#unit_info1].pos	= unit1:getPosition().p
+			end
 		end
 	end
 
 	for unitset2_ind = 1, #unitset2 do
 		local unit2 = Unit.getByName(unitset2[unitset2_ind])
-        local lCat = Object.getCategory(unit2)
-		if unit2 and ((lCat == 1 and unit2:isActive()) or lCat ~= 1) and unit:isExist() == true then
-			unit_info2[#unit_info2 + 1] = {}
-			unit_info2[#unit_info2].unit = unit2
-			unit_info2[#unit_info2].pos	= unit2:getPosition().p
+		if unit2 then
+			local lCat = Object.getCategory(unit2)
+			if  ((lCat == 1 and unit2:isActive()) or lCat ~= 1) and unit2:isExist() == true then
+				unit_info2[#unit_info2 + 1] = {}
+				unit_info2[#unit_info2].unit = unit2
+				unit_info2[#unit_info2].pos	= unit2:getPosition().p
+			end
 		end
 	end
 
@@ -4012,13 +4041,14 @@ do -- group functions scope
 
 		if Group.getByName(gpName) and Group.getByName(gpName):isExist() == true then
 			local newGroup = Group.getByName(gpName)
-			local newData = {}
+			local newData = mist.utils.deepCopy(dbData)
 			newData.name = gpName
 			newData.groupId = tonumber(newGroup:getID())
 			newData.category = newGroup:getCategory()
 			newData.groupName = gpName
 			newData.hidden = dbData.hidden
-
+			
+			
 			if newData.category == 2 then
 				newData.category = 'vehicle'
 			elseif newData.category == 3 then
@@ -4790,6 +4820,9 @@ do -- group functions scope
 			highNum = secondNum
 		end
 		local total = 1
+		if highNum > 50 then
+			return math.random(lowNum, highNum)
+		end
 		if math.abs(highNum - lowNum + 1) < 50 then -- if total values is less than 50
 			total = math.modf(50/math.abs(highNum - lowNum + 1)) -- make x copies required to be above 50
 		end
@@ -5193,7 +5226,8 @@ do -- mist.util scope
 
     function mist.utils.getHeadingPoints(point1, point2, north) -- sick of writing this out. 
         if north then 
-            return mist.utils.getDir(mist.vec.sub(mist.utils.makeVec3(point2), mist.utils.makeVec3(point1)), (mist.utils.makeVec3(point1)))
+			local p1 = mist.utils.get3DDist(point1)
+            return mist.utils.getDir(mist.vec.sub(mist.utils.makeVec3(point2), p1), p1)
         else
             return mist.utils.getDir(mist.vec.sub(mist.utils.makeVec3(point2), mist.utils.makeVec3(point1))) 
         end
@@ -5837,8 +5871,8 @@ do -- mist.debug scope
 			log:alert('insufficient libraries to run mist.debug.dump_G, you must disable the sanitization of the io and lfs libraries in ./Scripts/MissionScripting.lua')
 			--trigger.action.outText(errmsg, 10)
 		end
-	end
 
+	end
 	--- Write debug data to file.
 	-- This function requires you to disable script sanitization
 	-- in $DCS_ROOT\Scripts\MissionScripting.lua to access lfs and io
@@ -7653,7 +7687,10 @@ do
         --log:warn(s)
         if type(s) == 'table' then 
             local mType = s.markType
-            if mType == 'panel' then 
+			--log:echo(s)
+            
+			if mType == 'panel' then
+				local markScope = s.markScope or "all"
                 if markScope == 'coa' then
                     trigger.action.markToCoalition(s.markId, s.text, s.pos, s.markFor, s.readOnly)
                 elseif markScope == 'group' then
@@ -7711,10 +7748,15 @@ do
     
     local function validateColor(val)
         if type(val) == 'table' then 
-            for i = 1, #val do
-                if type(val[i]) == 'number' and val[i] > 1 then
-                    val[i] = val[i]/255 -- convert RGB values from 0-255 to 0-1 equivilent. 
-                end
+            for i = 1, 4 do
+                if val[i] then
+					if	type(val[i]) == 'number' and val[i] > 1 then
+						val[i] = val[i]/255 -- convert RGB values from 0-255 to 0-1 equivilent. 
+					end
+                else
+					val[i] = 0.8
+					log:warn("index $1 of color to mist.marker.add was missing, defaulted to 0.8", i)
+				end
             end
         elseif type(val) == 'string' then
             val = mist.utils.hexToRGB(val)
@@ -7755,7 +7797,7 @@ do
                 --log:info('create maker DB: $1', e.idx)
                mist.DBs.markList[e.idx] = {time = e.time, pos = e.pos, groupId = e.groupId, mType = 'panel', text = e.text, markId = e.idx, coalition = e.coalition}
                 if e.unit then
-                   mist.DBs.markList[e.idx].unit = e.intiator:getName()
+                   mist.DBs.markList[e.idx].unit = e.initiator:getName()
                 end
                 --log:info(mist.marker.list[e.idx])
            end
@@ -7778,7 +7820,7 @@ do
         else
             for mEntry, mData in pairs(mist.DBs.markList) do
                 if id == mData.name or id == mData.id then
-                    return mData.id
+                    return mData.markId
                 end
             end
         end
@@ -7788,11 +7830,16 @@ do
     
     
     local function removeMark(id)
-        --log:info("Removing Mark: $1", id
+		--log:info("Removing Mark: $1", id)
         local removed = false
         if type(id) == 'table' then 
             for ind, val in pairs(id) do
-                local r = getMarkId(val)
+				local r
+				if val.markId then
+					r = val.markId
+				else
+					r = getMarkId(val)
+				end
                 if r then 
                     trigger.action.removeMark(r)
                     mist.DBs.markList[r] = nil
@@ -7802,9 +7849,11 @@ do
           
         else
             local r = getMarkId(id)
-            trigger.action.removeMark(r)
-            mist.DBs.markList[r] = nil
-            removed = true
+			if r then 
+				trigger.action.removeMark(r)
+				mist.DBs.markList[r] = nil
+				removed = true
+			end
         end
         return removed
     end
@@ -7926,6 +7975,7 @@ do
         
         if markForCoa then
             if type(markForCoa) == 'string' then
+				--log:warn("coa is string")
                 if tonumber(markForCoa) then 
                     coa = coas[tonumber(markForCoa)]
                     markScope = 'coa'
@@ -7940,11 +7990,10 @@ do
                 end
             elseif type(markForCoa) == 'number' and markForCoa >=-1 and markForCoa <= #coas then
                 coa = markForCoa
-                markScore = 'coa'
+				--log:warn("coa is number")
+                markScope = 'coa'
             end
-            
-            
-        
+            markFor = coa
         elseif markFor then
 			if type(markFor) == 'number' then -- groupId
 				if mist.DBs.groupsById[markFor] then	
@@ -8053,7 +8102,7 @@ do
                     end
                     for i = 1, #markForTable do
                         local newId = iterate()
-                        local data = {markId = newId, text = text, pos = pos[i], markFor = markForTable[i], markType = 'panel', name = name, readOnly = readOnly, time = timer.getTime()}
+                        local data = {markId = newId, text = text, pos = pos[i], markScope = markScope, markFor = markForTable[i], markType = 'panel', name = name, readOnly = readOnly, time = timer.getTime()}
                         mist.DBs.markList[newId] = data
                         table.insert(list, data)
 
@@ -8177,6 +8226,7 @@ do
 	end
 	
 	function mist.marker.remove(id)
+	
         return removeMark(id)
 	end
 	
@@ -8967,8 +9017,8 @@ do -- group tasks scope
 				minR = mist.utils.get2DDist(avg, zone[i])
 			end
 		end
-        --log:warn('Radius: $1', radius)
         --log:warn('minR: $1', minR)
+        --log:warn('Radius: $1', radius)
 		local lSpawnPos = {}
 		for j = 1, 100 do
 			newCoord = mist.getRandPointInCircle(avg, radius)
@@ -9200,7 +9250,7 @@ do -- group tasks scope
     function mist.groupIsDead(groupName) -- copy more or less from on station
 		local gp = Group.getByName(groupName)
         if gp then 
-            if  #gp:getUnits() > 0 or gp:isExist() == true  then
+            if  #gp:getUnits() > 0 and gp:isExist() == true  then
                 return false
             end
 		end
