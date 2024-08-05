@@ -9,7 +9,7 @@ hcs = SET_CLIENT:New():FilterCategories("helicopter"):FilterStart()
 
 
 
-function checkfornewctld()
+function CHECKFORNEWCTLD()
  
  
   hcs:ForEachClient(function(PlayerClient)
@@ -30,4 +30,4 @@ end
 
 
 
-SCHEDULER:New(nil,function() checkfornewctld() end,nil,30,30)
+SCHEDULER:New(nil,function() CHECKFORNEWCTLD() end,nil,30,30)

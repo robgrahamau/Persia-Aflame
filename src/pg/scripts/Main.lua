@@ -134,6 +134,10 @@ _LOADFILE("stts.lua",_SRCPATH,true,-1,15)
 hm("> zones and functions.lua")
 _LOADFILE("zones.lua",_SRCPATH,true,-1,15)
 
+
+_LOADFILE("warehousetables.lua",_SRCPATH,true,-1,15)
+hm("> warehousetables.lua")
+
 hm("> CTLD.lua")
 _LOADFILE("CTLD.lua",_SRCPATH,true,-1,15)
 

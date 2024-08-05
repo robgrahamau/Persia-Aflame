@@ -126,7 +126,7 @@ do
 	end
 
 	function checkawacs()
-		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf.Al_Dhafra_AB)
+		local ab = AIRBASE:FindByName("Al Dhafra AFB")
 		if ab:GetCoalition() == 2 then
 			if Overlord:IsAlive() ~= true and Overlordcount < Overlordlimit then
 				OverlordSpawn:Spawn()
@@ -140,7 +140,7 @@ do
 	end
 	
 	function checkskyeye()
-		local ab = AIRBASE:FindByName(AIRBASE.PersianGulf["Al_Dhafra_AB"])
+		local ab = AIRBASE:FindByName("Al Dhafra AFB")
 		if ab:GetCoalition() == 2 then
 			if SkyEye1:IsAlive() ~= true and skyeyecount < skyeyelimit then
 				SkyEye1Spawn:Spawn()

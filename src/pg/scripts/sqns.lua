@@ -151,7 +151,7 @@ function sqn:Check()
 					self.takeoff = false
 					-- set the spawned unit to nil.
 					self.spawnedunit = nil
-					BASE:E({"SQN CHECK END:",self.sqnname,self.sqnamount,self.spawnedunit:IsAirborne(),self.takeoff})
+					BASE:E({"SQN CHECK END:",self.sqnname,self.sqnamount,self.takeoff})
 				end		
 			elseif (self.spawnedunit:IsAirborne() == true) and (self.takeoff == false ) then
 				-- if we are in the air and take off is false set to true.
@@ -188,9 +188,7 @@ function sqn:Check()
 			BASE:E({"SQN CHECK Spawn:",self.sqnname,self.takeoff})
 			if self.sqnamount > 0 then
 					self:Spawn() 
-					BASE:E({"SQN CHECK >0:",self.sqnname,self.spawnedunit:IsAirborne(),self.takeoff,self.spawnedunit:IsAlive()})
-			else
-				BASE:E({"SQN CHECK Spawn: < 0",self.sqnname,self.spawnedunit:IsAirborne(),self.takeoff,self.spawnedunit:IsAlive()})
+					BASE:E({"SQN CHECK >0:",self.sqnname,self.takeoff})				
 			end
 		end  
 	else

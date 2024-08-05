@@ -41,7 +41,7 @@ function blueqeshmcap()
 end
 
 function bluekishcap()
-  local ab  = AIRBASE:FindByName(AIRBASE.PersianGulf.Kish_International_Airport)
+  local ab  = AIRBASE:FindByName("Kish Intl")
   if ab:GetCoalition() == 2 then
     if _USKISH == nil then
       uskish:Spawn()
@@ -55,12 +55,12 @@ function bluekishcap()
 end
 
 function checkislands()
-	local am = AIRBASE:FindByName(AIRBASE.PersianGulf["Abu_Musa_Island_Airport"])
-	local si = AIRBASE:FindByName(AIRBASE.PersianGulf["Sirri_Island"])
-	local tk = AIRBASE:FindByName(AIRBASE.PersianGulf["Tunb_Kochak"])
-	local ta = AIRBASE:FindByName(AIRBASE.PersianGulf["Tunb_Island_AFB"])
-	local qs = AIRBASE:FindByName(AIRBASE.PersianGulf["Qeshm_Island"])
-	local abna = AIRBASE:FindByName(AIRBASE.PersianGulf["Sir_Abu_Nuayr"])
+	local am = AIRBASE:FindByName("Abu Musa Island")
+	local si = AIRBASE:FindByName("Sirri Island")
+	local tk = AIRBASE:FindByName("Tunb Kochak")
+	local ta = AIRBASE:FindByName("Tunb Island AFB")
+	local qs = AIRBASE:FindByName("Qeshm Island")
+	local abna = AIRBASE:FindByName("Sir Abu Nuayr")
 	
 	if tk:GetCoalition() == 2 and ta:GetCoalition() == 2 and si:GetCoalition() == 2 and am:GetCoalition() == 2 then
 	  if PeleliuSpawned == false then

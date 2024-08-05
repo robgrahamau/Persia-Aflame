@@ -443,9 +443,10 @@ function HEVENT:spawnfarp(text,coord,_group,_playername,_coalition)
     self:FPSpawnStatic("Farp1_Tyre17_" .. farpcounter .. "","H-tyre_B_WF","Fortifications","Black_Tyre_WF",3,(temptable.FarpAX - 43.93118389),(temptable.FarpAY - -22.67033198),(FarpHDG )) 
     self:FPSpawnFarpBuilding("Farp_Heliport_" ..farpcounter .. "","invisiblefarp","Heliports","Invisible FARP",radios[farpcounter],0,farpcounter,(temptable.FarpAX - 0.00000000),(temptable.FarpAY - 0.00000000),(FarpHDG))
     BASE:E({self.name,"Spawned Farp",farpcounter})
+
  end
 
- function HEVENT:FPSpawnFarpBuilding(_name,_shape,_cat,_type,_radio,_modulation,_callsign,_x,_y,_heading)
+function HEVENT:FPSpawnFarpBuilding(_name,_shape,_cat,_type,_radio,_modulation,_callsign,_x,_y,_heading)
   local staticObj = {
     ["name"] = _name , --unit name (Name this something identifying some you can find it later)
     ["category"] = _cat,
@@ -463,6 +464,30 @@ function HEVENT:spawnfarp(text,coord,_group,_playername,_coalition)
         ["dead"] = false,
   }
   coalition.addStaticObject(country.id.USA, staticObj)
+
+  self:UpdateWarehouse(_name,FARPWH)
+end
+
+function HEVENT:UpdateWarehouse(_airbase,_whtable)
+  -- ok we need to populate the warehouse table first we need to actually get our new airbase.
+  local _tempab = Airbase:getByName(_airbase)
+  local _wh = _tempab:getWarehouse()
+  for k,v in pairs(_whtable) do
+    if k == "liquids" then
+      for _k,_v in pairs(v) do
+        _wh:addLiquid(_k,_v)
+      end
+    elseif k == "weapon" then
+      for _k,_v in pairs(v) do 
+        _wh:setItem(_k,_v)
+      end
+    elseif k == "aircraft" then
+      for _k,_v in pairs(v) do 
+        _wh:setItem(_k,_v)
+      end
+    end
+  end
+  return self
 end
 -- spawns all our statics.
 function HEVENT:FPSpawnStatic(_name,_shape,_cat,_type,_rate,_x,_y,_heading)

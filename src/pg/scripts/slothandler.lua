@@ -47,10 +47,16 @@ redctld = nil,
 -- @param #number default coalition id, 1 = red, 2 = blue, 0 = neutral.
 -- @param #string slot prefix for both sides ie "Minhad"
 -- @return #slothandler self 
-function slothandler:New(airfield,_coalition,prefix)
+function slothandler:New(_airfield,_coalition,prefix)
+  if _airfield == nil then
+    BASE:E({"Warning _airfield is reporting nil",_airfield})
+  end
   local self = BASE:Inherit(self,BASE:New())
-  self.name = airfield
-  self.airfield = AIRBASE:FindByName(airfield)
+  self.name = _airfield
+  self.airfield = AIRBASE:FindByName(_airfield)
+  if self.airfield == nil then
+    BASE:E({"Warning AIRBASE:FINDBYNAME NOT WORKING!",_airfield})
+  end
   self.coord = self.airfield:GetCoordinate()
   self.storage = self.airfield:GetStorage()
   self.defaultcoalition = _coalition
@@ -162,7 +168,7 @@ function slothandler:WHupdate()
         self:E({"Coalition is 2 setting rednotallowed"})
         for k,v in pairs(self.rednotallowed) do
           BASE:E("Setting",v,"To",2)
-          self.storage:SetAmount(v,0)
+          self.storage:SetAmount(v,2)
         end
       end
     end
